@@ -1,2 +1,1 @@
-# stat-mod
-Intro to Statistical Modeling 
+# Intro to Statistical Modeling 
