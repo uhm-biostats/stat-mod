@@ -1,0 +1,45 @@
+project:
+    type: book
+    output-dir: docs
+
+book:
+    title: "Intro to Statistical Modeling"
+    author: "Andy Rominger"
+    chapters:
+        - index.qmd
+        - part: intro.qmd
+          chapters:
+            - datasets-intro.qmd
+            - care-fair.qmd
+            - r-refresh.qmd
+        - part: prob.qmd
+          chapters:
+            - prob-intro-lecture.qmd
+            - prob-intro-lab.qmd
+            - prob-rules-lecture.qmd
+            - prob-rules-lab.qmd
+            - prob-sim-data.qmd
+        - part: likelihood-intro.qmd
+          chapters:
+            - binom-lec.qmd
+            - binom-lab.qmd
+            - ml-method.qmd
+            - norm-lab.qmd
+        - part: lin-mod.qmd
+          chapters:
+            - mods-howto.qmd
+            - lin-norm.qmd
+            - lin-lstsqrs.qmd
+
+
+comments:
+    hypothesis: false
+
+bibliography: stat-mod.bib
+
+format:
+  html:
+    theme:
+      - cosmo
+    # css: styles.css
+    toc: true

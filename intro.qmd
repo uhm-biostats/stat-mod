@@ -1,0 +1,12 @@
+# Introductory material 
+
+
+Intro stuff
+
+Jump straight to:
+
+- Lecture: [Data sets we will work with](datasets-intro.qmd)
+- Lecture: [CARE and FAIR principles](care-fair.qmd)
+- [R refresher](r-refresh.qmd)
+
+

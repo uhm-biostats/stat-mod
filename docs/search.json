@@ -1,0 +1,195 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Intro to Statistical Modeling",
+    "section": "",
+    "text": "Welina mai!\nThis is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites.\n\n1 + 1\n\n[1] 2",
+    "crumbs": [
+      "Welina mai!"
+    ]
+  },
+  {
+    "objectID": "datasets-intro.html",
+    "href": "datasets-intro.html",
+    "title": "1  Data we will work with",
+    "section": "",
+    "text": "1.1 Intorducing the data\nWe will be working with data from forest monitoring plots across the pae ʻāina Hawaiʻi as well as environmental and geophysical data measured or interpolated at these monitoring plots. The forest monitoring plot data are organized and distributed in a data resource called OpenNahele (Craven et al. 2018).\nIn this context open refers to the data being openly shared and accessible in alignment with the FAIR principles which we discuss in the next section. Nahele in ʻōlelo Hawaiʻi means, in this context, forest. The use of ʻōlelo Hawaiʻi points to the fact that the data pertain to the pae ʻāina Hawaiʻi. This naming choice could show respect and acknowledgement of the Hawaiian provenance of these data, but could also be seen as appropriation. The interpretation of the naming choice depends in part on whether the data not only comply with FAIR, but also the CARE principles, which, again, we discuss in the next section. The CARE principles mandate that Indigenous provenance and governance rights are acknowledged and respected in the stewardship of data. In the case of OpenNahele, the CARE principles are not met. While the good intentions of those distributing the data is not being questioned, we also recognize there is opportunity for making right the stewardship of these, and other, data from Hawaiʻi. We dive much deeper into this discussion in the next section on CARE and FAIR.\nThe environmental and geophysical data we will use include climate variables, information about human impact, elevation, and geologic age of substrates at the locations of the plot data. For climate variables we use the Hawaiʻi Climate Data Portal (McLean et al. 2023). Elevation, geologic age, and human impact data have been organized by the authors of the OpenNahele data set in a separate data publication (Craven 2019) and we will use those already compiled data rather than re-gather them from the primary sources. However, for the sake of completeness, the primary sources are as follows: elevation (Jarvis et al. 2008), substrate age (Sherrod et al. 2007), and human impact (Society and International Earth Science Information Network 2005).\nWhile these environmental and geophysical data meet the FAIR principles, they again are not CARE compliant. Part of our work in this course will be discussing and envisioning how data collected in Hawaiʻi can live up to the CARE principles.",
+    "crumbs": [
+      "Introductory material",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Data we will work with</span>"
+    ]
+  },
+  {
+    "objectID": "r-refresh.html",
+    "href": "r-refresh.html",
+    "title": "3  R refresher",
+    "section": "",
+    "text": "3.1 Resources\nhttps://datacarpentry.github.io/R-ecology-lesson/\nbut note: they use %&gt;% and load entire tidyverse",
+    "crumbs": [
+      "Introductory material",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>R refresher</span>"
+    ]
+  },
+  {
+    "objectID": "prob-intro.html",
+    "href": "prob-intro.html",
+    "title": "Probability",
+    "section": "",
+    "text": "About this site\n\n1 + 1\n\n[1] 2",
+    "crumbs": [
+      "Probability"
+    ]
+  },
+  {
+    "objectID": "prob-rules.html",
+    "href": "prob-rules.html",
+    "title": "Probability rules",
+    "section": "",
+    "text": "About this site\n\n1 + 1\n\n[1] 2",
+    "crumbs": [
+      "Probability rules"
+    ]
+  },
+  {
+    "objectID": "prob-intro-lecture.html",
+    "href": "prob-intro-lecture.html",
+    "title": "4  About",
+    "section": "",
+    "text": "About this site\n\n1 + 1\n\n[1] 2",
+    "crumbs": [
+      "Intro to probability",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>About</span>"
+    ]
+  },
+  {
+    "objectID": "prob-intro-lab.html",
+    "href": "prob-intro-lab.html",
+    "title": "5  About",
+    "section": "",
+    "text": "About this site\n\n1 + 1\n\n[1] 2",
+    "crumbs": [
+      "About",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>About</span>"
+    ]
+  },
+  {
+    "objectID": "prob-rules-lecture.html",
+    "href": "prob-rules-lecture.html",
+    "title": "6  Probability rules",
+    "section": "",
+    "text": "About this site\n\n1 + 1\n\n[1] 2",
+    "crumbs": [
+      "Probability rules",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Probability rules</span>"
+    ]
+  },
+  {
+    "objectID": "prob-rules-lab.html",
+    "href": "prob-rules-lab.html",
+    "title": "7  Probability rules",
+    "section": "",
+    "text": "About this site\n\n1 + 1\n\n[1] 2",
+    "crumbs": [
+      "Probability rules",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Probability rules</span>"
+    ]
+  },
+  {
+    "objectID": "intro.html",
+    "href": "intro.html",
+    "title": "Introductory material",
+    "section": "",
+    "text": "Intro stuff\nJump straight to:\n\nLecture: Data sets we will work with\nLecture: CARE and FAIR principles\nR refresher",
+    "crumbs": [
+      "Introductory material"
+    ]
+  },
+  {
+    "objectID": "care-fair.html",
+    "href": "care-fair.html",
+    "title": "2  CARE and FAIR principles",
+    "section": "",
+    "text": "2.1 CARE\nCARE and FAIR\nstuff",
+    "crumbs": [
+      "Introductory material",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>CARE and FAIR principles</span>"
+    ]
+  },
+  {
+    "objectID": "care-fair.html#fair",
+    "href": "care-fair.html#fair",
+    "title": "2  CARE and FAIR principles",
+    "section": "2.2 FAIR",
+    "text": "2.2 FAIR\nstuff",
+    "crumbs": [
+      "Introductory material",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>CARE and FAIR principles</span>"
+    ]
+  },
+  {
+    "objectID": "prob.html",
+    "href": "prob.html",
+    "title": "Probability",
+    "section": "",
+    "text": "About this site\n\n1 + 1\n\n[1] 2",
+    "crumbs": [
+      "Probability"
+    ]
+  },
+  {
+    "objectID": "ml-method.html",
+    "href": "ml-method.html",
+    "title": "11  How likelihood maximization works",
+    "section": "",
+    "text": "should bring up ward intervals here\nmaybe not about maximization at all\nmaybe about uncertainty",
+    "crumbs": [
+      "Introducing the method of maximum likelihood",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>How likelihood maximization works</span>"
+    ]
+  },
+  {
+    "objectID": "datasets-intro.html#the-data",
+    "href": "datasets-intro.html#the-data",
+    "title": "1  Data we will work with",
+    "section": "",
+    "text": "Craven, Dylan. 2019. “Dylancraven/Hawaii_diversity: Beta.” Zenodo. https://doi.org/10.5281/zenodo.3250638.\n\n\nCraven, Dylan, Tiffany M Knight, Kasey E Barton, Lalasia Bialic-Murphy, Susan Cordell, Christian P Giardina, Thomas W Gillespie, Rebecca Ostertag, Lawren Sack, and Jonathan M Chase. 2018. “OpenNahele: The Open Hawaiian Forest Plot Database.” Biodiversity Data Journal, no. 6: e28406.\n\n\nJarvis, A, E Guevara, HI Reuter, and AD Nelson. 2008. “Hole-Filled SRTM for the Globe: Version 4: Data Grid.”\n\n\nMcLean, Jared, Sean B Cleveland, Michael Dodge, Matthew P Lucas, Ryan J Longman, Thomas W Giambelluca, and Gwen A Jacobs. 2023. “Building a Portal for Climate Data—Mapping Automation, Visualization, and Dissemination.” Concurrency and Computation: Practice and Experience 35 (18): e6727.\n\n\nSherrod, David R, John M Sinton, Sarah E Watkins, and Kelly M Brunt. 2007. “Geologic Map of the State of Hawaii, Sheet 3: Island of Oahu.” United States Geological Survey Open-File Report 1089.\n\n\nSociety, Wildlife Conservation Wildlife Conservation, and Center for International Earth Science Information Network. 2005. “Last of the Wild Project, Version 2 (LWP-2): Global Human Footprint Dataset (Geographic).”",
+    "crumbs": [
+      "Introductory material",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Data we will work with</span>"
+    ]
+  },
+  {
+    "objectID": "datasets-intro.html#intorducing-the-data",
+    "href": "datasets-intro.html#intorducing-the-data",
+    "title": "1  Data we will work with",
+    "section": "",
+    "text": "Craven, Dylan. 2019. “Dylancraven/Hawaii_diversity: Beta.” Zenodo. https://doi.org/10.5281/zenodo.3250638.\n\n\nCraven, Dylan, Tiffany M Knight, Kasey E Barton, Lalasia Bialic-Murphy, Susan Cordell, Christian P Giardina, Thomas W Gillespie, Rebecca Ostertag, Lawren Sack, and Jonathan M Chase. 2018. “OpenNahele: The Open Hawaiian Forest Plot Database.” Biodiversity Data Journal, no. 6: e28406.\n\n\nJarvis, A, E Guevara, HI Reuter, and AD Nelson. 2008. “Hole-Filled SRTM for the Globe: Version 4: Data Grid.”\n\n\nMcLean, Jared, Sean B Cleveland, Michael Dodge, Matthew P Lucas, Ryan J Longman, Thomas W Giambelluca, and Gwen A Jacobs. 2023. “Building a Portal for Climate Data—Mapping Automation, Visualization, and Dissemination.” Concurrency and Computation: Practice and Experience 35 (18): e6727.\n\n\nSherrod, David R, John M Sinton, Sarah E Watkins, and Kelly M Brunt. 2007. “Geologic Map of the State of Hawaii, Sheet 3: Island of Oahu.” United States Geological Survey Open-File Report 1089.\n\n\nSociety, Wildlife Conservation Wildlife Conservation, and Center for International Earth Science Information Network. 2005. “Last of the Wild Project, Version 2 (LWP-2): Global Human Footprint Dataset (Geographic).”",
+    "crumbs": [
+      "Introductory material",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Data we will work with</span>"
+    ]
+  },
+  {
+    "objectID": "datasets-intro.html#preliminary-description-of-the-data",
+    "href": "datasets-intro.html#preliminary-description-of-the-data",
+    "title": "1  Data we will work with",
+    "section": "1.2 Preliminary description of the data",
+    "text": "1.2 Preliminary description of the data\n\n1.2.1 Forest plot data\nThe forest plot data are found in data/OpenNahele_Tree_Data.csv. The data contain taxonomic identity and diameter at breast height (DBH) for 43,590 individual trees found across 530 plots. Figure 1.1 shows the locations of plots across the pae ʻāina.\n\n\n\n\n\n\n\n\nFigure 1.1: Distribution of plot locations across the pae ʻāina Hawaiʻi. Points are semi-transparent to better show plot locations when those locations are very proximate, thus darker colors represent a higher density of plots.\n\n\n\n\n\nRows in the forest plot data represent individual trees. Therefore, some data across the columns will be duplicated, for example trees from the same plot will have the same plot ID. Columns in the forest plot data are described in data/README_for_OpenNahele_Tree_Data.txt, repreduced below:\n\n\n\n\n\n\n\n\n\nColumn label\nColumn description\n\n\n\n\nIsland\nIsland name\n\n\nPlotID\nUnique numeric identifier for each plot\n\n\nStudy\nBrief name of study\n\n\nPlot_area\nPlot area in m2\n\n\nLongitude\nLongitude of plot in decimal degrees; WGS84 coordinate system\n\n\nLatitude\nLatitude of plot in decimal degrees; WGS84 coordinate system\n\n\nYear\nYear in which plot data was collected\n\n\nCensus\nNumeric identifier for each census\n\n\nTree_ID\nUnique numeric identifier for each individual\n\n\nScientific_name\nGenus and species of each individual following TPL v. 1.1\n\n\nFamily\nFamily of each individual following TPL v. 1.1\n\n\nAngiosperm\nBinary variable (1 = yes, 0 = no) indicating whether an individual is classified as an angiosperm following APG III\n\n\nMonocot\nBinary variable (1 = yes, 0 = no) indicating whether an individual is classified as a monocot following APG III\n\n\nNative_Status\nCategorical variable (‘native’, ‘alien’, ‘uncertain’) indicating alien status of each individual following Wagner et al. (2005)\n\n\nCultivated_Status\nBinary variable (1 = yes, 0 = no, NA = not applicable) indicating if species is cultivated following PIER\n\n\nAbundance\nNumber of individuals (all = 1)\n\n\nAbundance_ha\nAbundance of each individual on a per hectare basis\n\n\nDBH_cm\nDiameter at 1.3 m (DBH) for each individual; NA indicates that size was not measured, but was classified by size class\n\n\n\n\n\n\n\n1.2.2 Climate data\nClimate data are found in data/plot_climate.csv. Rows here are unique plots and no information in any column is duplicated. Columns are described in data/README_for_plot_climate.txt, reproduced below:\n\n\n\n\n\n\n\n\n\nColumn label\nColumn description\n\n\n\n\nPlotID\nUnique numeric identifier for each plot\n\n\nlon\nLongitude of plot in decimal degrees; WGS84 coordinate system\n\n\nlat\nLatitude of plot in decimal degrees; WGS84 coordinate system\n\n\nevapotrans_annual_mm\nActual annual evapotranspiration in mm\n\n\navbl_energy_annual_wm2\nAnnual available energy in W/m^2\n\n\ncloud_freq_annual\nAnnual cloud frequency in days/year\n\n\nndvi_annual\nNormalized Difference Vegetation Index\n\n\nrain_annual_mm\nAnnual rain fall in mm\n\n\navg_temp_annual_c\nAnnual average temperature in celsius\n\n\n\n\n\n\n\n1.2.3 Human impact and geophysical data\nHuman impact data and geophysical data are found in the same file, only because they are from the same source. That file is data/hii_geo.csv. Its rows are also unique plots and no information in columns is duplicated across rows. Columns are described in `\n\n\n\n\n\n\n\n\n\nColumn label\nColumn description\n\n\n\n\nPlotID\nUnique numeric identifier for each plot\n\n\nlon\nLongitude of plot in decimal degrees; WGS84 coordinate system\n\n\nlat\nLatitude of plot in decimal degrees; WGS84 coordinate system\n\n\nhii\nHuman impact index\n\n\nage_yr\nGeologic substrate age in years before present\n\n\nelev_m\nElevation in meters",
+    "crumbs": [
+      "Introductory material",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Data we will work with</span>"
+    ]
+  },
+  {
+    "objectID": "datasets-intro.html#references",
+    "href": "datasets-intro.html#references",
+    "title": "1  Data we will work with",
+    "section": "1.3 References",
+    "text": "1.3 References\n\n\n\n\nCraven, Dylan. 2019. “Dylancraven/Hawaii_diversity: Beta.” Zenodo. https://doi.org/10.5281/zenodo.3250638.\n\n\nCraven, Dylan, Tiffany M Knight, Kasey E Barton, Lalasia Bialic-Murphy, Susan Cordell, Christian P Giardina, Thomas W Gillespie, Rebecca Ostertag, Lawren Sack, and Jonathan M Chase. 2018. “OpenNahele: The Open Hawaiian Forest Plot Database.” Biodiversity Data Journal, no. 6: e28406.\n\n\nJarvis, A, E Guevara, HI Reuter, and AD Nelson. 2008. “Hole-Filled SRTM for the Globe: Version 4: Data Grid.”\n\n\nMcLean, Jared, Sean B Cleveland, Michael Dodge, Matthew P Lucas, Ryan J Longman, Thomas W Giambelluca, and Gwen A Jacobs. 2023. “Building a Portal for Climate Data—Mapping Automation, Visualization, and Dissemination.” Concurrency and Computation: Practice and Experience 35 (18): e6727.\n\n\nSherrod, David R, John M Sinton, Sarah E Watkins, and Kelly M Brunt. 2007. “Geologic Map of the State of Hawaii, Sheet 3: Island of Oahu.” United States Geological Survey Open-File Report 1089.\n\n\nSociety, Wildlife Conservation Wildlife Conservation, and Center for International Earth Science Information Network. 2005. “Last of the Wild Project, Version 2 (LWP-2): Global Human Footprint Dataset (Geographic).”",
+    "crumbs": [
+      "Introductory material",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Data we will work with</span>"
+    ]
+  }
+]

@@ -1,0 +1,7 @@
+# R refresher 
+
+## Resources
+
+https://datacarpentry.github.io/R-ecology-lesson/
+
+but note: they use `%>%` and load entire *tidyverse*
