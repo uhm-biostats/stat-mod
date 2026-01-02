@@ -1,9 +1,5 @@
 # Welina mai! {.unnumbered}
 
-This is a Quarto website.
+This is the course website for ZOOL 631: Intro to Statistical Modeling at the University of Hawaiʻi at Mānoa.
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
 
-```{r}
-1 + 1
-```
