@@ -1,6 +1,7 @@
 # CARE and FAIR principles 
 
-CARE and FAIR
+CARE and FAIR are principles that specify different but, at times, complimentary ethical considerations for the collection, management, use, and governance of data. The concepts underlying CARE articulate ideas of Indigenous data sovereignty and governance that have deep historical roots (https://library.oapen.org/bitstream/handle/20.500.12657/31875/624262.pdf?sequence=1&isAllowed=y). The concepts in FAIR relate to the more recent idea of open and reproducible science. We will discuss these principles out of order in terms of chronology and ethical weight because the current articulation of CARE contends with the fact that FAIR is the emerging default for data, the result of FAIR being relatively more amenable to the colonial enterprise. 
+
 
 ## CARE
 
