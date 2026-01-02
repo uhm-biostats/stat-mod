@@ -12,6 +12,9 @@ book:
             - datasets-intro.qmd
             - care-fair.qmd
             - r-refresh.qmd
+            - github.qmd
+            - dynamic-doc.qmd
+            - bring-it-together.qmd
         - part: prob.qmd
           chapters:
             - prob-intro-lecture.qmd
