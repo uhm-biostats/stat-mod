@@ -3,10 +3,14 @@
 CARE and FAIR are principles that specify different but, at times, complimentary ethical considerations for the collection, management, use, and governance of data. The concepts underlying CARE articulate ideas of Indigenous data sovereignty and governance that have deep historical roots (https://library.oapen.org/bitstream/handle/20.500.12657/31875/624262.pdf?sequence=1&isAllowed=y). The concepts in FAIR relate to the more recent idea of open and reproducible science. We will discuss these principles out of order in terms of chronology and ethical weight because the current articulation of CARE contends with the fact that FAIR is the emerging default for data, the result of FAIR being relatively more amenable to the colonial enterprise. 
 
 
-## CARE
-
-stuff
-
 ## FAIR
 
-stuff
+FAIR stands for **F**indable, *"A**ccessible, **I**nterpretable, and **R**eusable. We'll go through what each of those mean in practice and then briefly discuss the underlying ethics.
+
+### Ethics of FAIR
+
+Global and local disparities in funding access means that a small proportion of researchers have dominated the means of producing data. If data were not FAIR, researchers without access to the same funding would be further disadvantaged and their contributions to science would be further lost. FAIR also came to the scientific forefront very much on response to the replication crisis. It is hoped that making data open and reusable will make science more transparent and reproducible, and therefore less prone to the analytical errors and biases leading to the replication crisis, as well as quicker and easier to correct when errors do occur. Much of scientific data production is also publicly funded and therefore there are ethical considerations for making data broadly accessible by everyone, public included, and reusable to ensure the highest scientific return on the investment from the public.
+
+## CARE
+
+
