@@ -7,6 +7,16 @@ CARE and FAIR are principles that specify different but, at times, complimentary
 
 FAIR stands for **F**indable, *"A**ccessible, **I**nterpretable, and **R**eusable. We'll go through what each of those mean in practice and then briefly discuss the underlying ethics.
 
+### Findable
+
+This means data and metadata should be easy to find by both humans and computers. At a minimum data should have persistent identifiers such as a digital object identifier (DOI) and ideally being registered in searchable resources. As an example, the Global Biodiversity Information Facility (GBIF) houses species occurrence data (think museum and herbarium specimens) and assigns DOIs to every submitted dataset and every user download. That downloads have a DOI means that research using those downloaded data can reference the DOI, making the exact data underpinning the research finable. 
+
+### Accessible
+
+This means that once found, data and metadata should be retrievable by both humans and computers. This means that the method for downloading or requesting access to the (meta)data is clear and does not require specialized or proprietary tools but rather standardized, open (as in open source) protocols. 
+
+
+
 ### Ethics of FAIR
 
 Global and local disparities in funding access means that a small proportion of researchers have dominated the means of producing data. If data were not FAIR, researchers without access to the same funding would be further disadvantaged and their contributions to science would be further lost. FAIR also came to the scientific forefront very much on response to the replication crisis. It is hoped that making data open and reusable will make science more transparent and reproducible, and therefore less prone to the analytical errors and biases leading to the replication crisis, as well as quicker and easier to correct when errors do occur. Much of scientific data production is also publicly funded and therefore there are ethical considerations for making data broadly accessible by everyone, public included, and reusable to ensure the highest scientific return on the investment from the public.
