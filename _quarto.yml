@@ -39,6 +39,7 @@ comments:
     hypothesis: false
 
 bibliography: stat-mod.bib
+csl: ecology-letters.csl
 
 format:
   html:
