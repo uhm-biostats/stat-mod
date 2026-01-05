@@ -6,7 +6,7 @@ We will be working with data from forest monitoring plots across the pae ʻāina
 
 In this context *open* refers to the data being openly shared and accessible in alignment with the FAIR principles which we discuss in the [next section](care-fair.qmd). [*Nahele*](https://wehewehe.org/gsdl2.85/cgi-bin/hdict?e=q-11000-00---off-0hdict--00-1----0-10-0---0---0direct-10-ED--4--textpukuielbert%2ctextmamaka%2ctextandrew%2ctextparker%2ctextchd-----0-1l--11-en-Zz-1---Zz-1-home-nahele--00-4-1-00-0--4----0-0-11-00-0utfZz-8-00&a=d&d=D13981#hero-bottom-banner){target="_blank"} in ʻōlelo Hawaiʻi means, in this context, forest. The use of ʻōlelo Hawaiʻi points to the fact that the data pertain to the pae ʻāina Hawaiʻi. This naming choice could show respect and acknowledgement of the Hawaiian provenance of these data, but could also be seen as appropriation. The interpretation of the naming choice depends in part on whether the data not only comply with FAIR, but also the CARE principles, which, again, we discuss in the [next section](care-fair.qmd). The CARE principles mandate that Indigenous provenance and governance rights are acknowledged and respected in the stewardship of data. In the case of *OpenNahele*, the CARE principles are not met. While the good intentions of those distributing the data is not being questioned, we also recognize there is opportunity for making right the stewardship of these, and other, data from Hawaiʻi.  We dive much deeper into this discussion in the next section on [CARE and FAIR](care-fair.qmd).
 
-The environmental and geophysical data we will use include climate variables, information about human impact, elevation, and geologic age of substrates at the locations of the plot data. For climate variables we use the [Hawaiʻi Climate Data Portal](https://www.hawaii.edu/climate-data-portal/climate-atlas/) [@mclean2023]. Elevation, geologic age, and human impact data have been organized by the authors of the *OpenNahele* data set in a separate data publication [@craven2019] and we will use those already compiled data rather than re-gather them from the primary sources. However, for the sake of completeness, the primary sources are as follows: elevation [@jarvis2008], substrate age [@sherrod2007], and human impact [@sedac2005].
+The environmental and geophysical data we will use include climate variables, information about human impact, elevation, and geologic age of substrates at the locations of the plot data. For climate variables we use the [Hawaiʻi Climate Data Portal](https://www.hawaii.edu/climate-data-portal/climate-atlas/){target="_blank"} [@mclean2023]. Elevation, geologic age, and human impact data have been organized by the authors of the *OpenNahele* data set in a separate data publication [@craven2019] and we will use those already compiled data rather than re-gather them from the primary sources. However, for the sake of completeness, the primary sources are as follows: elevation [@jarvis2008], substrate age [@sherrod2007], and human impact [@sedac2005].
 
 While these environmental and geophysical data meet the FAIR principles, they again are not CARE compliant. Part of our work in this course will be discussing and envisioning how data collected in Hawaiʻi can live up to the CARE principles.
 
@@ -100,5 +100,15 @@ names(gmeta) <- gsub("\\.", " ", names(gmeta))
 kable(gmeta)
 
 ```
+
+We won't go deeper into describing the data now because we'll save that for our [R refresher](r-refresh.qmd) when we'll review coding tools by describing the data numerically and visually.
+
+## Ecological questions we'll consider
+
+Forests in Hawaiʻi are shaped by a multitude of processes [@barton]. This is not a forest ecology class, but it is a class about using statistical models to help us answer questions in ecology and evolution. So we will engage with questions and hypotheses in ecology and evolution. The flora of Hawaiʻi has been a source of inspiration, sustenance, medicine, and scientific inquiry for millennia [@abbot-paha]. 
+
+- Kilo
+- western tradition (eco-evo-anthro)
+- invasion interacting with evo-eco
 
 ## References
