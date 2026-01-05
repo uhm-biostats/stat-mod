@@ -1,1 +1,13 @@
-# Managing code with GitHub
+# Managing code with git and GitHub
+
+## What is git and GitHub and how do they help us?
+
+## Integrating GitHub and RStudio
+
+## Learning the git workflow
+
+### Stage and commit
+
+### Push and pull
+
+## Working collaboratively: branches, forks, and pull requests
