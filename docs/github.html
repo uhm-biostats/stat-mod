@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>7&nbsp; Introduction to probability – Intro to Statistical Modeling</title>
+<title>4&nbsp; Managing code with git and GitHub – Intro to Statistical Modeling</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,6 +20,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -30,8 +65,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./prob-intro-lab.html" rel="next">
-<link href="./prob.html" rel="prev">
+<link href="./dynamic-doc.html" rel="next">
+<link href="./r-refresh.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -82,7 +117,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./prob.html">Probability</a></li><li class="breadcrumb-item"><a href="./prob-intro-lecture.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Introduction to probability</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./intro.html">Introductory material</a></li><li class="breadcrumb-item"><a href="./github.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Managing code with git and GitHub</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -142,7 +177,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./github.html" class="sidebar-item-text sidebar-link">
+  <a href="./github.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Managing code with git and GitHub</span></span></a>
   </div>
 </li>
@@ -171,7 +206,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./prob-intro-lecture.html" class="sidebar-item-text sidebar-link active">
+  <a href="./prob-intro-lecture.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Introduction to probability</span></span></a>
   </div>
 </li>
@@ -270,15 +305,31 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#what-is-git-and-github-and-how-do-they-help-us" id="toc-what-is-git-and-github-and-how-do-they-help-us" class="nav-link active" data-scroll-target="#what-is-git-and-github-and-how-do-they-help-us"><span class="header-section-number">4.1</span> What is git and GitHub and how do they help us?</a></li>
+  <li><a href="#using-git-and-github-with-help-from-rstudio" id="toc-using-git-and-github-with-help-from-rstudio" class="nav-link" data-scroll-target="#using-git-and-github-with-help-from-rstudio"><span class="header-section-number">4.2</span> Using git and GitHub with help from RStudio</a>
+  <ul class="collapse">
+  <li><a href="#testing-our-connection" id="toc-testing-our-connection" class="nav-link" data-scroll-target="#testing-our-connection"><span class="header-section-number">4.2.1</span> Testing our connection</a></li>
+  </ul></li>
+  <li><a href="#learning-the-git-workflow" id="toc-learning-the-git-workflow" class="nav-link" data-scroll-target="#learning-the-git-workflow"><span class="header-section-number">4.3</span> Learning the git workflow</a>
+  <ul class="collapse">
+  <li><a href="#stage-and-commit" id="toc-stage-and-commit" class="nav-link" data-scroll-target="#stage-and-commit"><span class="header-section-number">4.3.1</span> Stage and commit</a></li>
+  <li><a href="#push-and-pull" id="toc-push-and-pull" class="nav-link" data-scroll-target="#push-and-pull"><span class="header-section-number">4.3.2</span> Push and pull</a></li>
+  </ul></li>
+  <li><a href="#working-collaboratively-branches-forks-and-pull-requests" id="toc-working-collaboratively-branches-forks-and-pull-requests" class="nav-link" data-scroll-target="#working-collaboratively-branches-forks-and-pull-requests"><span class="header-section-number">4.4</span> Working collaboratively: branches, forks, and pull requests</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./prob.html">Probability</a></li><li class="breadcrumb-item"><a href="./prob-intro-lecture.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Introduction to probability</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./intro.html">Introductory material</a></li><li class="breadcrumb-item"><a href="./github.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Managing code with git and GitHub</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Introduction to probability</span></h1>
+<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Managing code with git and GitHub</span></h1>
 </div>
 
 
@@ -295,8 +346,99 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<section id="what-is-git-and-github-and-how-do-they-help-us" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="what-is-git-and-github-and-how-do-they-help-us"><span class="header-section-number">4.1</span> What is git and GitHub and how do they help us?</h2>
+</section>
+<section id="using-git-and-github-with-help-from-rstudio" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="using-git-and-github-with-help-from-rstudio"><span class="header-section-number">4.2</span> Using git and GitHub with help from RStudio</h2>
+<p>To start working with git and GitHub we will need to make a free GitHub account and to install the actual git software on our computers. Here are external instructions for those tasks:</p>
+<ol type="1">
+<li><a href="https://docs.github.com/en/get-started/start-your-journey/creating-an-account-on-github" target="_blank">make a free GitHub account</a>; no need to follow the “Next steps” (although eventually you should set up 2FA)</li>
+<li>downloaded and installed git (click on your operating system <a href="https://git-scm.com/install/" target="_blank">here</a> for instruction)</li>
+</ol>
+<p>Instead of step (2), if you think you have done this before, check if git is already on your machine by opening the terminal (from RStudio is fine) and run this command:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> <span class="at">--version</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>You will see a version number if git is available, you will see an error if it is not.</p>
+<p>Now we can integrate git, GitHub, and RStudio. This is not necessary for using git and GitHub but it makes the experience easier, especially because we are already using RStudio.</p>
+<p>We will use two R packages to help us connect RStudio and GitHub: <em>usethis</em> and <em>gitcreds</em>. Let’s install those packages by typing the following in the R console</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"usethis"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"gitcreds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>A common problem has been that <em>usethis</em> has a dependency on the package <em>crayon</em> which is currently not playing nice. If you have errors involving <em>crayon</em> try this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"crayon"</span>, <span class="at">type =</span> <span class="st">"source"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"usethis"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now we can use functions from those packages to help us continue. First we use <em>usethis</em> to set up a personal access tokin that will serve as our login credential with GitHub. We do that by typing this into the R console:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(usethis)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">create_github_token</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>That should open up a web browser page where you might be promoted to log into your GitHub account. Do that and then on the next page scroll to the bottom and click the “Generate token” button. You will then see on a new page a string of numbers and letters—that’s the token. Copy that token and paste it somewhere temporarily, like a blank text editor document or a blank R script, where you paste it doesn’t matter—you’ll soon delete it.</p>
+<p>Now come back to RStudio and run the following in the R console:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gitcreds)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">gitcreds_set</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This will prompt you to enter a password or token; now you can paste the token you just generated here and hit enter. You should now be good to go!</p>
+<p>It’s possible you’ve already gone through this process. If that’s the case you’ll see this:</p>
+<pre><code>-&gt; Your current credentials for 'https://github.com':
+
+  protocol: https
+  host    : github.com
+  username: PersonalAccessToken
+  password: &lt;-- hidden --&gt;
+
+-&gt; What would you like to do? 
+
+1: Keep these credentials
+2: Replace these credentials
+3: See the password / token
+
+Selection: </code></pre>
+<p>Enter <code>1</code> for your selection. There might be be an error message but you can ignore it.</p>
+<p>Now we should hopefully be all connected!</p>
+<section id="testing-our-connection" class="level3" data-number="4.2.1">
+<h3 data-number="4.2.1" class="anchored" data-anchor-id="testing-our-connection"><span class="header-section-number">4.2.1</span> Testing our connection</h3>
+<p>Now we’ll double check that you’ve connected RStudio with GitHub by going to our GitHub profile and making a new repository. We’ll then copy (i.e.&nbsp;“clone”) this repo to our computers, modify it locally, and send those changes back to GitHub via git (all this sounds overly technical right now, we will gain a deeper understanding in the next section on learning the git workflow).</p>
+<p>First let’s make a new repo. Go to your GitHub profile and click the plus sign in the top right, select “New repository”.</p>
+<p><img src="./img/github_how2/fig_add_repo.png" class="img-fluid" style="width:100.0%"></p>
+<p>Give the repository a name, a description, make it public and select the option to add a README. Then hit “Create repository”</p>
+<p><img src="./img/github_how2/fig_add_repo2.png" class="img-fluid" style="width:100.0%"></p>
+<p>Next hit the green “Code” button and copy the HTTPS URL to your clipboard.</p>
+<p><img src="./img/github_how2/fig_clone.png" class="img-fluid" style="width:100.0%"></p>
+<p>Now head back to RStudio and selection File &gt; New Project. Then select “Version control” then “Git”. Finally, paste the HTTPS URL that you copied from GitHub. The “Project directory name” should auto-population. Choose a meaningful place on your computer to house this project, select the option to open in a new session and hit “Create Project”.</p>
+<p><img src="./img/github_how2/fig_git_project.png" class="img-fluid" style="width:50.0%"></p>
+<p>You should now have a new project open! Navigate to the “Git” tab in RStudio and notice that two file names are listed with yellow question marks by them.</p>
+<p><img src="./img/github_how2/fig_git_tab.png" class="img-fluid" style="width:100.0%"></p>
+<p>Those files were auto-generated by RStudio. The question marks indicate that they are new files which git is currently not tracking. Click the radio button next to each one under the “Staged” column. Checking those buttons stages the files. We can now hit “Commit” to add a commit message and commit the changes. If you have success it should look something like this (possibly with a warning about username or email, that’s ok!):</p>
+<p><img src="./img/github_how2/fig_commit.png" class="img-fluid" style="width:50.0%"></p>
+<p>Once we’ve committed the changes we can send those changes to GitHub by hitting the “push” button Hopefully the result of hitting “push” looks something like this (possibly with a warning about username or email, again, that’s ok!):</p>
+<p><img src="./img/github_how2/fig_push.png" class="img-fluid" style="width:50.0%"></p>
+<p>Go back to your web browser, refresh the GitHub repo page, and you should see the new files you just pushed!</p>
+<p>While committing and pushing you might get warning messages about your username and email. If you see these warnings you need to let git and GitHub know who you are. You can do this through the Terminal. To open a terminal tab through RStudio go to Tools &gt; Terminal &gt; New Terminal. This will open a new terminal tab next to the R Console tab. The terminal is different than the R Console. You can think of the terminal as accessing the guts of your computer. Raw R commands will not work here. However, we <em>can</em> interact with git here and that’s what we need to do to identify ourselves. So in the terminal type</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> config <span class="at">--global</span> user.name <span class="st">"github_user_name"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>replace <code>github_user_name</code> with your actual username; hit enter. Then type</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> config <span class="at">--global</span> user.email <span class="st">"my_email"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>again replace <code>my_email</code> with the actual email address you used to register your GitHub account; hit enter.</p>
+<p>Now your identity is known and you should be all set!</p>
+</section>
+</section>
+<section id="learning-the-git-workflow" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="learning-the-git-workflow"><span class="header-section-number">4.3</span> Learning the git workflow</h2>
+<section id="stage-and-commit" class="level3" data-number="4.3.1">
+<h3 data-number="4.3.1" class="anchored" data-anchor-id="stage-and-commit"><span class="header-section-number">4.3.1</span> Stage and commit</h3>
+</section>
+<section id="push-and-pull" class="level3" data-number="4.3.2">
+<h3 data-number="4.3.2" class="anchored" data-anchor-id="push-and-pull"><span class="header-section-number">4.3.2</span> Push and pull</h3>
+</section>
+</section>
+<section id="working-collaboratively-branches-forks-and-pull-requests" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="working-collaboratively-branches-forks-and-pull-requests"><span class="header-section-number">4.4</span> Working collaboratively: branches, forks, and pull requests</h2>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -700,13 +842,13 @@ ul.task-list li input[type="checkbox"] {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./prob.html" class="pagination-link" aria-label="Probability">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Probability</span>
+      <a href="./r-refresh.html" class="pagination-link" aria-label="R refresher">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">R refresher</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./prob-intro-lab.html" class="pagination-link" aria-label="Working with probability in R">
-        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Working with probability in R</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./dynamic-doc.html" class="pagination-link" aria-label="Dynamic documents with quarto">
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Dynamic documents with quarto</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
