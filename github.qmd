@@ -2,6 +2,14 @@
 
 ## What is git and GitHub and how do they help us?
 
+Coding and analyzing data are complex tasks. We often need to try different approaches, step away from our code for a while, or share code with others to get their input and collaboration. We might often find ourselves in a situation like this: we make a script, say `analysis.R`, and then revise it based on feedback, but we don't want to loose our old work, so we call the new version `analysis_v2.R`. Then we can't figure out how to make a plot we want, so we email it to a friend, they edit it and send back a new file called `analysis_v2_ajr-edits.R`. We resolve those edits and add some other code and save the file with the date so we remember where we were: `analysis_2025-01-28.R`. But then we don't get a chance to work on the analysis again for two months. By that time, we can't remember if `analysis_v2.R` is the right version or `analysis_v2_ajr-edits.R` or `analysis_2025-01-28.R`. You can't even remember exactly what the edits were and why you needed them.
+
+Avoiding this situation is the job for git and GitHub. Git is a kind of version control software that runs locally on your computer and tracks changes to files. Those files live in a project folder (usually called a "repo" short for "repository"). GitHub is a web-based platform that hosts git repositories online, allowing you to back up your work, share it with others, and contribute to others' projects too.
+
+Together, git and GitHub help us in several ways. First, they provide a complete history of our work. Every change we make is recorded with a timestamp and a description we write about what is important in that change. If we make a mistake or want to try something experimental, we can easily revert back to an earlier version. GitHub and git facilitate collaboration. Multiple people can work on the same project simultaneously, and git helps merge their contributions together. Combined with web-based hosting and backup, this is kind of like google docs for code (but a little less automated because we manually document and describe changes). GitHub makes it easy to share code, review changes, and give and receive feedback. Hosting code on GitHub is also a real way to work toward open and reproducible science. Anyone can see exactly how we carried out our analysis.
+
+As another important motivator: we will use git and GitHub for all class assignments moving forward.
+
 ## Using git and GitHub with help from RStudio
 
 To start working with git and GitHub we will need to make a free GitHub account and to install the actual git software on our computers.  Here are external instructions for those tasks:
@@ -141,8 +149,20 @@ Now your identity is known and you should be all set!
 
 ## Learning the git workflow
 
+We have in fact already seen a big part of the git workflow when we confirmed that RStudio is properly communicating with GitHub. Now we will work toward really understanding it. 
+
 ### Stage and commit
 
+"Staging" changes (hitting the radio button next to a file name in RStudio's "Git" panel) let's git know to pay attention to the changes you made. We can stage changes from one or multiple files at a time. Once staged, we can then write a commit message. This message briefly records what changes were made and (perhaps) why or how.  These messages should be brief and think of them as notes to your future self. Recall from the intro to this chapter that git lets you roll back to previous versions of your code (for example if you messed something up). The commit message is your way of knowing which version to roll back to.
+
+
+
+These changes, and their commit messages, still only exist locally on your computer. The next steps are about interacting with the repo hosted on GitHub.
+
 ### Push and pull
+
+If we want our local changes to be reflected in the GitHub repo, we need to "push" them. You can push from RStudio by hitting the green up arrow in the "Git" panel. Pushing does just that, it pushes all your committed changes to the GitHub repo. 
+
+Conceptually, you should think of your local version of the repo as your temporary, personal copy of the official GitHub repo. Your computer could die, you could loose it, a cat could walk over the keys and mess it all up. Your local version is not permanent, but the GitHub version is. 
 
 ## Working collaboratively: branches, forks, and pull requests
