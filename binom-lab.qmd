@@ -1,3 +1,2 @@
 # Estimating probability of occurrence 
 
-foo foo foo
