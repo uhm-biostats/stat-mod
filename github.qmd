@@ -155,7 +155,6 @@ We have in fact already seen a big part of the git workflow when we confirmed th
 
 "Staging" changes (hitting the radio button next to a file name in RStudio's "Git" panel) let's git know to pay attention to the changes you made. We can stage changes from one or multiple files at a time. Once staged, we can then write a commit message. This message briefly records what changes were made and (perhaps) why or how.  These messages should be brief and think of them as notes to your future self. Recall from the intro to this chapter that git lets you roll back to previous versions of your code (for example if you messed something up). The commit message is your way of knowing which version to roll back to.
 
-stub stub stub
 
 These changes, and their commit messages, still only exist locally on your computer. The next steps are about interacting with the repo hosted on GitHub.
 
