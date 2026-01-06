@@ -1,11 +1,11 @@
 # CARE and FAIR principles 
 
-CARE and FAIR are principles that specify different but, at times, complimentary ethical considerations for the collection, management, use, and governance of data. The concepts underlying CARE articulate ideas of Indigenous data sovereignty and governance that have deep historical roots (https://library.oapen.org/bitstream/handle/20.500.12657/31875/624262.pdf?sequence=1&isAllowed=y). The concepts in FAIR relate to the more recent idea of open and reproducible science. We will discuss these principles out of order in terms of chronology and ethical weight because the current articulation of CARE contends with the fact that FAIR is the emerging default for data, the result of FAIR being relatively more amenable to the colonial enterprise. 
+CARE and FAIR are principles that specify different but, at times, complimentary ethical considerations for the collection, management, use, and governance of data [@carroll2021operationalizing]. The concepts underlying CARE articulate ideas of Indigenous data sovereignty and governance that have deep historical roots [@undrip; @kukutai2016; @carroll2020care; @carroll2021operationalizing]. The concepts in FAIR relate to the more recent idea of open and reproducible science. We will discuss FAIR first, though it is not the chronologically earlier concept nor more important, because the current articulation of CARE contends with the fact that FAIR is the emerging default for data [@carroll2021operationalizing]. 
 
 
 ## FAIR
 
-FAIR stands for **F**indable, *"A**ccessible, **I**nterpretable, and **R**eusable. We'll go through what each of those mean in practice and then briefly discuss the underlying ethics.
+[FAIR](https://www.go-fair.org/fair-principles/){target="_blank"} [@fair] stands for **F**indable, **A**ccessible, **I**nterpretable, and **R**eusable. We'll go through what each of those mean in practice and then briefly discuss the underlying ethics.
 
 ### Findable
 
@@ -21,12 +21,12 @@ Data and metadata should use broadly applicable, formal data standards that are 
 
 ### Reusable
 
-To be refundable data must be well-described with accurate metadata, including provence, and have clear licensing that allows for reuse. I'm this context provence is taken to mean the researchers who generated the data and how they generated it. In our discussion of CARE, provenance will take on a much deeper and more accurate meaning. The Darwin Core standard enables metadata to meet the reusability standard as long as the specific licence allows reuse. GBIF, for example, requires data to be licensed under a Creative Commons license. Another metadata standard worth noting is the Ecological Metadata Language which provides additional ways of describing data that do not neatly fit within the occurrence-type data most easily described by Darwin Core.
+To be refundable data must be well-described with accurate metadata, including provenance, and have clear licensing that allows for reuse. I'm this context provenance is taken to mean the researchers who generated the data and how they generated it. In our discussion of CARE, provenance will take on a much deeper and more accurate meaning. The Darwin Core standard enables metadata to meet the reusability standard as long as the specific licence allows reuse. GBIF, for example, requires data to be licensed under a Creative Commons license. Another metadata standard worth noting is the Ecological Metadata Language which provides additional ways of describing data that do not neatly fit within the occurrence-type data most easily described by Darwin Core.
 
 
 ### Ethics of FAIR
 
-Global and local disparities in funding access means that a small proportion of researchers have dominated the means of producing data. If data were not FAIR, researchers without access to the same funding would be further disadvantaged and their contributions to science would be further lost. FAIR also came to the scientific forefront very much in response to the replication crisis. It is hoped that making data open and reusable will make science more transparent and reproducible. Greater transiency and reproducibility should make science less prone to the analytical errors and biases that led to the replication crisis, as well as make the scientific record quicker and easier to correct when errors do occur. Much of scientific data production is also publicly funded and therefore there are ethical considerations for making data broadly accessible by everyone, public included, and reusable to ensure the highest scientific return on the investment from the public.
+Global and local disparities in science funding access [@ma2015; @petersen2021; @chen2022; @nguyen2023; @larregue2024] means that a small proportion of researchers have dominated the means of producing data. If data were not FAIR, researchers without access to the same funding would be further disadvantaged and their contributions to science would be further lost. FAIR also came to the scientific forefront in response to the replication crisis [@nosek2015; @fair]. It is hoped that making data open and reusable will make science more transparent and reproducible [@parker2016; @filazzola2021]. Greater transiency and reproducibility should make science less prone to the analytical errors and biases that led to the replication crisis, as well as make the scientific record quicker and easier to correct when errors do occur. Much of scientific data production is also publicly funded and therefore there are ethical considerations for making data broadly accessible by everyone, public included, and reusable to ensure the highest scientific return on the investment from the public [@maglia2015nsf].
 
 ## CARE
 
