@@ -111,4 +111,8 @@ Forests in Hawaiʻi are shaped by a multitude of processes [@barton]. This is no
 - western tradition (eco-evo-anthro)
 - invasion interacting with evo-eco
 
+[Download assignment](data/hi.rda)
+
+
+
 ## References
