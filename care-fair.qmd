@@ -9,7 +9,7 @@ CARE and FAIR are principles that specify different but, at times, complimentary
 
 ### Findable
 
-This means data and metadata should be easy to find by both humans and computers. Data should have persistent identifiers such as a digital object identifier (DOI) and have sufficient structured information such that it is searchable. As an example, the Global Biodiversity Information Facility (GBIF) houses species occurrence data (think museum and herbarium specimens) and assigns DOIs to every submitted dataset and every user download. That downloads have a DOI means that research using those downloaded data can reference the DOI, making the exact data underpinning the research finable. GBIF also enables searching for data by different criteria including taxonomy and geographic location.
+This means data and metadata should be easy to find by both humans and computers. Data should have persistent identifiers such as a digital object identifier (DOI) and have sufficient structured information such that it is searchable. As an example, the Global Biodiversity Information Facility (GBIF) houses species occurrence data (think museum and herbarium specimens) and assigns DOIs to every submitted data set and every user download. That downloads have a DOI means that research using those downloaded data can reference the DOI, making the exact data underpinning the research finable. GBIF also enables searching for data by different criteria including taxonomy and geographic location.
 
 ### Accessible
 
@@ -17,17 +17,45 @@ This means that once found, data and metadata should be retrievable by both huma
 
 ### Interoperable
 
-Data and metadata should use broadly applicable, formal data standards that are themselves FAIR. It should use standardized formats that allow data to be integrated with other datasets and used with various applications. As an example, GBIF uses the Darwin Core standard which provides a shared vocabulary for occurrence-based biodiversity (meta)data, with terms like `scientificName`, `decimalLatitude`, and `eventDate`. These terms can be thought of as standard column names that all data should have in order to meet the Darwin Core standard. All other data that use Darwin Core, or another standard that can be transliterated to Darwin Core, can now interoperate. 
+Data and metadata should use broadly applicable, formal data standards that are themselves FAIR. It should use standardized formats that allow data to be integrated with other data sets and used with various applications. As an example, GBIF uses the Darwin Core standard which provides a shared vocabulary for occurrence-based biodiversity (meta)data, with terms like `scientificName`, `decimalLatitude`, and `eventDate`. These terms can be thought of as standard column names that all data should have in order to meet the Darwin Core standard. All other data that use Darwin Core, or another standard that can be transliterated to Darwin Core, can now interoperate. 
 
 ### Reusable
 
-To be refundable data must be well-described with accurate metadata, including provenance, and have clear licensing that allows for reuse. I'm this context provenance is taken to mean the researchers who generated the data and how they generated it. In our discussion of CARE, provenance will take on a much deeper and more accurate meaning. The Darwin Core standard enables metadata to meet the reusability standard as long as the specific licence allows reuse. GBIF, for example, requires data to be licensed under a Creative Commons license. Another metadata standard worth noting is the Ecological Metadata Language which provides additional ways of describing data that do not neatly fit within the occurrence-type data most easily described by Darwin Core.
+To be refundable data must be well-described with accurate metadata, including provenance, and have clear licensing that allows for reuse. In this context provenance is taken to mean the researchers who generated the data and how they generated it. In our discussion of CARE, provenance will take on a much deeper and more accurate meaning. The Darwin Core standard enables metadata to meet the reusability standard as long as the specific licence allows reuse. GBIF, for example, requires data to be licensed under a Creative Commons license. Another metadata standard worth noting is the Ecological Metadata Language which provides additional ways of describing data that do not neatly fit within the occurrence-type data most easily described by Darwin Core.
 
 
 ### Ethics of FAIR
 
-Global and local disparities in science funding access [@ma2015; @petersen2021; @chen2022; @nguyen2023; @larregue2024] means that a small proportion of researchers have dominated the means of producing data. If data were not FAIR, researchers without access to the same funding would be further disadvantaged and their contributions to science would be further lost. FAIR also came to the scientific forefront in response to the replication crisis [@nosek2015; @fair]. It is hoped that making data open and reusable will make science more transparent and reproducible [@parker2016; @filazzola2021]. Greater transiency and reproducibility should make science less prone to the analytical errors and biases that led to the replication crisis, as well as make the scientific record quicker and easier to correct when errors do occur. Much of scientific data production is also publicly funded and therefore there are ethical considerations for making data broadly accessible by everyone, public included, and reusable to ensure the highest scientific return on the investment from the public [@maglia2015nsf].
+Global and local disparities in science funding access [@ma2015; @petersen2021; @chen2022; @nguyen2023; @larregue2024] means that a small proportion of researchers have dominated the means of producing data. If data were not FAIR, researchers without access to the same funding would be further disadvantaged and their contributions to science would be further lost. FAIR also came to the scientific forefront in response to the replication crisis [@nosek2015; @fair]. It is hoped that making data open and reusable will make science more transparent and reproducible [@parker2016; @filazzola2021]. Greater transiency and reproducibility should make science less prone to the analytical errors and biases that led to the replication crisis, as well as make the scientific record quicker and easier to correct when errors do occur. Most scientific data is also publicly funded and therefore there are ethical considerations for making data broadly accessible by everyone, public included, and reusable to ensure the highest scientific return on the investment from the public [@stebbins2013; @maglia2015nsf].
 
 ## CARE
 
+These ethics underlying FAIR, especially around countering disparities, also relate to the CARE principles [@carroll2021operationalizing]. But while these ethics are implied in FAIR, CARE intentionally addresses them head-on in the context of Indigenous peoples' rights [@undrip] and countering colonialism. CARE is an articulation of Indigenous data sovereignty (IDSov) and Indigenous data governance (IDGov). 
+
+IDSov and IDGov apply to Indigenous data. Indigenous data are any form of data (including traditional knowledge and more) in any format that originate from or impact Indigenous peoples, people, communities, nations, territories (including traditional territories now occupied by settlers), and all their constituent pieces from natural resources to human bodies to languages [@carroll2021operationalizing]. Where data "originate from" is a way of saying what is the provenance of the data. We saw provenance when discussing the necessity of clearly describing data under FAIR. From a colonial perspective the provenance of data sits with the researcher extracting data. But a de-colonial perspective reveals that the provenance sits with the original knowledge holders and/or stewards of the sources of knowledge. The provenance of an academic recording of ʻōlelo Hawaiʻi spoken by a mānaleo is not with the academic but with the speaker and more broadly with Kānaka ʻŌiwi. The provenance of an entomological collection from the Waiʻanae Mountains is not with the collector (whose name is likely attached to each specimen) but with the ʻāina, the lāhui Hawaiʻi, and Kānaka ʻŌiwi. The distinction about provenance is important because, under western intellectual property systems, provenance and ownership are assumed to be equivalent. Who "owns" the data governs the data.
+
+We will start to build understanding of IDSov and IDGov by defining CARE. CARE stands for **C**ollective benefit, **A**uthority to control, **R**esponsibility, and **E**thics. We will dive deeper into each.
+
+### Collective benefit
+
+Data inherently hold potential for innovation, value generation, and decision making. People, communities, and nations can *benefit* from data. The collective benefit principle stipulates that benefits should be shared collectively and specifically that data stewardship practices must enable Indigenous peoples and people to derive benefit from Indigenous data. Benefit is sometimes---in western worldviews---reflexively equated with monetary value, but benefit takes many forms including the benefit of using data to inform governance and decision making, and generally to promote wellbeing.
+
+### Authority to control
+
+Indigenous peoples have a right to govern how Indigenous data are collected, used, managed, and shared. This means that cultural protocols from Indigenous people(s) are prioritized in the stewardship of data. Authority to control can be enabled by FAIR principles if those principles are applied to enable Indigenous peoples to access their data and use it advance their right to self-determination.
+
+### Responsibility 
+
+Those working with Indigenous data have a responsibility to engage with respect, reciprocity, and earned trust. Respect must be given to cultural protocols and rights to self-determination. Reciprocity is about ensuring that not only the benefits derived from data can advance Indigenous peoples' wellbeing, but the process of data collection and stewardship have embedded practices of collaboration that expand the capacity (e.g. through increased data literacy) of Indigenous peoples and people to engage with data. Reciprocity and respect are also about seeking mutual understanding of worldviews and ensuring that data and their products are communicated in a way consistent with those worldviews, including in the Indigenous language of the people of provenance. Earned trust means those working with Indigenous data embrace the responsibility of collaborating with integrity and consistently support positive relationships.
+
+
+### Ethics
+
+Ethics means centering the rights, wellbeing, and ethical frameworks of Indigenous Peoples in the stewardship of Indigenous data. To do so requires embracing the challenges of grappling with the ways colonialism has created power imbalances, scarcities (real and constructed), and trauma. This work is not trivial, which also means ethics include ensuring the longevity of data and its potential to produce benefits into the future. Indicating Indigenous provenance is part of the ethics of ensuring future use.
+
+## CARE and FAIR
+
+## Implementing CARE with Local Contexts Labels and Notices
+
+## References
 
