@@ -6,7 +6,7 @@ Coding and analyzing data are complex tasks. We often need to try different appr
 
 Avoiding this situation is the job for git and GitHub. Git is a kind of version control software that runs locally on your computer and tracks changes to files. Those files live in a project folder (usually called a "repo" short for "repository"). GitHub is a web-based platform that hosts git repositories online, allowing you to back up your work, share it with others, and contribute to others' projects too.
 
-Together, git and GitHub help us in several ways. First, they provide a complete history of our work. Every change we make is recorded with a timestamp and a description we write about what is important in that change. If we make a mistake or want to try something experimental, we can easily revert back to an earlier version. GitHub and git facilitate collaboration. Multiple people can work on the same project simultaneously, and git helps merge their contributions together. Combined with web-based hosting and backup, this is kind of like google docs for code (but a little less automated because we manually document and describe changes). GitHub makes it easy to share code, review changes, and give and receive feedback. Hosting code on GitHub is also a real way to work toward open and reproducible science. Anyone can see exactly how we carried out our analysis.
+Together, git and GitHub help us in several ways. They provide a complete history of our work. Every change we make is recorded with a timestamp and a description we write about what is important in that change. If we make a mistake or want to try something experimental, we can easily revert back to an earlier version. GitHub and git facilitate collaboration. Multiple people can work on the same project simultaneously, and git helps merge their contributions together. Given the web-based hosting and backup, this is kind of like google docs for code (but a little less automated because we manually document and describe changes). GitHub makes it easy to share code, review changes, and give and receive feedback. The feedback bit is shockingly helpful via a tool called "issues" which we will discuss in the Workflow section. Hosting code on GitHub is also a real way to work toward open and reproducible science. Anyone can see exactly how we carried out our analysis.
 
 As another important motivator: we will use git and GitHub for all class assignments moving forward.
 
@@ -147,15 +147,18 @@ again replace `my_email` with the actual email address you used to register your
 
 Now your identity is known and you should be all set!
 
-## Learning the git workflow
+## Learning the git and GitHub workflow
 
-We have in fact already seen a big part of the git workflow when we confirmed that RStudio is properly communicating with GitHub. Now we will work toward really understanding it. 
+We have in fact already seen a big part of this workflow when we confirmed that RStudio is properly communicating with GitHub. Now we will work toward really understanding it. 
+
+
+### Clone
+
+Cloning means copying a remote repo, like one on GitHub, to your local computer. This is how you typically first start a local git repo. Cloning is a little more complex than just downloading all the files: cloning also maintains the relationship between your local copy and the remote repo as well as all the version history.
 
 ### Stage and commit
 
-"Staging" changes (hitting the radio button next to a file name in RStudio's "Git" panel) let's git know to pay attention to the changes you made. We can stage changes from one or multiple files at a time. Once staged, we can then write a commit message. This message briefly records what changes were made and (perhaps) why or how.  These messages should be brief and think of them as notes to your future self. Recall from the intro to this chapter that git lets you roll back to previous versions of your code (for example if you messed something up). The commit message is your way of knowing which version to roll back to.
-
-stub stub stub
+Once you have your git repo locally, you will start changing things. "Staging" changes (hitting the radio button next to a file name in RStudio's "Git" panel) let's git know to pay attention to the changes you made. We can stage changes from one or multiple files at a time. Once staged, we can then write a commit message. This message briefly records what changes were made and (perhaps) why or how.  These messages should be brief, think of them as notes to your future self (or collaborators). Recall from the intro to this chapter that git enables you to roll back to previous versions of your code (for example if you messed something up). The commit message is your way of knowing which version to roll back to.  We will cover how to roll back or recover past versions soon.
 
 These changes, and their commit messages, still only exist locally on your computer. The next steps are about interacting with the repo hosted on GitHub.
 
@@ -163,6 +166,25 @@ These changes, and their commit messages, still only exist locally on your compu
 
 If we want our local changes to be reflected in the GitHub repo, we need to "push" them. You can push from RStudio by hitting the green up arrow in the "Git" panel. Pushing does just that, it pushes all your committed changes to the GitHub repo. 
 
-Conceptually, you should think of your local version of the repo as your temporary, personal copy of the official GitHub repo. Your computer could die, you could loose it, a cat could walk over the keys and mess it all up. Your local version is not permanent, but the GitHub version is. 
+Conceptually, you should think of your local version of the repo as your temporary, personal copy of the official GitHub repo. Your computer could die, you could loose it, a cat could walk over the keys and mess it all up. Your local version is not permanent, but the GitHub version is. The fact that your local copy is ephemeral also means you should commit often, push often, and pull often.
 
-## Working collaboratively: branches, forks, and pull requests
+Wait, what is pull?  Pull is how you keep your local copy up-to-date with the official copy on GitHub.  You can pull from RStudio by hitting the turquoise down arrow in the "Git" panel. But you might ask: how could the official copy change? Primarily through the commits and pushes of your collaborators. More on that in "Working collaboratively."
+
+### Recovering past versions
+
+To actually recover previous versions of your code, you have a few options. You can view the history of your repo (as it is preserved from within your local copy) right inside RStudio. On the "Git" panel, hit the watch icon and a window will pop-up showing the history of all commits along with their messages. You can click on any of those commits to see the past versions of your work. The easiest way to recover it is to copy the code of the past version and paste it into the script you're currently working on. This gives you maximum control to selectively recover specific parts of your past work. 
+Another option is to use code in the terminal to roll back the entire repo to a past version. When you clicked a specific commit, you saw, amoung other information, a long SHA key. You can paste that SHA key into this code to roll back to that commit:
+
+```bash
+git revert <SHA-key>
+```
+
+Yet another option is to use the GitHub interface to view past versions. On the page for the GitHub repo you will see another watch-looking icon. Click that and again you can see a list of past commits which you can click through to see the associated versions of the files/scripts at the times of those commits. You can again copy-paste the code you might want from these past versions.
+
+### Issues: toward working collaboratively 
+
+### Working collaboratively: branches, forks, and pull requests
+
+## Resources
+
+One of the absolute best references on git, GitHub, and working with both through RStudio is Jenny Bryan's online book [Happy git with R](https://happygitwithr.com).
