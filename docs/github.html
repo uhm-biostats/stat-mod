@@ -315,12 +315,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#testing-our-connection" id="toc-testing-our-connection" class="nav-link" data-scroll-target="#testing-our-connection"><span class="header-section-number">4.2.1</span> Testing our connection</a></li>
   </ul></li>
-  <li><a href="#learning-the-git-workflow" id="toc-learning-the-git-workflow" class="nav-link" data-scroll-target="#learning-the-git-workflow"><span class="header-section-number">4.3</span> Learning the git workflow</a>
+  <li><a href="#learning-the-git-and-github-workflow" id="toc-learning-the-git-and-github-workflow" class="nav-link" data-scroll-target="#learning-the-git-and-github-workflow"><span class="header-section-number">4.3</span> Learning the git and GitHub workflow</a>
   <ul class="collapse">
-  <li><a href="#stage-and-commit" id="toc-stage-and-commit" class="nav-link" data-scroll-target="#stage-and-commit"><span class="header-section-number">4.3.1</span> Stage and commit</a></li>
-  <li><a href="#push-and-pull" id="toc-push-and-pull" class="nav-link" data-scroll-target="#push-and-pull"><span class="header-section-number">4.3.2</span> Push and pull</a></li>
+  <li><a href="#clone" id="toc-clone" class="nav-link" data-scroll-target="#clone"><span class="header-section-number">4.3.1</span> Clone</a></li>
+  <li><a href="#stage-and-commit" id="toc-stage-and-commit" class="nav-link" data-scroll-target="#stage-and-commit"><span class="header-section-number">4.3.2</span> Stage and commit</a></li>
+  <li><a href="#push-and-pull" id="toc-push-and-pull" class="nav-link" data-scroll-target="#push-and-pull"><span class="header-section-number">4.3.3</span> Push and pull</a></li>
+  <li><a href="#recovering-past-versions" id="toc-recovering-past-versions" class="nav-link" data-scroll-target="#recovering-past-versions"><span class="header-section-number">4.3.4</span> Recovering past versions</a></li>
+  <li><a href="#issues-toward-working-collaboratively" id="toc-issues-toward-working-collaboratively" class="nav-link" data-scroll-target="#issues-toward-working-collaboratively"><span class="header-section-number">4.3.5</span> Issues: toward working collaboratively</a></li>
+  <li><a href="#working-collaboratively-branches-forks-and-pull-requests" id="toc-working-collaboratively-branches-forks-and-pull-requests" class="nav-link" data-scroll-target="#working-collaboratively-branches-forks-and-pull-requests"><span class="header-section-number">4.3.6</span> Working collaboratively: branches, forks, and pull requests</a></li>
   </ul></li>
-  <li><a href="#working-collaboratively-branches-forks-and-pull-requests" id="toc-working-collaboratively-branches-forks-and-pull-requests" class="nav-link" data-scroll-target="#working-collaboratively-branches-forks-and-pull-requests"><span class="header-section-number">4.4</span> Working collaboratively: branches, forks, and pull requests</a></li>
+  <li><a href="#resources" id="toc-resources" class="nav-link" data-scroll-target="#resources"><span class="header-section-number">4.4</span> Resources</a></li>
   </ul>
 </nav>
     </div>
@@ -348,6 +352,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="what-is-git-and-github-and-how-do-they-help-us" class="level2" data-number="4.1">
 <h2 data-number="4.1" class="anchored" data-anchor-id="what-is-git-and-github-and-how-do-they-help-us"><span class="header-section-number">4.1</span> What is git and GitHub and how do they help us?</h2>
+<p>Coding and analyzing data are complex tasks. We often need to try different approaches, step away from our code for a while, or share code with others to get their input and collaboration. We might often find ourselves in a situation like this: we make a script, say <code>analysis.R</code>, and then revise it based on feedback, but we don’t want to loose our old work, so we call the new version <code>analysis_v2.R</code>. Then we can’t figure out how to make a plot we want, so we email it to a friend, they edit it and send back a new file called <code>analysis_v2_ajr-edits.R</code>. We resolve those edits and add some other code and save the file with the date so we remember where we were: <code>analysis_2025-01-28.R</code>. But then we don’t get a chance to work on the analysis again for two months. By that time, we can’t remember if <code>analysis_v2.R</code> is the right version or <code>analysis_v2_ajr-edits.R</code> or <code>analysis_2025-01-28.R</code>. You can’t even remember exactly what the edits were and why you needed them.</p>
+<p>Avoiding this situation is the job for git and GitHub. Git is a kind of version control software that runs locally on your computer and tracks changes to files. Those files live in a project folder (usually called a “repo” short for “repository”). GitHub is a web-based platform that hosts git repositories online, allowing you to back up your work, share it with others, and contribute to others’ projects too.</p>
+<p>Together, git and GitHub help us in several ways. They provide a complete history of our work. Every change we make is recorded with a timestamp and a description we write about what is important in that change. If we make a mistake or want to try something experimental, we can easily revert back to an earlier version. GitHub and git facilitate collaboration. Multiple people can work on the same project simultaneously, and git helps merge their contributions together. Given the web-based hosting and backup, this is kind of like google docs for code (but a little less automated because we manually document and describe changes). GitHub makes it easy to share code, review changes, and give and receive feedback. The feedback bit is shockingly helpful via a tool called “issues” which we will discuss in the Workflow section. Hosting code on GitHub is also a real way to work toward open and reproducible science. Anyone can see exactly how we carried out our analysis.</p>
+<p>As another important motivator: we will use git and GitHub for all class assignments moving forward.</p>
 </section>
 <section id="using-git-and-github-with-help-from-rstudio" class="level2" data-number="4.2">
 <h2 data-number="4.2" class="anchored" data-anchor-id="using-git-and-github-with-help-from-rstudio"><span class="header-section-number">4.2</span> Using git and GitHub with help from RStudio</h2>
@@ -425,17 +433,40 @@ Selection: </code></pre>
 <p>Now your identity is known and you should be all set!</p>
 </section>
 </section>
-<section id="learning-the-git-workflow" class="level2" data-number="4.3">
-<h2 data-number="4.3" class="anchored" data-anchor-id="learning-the-git-workflow"><span class="header-section-number">4.3</span> Learning the git workflow</h2>
-<section id="stage-and-commit" class="level3" data-number="4.3.1">
-<h3 data-number="4.3.1" class="anchored" data-anchor-id="stage-and-commit"><span class="header-section-number">4.3.1</span> Stage and commit</h3>
+<section id="learning-the-git-and-github-workflow" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="learning-the-git-and-github-workflow"><span class="header-section-number">4.3</span> Learning the git and GitHub workflow</h2>
+<p>We have in fact already seen a big part of this workflow when we confirmed that RStudio is properly communicating with GitHub. Now we will work toward really understanding it.</p>
+<section id="clone" class="level3" data-number="4.3.1">
+<h3 data-number="4.3.1" class="anchored" data-anchor-id="clone"><span class="header-section-number">4.3.1</span> Clone</h3>
+<p>Cloning means copying a remote repo, like one on GitHub, to your local computer. This is how you typically first start a local git repo. Cloning is a little more complex than just downloading all the files: cloning also maintains the relationship between your local copy and the remote repo as well as all the version history.</p>
 </section>
-<section id="push-and-pull" class="level3" data-number="4.3.2">
-<h3 data-number="4.3.2" class="anchored" data-anchor-id="push-and-pull"><span class="header-section-number">4.3.2</span> Push and pull</h3>
+<section id="stage-and-commit" class="level3" data-number="4.3.2">
+<h3 data-number="4.3.2" class="anchored" data-anchor-id="stage-and-commit"><span class="header-section-number">4.3.2</span> Stage and commit</h3>
+<p>Once you have your git repo locally, you will start changing things. “Staging” changes (hitting the radio button next to a file name in RStudio’s “Git” panel) let’s git know to pay attention to the changes you made. We can stage changes from one or multiple files at a time. Once staged, we can then write a commit message. This message briefly records what changes were made and (perhaps) why or how. These messages should be brief, think of them as notes to your future self (or collaborators). Recall from the intro to this chapter that git enables you to roll back to previous versions of your code (for example if you messed something up). The commit message is your way of knowing which version to roll back to. We will cover how to roll back or recover past versions soon.</p>
+<p>These changes, and their commit messages, still only exist locally on your computer. The next steps are about interacting with the repo hosted on GitHub.</p>
+</section>
+<section id="push-and-pull" class="level3" data-number="4.3.3">
+<h3 data-number="4.3.3" class="anchored" data-anchor-id="push-and-pull"><span class="header-section-number">4.3.3</span> Push and pull</h3>
+<p>If we want our local changes to be reflected in the GitHub repo, we need to “push” them. You can push from RStudio by hitting the green up arrow in the “Git” panel. Pushing does just that, it pushes all your committed changes to the GitHub repo.</p>
+<p>Conceptually, you should think of your local version of the repo as your temporary, personal copy of the official GitHub repo. Your computer could die, you could loose it, a cat could walk over the keys and mess it all up. Your local version is not permanent, but the GitHub version is. The fact that your local copy is ephemeral also means you should commit often, push often, and pull often.</p>
+<p>Wait, what is pull? Pull is how you keep your local copy up-to-date with the official copy on GitHub. You can pull from RStudio by hitting the turquoise down arrow in the “Git” panel. But you might ask: how could the official copy change? Primarily through the commits and pushes of your collaborators. More on that in “Working collaboratively.”</p>
+</section>
+<section id="recovering-past-versions" class="level3" data-number="4.3.4">
+<h3 data-number="4.3.4" class="anchored" data-anchor-id="recovering-past-versions"><span class="header-section-number">4.3.4</span> Recovering past versions</h3>
+<p>To actually recover previous versions of your code, you have a few options. You can view the history of your repo (as it is preserved from within your local copy) right inside RStudio. On the “Git” panel, hit the watch icon and a window will pop-up showing the history of all commits along with their messages. You can click on any of those commits to see the past versions of your work. The easiest way to recover it is to copy the code of the past version and paste it into the script you’re currently working on. This gives you maximum control to selectively recover specific parts of your past work. Another option is to use code in the terminal to roll back the entire repo to a past version. When you clicked a specific commit, you saw, amoung other information, a long SHA key. You can paste that SHA key into this code to roll back to that commit:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> revert <span class="op">&lt;</span>SHA-key<span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Yet another option is to use the GitHub interface to view past versions. On the page for the GitHub repo you will see another watch-looking icon. Click that and again you can see a list of past commits which you can click through to see the associated versions of the files/scripts at the times of those commits. You can again copy-paste the code you might want from these past versions.</p>
+</section>
+<section id="issues-toward-working-collaboratively" class="level3" data-number="4.3.5">
+<h3 data-number="4.3.5" class="anchored" data-anchor-id="issues-toward-working-collaboratively"><span class="header-section-number">4.3.5</span> Issues: toward working collaboratively</h3>
+</section>
+<section id="working-collaboratively-branches-forks-and-pull-requests" class="level3" data-number="4.3.6">
+<h3 data-number="4.3.6" class="anchored" data-anchor-id="working-collaboratively-branches-forks-and-pull-requests"><span class="header-section-number">4.3.6</span> Working collaboratively: branches, forks, and pull requests</h3>
 </section>
 </section>
-<section id="working-collaboratively-branches-forks-and-pull-requests" class="level2" data-number="4.4">
-<h2 data-number="4.4" class="anchored" data-anchor-id="working-collaboratively-branches-forks-and-pull-requests"><span class="header-section-number">4.4</span> Working collaboratively: branches, forks, and pull requests</h2>
+<section id="resources" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="resources"><span class="header-section-number">4.4</span> Resources</h2>
+<p>One of the absolute best references on git, GitHub, and working with both through RStudio is Jenny Bryan’s online book <a href="https://happygitwithr.com">Happy git with R</a>.</p>
 
 
 </section>
