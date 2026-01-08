@@ -275,7 +275,10 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#welina-mai" id="toc-welina-mai" class="nav-link active" data-scroll-target="#welina-mai">Welina mai!</a></li>
+  <li><a href="#welina-mai" id="toc-welina-mai" class="nav-link active" data-scroll-target="#welina-mai">Welina mai!</a>
+  <ul class="collapse">
+  <li><a href="#learning-goals" id="toc-learning-goals" class="nav-link" data-scroll-target="#learning-goals">Learning Goals</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -310,8 +313,22 @@ ul.task-list li input[type="checkbox"] {
 <section id="welina-mai" class="level1 unnumbered">
 <h1 class="unnumbered">Welina mai!</h1>
 <p>This is the course website for ZOOL 631: Intro to Statistical Modeling at the University of Hawaiʻi at Mānoa.</p>
+<p>Being in Hawaiʻi we will center this place in learning about the conceptual, practical, and broader societal aspects of analyzing data with statistical models. Centering Hawaiʻi means acknowledging what our presence here means. For each of us that meaning is probably unique. Speaking personally as me, Andy, your instructor, I am a <a href="https://wehe.hilo.hawaii.edu/?q=haole#w2w2-32916">haole</a>/settler in Hawaiʻi. From that position I adapt and shorten the Land Acknowledgement <a href="https://manoa.hawaii.edu/nhpol/auamo/land-acknowledgment">example</a> presented by the Hawaiian Place of Learning Advancement Office: This ʻāina on which our University resides is part of the larger territory recognized by Kānaka ʻŌiwi as their ancestral grandmother, Papahānaumoku. Her majesty Queen Liliʻuokalani yielded the Hawaiian Kingdom and these territories under duress and protest to the United States to avoid the bloodshed of her people. Hawaiʻi remains illegally occupied by the United States. This acknowledgement is offered fully recognizing that acknowledgement is only a first step and insufficient by itself. This course deals deeply with the intersection of statistics and colonialism in Hawaiʻi and globally. To that end we also display the Local Contexts Open to Collaborate Notice (which we will learn more about <a href="./care-fair.html">soon</a>).</p>
+<div class="columns">
+<div class="column" style="width:30%;">
+<p><img src="img/care/otc-notice.png" class="img-fluid"></p>
+</div><div class="column" style="width:70%;">
+<p><strong>Open to Collaborate</strong></p>
+<p>This course and its instructor are committed to the development of new modes of collaboration, engagement, and partnership with Indigenous Peoples for the care and stewardship of past and future heritage collections.</p>
+</div>
+</div>
+<section id="learning-goals" class="level2">
+<h2 class="anchored" data-anchor-id="learning-goals">Learning Goals</h2>
+<p>Each module contains three types of learning objectives: i) conceptual foundations, ii) applications, iii) societal contexts and ethics. Conceptual foundations will help you understand how and why we apply statistics to the real world and also help you understand and evaluate the validity of the scientific literature. Applications is where you learn how to actually make these tools work for you. Societal contexts and ethics are all too often overlooked in the teaching and practice of statistics, but ultimately statistics is a central tool in how western scientists reach conclusions about the world; we have a mandate to make sure our conclusions, and the very process we take to make those conclusions, is relevant and <a href="https://wehe.hilo.hawaii.edu/?q=pono#w2w2-3710">pono</a>.</p>
+<p>We will use the R programming language as our primary tool for doing statistics. We will focus our statistical learning on the concept of likelihood and the method of Maximum Likelihood Estimation. This is a powerful approach that unifies many seemingly disparate statistical methods from logistic regression to ANOVA to contingency analysis. Likelihood methods focus on building statistical models of how we hypothesize the world works and using data to test whether those models are supported. Unlike the toy examples and cookbook style methods we often encounter in introductory statistics courses, likelihood methods will be your friend for a wide range of challenges from the simple to the complex. We will not abandon methods you may have encountered in past classes like least squares regression or t-tests, but rather show how those emerge as special cases of the more general underlying likelihood framework.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
