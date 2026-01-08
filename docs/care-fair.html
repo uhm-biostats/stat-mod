@@ -310,8 +310,13 @@ div.csl-indent {
   <li><a href="#responsibility" id="toc-responsibility" class="nav-link" data-scroll-target="#responsibility"><span class="header-section-number">2.2.3</span> Responsibility</a></li>
   <li><a href="#ethics" id="toc-ethics" class="nav-link" data-scroll-target="#ethics"><span class="header-section-number">2.2.4</span> Ethics</a></li>
   </ul></li>
-  <li><a href="#care-and-fair" id="toc-care-and-fair" class="nav-link" data-scroll-target="#care-and-fair"><span class="header-section-number">2.3</span> CARE and FAIR</a></li>
-  <li><a href="#implementing-care-with-local-contexts-labels-and-notices" id="toc-implementing-care-with-local-contexts-labels-and-notices" class="nav-link" data-scroll-target="#implementing-care-with-local-contexts-labels-and-notices"><span class="header-section-number">2.4</span> Implementing CARE with Local Contexts Labels and Notices</a></li>
+  <li><a href="#care-and-fair-together" id="toc-care-and-fair-together" class="nav-link" data-scroll-target="#care-and-fair-together"><span class="header-section-number">2.3</span> CARE and FAIR together</a></li>
+  <li><a href="#implementing-care-with-local-contexts-labels-and-notices" id="toc-implementing-care-with-local-contexts-labels-and-notices" class="nav-link" data-scroll-target="#implementing-care-with-local-contexts-labels-and-notices"><span class="header-section-number">2.4</span> Implementing CARE with Local Contexts Labels and Notices</a>
+  <ul class="collapse">
+  <li><a href="#a-researcher-applies-notices-and-notifies-communities" id="toc-a-researcher-applies-notices-and-notifies-communities" class="nav-link" data-scroll-target="#a-researcher-applies-notices-and-notifies-communities"><span class="header-section-number">2.4.1</span> A researcher applies Notices and notifies communities</a></li>
+  <li><a href="#a-community-applies-labels" id="toc-a-community-applies-labels" class="nav-link" data-scroll-target="#a-community-applies-labels"><span class="header-section-number">2.4.2</span> A community applies Labels</a></li>
+  <li><a href="#whats-next" id="toc-whats-next" class="nav-link" data-scroll-target="#whats-next"><span class="header-section-number">2.4.3</span> What’s next?</a></li>
+  </ul></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">2.5</span> References</a></li>
   </ul>
 </nav>
@@ -338,17 +343,23 @@ div.csl-indent {
 </header>
 
 
-<p>CARE and FAIR are principles that specify different but, at times, complimentary ethical considerations for the collection, management, use, and governance of data <span class="citation" data-cites="carroll2021operationalizing">(<a href="#ref-carroll2021operationalizing" role="doc-biblioref">Carroll <em>et al.</em> 2021</a>)</span>. The concepts underlying CARE articulate ideas of Indigenous data sovereignty and governance that have deep historical roots <span class="citation" data-cites="undrip kukutai2016 carroll2020care carroll2021operationalizing">(<a href="#ref-carroll2020care" role="doc-biblioref">Carroll <em>et al.</em> 2020</a>; <a href="#ref-carroll2021operationalizing" role="doc-biblioref">Carroll <em>et al.</em> 2021</a>; <a href="#ref-kukutai2016" role="doc-biblioref">Kukutai &amp; Taylor 2016</a>; <a href="#ref-undrip" role="doc-biblioref">UN General Assembly 2007</a>)</span>. The concepts in FAIR relate to the more recent idea of open and reproducible science. We will discuss FAIR first, though it is not the chronologically earlier concept nor more important, because the current articulation of CARE contends with the fact that FAIR is the emerging default for data <span class="citation" data-cites="carroll2021operationalizing">(<a href="#ref-carroll2021operationalizing" role="doc-biblioref">Carroll <em>et al.</em> 2021</a>)</span>.</p>
+<p>CARE and FAIR are principles that specify different but complimentary ethical considerations for the collection, management, use, and governance of data <span class="citation" data-cites="carroll2021operationalizing">(<a href="#ref-carroll2021operationalizing" role="doc-biblioref">Carroll et al. 2021</a>)</span>. The concepts underlying CARE articulate ideas of Indigenous data sovereignty and governance that have deep historical roots <span class="citation" data-cites="undrip kukutai2016 carroll2020care carroll2021operationalizing">(<a href="#ref-undrip" role="doc-biblioref">UN General Assembly 2007</a>; <a href="#ref-kukutai2016" role="doc-biblioref">Kukutai &amp; Taylor 2016</a>; <a href="#ref-carroll2020care" role="doc-biblioref">Carroll et al. 2020</a>; <a href="#ref-carroll2021operationalizing" role="doc-biblioref">Carroll et al. 2021</a>)</span>. The concepts in FAIR relate to the more recent idea of open and reproducible science. We will discuss FAIR first, though it is not the chronologically earlier concept nor more important, because the current articulation of CARE contends with the fact that FAIR is the emerging default for data <span class="citation" data-cites="carroll2021operationalizing">(<a href="#ref-carroll2021operationalizing" role="doc-biblioref">Carroll et al. 2021</a>)</span>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://images.squarespace-cdn.com/content/v1/5d3799de845604000199cd24/1567592451970-2R8XFL670QNMAGDRV7ED/Be+FAIR+and+CARE.png?format=2500w" class="img-fluid figure-img"></p>
+<figcaption>image credit: <span class="citation" data-cites="care">GIDA (<a href="#ref-care" role="doc-biblioref">2019</a>)</span></figcaption>
+</figure>
+</div>
 <section id="fair" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="fair"><span class="header-section-number">2.1</span> FAIR</h2>
-<p><a href="https://www.go-fair.org/fair-principles/" target="_blank">FAIR</a> <span class="citation" data-cites="fair">(<a href="#ref-fair" role="doc-biblioref">Wilkinson <em>et al.</em> 2016</a>)</span> stands for <strong>F</strong>indable, <strong>A</strong>ccessible, <strong>I</strong>nterpretable, and <strong>R</strong>eusable. We’ll go through what each of those mean in practice and then briefly discuss the underlying ethics.</p>
+<p><a href="https://www.go-fair.org/fair-principles/" target="_blank">FAIR</a> <span class="citation" data-cites="fair">(<a href="#ref-fair" role="doc-biblioref">Wilkinson et al. 2016</a>)</span> stands for <strong>F</strong>indable, <strong>A</strong>ccessible, <strong>I</strong>nterpretable, and <strong>R</strong>eusable. We’ll go through what each of those mean in practice and then briefly discuss the underlying ethics.</p>
 <section id="findable" class="level3" data-number="2.1.1">
 <h3 data-number="2.1.1" class="anchored" data-anchor-id="findable"><span class="header-section-number">2.1.1</span> Findable</h3>
 <p>This means data and metadata should be easy to find by both humans and computers. Data should have persistent identifiers such as a digital object identifier (DOI) and have sufficient structured information such that it is searchable. As an example, the Global Biodiversity Information Facility (GBIF) houses species occurrence data (think museum and herbarium specimens) and assigns DOIs to every submitted data set and every user download. That downloads have a DOI means that research using those downloaded data can reference the DOI, making the exact data underpinning the research finable. GBIF also enables searching for data by different criteria including taxonomy and geographic location.</p>
 </section>
 <section id="accessible" class="level3" data-number="2.1.2">
 <h3 data-number="2.1.2" class="anchored" data-anchor-id="accessible"><span class="header-section-number">2.1.2</span> Accessible</h3>
-<p>This means that once found, data and metadata should be retrievable by both humans and computers. The method for downloading or requesting access to the (meta)data should be clear and not require specialized or proprietary tools but rather standardized, open (as in open source) protocols. For example. GBIF allows humans to select data for download through a web interface and complete the download through standard HTTP protocols. GBIF also serves an application programming interface (API) which allows data to be downloaded through automated computer workflows. Other examples of repositories with accessible data are Dryad Digital Repository and Zenodo, two resources we retrieved data from for this class.</p>
+<p>This means that once found, data and metadata should be retrievable by both humans and computers. Importantly, accessible in this context means metadata are always accessible, even if raw data cannot be accessed (e.g.&nbsp;for ethical reasons). The method for downloading or requesting access to (meta)data should be clear and not require specialized or proprietary tools but rather standardized, open (as in open source) protocols. For example. GBIF allows humans to select data for download through a web interface and complete the download through standard HTTP protocols. GBIF also serves an application programming interface (API) which allows data to be downloaded through automated computer workflows. Other examples of repositories with accessible data are Dryad Digital Repository and Zenodo, two resources we retrieved data from for this class.</p>
 </section>
 <section id="interoperable" class="level3" data-number="2.1.3">
 <h3 data-number="2.1.3" class="anchored" data-anchor-id="interoperable"><span class="header-section-number">2.1.3</span> Interoperable</h3>
@@ -360,14 +371,24 @@ div.csl-indent {
 </section>
 <section id="ethics-of-fair" class="level3" data-number="2.1.5">
 <h3 data-number="2.1.5" class="anchored" data-anchor-id="ethics-of-fair"><span class="header-section-number">2.1.5</span> Ethics of FAIR</h3>
-<p>Global and local disparities in science funding access <span class="citation" data-cites="ma2015 petersen2021 chen2022 nguyen2023 larregue2024">(<a href="#ref-chen2022" role="doc-biblioref">Chen <em>et al.</em> 2022</a>; <a href="#ref-larregue2024" role="doc-biblioref">Larregue &amp; Nielsen 2024</a>; <a href="#ref-ma2015" role="doc-biblioref">Ma <em>et al.</em> 2015</a>; <a href="#ref-nguyen2023" role="doc-biblioref">Nguyen <em>et al.</em> 2023</a>; <a href="#ref-petersen2021" role="doc-biblioref">Petersen 2021</a>)</span> means that a small proportion of researchers have dominated the means of producing data. If data were not FAIR, researchers without access to the same funding would be further disadvantaged and their contributions to science would be further lost. FAIR also came to the scientific forefront in response to the replication crisis <span class="citation" data-cites="nosek2015 fair">(<a href="#ref-nosek2015" role="doc-biblioref">Nosek <em>et al.</em> 2015</a>; <a href="#ref-fair" role="doc-biblioref">Wilkinson <em>et al.</em> 2016</a>)</span>. It is hoped that making data open and reusable will make science more transparent and reproducible <span class="citation" data-cites="parker2016 filazzola2021">(<a href="#ref-filazzola2021" role="doc-biblioref">Filazzola &amp; Cahill Jr 2021</a>; <a href="#ref-parker2016" role="doc-biblioref">Parker <em>et al.</em> 2016</a>)</span>. Greater transiency and reproducibility should make science less prone to the analytical errors and biases that led to the replication crisis, as well as make the scientific record quicker and easier to correct when errors do occur. Most scientific data is also publicly funded and therefore there are ethical considerations for making data broadly accessible by everyone, public included, and reusable to ensure the highest scientific return on the investment from the public <span class="citation" data-cites="stebbins2013 maglia2015nsf">(<a href="#ref-maglia2015nsf" role="doc-biblioref">Maglia 2015</a>; <a href="#ref-stebbins2013" role="doc-biblioref">Stebbins 2013</a>)</span>.</p>
+<p>Global and local disparities in science funding access <span class="citation" data-cites="ma2015 petersen2021 chen2022 nguyen2023 larregue2024">(<a href="#ref-ma2015" role="doc-biblioref">Ma et al. 2015</a>; <a href="#ref-petersen2021" role="doc-biblioref">Petersen 2021</a>; <a href="#ref-chen2022" role="doc-biblioref">Chen et al. 2022</a>; <a href="#ref-nguyen2023" role="doc-biblioref">Nguyen et al. 2023</a>; <a href="#ref-larregue2024" role="doc-biblioref">Larregue &amp; Nielsen 2024</a>)</span> means that a small proportion of researchers have dominated the means of producing data. If data were not FAIR, researchers without access to the same funding would be further disadvantaged and their contributions to science would be further lost. FAIR also came to the scientific forefront in response to the replication crisis <span class="citation" data-cites="nosek2015 fair">(<a href="#ref-nosek2015" role="doc-biblioref">Nosek et al. 2015</a>; <a href="#ref-fair" role="doc-biblioref">Wilkinson et al. 2016</a>)</span>. It is hoped that making data open and reusable will make science more transparent and reproducible <span class="citation" data-cites="parker2016 filazzola2021">(<a href="#ref-parker2016" role="doc-biblioref">Parker et al. 2016</a>; <a href="#ref-filazzola2021" role="doc-biblioref">Filazzola &amp; Cahill Jr 2021</a>)</span>. Greater transiency and reproducibility should make science less prone to the analytical errors and biases that led to the replication crisis, as well as make the scientific record quicker and easier to correct when errors do occur. Most scientific data is also publicly funded and therefore there are ethical considerations for making data broadly accessible by everyone, public included, and reusable to ensure the highest scientific return on the investment from the public <span class="citation" data-cites="stebbins2013 maglia2015nsf">(<a href="#ref-stebbins2013" role="doc-biblioref">Stebbins 2013</a>; <a href="#ref-maglia2015nsf" role="doc-biblioref">Maglia 2015</a>)</span>.</p>
 </section>
 </section>
 <section id="care" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="care"><span class="header-section-number">2.2</span> CARE</h2>
-<p>These ethics underlying FAIR, especially around countering disparities, also relate to the CARE principles <span class="citation" data-cites="carroll2021operationalizing">(<a href="#ref-carroll2021operationalizing" role="doc-biblioref">Carroll <em>et al.</em> 2021</a>)</span>. But while these ethics are implied in FAIR, CARE intentionally addresses them head-on in the context of Indigenous peoples’ rights <span class="citation" data-cites="undrip">(<a href="#ref-undrip" role="doc-biblioref">UN General Assembly 2007</a>)</span> and countering colonialism. CARE is an articulation of Indigenous data sovereignty (IDSov) and Indigenous data governance (IDGov).</p>
-<p>IDSov and IDGov apply to Indigenous data. Indigenous data are any form of data (including traditional knowledge and more) in any format that originate from or impact Indigenous peoples, people, communities, nations, territories (including traditional territories now occupied by settlers), and all their constituent pieces from natural resources to human bodies to languages <span class="citation" data-cites="carroll2021operationalizing">(<a href="#ref-carroll2021operationalizing" role="doc-biblioref">Carroll <em>et al.</em> 2021</a>)</span>. Where data “originate from” is a way of saying what is the provenance of the data. We saw provenance when discussing the necessity of clearly describing data under FAIR. From a colonial perspective the provenance of data sits with the researcher extracting data. But a de-colonial perspective reveals that the provenance sits with the original knowledge holders and/or stewards of the sources of knowledge. The provenance of an academic recording of ʻōlelo Hawaiʻi spoken by a mānaleo is not with the academic but with the speaker and more broadly with Kānaka ʻŌiwi. The provenance of an entomological collection from the Waiʻanae Mountains is not with the collector (whose name is likely attached to each specimen) but with the ʻāina, the lāhui Hawaiʻi, and Kānaka ʻŌiwi. The distinction about provenance is important because, under western intellectual property systems, provenance and ownership are assumed to be equivalent. Who “owns” the data governs the data.</p>
-<p>We will start to build understanding of IDSov and IDGov by defining CARE. CARE stands for <strong>C</strong>ollective benefit, <strong>A</strong>uthority to control, <strong>R</strong>esponsibility, and <strong>E</strong>thics. We will dive deeper into each.</p>
+<p>While ethics are implied in FAIR, CARE intentionally addresses them head-on in the context of Indigenous peoples’ rights <span class="citation" data-cites="carroll2020care carroll2021operationalizing undrip">(<a href="#ref-undrip" role="doc-biblioref">UN General Assembly 2007</a>; <a href="#ref-carroll2020care" role="doc-biblioref">Carroll et al. 2020</a>; <a href="#ref-carroll2021operationalizing" role="doc-biblioref">Carroll et al. 2021</a>)</span>. CARE is an articulation of Indigenous data sovereignty (IDSov) and Indigenous data governance (IDGov). IDSov and IDGov apply to Indigenous data. Indigenous data are any form of data (including traditional knowledge, language, physical materials, digital records, and more) in any format that originate from or impact Indigenous peoples, people, communities, nations, territories (including traditional territories now occupied by settlers), and all their constituent pieces from natural “resources” to human bodies to cultural expression <span class="citation" data-cites="carroll2021operationalizing">(<a href="#ref-carroll2021operationalizing" role="doc-biblioref">Carroll et al. 2021</a>)</span>.</p>
+<p>Where data “originate from” is a way of saying what is the provenance of the data. We saw provenance when discussing the necessity of clearly describing data under FAIR. From a colonial perspective the provenance of data sits with the researcher extracting data. But a de-colonial perspective reveals that the provenance sits with the original knowledge holders and/or stewards of the sources (e.g.&nbsp;lands and waters) of knowledge. The provenance of an academic recording of ʻōlelo Hawaiʻi spoken by a mānaleo does not sit with the academic but with the speaker and more broadly with Kānaka ʻŌiwi. The provenance of an entomological collection from the Waiʻanae Mountains on Oʻahu does not sit with the collector (whose name is likely attached to each specimen) but with the ʻāina, the lāhui Hawaiʻi, and Kānaka ʻŌiwi. The distinction about provenance is important because, under western intellectual property systems, provenance and ownership are assumed to be equivalent. Who “owns” the data governs the data. IDSov and IDGov work to recenter Indigenous worldviews, rights, self-determination, and wellbeing in data stewardship, rather than western notions of property.</p>
+<p>We will start to build understanding of IDSov and IDGov by defining CARE. <a href="https://static1.squarespace.com/static/5d3799de845604000199cd24/t/6397b363b502ff481fce6baf/1670886246948/CARE%2BPrinciples_One%2BPagers%2BFINAL_Oct_17_2019.pdf">CARE</a> <span class="citation" data-cites="care carroll2020care">(<a href="#ref-care" role="doc-biblioref">GIDA 2019</a>; <a href="#ref-carroll2020care" role="doc-biblioref">Carroll et al. 2020</a>)</span> stands for <strong>C</strong>ollective benefit, <strong>A</strong>uthority to control, <strong>R</strong>esponsibility, and <strong>E</strong>thics. We will dive deeper into each.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="care-fair_files/figure-html/care-img-1.png" class="img-fluid figure-img" width="645"></p>
+<figcaption>image credit: <span class="citation" data-cites="carroll2020care">Carroll et al. (<a href="#ref-carroll2020care" role="doc-biblioref">2020</a>)</span></figcaption>
+</figure>
+</div>
+</div>
+</div>
 <section id="collective-benefit" class="level3" data-number="2.2.1">
 <h3 data-number="2.2.1" class="anchored" data-anchor-id="collective-benefit"><span class="header-section-number">2.2.1</span> Collective benefit</h3>
 <p>Data inherently hold potential for innovation, value generation, and decision making. People, communities, and nations can <em>benefit</em> from data. The collective benefit principle stipulates that benefits should be shared collectively and specifically that data stewardship practices must enable Indigenous peoples and people to derive benefit from Indigenous data. Benefit is sometimes—in western worldviews—reflexively equated with monetary value, but benefit takes many forms including the benefit of using data to inform governance and decision making, and generally to promote wellbeing.</p>
@@ -382,14 +403,83 @@ div.csl-indent {
 </section>
 <section id="ethics" class="level3" data-number="2.2.4">
 <h3 data-number="2.2.4" class="anchored" data-anchor-id="ethics"><span class="header-section-number">2.2.4</span> Ethics</h3>
-<p>Ethics means centering the rights, wellbeing, and ethical frameworks of Indigenous Peoples in the stewardship of Indigenous data. To do so requires embracing the challenges of grappling with the ways colonialism has created power imbalances, scarcities (real and constructed), and trauma. This work is not trivial, which also means ethics include ensuring the longevity of data and its potential to produce benefits into the future. Indicating Indigenous provenance is part of the ethics of ensuring future use.</p>
+<p>Ethics means centering the rights, wellbeing, and ethical frameworks of Indigenous Peoples in the stewardship of Indigenous data. To do so requires grappling with the ways colonialism and colonists create power imbalances, scarcities (real and constructed), and trauma. This work is not trivial, which also means ethics include honoring that work by ensuring the longevity of data and its potential to produce benefits into the future. Indicating Indigenous provenance is part of ensuring future ethical use.</p>
 </section>
 </section>
-<section id="care-and-fair" class="level2" data-number="2.3">
-<h2 data-number="2.3" class="anchored" data-anchor-id="care-and-fair"><span class="header-section-number">2.3</span> CARE and FAIR</h2>
+<section id="care-and-fair-together" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="care-and-fair-together"><span class="header-section-number">2.3</span> CARE and FAIR together</h2>
+<p>Stephanie Carroll and colleagues <span class="citation" data-cites="carroll2021operationalizing">(<a href="#ref-carroll2021operationalizing" role="doc-biblioref">2021</a>)</span>, leaders in IDSov and IDGov, point out that FAIR principles can support operationalizing CARE and vice versa. Indigenous data are all too often rendered hidden, inaccessible, not reusable, and not interoperable by colonial power imbalances and institutions <span class="citation" data-cites="carroll2021operationalizing">(<a href="#ref-carroll2021operationalizing" role="doc-biblioref">Carroll et al. 2021</a>)</span>. Making such data FAIR is necessary in these cases to begin the process of implementing CARE. From personal experience (Andy speaking here) CARE can be perceived by some researchers in colonial institutions to curtail the implementation of FAIR, but this is misguided. As pointed out in the <a href="https://static1.squarespace.com/static/5d3799de845604000199cd24/t/6397b363b502ff481fce6baf/1670886246948/CARE%2BPrinciples_One%2BPagers%2BFINAL_Oct_17_2019.pdf">articulation of CARE</a> <span class="citation" data-cites="care">(<a href="#ref-care" role="doc-biblioref">GIDA 2019</a>)</span>, Indigenous data cannot be used in good conscience without “relationships built on respect, reciprocity, trust, and mutual understanding, as defined by the Indigenous Peoples to whom those data relate” (quoting from <span class="citation" data-cites="care">GIDA (<a href="#ref-care" role="doc-biblioref">2019</a>)</span>). Thus without CARE, the <strong>R</strong> (reusable) in FAIR is invalid. Operationalizing CARE results in richer, more complete metadata, and complete metadata underpin all aspects of FAIR.</p>
+<p>Perceived conflicts between FAIR and CARE might be resolved by asking “FAIR for whom?” and “who gets to decide?” Who gets to decide which protocols are implemented to access and reuse data? Who can find the data (i.e.&nbsp;findable for whom)? Who decided what metadata to expose to make data findable by which search terms? With whose worldview do those search terms align? Contemplating these questions might result in the conclusion that individuals or institutions that are asked to share power—power that previously was not shared—may perceive CARE to limit FAIR. But CARE does not limit FAIR. Rather, colonial power imbalances made data only FAIR for some, which is not actually fulfilling FAIR at all.</p>
+<!-- #### -->
 </section>
 <section id="implementing-care-with-local-contexts-labels-and-notices" class="level2" data-number="2.4">
 <h2 data-number="2.4" class="anchored" data-anchor-id="implementing-care-with-local-contexts-labels-and-notices"><span class="header-section-number">2.4</span> Implementing CARE with Local Contexts Labels and Notices</h2>
+<p>Metadata result from operationalizing CARE. Having metadata standards is one important aspect of FAIR. Local Contexts offers one emerging implementation of standard CARE metadata via their Labels and Notices <span class="citation" data-cites="lclab lcnot">(<a href="#ref-lclab" role="doc-biblioref">Local Contexts 2025a</a>, <a href="#ref-lcnot" role="doc-biblioref">2025b</a>)</span>. Labels are used by Indigenous communities and nations to articulate their rights to and interests in Indigenous data. Notices are used by researchers and colonial institutions to affirm the existence of Indigenous rights and interests and acknowledge that work is underway to articulate those rights and interests. Notices also indicate the readiness of researchers and colonial institutions to fulfill their responsibilities (the <strong>R</strong> in CARE) of centering Indigenous worldviews, self-determination, wellbeing, and rights in data stewardship.</p>
+<p>For metadata to be useful they need to be FAIR. To make Local Contexts Labels and Notices FAIR they are hosted on the <a href="https://localcontextshub.org/">Local Contexts Hub</a>, an online repository. To work with these metadata, communities, researchers, and colonial institutions must first make an account on the Hub (free for communities and researchers, paid on a subscription basis for institutions). Local Contexts Hub is structured by projects. Labels and Notices are applied to data by connecting both to a project. Projects have permanent unique identifiers and persistent URLs based on those identifiers, replicating the permanence of DOIs.</p>
+<p>To understand this better we will walk through the a Local Contexts workflow from the perspective of a researcher initiated the process, because “researcher” is likely the common aspect of identity shared by those participating in this course.</p>
+<section id="a-researcher-applies-notices-and-notifies-communities" class="level3" data-number="2.4.1">
+<h3 data-number="2.4.1" class="anchored" data-anchor-id="a-researcher-applies-notices-and-notifies-communities"><span class="header-section-number">2.4.1</span> A researcher applies Notices and notifies communities</h3>
+<p>The Local Contexts Hub workflow for a researcher should ideally begin with co-production of research goals and data management with local communities in real life outside of the Hub. For archival data already collected (the majority of data) this likely did not occur. Within the Hub a researcher creates a project to correspond to Indigenous data they are working with. The Hub does not house the data itself, only the metadata. Then Notices are applied to the project and communities are notified via the Hub. Again, ideally, researchers and communities will already be working together because even the act of defining what data are and the geographic or other bounds that delineate one data set (and thus one Hub project) from another can be surprisingly different across different ways of knowing. But projects can still be created and Notices applied in situations where co-production has not occurred (don’t let perfect be the enemy of good).</p>
+<p>Notices, again, affirm the existence of Indigenous rights to and interests in specific data. A notice is three things: 1) a visual badge drawing the focus of a person engaging with Indigenous data; 2) human-readable text explaining the significance of the Notice; and 3) a machine-readable string that can be integrated into data processing and management workflows. There are multiple Notices each with unique purpose. We will focus on four that individual researchers are most likely to use.</p>
+<section id="open-to-collaborate" class="level4" data-number="2.4.1.1">
+<h4 data-number="2.4.1.1" class="anchored" data-anchor-id="open-to-collaborate"><span class="header-section-number">2.4.1.1</span> Open to Collaborate</h4>
+<div class="columns">
+<div class="column" style="width:30%;">
+<p><img src="img/care/otc-label.png" class="img-fluid"></p>
+</div><div class="column" style="width:70%;">
+<p>The Open to Collaborate Notice is an <em>Engagement Notice</em> that can be used to indicate a researcher’s or institution’s commitment to CARE principles and working collaboratively on issues of IDSov and IDGov. Engagement Notices are not applied to data, but rather are appropriate to display on, for example, research or institution websites. See full information <a href="https://localcontexts.org/notice/open-to-collaborate/">here</a>.</p>
+</div>
+</div>
+</section>
+<section id="attribution-incomplete" class="level4" data-number="2.4.1.2">
+<h4 data-number="2.4.1.2" class="anchored" data-anchor-id="attribution-incomplete"><span class="header-section-number">2.4.1.2</span> Attribution Incomplete</h4>
+<div class="columns">
+<div class="column" style="width:30%;">
+<p><img src="img/care/attr-label.png" class="img-fluid"></p>
+</div><div class="column" style="width:70%;">
+<p>The Attribution Incomplete Notice is applied to data to indicate that attribution (including provenance and contributors) is incomplete, inaccurate, or missing. This notice indicates a work in progress toward correcting the mistake of incomplete attribution. See full information <a href="https://localcontexts.org/notice/attribution-incomplete/">here</a>.</p>
+</div>
+</div>
+</section>
+<section id="traditional-knowledge" class="level4" data-number="2.4.1.3">
+<h4 data-number="2.4.1.3" class="anchored" data-anchor-id="traditional-knowledge"><span class="header-section-number">2.4.1.3</span> Traditional Knowledge</h4>
+<div class="columns">
+<div class="column" style="width:30%;">
+<p><img src="img/care/tk-label.png" class="img-fluid"></p>
+</div><div class="column" style="width:70%;">
+<p>The TK Notice indicates that data representing Traditional Knowledge and related terms/concepts (Traditional Ecological Knowledge, Indigenous Knowledge, Indigenous Science) carry Indigenous rights, protocols, and responsibilities. See full information <a href="https://localcontexts.org/notice/tk-notice/">here</a>.</p>
+</div>
+</div>
+</section>
+<section id="biocultural" class="level4" data-number="2.4.1.4">
+<h4 data-number="2.4.1.4" class="anchored" data-anchor-id="biocultural"><span class="header-section-number">2.4.1.4</span> Biocultural</h4>
+<div class="columns">
+<div class="column" style="width:30%;">
+<p><img src="img/care/bc-label.png" class="img-fluid"></p>
+</div><div class="column" style="width:70%;">
+<p>The BC Notice affirms the rights of Indigenous peoples to govern the stewardship of data generated from biological sources within their traditional lands, waters, and territories. See full information <a href="https://localcontexts.org/notice/bc-notice/">here</a>.</p>
+</div>
+</div>
+<p>Notices are not meant to be the permanent metadata associated with Indigenous data because the Notices do not themselves articulate the rights and protocols of Indigenous peoples. That is the job for Labels.</p>
+</section>
+</section>
+<section id="a-community-applies-labels" class="level3" data-number="2.4.2">
+<h3 data-number="2.4.2" class="anchored" data-anchor-id="a-community-applies-labels"><span class="header-section-number">2.4.2</span> A community applies Labels</h3>
+<p>To re-iterate, this workflow is from a researcher’s perspective. Indigenous communities can also create projects connected to data without need for researchers external to their communities creating the project and applying Notices. We are using the researcher-initiated example here because we are all researchers, but not all of us may be Indigenous or authorized to speak for Indigenous communities.</p>
+<p>In the researcher-initiated workflow, once a Notice(s) is applied to data via a project, an Indigenous community can then replace Notices with Labels. Unlike Notices, Labels <em>do</em> articulate the rights and protocols of Indigenous peoples. There are many different kinds of Labels</p>
+<ul>
+<li>not for researchers to apply</li>
+<li>here are some categories</li>
+<li>though not for researchers to apply, should all understand and be ready to act</li>
+</ul>
+</section>
+<section id="whats-next" class="level3" data-number="2.4.3">
+<h3 data-number="2.4.3" class="anchored" data-anchor-id="whats-next"><span class="header-section-number">2.4.3</span> What’s next?</h3>
+<ul>
+<li>projects integrated with database holding data and journals</li>
+<li>users develop culture of respect and understanding of CARE metadata</li>
+</ul>
+</section>
 </section>
 <section id="references" class="level2" data-number="2.5">
 <h2 data-number="2.5" class="anchored" data-anchor-id="references"><span class="header-section-number">2.5</span> References</h2>
@@ -397,49 +487,58 @@ div.csl-indent {
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
 <div id="ref-carroll2020care" class="csl-entry" role="listitem">
-Carroll, S., Garba, I., Figueroa-Rodrı́guez, O., Holbrook, J., Lovett, R., Materechera, S., <em>et al.</em> (2020). The CARE principles for indigenous data governance. <em>Data science journal</em>, 19.
+Carroll S et al. 2020. The CARE principles for indigenous data governance. Data science journal <strong>19</strong>. Ubiquity Press.
 </div>
 <div id="ref-carroll2021operationalizing" class="csl-entry" role="listitem">
-Carroll, S.R., Herczog, E., Hudson, M., Russell, K. &amp; Stall, S. (2021). Operationalizing the CARE and FAIR principles for indigenous data futures. <em>Scientific data</em>, 8, 108.
+Carroll SR, Herczog E, Hudson M, Russell K, Stall S. 2021. Operationalizing the CARE and FAIR principles for indigenous data futures. Scientific data <strong>8</strong>:108. Nature Publishing Group UK London.
 </div>
 <div id="ref-chen2022" class="csl-entry" role="listitem">
-Chen, C.Y., Kahanamoku, S.S., Tripati, A., Alegado, R.A., Morris, V.R., Andrade, K., <em>et al.</em> (2022). Systemic racial disparities in funding rates at the national science foundation. <em>Elife</em>, 11, e83071.
+Chen CY, Kahanamoku SS, Tripati A, Alegado RA, Morris VR, Andrade K, Hosbey J. 2022. Systemic racial disparities in funding rates at the national science foundation. Elife <strong>11</strong>:e83071. eLife Sciences Publications, Ltd.
 </div>
 <div id="ref-filazzola2021" class="csl-entry" role="listitem">
-Filazzola, A. &amp; Cahill Jr, J.F. (2021). Replication in field ecology: Identifying challenges and proposing solutions. <em>Methods in Ecology and Evolution</em>, 12, 1780–1792.
+Filazzola A, Cahill Jr JF. 2021. Replication in field ecology: Identifying challenges and proposing solutions. Methods in Ecology and Evolution <strong>12</strong>:1780–1792. Wiley Online Library.
+</div>
+<div id="ref-care" class="csl-entry" role="listitem">
+GIDA. 2019. <span class="nocase">Research Data Alliance International Indigenous Data Sovereignty Interest Group. CARE Principles for Indigenous Data Governance</span>. https://www.gida-global.org/care.
 </div>
 <div id="ref-kukutai2016" class="csl-entry" role="listitem">
-Kukutai, T. &amp; Taylor, J. (2016). <em>Indigenous data sovereignty: Toward an agenda</em>. ANU press.
+Kukutai T, Taylor J. 2016. Indigenous data sovereignty: Toward an agenda. ANU press.
 </div>
 <div id="ref-larregue2024" class="csl-entry" role="listitem">
-Larregue, J. &amp; Nielsen, M.W. (2024). Knowledge hierarchies and gender disparities in social science funding. <em>Sociology</em>, 58, 45–65.
+Larregue J, Nielsen MW. 2024. Knowledge hierarchies and gender disparities in social science funding. Sociology <strong>58</strong>:45–65. SAGE Publications Sage UK: London, England.
+</div>
+<div id="ref-lclab" class="csl-entry" role="listitem">
+Local Contexts. 2025a. Local contexts labels. https://localcontexts.org/labels/about-the-labels/.
+</div>
+<div id="ref-lcnot" class="csl-entry" role="listitem">
+Local Contexts. 2025b. Local contexts notices. https://localcontexts.org/notices/about-the-notices/.
 </div>
 <div id="ref-ma2015" class="csl-entry" role="listitem">
-Ma, A., Mondragón, R.J. &amp; Latora, V. (2015). Anatomy of funded research in science. <em>Proceedings of the National Academy of Sciences</em>, 112, 14760–14765.
+Ma A, Mondragón RJ, Latora V. 2015. Anatomy of funded research in science. Proceedings of the National Academy of Sciences <strong>112</strong>:14760–14765. National Academy of Sciences.
 </div>
 <div id="ref-maglia2015nsf" class="csl-entry" role="listitem">
-Maglia, A. (2015). NSF data management and public access initiatives.
+Maglia A. 2015. NSF data management and public access initiatives.
 </div>
 <div id="ref-nguyen2023" class="csl-entry" role="listitem">
-Nguyen, M., Gonzalez, L., Chaudhry, S.I., Ahuja, N., Pomahac, B., Newman, A., <em>et al.</em> (2023). Gender disparity in national institutes of health funding among surgeon-scientists from 1995 to 2020. <em>JAMA network open</em>, 6, e233630–e233630.
+Nguyen M, Gonzalez L, Chaudhry SI, Ahuja N, Pomahac B, Newman A, Cannon A, Zarebski SA, Dardik A, Boatright D. 2023. Gender disparity in national institutes of health funding among surgeon-scientists from 1995 to 2020. JAMA network open <strong>6</strong>:e233630–e233630. American Medical Association.
 </div>
 <div id="ref-nosek2015" class="csl-entry" role="listitem">
-Nosek, B.A., Alter, G., Banks, G.C., Borsboom, D., Bowman, S.D., Breckler, S.J., <em>et al.</em> (2015). Promoting an open research culture. <em>Science</em>, 348, 1422–1425.
+Nosek BA et al. 2015. Promoting an open research culture. Science <strong>348</strong>:1422–1425. American Association for the Advancement of Science.
 </div>
 <div id="ref-parker2016" class="csl-entry" role="listitem">
-Parker, T.H., Forstmeier, W., Koricheva, J., Fidler, F., Hadfield, J.D., Chee, Y.E., <em>et al.</em> (2016). Transparency in ecology and evolution: Real problems, real solutions. <em>Trends in Ecology &amp; Evolution</em>, 31, 711–719.
+Parker TH, Forstmeier W, Koricheva J, Fidler F, Hadfield JD, Chee YE, Kelly CD, Gurevitch J, Nakagawa S. 2016. Transparency in ecology and evolution: Real problems, real solutions. Trends in Ecology &amp; Evolution <strong>31</strong>:711–719. Elsevier.
 </div>
 <div id="ref-petersen2021" class="csl-entry" role="listitem">
-Petersen, O.H. (2021). Inequality of research funding between different countries and regions is a serious problem for global science. <em>Function</em>, 2, zqab060.
+Petersen OH. 2021. Inequality of research funding between different countries and regions is a serious problem for global science. Function <strong>2</strong>:zqab060. Oxford University Press.
 </div>
 <div id="ref-stebbins2013" class="csl-entry" role="listitem">
-Stebbins, M. (2013). Expanding public access to the results of federally funded research.
+Stebbins M. 2013. Expanding public access to the results of federally funded research.
 </div>
 <div id="ref-undrip" class="csl-entry" role="listitem">
-UN General Assembly. (2007). United nations declaration on the rights of indigenous peoples, 12, 1–18.
+UN General Assembly. 2007. United nations declaration on the rights of indigenous peoples <strong>12</strong>:1–18.
 </div>
 <div id="ref-fair" class="csl-entry" role="listitem">
-Wilkinson, M.D., Dumontier, M., Aalbersberg, Ij.J., Appleton, G., Axton, M., Baak, A., <em>et al.</em> (2016). The FAIR guiding principles for scientific data management and stewardship. <em>Scientific data</em>, 3, 1–9.
+Wilkinson MD et al. 2016. The FAIR guiding principles for scientific data management and stewardship. Scientific data <strong>3</strong>:1–9. Nature Publishing Group.
 </div>
 </div>
 </section>
