@@ -173,9 +173,10 @@ Notices are not meant to be the permanent metadata associated with Indigenous da
 
 To re-iterate, this workflow is from a researcher's perspective. Indigenous communities can also create projects connected to data without need for researchers external to their communities creating the project and applying Notices. We are using the researcher-initiated example here because we are all researchers, but not all of us may be Indigenous or authorized to speak for Indigenous communities. 
 
-In the researcher-initiated workflow, once a Notice(s) is applied to data via a project, an Indigenous community can then replace Notices with Labels. Unlike Notices, Labels *do* articulate the rights and protocols of Indigenous peoples. There are many different kinds of Labels
+In the researcher-initiated workflow, once Notices are applied to data via a project, an Indigenous community can then replace Notices with Labels. Unlike Notices, Labels *do* articulate the rights and protocols of Indigenous peoples. There are many different kinds of Labels, indeed there needs to be many to express rights and interests. Only communities can apply Labels, they are out of the purview of researchers and settler institutions. It should of course be noted that researchers can belong to the community from which the data they work with originate. Such scholars may have roles in both applying Notices and applying Labels if they are given that authority by their community. 
 
-- not for researchers to apply
+The Labels are organized into Traditional Knowledge (TK) and Bicultural (BC), and within each of those groups there are Provenance, Protocol, and Permission Labels. Here are example Labels from each category. Text is quoted directly from the hyperlinked sources because we (really Andy speaking here) do not have authority to change the language
+
 - here are some categories
 - though not for researchers to apply, should all understand and be ready to act
 
@@ -184,7 +185,13 @@ In the researcher-initiated workflow, once a Notice(s) is applied to data via a 
 - projects integrated with database holding data and journals
 - users develop culture of respect and understanding of CARE metadata
 
+## CARE and FAIR for this class
 
+we use data that we cannot change the metadata of
+
+we therefore only use the open to collab
+
+the data and meta data are FAIR
 
 ## References
 
