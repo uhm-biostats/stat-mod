@@ -1,15 +1,15 @@
 # Introductory material 
 
 
-Here we will introduce the data we will be working with throughout this course. In the context of data we will discusss ethical issues of Indigenous data sov and reproducible science. We will also review the necessary R and version control knowledge for succeeding in this course. Such knowledge will include data structures in R, data input and output, data manipulation, visualization, quarto dynamic documents, and using GitHub.
+Here we will introduce the data we will work with throughout this course. In the context of data we will discuss ethical issues of Indigenous data sovereignty and reproducible science. We will also review the necessary R and version control knowledge for succeeding in this course. Such knowledge will include data structures in R, data input and output, data manipulation, visualization, quarto dynamic documents, and using GitHub.
 
 Jump straight to:
 
 - Lecture: [Data we will work with](datasets-intro.qmd)
 - Lecture: [CARE and FAIR principles](care-fair.qmd)
-- [R refresher](r-refresh.qmd)
-- [Managing code with git and GitHub](github.qmd)
-- [Dynamic documents with quarto](dynamic-doc.qmd)
-- [Brining it all together](bring-it-together)
+- Lab and lecture: [R refresher](r-refresh.qmd)
+- Lab and lecture: [Managing code with git and GitHub](github.qmd)
+- Lab and lecture: [Dynamic documents with quarto](dynamic-doc.qmd)
+- Lab: [Brining it all together](bring-it-together)
 
 
