@@ -1,6 +1,9 @@
 # CARE and FAIR principles 
 
-CARE and FAIR are principles that specify different but, at times, complimentary ethical considerations for the collection, management, use, and governance of data [@carroll2021operationalizing]. The concepts underlying CARE articulate ideas of Indigenous data sovereignty and governance that have deep historical roots [@undrip; @kukutai2016; @carroll2020care; @carroll2021operationalizing]. The concepts in FAIR relate to the more recent idea of open and reproducible science. We will discuss FAIR first, though it is not the chronologically earlier concept nor more important, because the current articulation of CARE contends with the fact that FAIR is the emerging default for data [@carroll2021operationalizing]. 
+CARE and FAIR are principles that specify different but complimentary ethical considerations for the collection, management, use, and governance of data [@carroll2021operationalizing]. The concepts underlying CARE articulate ideas of Indigenous data sovereignty and governance that have deep historical roots [@undrip; @kukutai2016; @carroll2020care; @carroll2021operationalizing]. The concepts in FAIR relate to the more recent idea of open and reproducible science. We will discuss FAIR first, though it is not the chronologically earlier concept nor more important, because the current articulation of CARE contends with the fact that FAIR is the emerging default for data [@carroll2021operationalizing]. 
+
+![image credit: @care](https://images.squarespace-cdn.com/content/v1/5d3799de845604000199cd24/1567592451970-2R8XFL670QNMAGDRV7ED/Be+FAIR+and+CARE.png?format=2500w)
+
 
 
 ## FAIR
@@ -13,7 +16,7 @@ This means data and metadata should be easy to find by both humans and computers
 
 ### Accessible
 
-This means that once found, data and metadata should be retrievable by both humans and computers. The method for downloading or requesting access to the (meta)data should be clear and not require specialized or proprietary tools but rather standardized, open (as in open source) protocols. For example. GBIF allows humans to select data for download through a web interface and complete the download through standard HTTP protocols. GBIF also serves an application programming interface (API) which allows data to be downloaded through automated computer workflows. Other examples of repositories with accessible data are Dryad Digital Repository and Zenodo, two resources we retrieved data from for this class.
+This means that once found, data and metadata should be retrievable by both humans and computers. Importantly, accessible in this context means metadata are always accessible, even if raw data cannot be accessed (e.g. for ethical reasons). The method for downloading or requesting access to (meta)data should be clear and not require specialized or proprietary tools but rather standardized, open (as in open source) protocols. For example. GBIF allows humans to select data for download through a web interface and complete the download through standard HTTP protocols. GBIF also serves an application programming interface (API) which allows data to be downloaded through automated computer workflows. Other examples of repositories with accessible data are Dryad Digital Repository and Zenodo, two resources we retrieved data from for this class.
 
 ### Interoperable
 
@@ -30,11 +33,26 @@ Global and local disparities in science funding access [@ma2015; @petersen2021; 
 
 ## CARE
 
-These ethics underlying FAIR, especially around countering disparities, also relate to the CARE principles [@carroll2021operationalizing]. But while these ethics are implied in FAIR, CARE intentionally addresses them head-on in the context of Indigenous peoples' rights [@undrip] and countering colonialism. CARE is an articulation of Indigenous data sovereignty (IDSov) and Indigenous data governance (IDGov). 
+While ethics are implied in FAIR, CARE intentionally addresses them head-on in the context of Indigenous peoples' rights [@carroll2020care; @carroll2021operationalizing; @undrip]. CARE is an articulation of Indigenous data sovereignty (IDSov) and Indigenous data governance (IDGov). IDSov and IDGov apply to Indigenous data. Indigenous data are any form of data (including traditional knowledge, language, physical materials, digital records, and more) in any format that originate from or impact Indigenous peoples, people, communities, nations, territories (including traditional territories now occupied by settlers), and all their constituent pieces from natural "resources" to human bodies to cultural expression [@carroll2021operationalizing]. 
 
-IDSov and IDGov apply to Indigenous data. Indigenous data are any form of data (including traditional knowledge and more) in any format that originate from or impact Indigenous peoples, people, communities, nations, territories (including traditional territories now occupied by settlers), and all their constituent pieces from natural resources to human bodies to languages [@carroll2021operationalizing]. Where data "originate from" is a way of saying what is the provenance of the data. We saw provenance when discussing the necessity of clearly describing data under FAIR. From a colonial perspective the provenance of data sits with the researcher extracting data. But a de-colonial perspective reveals that the provenance sits with the original knowledge holders and/or stewards of the sources of knowledge. The provenance of an academic recording of ʻōlelo Hawaiʻi spoken by a mānaleo is not with the academic but with the speaker and more broadly with Kānaka ʻŌiwi. The provenance of an entomological collection from the Waiʻanae Mountains is not with the collector (whose name is likely attached to each specimen) but with the ʻāina, the lāhui Hawaiʻi, and Kānaka ʻŌiwi. The distinction about provenance is important because, under western intellectual property systems, provenance and ownership are assumed to be equivalent. Who "owns" the data governs the data.
+Where data "originate from" is a way of saying what is the provenance of the data. We saw provenance when discussing the necessity of clearly describing data under FAIR. From a colonial perspective the provenance of data sits with the researcher extracting data. But a de-colonial perspective reveals that the provenance sits with the original knowledge holders and/or stewards of the sources (e.g. lands and waters) of knowledge. The provenance of an academic recording of ʻōlelo Hawaiʻi spoken by a mānaleo does not sit with the academic but with the speaker and more broadly with Kānaka ʻŌiwi. The provenance of an entomological collection from the Waiʻanae Mountains on Oʻahu does not sit with the collector (whose name is likely attached to each specimen) but with the ʻāina, the lāhui Hawaiʻi, and Kānaka ʻŌiwi. The distinction about provenance is important because, under western intellectual property systems, provenance and ownership are assumed to be equivalent. Who "owns" the data governs the data. IDSov and IDGov work to recenter Indigenous worldviews, rights, self-determination, and wellbeing in data stewardship, rather than western notions of property.
 
-We will start to build understanding of IDSov and IDGov by defining CARE. CARE stands for **C**ollective benefit, **A**uthority to control, **R**esponsibility, and **E**thics. We will dive deeper into each.
+We will start to build understanding of IDSov and IDGov by defining CARE. [CARE](https://static1.squarespace.com/static/5d3799de845604000199cd24/t/6397b363b502ff481fce6baf/1670886246948/CARE%2BPrinciples_One%2BPagers%2BFINAL_Oct_17_2019.pdf) [@care; @carroll2020care] stands for **C**ollective benefit, **A**uthority to control, **R**esponsibility, and **E**thics. We will dive deeper into each.
+
+```{r}
+#| label: care-img
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-cap: "image credit: @carroll2020care"
+
+library(magick)
+
+cr <- image_read("img/care/care.png")
+
+image_despeckle(cr, times = 4)|> 
+    image_convolve(kernel = "Log:0x0.5", scaling = "100,100%")
+```
 
 ### Collective benefit
 
@@ -51,11 +69,122 @@ Those working with Indigenous data have a responsibility to engage with respect,
 
 ### Ethics
 
-Ethics means centering the rights, wellbeing, and ethical frameworks of Indigenous Peoples in the stewardship of Indigenous data. To do so requires embracing the challenges of grappling with the ways colonialism has created power imbalances, scarcities (real and constructed), and trauma. This work is not trivial, which also means ethics include ensuring the longevity of data and its potential to produce benefits into the future. Indicating Indigenous provenance is part of the ethics of ensuring future use.
+Ethics means centering the rights, wellbeing, and ethical frameworks of Indigenous Peoples in the stewardship of Indigenous data. To do so requires grappling with the ways colonialism and colonists create power imbalances, scarcities (real and constructed), and trauma. This work is not trivial, which also means ethics include honoring that work by ensuring the longevity of data and its potential to produce benefits into the future. Indicating Indigenous provenance is part of ensuring future ethical use.
 
-## CARE and FAIR
+## CARE and FAIR together
+
+Stephanie Carroll and colleagues [-@carroll2021operationalizing], leaders in IDSov and IDGov, point out that FAIR principles can support operationalizing CARE and vice versa. Indigenous data are all too often rendered hidden, inaccessible, not reusable, and not interoperable by colonial power imbalances and institutions [@carroll2021operationalizing]. Making such data FAIR is necessary in these cases to begin the process of implementing CARE. From personal experience (Andy speaking here) CARE can be perceived by some researchers in colonial institutions to curtail the implementation of FAIR, but this is misguided. As pointed out in the [articulation of CARE](https://static1.squarespace.com/static/5d3799de845604000199cd24/t/6397b363b502ff481fce6baf/1670886246948/CARE%2BPrinciples_One%2BPagers%2BFINAL_Oct_17_2019.pdf) [@care], Indigenous data cannot be used in good conscience without "relationships built on respect, reciprocity, trust, and mutual
+understanding, as defined by the Indigenous Peoples to whom those data relate" (quoting from @care). Thus without CARE, the **R** (reusable) in FAIR is invalid. Operationalizing CARE results in richer, more complete metadata, and complete metadata underpin all aspects of FAIR. 
+
+Perceived conflicts between FAIR and CARE might be resolved by asking "FAIR for whom?" and "who gets to decide?"  Who gets to decide which protocols are implemented to access and reuse data? Who can find the data (i.e. findable for whom)? Who decided what metadata to expose to make data findable by which search terms? With whose worldview do those search terms align? Contemplating these questions might result in the conclusion that individuals or institutions that are asked to share power---power that previously was not shared---may perceive CARE to limit FAIR. But CARE does not limit FAIR. Rather, colonial power imbalances made data only FAIR for some, which is not actually fulfilling FAIR at all. 
+
+<!-- #### -->
 
 ## Implementing CARE with Local Contexts Labels and Notices
+
+Metadata result from operationalizing CARE. Having metadata standards is one important aspect of FAIR. Local Contexts offers one emerging implementation of standard CARE metadata via their Labels and Notices [@lclab; @lcnot]. Labels are used by Indigenous communities and nations to articulate their rights to and interests in Indigenous data. Notices are used by researchers and colonial institutions to affirm the existence of Indigenous rights and interests and acknowledge that work is underway to articulate those rights and interests. Notices also indicate the readiness of researchers and colonial institutions to fulfill their responsibilities (the **R** in CARE) of centering Indigenous worldviews, self-determination, wellbeing, and rights in data stewardship. 
+
+For metadata to be useful they need to be FAIR. To make Local Contexts Labels and Notices FAIR they are hosted on the [Local Contexts Hub](https://localcontextshub.org/), an online repository. To work with these metadata, communities, researchers, and colonial institutions must first make an account on the Hub (free for communities and researchers, paid on a subscription basis for institutions). Local Contexts Hub is structured by projects. Labels and Notices are applied to data by connecting both to a project. Projects have permanent unique identifiers and persistent URLs based on those identifiers, replicating the permanence of DOIs. 
+
+To understand this better we will walk through the a Local Contexts workflow from the perspective of a researcher initiated the process, because "researcher" is likely the common aspect of identity shared by those participating in this course.
+
+### A researcher applies Notices and notifies communities
+
+The Local Contexts Hub workflow for a researcher should ideally begin with co-production of research goals and data management with local communities in real life outside of the Hub. For archival data already collected (the majority of data) this likely did not occur. Within the Hub a researcher creates a project to correspond to Indigenous data they are working with. The Hub does not house the data itself, only the metadata. Then Notices are applied to the project and communities are notified via the Hub. Again, ideally, researchers and communities will already be working together because even the act of defining what data are and the geographic or other bounds that delineate one data set (and thus one Hub project) from another can be surprisingly different across different ways of knowing. But projects can still be created and Notices applied in situations where co-production has not occurred (don't let perfect be the enemy of good).
+
+Notices, again, affirm the existence of Indigenous rights to and interests in specific data. A notice is three things: 1) a visual badge drawing the focus of a person engaging with Indigenous data; 2) human-readable text explaining the significance of the Notice; and 3) a machine-readable string that can be integrated into data processing and management workflows. There are multiple Notices each with unique purpose. We will focus on four that individual researchers are most likely to use. 
+
+#### Open to Collaborate
+
+::: columns
+
+:::: {.column width="30%"}
+
+![](img/care/otc-label.png)
+
+::::
+
+:::: {.column width="70%"}
+
+The Open to Collaborate Notice is an *Engagement Notice* that can be used to indicate a researcher's or institution's commitment to CARE principles and working collaboratively on issues of IDSov and IDGov. Engagement Notices are not applied to data, but rather are appropriate to display on, for example, research or institution websites. See full information [here](https://localcontexts.org/notice/open-to-collaborate/).
+
+::::
+
+:::
+
+#### Attribution Incomplete
+
+::: columns
+
+:::: {.column width="30%"}
+
+![](img/care/attr-label.png)
+
+::::
+
+:::: {.column width="70%"}
+
+The Attribution Incomplete Notice is applied to data to indicate that attribution (including provenance and contributors) is incomplete, inaccurate, or missing. This notice indicates a work in progress toward correcting the mistake of incomplete attribution. See full information [here](https://localcontexts.org/notice/attribution-incomplete/).
+
+::::
+
+:::
+
+#### Traditional Knowledge
+
+::: columns
+
+:::: {.column width="30%"}
+
+![](img/care/tk-label.png)
+
+::::
+
+:::: {.column width="70%"}
+
+The TK Notice indicates that data representing Traditional Knowledge and related terms/concepts (Traditional Ecological Knowledge, Indigenous Knowledge, Indigenous Science) carry Indigenous rights, protocols, and responsibilities. See full information [here](https://localcontexts.org/notice/tk-notice/).
+
+::::
+
+:::
+
+
+#### Biocultural
+
+::: columns
+
+:::: {.column width="30%"}
+
+![](img/care/bc-label.png)
+
+::::
+
+:::: {.column width="70%"}
+
+The BC Notice affirms the rights of Indigenous peoples to govern the stewardship of data generated from biological sources within their traditional lands, waters, and territories. See full information  [here](https://localcontexts.org/notice/bc-notice/).
+
+::::
+
+:::
+
+Notices are not meant to be the permanent metadata associated with Indigenous data because the Notices do not themselves articulate the rights and protocols of Indigenous peoples.  That is the job for Labels.
+
+### A community applies Labels
+
+To re-iterate, this workflow is from a researcher's perspective. Indigenous communities can also create projects connected to data without need for researchers external to their communities creating the project and applying Notices. We are using the researcher-initiated example here because we are all researchers, but not all of us may be Indigenous or authorized to speak for Indigenous communities. 
+
+In the researcher-initiated workflow, once a Notice(s) is applied to data via a project, an Indigenous community can then replace Notices with Labels. Unlike Notices, Labels *do* articulate the rights and protocols of Indigenous peoples. There are many different kinds of Labels
+
+- not for researchers to apply
+- here are some categories
+- though not for researchers to apply, should all understand and be ready to act
+
+### What's next?
+
+- projects integrated with database holding data and journals
+- users develop culture of respect and understanding of CARE metadata
+
+
 
 ## References
 
