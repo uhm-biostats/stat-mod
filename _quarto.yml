@@ -39,7 +39,7 @@ comments:
     hypothesis: false
 
 bibliography: stat-mod.bib
-csl: ecology-letters.csl
+csl: conservation-biology.csl
 
 format:
   html:
