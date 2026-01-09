@@ -12,7 +12,7 @@ While these environmental and geophysical data meet the FAIR principles, they ag
 
 ## Preliminary description of the data
 
-
+We won't go deep into visualizing and numerically describing the data here because we'll save that for our [R refresher](r-refresh.qmd) when we'll review coding tools by working with these data.
 
 ```{r}
 #| label: setup
@@ -58,7 +58,7 @@ ggplot(hi) +
     theme_void()
 ```
 
-Rows in the forest plot data represent individual trees. Therefore, some data across the columns will be duplicated, for example trees from the same plot will have the same plot ID. Columns in the forest plot data are described in `data/README_for_OpenNahele_Tree_Data.txt`, repreduced below:
+Rows in the forest plot data represent individual trees. Therefore, some data across the columns will be duplicated, for example trees from the same plot will have the same plot ID. Columns in the forest plot data are described in `data/README_for_OpenNahele_Tree_Data.txt`, reproduced below:
 
 ```{r}
 #| label: tree-meta
@@ -101,7 +101,51 @@ kable(gmeta)
 
 ```
 
-We won't go deeper into describing the data now because we'll save that for our [R refresher](r-refresh.qmd) when we'll review coding tools by describing the data numerically and visually.
+### Biocultural dimensions
+
+```{r}
+laau <- read.csv("data_raw/ethnobotany_bishop.csv") |> 
+    rename(name = Hawaiian.Name, 
+           latin_name = Scientific.Name, 
+           haole_name = Vernacular.Name) |> 
+    mutate(latin_name = gsub(" \\(.*", "", latin_name))
+
+in_laau <- select(tree, Scientific_name) |> 
+    mutate(genus = gsub(" .*", "", Scientific_name)) |> 
+    group_by(Scientific_name) |> 
+    mutate(in_laau = paste(first(Scientific_name), first(genus), sep = "|") |> 
+               grepl(laau$latin_name) |> 
+               any()) |> 
+    ungroup()
+
+prop_stem_in_laau <- mean(in_laau$in_laau)
+prop_spp_in_laau <- mean(in_laau$in_laau[!duplicated(in_laau)])
+```
+
+[Lāʻau](https://wehe.hilo.hawaii.edu/?q=laau#w2w2-845) are found in the Kumulipo, an ʻŌiwi creation chant, and many significant genealogical [moʻolelo](https://wehe.hilo.hawaii.edu/?q=moolelo#w2w2-14639) such as that of Hāloanakalaukapalili (the first kalo) and Hāloa (his younger brother, the first Hawaiian), bringing the plants we'll work with into the [moʻokūʻauhau](https://wehe.hilo.hawaii.edu/?q=mookuauhau#w2w2-28752) of Kānaka ʻŌiwi. The author (me Andy your instructor) is not trained to understand these relationships but follows the lead of ʻŌiwi scholars and their work such as @hutchins2023 and @goldbergsilva2015. Genealogical relations require deep regard and respect.
+
+Western science might use the term "biocultural" for the connections between human and non-human aspects of the world. In addition to "biocultural"[^1] moʻokūʻauhau, there are at least two other "biocultural" dimensions to consider. 
+
+[^1]: "Biocultural" is in quotes here to indicate the deficiency of the term in this context and especially when grammatically attached to moʻokūʻauhau
+
+- Lāʻau lapaʻau and ethnobotanical connections to plants
+- [Wahi pana](https://wehe.hilo.hawaii.edu/?q=wahi%20pana#w2w2-33435) and different categories of wao (e.g. [wao akua](https://wehe.hilo.hawaii.edu/?q=wao%20akua#w2w2-72767)) along with other ʻōiwi geographies that carry specific cultural protocols and sensitivities
+
+
+In regard to lāʻau lapaʻau and ethnobotany, the Bernice Pauahi Bishop Museum provides a [Hawaiian ethnobotany database](https://data.bishopmuseum.org/ethnobotanydb/ethnobotany.php?b=list&o=1) built largely on the work of Isabella Aiona Abbott [-@abbott1992]. This database is neither CARE nor FAIR compliant so we will not linger on it except to compare the plant names listed as ethnobotanically significant with plant names in the data we will work with. Doing so reveals that in the data set we will work with, `r round(prop_stem_in_laau * 100)`% of individual trees and `r round(prop_spp_in_laau * 100)`% of unique taxa have ethnobotanical significance.
+
+```{r}
+prop_native_plot <- group_by(tree, PlotID) |> 
+    summarize(prop_native = mean(Native_Status == "native"))
+
+prcnt_native <- round(mean(prop_native_plot$prop_native >= 0.75) * 100)
+```
+
+A similar analysis of the geographic overlap of wahi pana and wao with the coordinates of plot data is not as simply completed. Different wao have specific geographic [palena]() and carry different cultural protocols, knowledge held by cultural practitioners and not always interoperated with western cartography [which would allow analysis with plot data; but see @winter2017]. However, there is a working assumption among some cultural and natural resource practitioners in Hawaiʻi that the wao akua corresponds roughly to high elevation, native forest areas. This is not universally agreed upon but in the current context could have utility as a heuristic. What constitutes native forest is open for debate, and any choice comes with inaccuracies. However, we could ask what percent of plots are composed of at least three quarters native trees. The answer is `r prnct_native`%. So *perhaps* `r prcnt_native`% of plots are located in wao akua across the pae ʻāina. The wao akua is a realm with strict cultural protocols relating to its [kapu]() status [@winter2018], protocols that were likely rarely if ever met when collecting these data. 
+
+Many---perhaps most---wahi pana are recorded in written Hawaiian language sources (e.g. nūpepa) that are cataloged in the [Papakilo Database](https://www.papakilodatabase.com/). However, Andy is not proficient enough in the Papakilo Database nor ʻōlelo Hawaiʻi nor place names across the entire pae ʻāina to analyze plot coordinates in relation to wahi pana, at least for now. But we should assume that many plots are located in or near wahi pana.
+
+
 
 ## Ecological questions we'll consider
 
