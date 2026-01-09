@@ -106,7 +106,7 @@ Notices, again, affirm the existence of Indigenous rights to and interests in sp
 
 :::: {.column width="70%"}
 
-The Open to Collaborate Notice is an *Engagement Notice* that can be used to indicate a researcher's or institution's commitment to CARE principles and working collaboratively on issues of IDSov and IDGov. Engagement Notices are not applied to data, but rather are appropriate to display on, for example, research or institution websites. See full information [here](https://localcontexts.org/notice/open-to-collaborate/).
+The Open to Collaborate Notice is an *Engagement Notice* that can be used to indicate a researcher's or institution's commitment to CARE principles and working collaboratively on issues of IDSov and IDGov. Engagement Notices are not applied to data, but rather are appropriate to display on, for example, research or institution websites. You might recall we use this notice on the [landing page](index.qmd) of this course website. See full information [here](https://localcontexts.org/notice/open-to-collaborate/).
 
 ::::
 
@@ -161,7 +161,7 @@ The TK Notice indicates that data representing Traditional Knowledge and related
 
 :::: {.column width="70%"}
 
-The BC Notice affirms the rights of Indigenous peoples to govern the stewardship of data generated from biological sources within their traditional lands, waters, and territories. See full information  [here](https://localcontexts.org/notice/bc-notice/).
+The BC Notice affirms the rights of Indigenous peoples to govern the stewardship of data generated from biological sources within their traditional lands, waters, and territories. See full information [here](https://localcontexts.org/notice/bc-notice/).
 
 ::::
 
@@ -332,25 +332,40 @@ Another goal is for journals to clearly indicate CARE metadata. Journals are ado
 
 ![source: @lim2021](img/care/jun.png)
 
-Another article centering CARE practices in a closely related journal, including overlapping authors, using data from within the same [mokupuni](https://wehe.hilo.hawaii.edu/?q=mokupuni#w2w2-33939) of Hawaiʻi, is not able to display Local Contexts Notices on equal footing with FAIR-related badges. Instead, Notices are displayed in data figures (the best solution available). But if Labels were to replace these Notices, the static figure would not reflect that update, whereas dynamic badges rendered by the journal itself would be able to.
+Another article centering CARE practices in a closely related journal using the same publishing platform, including overlapping authors, using data from within the same [mokupuni](https://wehe.hilo.hawaii.edu/?q=mokupuni#w2w2-33939), is not able to display Local Contexts Notices on equal footing with FAIR-related badges. Instead, Notices are displayed in data figures (the best solution available). But if Labels were to replace these Notices, the static figure would not reflect that update, whereas dynamic badges rendered by the journal itself would be able to.
 
 ![source: @hutchins2023](img/care/leke.png)
 
 The article by Leke Hutchins and colleagues [-@hutchins2023] also does not earn an Open Data Badge despite metadata conforming to open standards and residing in [BOLD](https://boldsystems.org/), a FAIR repository, and the data itself residing in the Native BioData Consortium and reusable within conditions mandated by CARE.
 
-Hawaiʻi contains a multitude of active work involving IDSov and IDGov. Among many examples, see the Paoakalani Declaration [@-paoakalani], the Huamakahikina Declaration [@huamakahikina], the [Kūlana Noiʻi](https://seagrant.soest.hawaii.edu/wp-content/uploads/2021/09/Kulana-Noii-2.0_LowRes.pdf), work by the Ahupauʻa Accelerator Initiative (see "Information and Data Management, Storage, and Sharing" in their [Ahupuaʻa Action Agenda](http://hawaiiconservation.org/wp-content/uploads/Ahupuaa-Action-Agenda_Kauwela-2023_FINAL.pdf){target="_blank"}), and work and advocacy by Rosie ʻAnolani Alegado (e.g. [here](https://seagrant.soest.hawaii.edu/wp-content/uploads/2021/09/Kulana-Noii-2.0_LowRes.pdf){targe="_blank"}) among many more.
+Hawaiʻi contains a multitude of active work involving IDSov and IDGov. Among many examples, see the Paoakalani Declaration [@-paoakalani], the Huamakahikina Declaration [@huamakahikina], the [Kūlana Noiʻi](https://seagrant.soest.hawaii.edu/wp-content/uploads/2021/09/Kulana-Noii-2.0_LowRes.pdf), work by the Ahupauʻa Accelerator Initiative (see "Information and Data Management, Storage, and Sharing" in their [Ahupuaʻa Action Agenda](http://hawaiiconservation.org/wp-content/uploads/Ahupuaa-Action-Agenda_Kauwela-2023_FINAL.pdf){target="_blank"}), and work and advocacy by Rosie ʻAnolani Alegado (e.g. [here](https://seagrant.soest.hawaii.edu/wp-content/uploads/2021/09/Kulana-Noii-2.0_LowRes.pdf){targe="_blank"}) among many more. Among these efforts and initiatives is the critical work of organizing communities to identify authorized representatives and create decision making structures so that Labels (or another articulation of CARE metadata) can be applied to data. Currently (as of December 2025) such authorized bodies may not exist for most data stewardship scenarios, for example the data in @hutchins2023.
 
-The work of advancing IDSov and IDGov in Hawaiʻi is rooted in correcting and healing the violence against and violations of human rights and Indigenous rights perpetrated against the Kanaka[^1] ʻŌiwi by European and American colonizers from first European contact, through the US-backed illegal overthrow, through illegal US annexation, to the present. The research apparatus, including the University of Hawaiʻi, and scientific racism were and remain integral parts of Euro-American colonization [@allkine]. Therefore research and scientific work in Hawaiʻi holds a distinct [kuleana](https://wehe.hilo.hawaii.edu/?q=kuleana#w2w2-12545) to confront and correct continued colonial practices and [kākoʻo](https://wehe.hilo.hawaii.edu/?q=kakoo#w2w2-11650) the Kanaka ʻŌiwi right to [ea](https://wehe.hilo.hawaii.edu/?q=ea#w2w2-4043) and self-determination.
+The work of advancing IDSov and IDGov in Hawaiʻi is rooted in correcting and healing the violence against and violations of human rights and Indigenous rights perpetrated against the Kanaka[^1] ʻŌiwi by European and American colonizers from first European contact, through the US-backed illegal overthrow, through illegal US annexation, to the present. Colonialism is why there is an absence of authorized bodies to articulate Indigenous rights and interests in data, let alone other aspects of wellbeing and self-determination. The research apparatus, including the University of Hawaiʻi, and scientific racism were and remain integral parts of Euro-American settler colonialism [@trask1993; @kauai2024]. Therefore, academic research in Hawaiʻi holds a distinct [kuleana](https://wehe.hilo.hawaii.edu/?q=kuleana#w2w2-12545) to confront and correct continued colonial practices and [kākoʻo](https://wehe.hilo.hawaii.edu/?q=kakoo#w2w2-11650) the Kanaka ʻŌiwi right to [ea](https://wehe.hilo.hawaii.edu/?q=ea#w2w2-4043) and self-determination.
 
-[^1]: We follow @kauanui2008 in using the plural Kānaka ʻŌiwi to refer to Native Hawaiians and the singular Kanaka ʻŌiwi to refer to the singular collective Native Hawaiian People.
+[^1]: We follow @kauanui2008 in using the plural Kānaka ʻŌiwi to refer to all people of ʻŌiwi ancestry and the singular Kanaka ʻŌiwi to refer to the singular collective People of ʻŌiwi decent (e.g. the Native Hawaiian People).
 
 ## CARE and FAIR for this class
 
-we use data that we cannot change the metadata of
+Our class uses data already collected/compiled and published by other researchers [@craven2018; @craven2019; @mclean2023]. These data have been published in compliance with FAIR. FAIR compliance takes the form of:
 
-we therefore only use the open to collab
+- Findable: within their respective databases, metadata can be searched to located the intended data and data have DOIs or other permanent identifiers. For convenience, we use copies of these data for this class, so we will not directly engage with the databases themselves.
+- Accessible: the data can be downloaded through HTTP or via API using open protocols and the data are stored in open formats
+- Interoperable: metadata (see tables in the [previous chapter](data-intro.qmd)) clearly define all data fields allowing data to be merged or integrated into other workflows
+- Reusable: the data are licenced under open licences allowing reuse
 
-the data and meta data are FAIR
+However, none of the data are CARE compliant. That leaves us with the question of what to do? There are a series of compromises to consider:
+
+- Centering place-based ecosystems and data in a class situated in Hawaiʻi honors this place and our connection to it
+- *But:* working with non-CARE-complying data that are already collected and published means we have no control over how the data were collected and limited impact on how their re-use is governed
+- Our limited impact can include reflecting on our own use of the data and identifying ways our individual use can align with CARE
+- *But:* our individual respect for CARE does not correct the larger problem of non-CARE-complying data being published
+- Our limited impact can extend a little further if we collaborate in this class to articulate a vision for how these data could meet the CARE principles
+- *But:* that vision may not be achievable 
+
+We will proceed in working with these data but our first assignment for this course will be drafting our considerations for respecting CARE individually and drafting ideas for a proposal to make the official stewardship of the data CARE-compliant.
+
+
+
 
 ## References
 
