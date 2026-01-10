@@ -1,5 +1,86 @@
 # R refresher 
 
+- 1st
+    - code style 
+    - utility of RStudio projects
+    - organizin data
+    - dplyr basics, pipe
+    - tibble
+    - tidyr::*_join
+- 2nd
+    - when to pipe and when to break
+    - group_by workflow
+    - ggplot
+
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library(tibble)
+library(tidyr)
+library(janitor)
+library(readr)
+
+
+tree <- read_csv("data/OpenNahele_Tree_Data.csv")
+clim <- read_csv("data/plot_climate.csv")
+geoh <- read_csv("data/hii_geo.csv")
+
+
+all_dat <- select(clim, -(lon:lat)) |> 
+    full_join(geoh) |>
+    full_join(tree) |>
+    select(-(Longitude:Latitude)) |> 
+    filter(!is.na(Island)) |> 
+    mutate(Island = gsub(" Isl.*", "", Island)) |> 
+    clean_names()
+
+str(all_dat)
+
+all_dat <- relocate(all_dat, c(island:census, lon:lat), .after = plot_id)
+
+all_dat$island <- factor(all_dat$island, 
+                         levels = c("Kaua'i", "O'ahu", "Moloka'i", 
+                                    "Lana'i", "Maui", "Hawai'i"))
+
+dat_by_plot <- group_by(all_dat, plot_id) |> 
+    summarize(prop_native = mean(native_status == "native"), 
+              nspp = length(unique(scientific_name)),
+              nspp_native = scientific_name[native_status == "native"] |> 
+                  unique() |> 
+                  length(),
+              across(c(island:elem_m), first)) |> 
+    ungroup()
+    
+str(dat_by_plot)
+
+ggplot(filter(dat_by_plot, elem_m > 300), 
+       aes(age_yr, prop_native, color = island)) +
+    geom_point(alpha = 0.25) +
+    scale_color_viridis_d() +
+    scale_x_continuous(transform = "log10")
+
+ggplot(dat_by_plot, aes(avbl_energy_annual_wm2, prop_native)) +
+    geom_point(alpha = 0.25) +
+    scale_color_viridis_d() + 
+    facet_wrap(vars(island))
+
+ggplot(dat_by_plot, aes(age_yr, nspp_native, color = island)) +
+    geom_point(alpha = 0.5) +
+    scale_color_viridis_d() +
+    scale_x_continuous(transform = "log10")
+
+
+ggplot(dat_by_plot, aes(rain_annual_mm, prop_native, color = island)) +
+    geom_point(alpha = 0.5) +
+    scale_color_viridis_d() +
+    scale_x_continuous(transform = "log10")
+
+
+
+```
+
+
 ## Resources
 
 https://datacarpentry.github.io/R-ecology-lesson/
