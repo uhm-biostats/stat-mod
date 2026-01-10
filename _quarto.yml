@@ -11,28 +11,28 @@ book:
           chapters:
             - datasets-intro.qmd
             - care-fair.qmd
-            - r-refresh.qmd
-            - github.qmd
-            - dynamic-doc.qmd
-            - bring-it-together.qmd
-        - part: prob.qmd
-          chapters:
-            - prob-intro-lecture.qmd
-            - prob-intro-lab.qmd
-            - prob-rules-lecture.qmd
-            - prob-rules-lab.qmd
-            - prob-sim-data.qmd
-        - part: likelihood-intro.qmd
-          chapters:
-            - binom-lec.qmd
-            - binom-lab.qmd
-            - ml-method.qmd
-            - norm-lab.qmd
-        - part: lin-mod.qmd
-          chapters:
-            - mods-howto.qmd
-            - lin-norm.qmd
-            - lin-lstsqrs.qmd
+            # - r-refresh.qmd
+            # - github.qmd
+            # - dynamic-doc.qmd
+            # - bring-it-together.qmd
+        # - part: prob.qmd
+        #   chapters:
+        #     - prob-intro-lecture.qmd
+        #     - prob-intro-lab.qmd
+        #     - prob-rules-lecture.qmd
+        #     - prob-rules-lab.qmd
+        #     - prob-sim-data.qmd
+        # - part: likelihood-intro.qmd
+        #   chapters:
+        #     - binom-lec.qmd
+        #     - binom-lab.qmd
+        #     - ml-method.qmd
+        #     - norm-lab.qmd
+        # - part: lin-mod.qmd
+        #   chapters:
+        #     - mods-howto.qmd
+        #     - lin-norm.qmd
+        #     - lin-lstsqrs.qmd
 
 
 comments:
