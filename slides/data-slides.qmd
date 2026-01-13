@@ -3,10 +3,9 @@ title: "Introducing data, CARE, and FAIR"
 format:
   revealjs: 
     slide-number: true
-    chalkboard: 
-      buttons: false
     preview-links: auto
     auto-stretch: false
+    embed-resources: true
     # css: slide-styles.css
     # footer: '[link](url)'
 
@@ -39,7 +38,7 @@ tree <- read.csv("../data/OpenNahele_Tree_Data.csv")
 
 We will use the [*OpenNahele*](https://datadryad.org/dataset/doi:10.5061/dryad.1kk02qr){target="_blank"} forest inventory plot data [@craven2018]
 
-![](docs/datasets-intro_files/figure-html/fig-map-1.png)
+![](../docs/datasets-intro_files/figure-html/fig-map-1.png)
 
 
 
@@ -51,7 +50,7 @@ We will use the [*OpenNahele*](https://datadryad.org/dataset/doi:10.5061/dryad.1
 
 :::: {.column width="60%"} 
 
-![](docs/datasets-intro_files/figure-html/fig-map-1.png)
+![](../docs/datasets-intro_files/figure-html/fig-map-1.png)
 
 ::::
 
