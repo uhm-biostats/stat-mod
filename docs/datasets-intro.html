@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.8.25">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -54,14 +54,15 @@ div.csl-indent {
 <link href="./intro.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-485d01fc63b59abcd3ee1bf1e8e2748d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-27c261d06b905028a18691de25d09dde.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -115,7 +116,9 @@ div.csl-indent {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="./index.html" class="sidebar-logo-link">
+      </a>
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Intro to Statistical Modeling</a> 
     </div>
@@ -204,7 +207,7 @@ div.csl-indent {
 <section id="intorducing-the-data" class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="intorducing-the-data"><span class="header-section-number">1.1</span> Intorducing the data</h2>
 <p>We will be working with data from forest monitoring plots across the pae ʻāina Hawaiʻi as well as environmental and geophysical data measured or interpolated at these monitoring plots. The forest monitoring plot data are organized and distributed in a data resource called <a href="https://datadryad.org/dataset/doi:10.5061/dryad.1kk02qr" target="_blank"><em>OpenNahele</em></a> <span class="citation" data-cites="craven2018">(<a href="#ref-craven2018" role="doc-biblioref">Craven et al. 2018</a>)</span>.</p>
-<p>In this context “open” refers to the data being openly shared and accessible in alignment with the FAIR principles which we discuss in the <a href="./care-fair.html">next section</a>. <a href="https://wehewehe.org/gsdl2.85/cgi-bin/hdict?e=q-11000-00---off-0hdict--00-1----0-10-0---0---0direct-10-ED--4--textpukuielbert%2ctextmamaka%2ctextandrew%2ctextparker%2ctextchd-----0-1l--11-en-Zz-1---Zz-1-home-nahele--00-4-1-00-0--4----0-0-11-00-0utfZz-8-00&amp;a=d&amp;d=D13981#hero-bottom-banner" target="_blank">Nahele</a> in ʻōlelo Hawaiʻi means, in this context, forest. The use of ʻōlelo Hawaiʻi points to the fact that the data pertain to the <a href="https://wehe.hilo.hawaii.edu/?q=pae%20aina#w2w2-18645">pae ʻāina</a> Hawaiʻi. This naming choice could show respect and acknowledgement of the Hawaiian provenance of these data, but could also be seen as appropriation. The interpretation of the naming choice depends in part on whether the data not only comply with FAIR, but also the CARE principles, which, again, we discuss in the <a href="./care-fair.html">next section</a>. The CARE principles mandate that Indigenous provenance and governance rights are acknowledged and respected in the stewardship of Indigenous data. The data in <em>OpenNahele</em> originate from the pae ʻāina Hawaiʻi and thus within the traditional lands of the <a href="https://wehe.hilo.hawaii.edu/?q=kanaka#w2w2-5691">Kanaka</a> <a href="https://wehe.hilo.hawaii.edu/?q=oiwi#w2w2-29101">ʻŌiwi</a>, making them Indigenous data. Without attribution, or any indication about ʻŌiwi protocols and rights for data collection and use, <em>OpenNahele</em> does not meet the CARE principles. While the good intentions of those distributing the data is not being questioned, we also recognize there is opportunity for making right the stewardship of these, and other, data from Hawaiʻi. We dive much deeper into this discussion in the next section on <a href="./care-fair.html">CARE and FAIR</a>.</p>
+<p>In this context “open” refers to the data being openly shared and accessible in alignment with the FAIR principles which we discuss in the <a href="./care-fair.html">next section</a>. <a href="https://wehe.hilo.hawaii.edu/?q=nahele#w2w2-15258" target="_blank">Nahele</a> in ʻōlelo Hawaiʻi means, in this context, forest. The use of ʻōlelo Hawaiʻi points to the fact that the data pertain to the <a href="https://wehe.hilo.hawaii.edu/?q=pae%20aina#w2w2-18645">pae ʻāina</a> Hawaiʻi. This naming choice could show respect and acknowledgement of the Hawaiian provenance of these data, but could also be seen as appropriation. The interpretation of the naming choice depends in part on whether the data not only comply with FAIR, but also the CARE principles, which, again, we discuss in the <a href="./care-fair.html">next section</a>. The CARE principles mandate that Indigenous provenance and governance rights are acknowledged and respected in the stewardship of Indigenous data. The data in <em>OpenNahele</em> originate from the pae ʻāina Hawaiʻi and thus within the traditional lands of the <a href="https://wehe.hilo.hawaii.edu/?q=kanaka#w2w2-5691">Kanaka</a> <a href="https://wehe.hilo.hawaii.edu/?q=oiwi#w2w2-29101">ʻŌiwi</a>, making them Indigenous data. Without attribution, or any indication about ʻŌiwi protocols and rights for data collection and use, <em>OpenNahele</em> does not meet the CARE principles. While the good intentions of those distributing the data is not being questioned, we also recognize there is opportunity for making right the stewardship of these, and other, data from Hawaiʻi. We dive much deeper into this discussion in the next section on <a href="./care-fair.html">CARE and FAIR</a>.</p>
 <p>The environmental and geophysical data we will use include climate variables, information about human impact, elevation, and geologic age of substrates at the locations of the plot data. For climate variables we use the <a href="https://www.hawaii.edu/climate-data-portal/climate-atlas/" target="_blank">Hawaiʻi Climate Data Portal</a> <span class="citation" data-cites="mclean2023">(<a href="#ref-mclean2023" role="doc-biblioref">McLean et al. 2023</a>)</span>. Elevation, geologic age, and human impact data have been organized by the authors of the <em>OpenNahele</em> data set in a separate data publication <span class="citation" data-cites="craven2019">(<a href="#ref-craven2019" role="doc-biblioref">Craven 2019</a>)</span> and we will use those already compiled data rather than re-gather them from the primary sources. However, for the sake of completeness, the primary sources are as follows: elevation <span class="citation" data-cites="jarvis2008">(<a href="#ref-jarvis2008" role="doc-biblioref">Jarvis et al. 2008</a>)</span>, substrate age <span class="citation" data-cites="sherrod2007">(<a href="#ref-sherrod2007" role="doc-biblioref">Sherrod et al. 2007</a>)</span>, and human impact <span class="citation" data-cites="sedac2005">(<a href="#ref-sedac2005" role="doc-biblioref">Society &amp; International Earth Science Information Network 2005</a>)</span>.</p>
 <p>While these environmental and geophysical data meet the FAIR principles, they again are not CARE compliant. Part of our work in this course will be discussing and envisioning how data collected in Hawaiʻi can live up to the CARE principles.</p>
 </section>
@@ -380,7 +383,7 @@ Figure&nbsp;1.1: Distribution of plot locations across the pae ʻāina Hawaiʻi.
 </section>
 <section id="human-impact-and-geophysical-data" class="level3" data-number="1.2.3">
 <h3 data-number="1.2.3" class="anchored" data-anchor-id="human-impact-and-geophysical-data"><span class="header-section-number">1.2.3</span> Human impact and geophysical data</h3>
-<p>Human impact data and geophysical data are found in the same file, only because they are from the same source. That file is <code>data/hii_geo.csv</code>. Its rows are also unique plots and no information in columns is duplicated across rows. Columns are described in `</p>
+<p>Human impact data and geophysical data are found in the same file, only because they are from the same source. That file is <code>data/hii_geo.csv</code>. Its rows are also unique plots and no information in columns is duplicated across rows. Columns are described in <code>data/README_for_hii_geo.txt</code>, reproduced below:</p>
 <div class="cell">
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
@@ -581,13 +584,14 @@ Winter KB, Lucas M. 2017. Spatial modeling of social-ecological management zones
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
