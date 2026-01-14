@@ -1,8 +1,8 @@
 # R refresher 
 
 - 1st
-    - code style 
     - utility of RStudio projects
+    - code style 
     - organizin data
     - dplyr basics, pipe
     - tibble
