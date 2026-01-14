@@ -164,3 +164,24 @@ Of those possible generalities, we will look into a couple---with statistical mo
 
 
 ## References
+
+
+```{r}
+#| echo: true
+#| eval: false
+
+library(quarto)
+
+system("rm -fr docs/data-slides")
+system("mkdir docs/data-slides")
+
+quarto_render(input = "slides/data-slides/data-slides.qmd", 
+              output_file = "index.html",
+              quiet = FALSE)
+
+system("cp -r slides/data-slides docs")
+```
+
+<!-- ```{=html} -->
+<!-- <iframe src="data-slides/" width="100%" height="475px" style="border: 1px solid #ccc;"></iframe> -->
+<!-- ``` -->
