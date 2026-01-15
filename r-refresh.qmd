@@ -177,12 +177,19 @@ Make a boolean object called `cool` that extracts the 2nd element of the object 
 ```{r}
 #| eval: false
 
+# recall `b` is
+b <- c("three", "little", "words")
+```
+
+```{r}
+#| echo: false
+#| label: cool-solution
+
 b <- c("three", "little", "words")
 
-cool <- ....
-
-....
+cool <- c(FALSE, TRUE, FALSE)
 ```
+
 :::
 
 ### Combining objects into something more data-like 
@@ -236,9 +243,8 @@ Make a `data.frame` to hold data that look like these:
 
 ```{r}
 #| echo: false
+#| label: mkdf-solution
 
-# library(knitr)
-# library(kableExtra)
 library(gt)
 
 dat <- data.frame(x = 1:3, y = c(2, 8, 6), group = c("g1", "g1", "g2"))
@@ -263,7 +269,7 @@ new_l
 ```
 
 
-## Working with data
+## Working with real data
 
 In real practice, we are rarely making a `data.frame` by hand. We are usually reading it in from a file. Let's get the data we'll be working with for this class, downloading it into the folder where our RStudio project lives. First make a folder called `data` inside the folder holding your RStudio project. You can do that in your computers folder system, or from within RStudio by hitting the icon of a holder with a plus over in the Files panel.
 
@@ -308,6 +314,7 @@ geoh <- .....
 
 ```{r}
 #| echo: false
+#| label: dat-read-solution
 
 clim <- read.csv("data/plot_climate.csv")
 geoh <- read.csv("data/hii_geo.csv")
@@ -365,7 +372,7 @@ If we want to combine all these data, and soon we will, then plot-level data lik
 
 Data organized with individual sampling units as rows and variables as columns have become known as tidy data [@wickham2014]. Hadly Wickham's [-@wickham2014] article on tidy data was not the first to champion this type of data organization (e.g. relational databases, the assumed data structure for regression and ANOVA in R) but it laid the groundwork for best practices in data organization that have subsequently enabled the development of coding tools in R and other languages that make working with data more clear and consistent.
 
-### Introducing the *dplyr* package
+## Introducing the *dplyr* package
 
 The package *dplyr* by Wickham and colleagues [-@dplyr] is a central package for working with tidy data. To work with the *dplyr* package we need to load it into our R session. Try this:
 
@@ -376,7 +383,7 @@ library(dplyr)
 If your console prints out the same message, great!  You have loaded *dplyr* into your current R session. If you get an error message that looks like
 
 ```
-Error in library(dplyr) : there is no package called ‘xyz’
+Error in library(dplyr) : there is no package called ‘dplyr’
 ```
 
 That means the package *dplyr* is not installed on your computer. No problem, install it with this code:
@@ -404,7 +411,7 @@ toy_data
 We can imagine `tree_ID` records the unique ID of each tree in some made-up inventory plot, `species` holds the made-up species ID, and `x1` and `x2` are some kind of measurements made on each tree.
 
 
-#### `select`
+### `select`
 
 What if we need to extract all the values in the `x1` column. The *dplyr* approach is:
 
@@ -457,9 +464,19 @@ Have a look at the help documentation for `select`:
 ```
 
 And figure out *two* ways of selecting both columns `x1` and `x2` that do not look like `select(toy_data, x1, x2)`.
+
+```{r}
+#| echo: false
+#| eval: false
+#| label: select-solution
+
+select(toy_data, x1:x2)
+select(toy_data, starts_with("x"))
+
+```
 :::
 
-#### `filter`
+### `filter`
 
 We can extract or remove columns now, but what about *rows*. That is the job for filter. Suppose we want only the rows corresponding to "sp1".  Here is the *dplyr* approach:
 
@@ -470,7 +487,7 @@ filter(toy_data, species == "sp1")
 Notice a few things there: we *do* need to put "sp1" in quotes because it is of type character; and we are using one of those logical comparisons `==`.  We saw logical comparisons earlier, but let's refresh. The `==` operator asks R a question *is* ***this*** *equal to* ***that****?* or in code `this == that`. So we are asking is `species` equal to `"sp1"` and where it is, give us `TRUE`, where it is not, give us `FALSE`. The function `filter` then uses those `TRUE`s and `FALSE`s to extract the rows we want.
 
 
-#### Logical operators
+### Logical operators
 
 There are a lot of logical operators and they are implemented in base R (we do not need *dplyr* to access them). Here is an accounting of the ones you are most likely to use
 
@@ -496,7 +513,24 @@ There are a lot of logical operators and they are implemented in base R (we do n
 
 Let's look under the hood a bit at what these logical operators are doing.  Use `select` to figure out what the comparison `species == "sp1"` is actually computing.
 
-Now try a few other operators out. Filter the `toy_data` so that we extract rows where `x2` is less than or equal to 5 but greater than 4.4.
+```{r}
+#| echo: false
+#| eval: false
+#| label: logic-select-solution
+
+select(toy_data, species) == "sp1"
+
+```
+
+Now try a few other operators out. Filter the `toy_data` so that we extract rows where `x2` is less than or equal to 5 but greater than 3.4.
+
+```{r}
+#| echo: false
+#| eval: false
+#| label: gte-solution
+
+filter(toy_data, x2 <= 5 & x2 > 3.4)
+```
 
 Now try to *predict* (without running any code) what this will produce:
 
@@ -509,7 +543,7 @@ filter(toy_data, species %in% c("sp1", "sp2"))
 Go ahead and run to code to see if you were right. If your prediction was off, why?
 :::
 
-#### `rename`
+### `rename`
 
 Sometimes our data do not have columns with the best names. One might want to change the raw data in the spread sheet, but wait!  That might not be FAIR! What if you're working with data that has well defined metadata and you want to share your code with a friend? They download the same data set but your code doesn't work for them because you changed the column names in your copy of the raw data. Better to document the name change and make it reproducible by using code.
 
@@ -536,7 +570,7 @@ clean_toy_data <- rename(toy_data, sla = x1, dbh = x2)
 Sometimes we need to add a column to a `data.frame` based on a computation we make in R. Say, for example, we want to analyze the log of DBH rather than DBH itself. The best way to set ourselves up for success is to add a column to the data.
 
 ```{r}
-mutate(clean_toy_data, log_dbh = log(dbh))
+mutate(clean_toy_data, log_dbh = dbh)
 ```
 
 Again, if we actually want to keep that change, we need to assign it to an object. Maybe we just re-assign it to the same object name
@@ -548,7 +582,7 @@ clean_toy_data
 ```
 
 
-### Piping
+## Piping
 
 What if we want to do multiple things to some data in order to arrive at the final object we want?  Suppose, for example, that we have `toy_data` and we want to make a new `data.frame` with only `"sp1"` in it, without the `tree_ID` column, and with `x1` and `x2` renamed appropriately?
 
@@ -596,7 +630,8 @@ All these less-than-ideal solutions motivate another approach: the pipe (`|>`). 
 
 ```{r}
 # we could nest functions
-# this passes the output of c(1, 4, 8) into sum()
+# this first computes output of c(1, 4, 8) and 
+# then sum() uses that output as its own input
 sum(c(1, 4, 8))
 
 # or we could achieve the same computation by
@@ -616,27 +651,61 @@ Now let's look at the data wrangling case using pipes
 ```{r}
 final_dat <- select(toy_data, -tree_ID) |> 
     filter(species == "sp1") |> 
-    rename(dsla = x1, dbh = x2)
+    rename(sla = x1, dbh = x2)
 
 final_dat
 ```
 
-That's the `data.frame` we want and hopefully a more clear, less error-prone way of getting there. One thing to note, that sometimes trips people up, is that after passing `toy_data` into `select`, we don't see any names of objects again. But remember, the *output* of `select` is being piped into `filter` as the first argument, and the output of `filter` is getting pipped into `rename` as the first argument.  If you got that, great! If not, here is one more way to think about it
+That's the `data.frame` we want and hopefully a more clear, less error-prone way of getting there. One thing to note, that sometimes trips people up, is that after passing `toy_data` into `select`, we don't see any names of data objects again. But remember, the *output* of `select` is being piped into `filter` as the first argument, and the output of `filter` is getting pipped into `rename` as its first argument.  If you got that, great! If not, here is one more way to think about it
+
+```{r}
+#| echo: false
+#| eval: false
+#| warning: false
+#| message: false
+#| label: trash-error
+
+
+filter <- function(x, y, ...) {
+    x
+}
+
+rename <- function(x, y, ...) {
+    x
+}
+
+unseen_output_of_select <- 10
+unseen_output_of_filter <- 10
+
+foo <- final_dat
+```
 
 ```{r}
 #| eval: false
 
 # don't try to run this, it is not valid R code
 final_dat <- select(toy_data, -tree_ID) |> 
-    filter(__hidden-output-of-select__, species == "sp1") |> 
-    rename(__hidden_output-of-filter__, dsla = x1, dbh = x2)
+    filter(unseen_output_of_select, species == "sp1") |> 
+    rename(unseen_output_of_filter, dsla = x1, dbh = x2)
+```
+
+```{r}
+#| echo: false
+#| eval: false
+#| warning: false
+#| message: false
+#| label: trash-undo
+
+final_dat <- foo
+
+rm(filter, select, rename, unseen_output_of_select, unseen_output_of_filter, foo)
 ```
 
 We don't see the output of `select` or `filter` but it is there under-the-hood.
 
 If typing out `|` and then `>` to make the pipe `|>` feels like gymnastics for your fingers, you can use the keyboard shortcut provided by RStudio. Look it up for your OS by going to Tools > Keyboard Shortcuts Help
 
-#### The *magrittr* pipe `%>%`
+### The *magrittr* pipe `%>%`
 
 If this is not your first time around the block with pipes, you probably know the *magrittr* pipe `%>%`. Following the [advice of Hadley Wickham and other pros](https://r4ds.hadley.nz/data-transform.html#sec-the-pipe) we will use the native pipe operator `|>`. In most cases your knowledge of the *magrittr* `%>%` will translate cleanly over to the native `|>`. Two key differences that commonly arise: 
 
@@ -653,13 +722,24 @@ Now let's use these approaches with our real data. We'll work with the `tree` da
 - remove rows where `Island` is `NA`
 - remove the columns `Cultivated_Status`, `Angiosperm`, and `Monocot`
 - make the column `DBH_cm` all lower case
-- add a column for log DBH and call it `log_dbg_cm`
+- add a column for log DBH and call it `log_dbh_cm`
 
+```{r}
+#| echo: false
+#| eval: false
+#| label: real-dplyr-solution
 
+nat_spp <- filter(tree, Native_Status == "native" & 
+                      !is.na(Island)) |> 
+    select(-c(Cultivated_Status, Angiosperm, Monocot)) |> 
+    rename(dbh_cm = DBH_cm) |> 
+    mutate(log_dbh_cm = log(dbh_cm))
+
+```
 
 :::
 
-### Merging data
+## Merging data
 
 Like we mentioned, we want to merge the tree, climate, and geology + human impact data. In database speak, this kind of task is called a "join." *dplyr* offers us three kinds of joins: `left_join`, `right_join`, `full_join`. To understand these, we'll use our toy data, but we need to make two other made-up `data.frames` to actually *join* things.
 
@@ -705,6 +785,18 @@ Cool! The taxonomy info was added, and only for the species we actually have in 
 - Try `full_join` with `clean_toy_data` and `tax`; describe any differences
 - Try `right_join(tax, trt)`; what's different?
 
+```{r}
+#| echo: false
+#| eval: false
+#| message: false
+#| label: toy-join-solution
+
+full_join(clean_toy_data, tax)
+
+right_join(tax, trt)
+
+```
+
 :::
 
 Let's put everything together. We can use `|>` to combine multiple joins. Also, imagine that `clean_toy_data` is the focus of our analysis, so we don't need the "extra" species from `tax` and `trt`. That means we'll use `left_join`.
@@ -714,13 +806,13 @@ final_toy_data <- left_join(clean_toy_data, tax) |>
     left_join(trt)
 ```
 
-Interesting, it says `join_by(species)` (that was from the first `left_join`) but then it says `join_by(species, sla)` which is from the second join. We better check what the data look like
+Interesting, the printed message says `join_by(species)` (that was from the first `left_join`) but then it says `join_by(species, sla)` which is from the second join. We better check what the data look like
 
 ```{r}
 final_toy_data
 ```
 
-We got no data from `trt`! The problem is that when we tried to join the output of `left_join(clean_toy_data, tax)` with `trt`, R tried to join not just with the shared column `species` but also the column `sla`, which has the same name in `clean_toy_data` and `trt`. That's unfortunate. But luckily we can tell R to not just join by all columns with the same name, we can tell it specific columns
+We got no data from `trt`! The problem is that when we tried to join the output of `left_join(clean_toy_data, tax)` with `trt`, R tried to join not just with the shared column `species` but also the column `sla`, which has the same name in `clean_toy_data` and `trt`. Because the unique combined values of `species` and `sla` have no exact matches across the two `data.frame`s, R can't merge any data. That's unfortunate. But luckily we can tell R to not join by all columns with the same name, we can tell it specific columns
 
 ```{r}
 final_toy_data <- left_join(clean_toy_data, tax) |> 
@@ -739,7 +831,7 @@ final_toy_data <- select(trt, -sla) |>
 final_toy_data
 ```
 
-All the data are joined, great! The columns are kind of in a funny order. Really that shouldn't deeply matter for the computer as long as they're all there. But us humans tend to like things arranged in a conceptual order. We can change the order of columns with `relocate`. That function also makes use of `<tidy-select>` to flexibly indicate which columns we want to work with. Here's one arrangement of columns that might make sense:
+All the data are joined, great! The columns are kind of in a funny order. Really that shouldn't deeply matter for the computer as long as they're all there. But us humans tend to like things arranged in some kind of conceptual order. We can change the order of columns with `relocate`. That function also makes use of `<tidy-select>` to flexibly indicate which columns we want to work with. Here's one arrangement of columns that might make sense:
 
 ```{r}
 final_toy_data <- select(trt, -sla) |> 
@@ -757,16 +849,19 @@ final_toy_data
 
 ```{r}
 #| echo: false
+#| label: real-join-solution
+#| message: false
 
 all_dat <- select(clim, -(lon:lat)) |> 
     full_join(geoh) |>
     full_join(tree) |>
     select(-(Longitude:Latitude)) |> 
     filter(!is.na(Island)) |> 
-    relocate(c(Island:Census, lon:lat), .after = PlotID)
+    relocate(c(Island:Census, lon:lat), .after = PlotID) |> 
+    rename(Plot_ID = PlotID)
 ```
 
-Let's join the three real data sets we'll be working with! Let's call the product of joining all the data `all_dat`. Don't forget to also remove rows where `Island` is `NA`. Let's also re-arrange the columns so they are ordered like this: 
+Let's join the three real data sets we'll be working with! Let's call the product of joining all the data `all_dat`. Don't forget to also remove rows where `Island` is `NA`. While we're at it, let's change the name of the column `PlotID` to be `Plot_ID` (more consistent with all the other names). And finally, let's re-arrange the columns so they are ordered like this: 
 
 ```{r}
 #| echo: false
@@ -779,9 +874,9 @@ names(all_dat) |>
 
 :::
 
-### The `tibble`
+## The `tibble`
 
-Printing `data.frame`s, even using `head`, can result in some hard-to-read output. The deeper you go in wrangling data you will also find some inconsistencies in the design choices (made decades ago) about how data.frames sometimes behave. For all those reasons, there is an alternative option that tries to retain all the good things about `data.frames`, be more-or-less interoperable with `data.frame`s, but also give us some improvements. This is the `tibble`. To work with `tibble`s we'll need the *tibble* package. To see the printing benefit of `tibble`s let's turn our monstrous `all_dat` object into a `tibble` and have a look:
+Printing `data.frame`s, even using `head` or `str`, can result in some hard-to-read output. The deeper you go in wrangling data you will also find some inconsistencies in the design choices (made decades ago) about how `data.frame`s sometimes behave. For all those reasons, there is an alternative option that tries to retain all the good things about `data.frame`s, tries to be more-or-less interoperable with `data.frame`s, but also gives us some improvements. This is the `tibble`. To work with `tibble`s we'll need the *tibble* package. To see the printing benefit of `tibble`s let's turn our monstrous `all_dat` object into a `tibble` and have a look:
 
 ```{r}
 library(tibble) # if you don't have it use install.packages
@@ -791,7 +886,7 @@ all_dat_tib <- as_tibble(all_dat)
 all_dat_tib
 ```
 
-We don't even need to worry about using `head`, we get more information about each column (kind of like `str`), and columns don't run off the screen or wrap around the console, some are just not printed and we get a message about which ones were not printed.
+We don't even need to worry about using `head`, we get more information about each column compared to the output of `head` (kind of like `head` and `str` combined), and columns don't run off the screen or wrap around the console, some are just not printed and we get a message about which ones were not printed.
 
 If we want to avoid `data.frame`s all together, we can read data directly into R as a `tibble` with the *readr* package:
 
@@ -804,9 +899,86 @@ tree_tib
 
 ```
 
-<!-- ### The split-apply-combine workflow -->
+## The split-apply-combine workflow
 
-<!-- ### To pipe or not to pipe -->
+Aggregating sampling units into more coarse-grained levels and calculating summary statistics is one of the most common tasks in data wrangling. Think of things like calculating the proportion of native species in each plot; or calculating the total basal area (sum of DBH) for each plot; or calculating the number of species found in each plot. Those are all examples of aggregating data on individual trees into more coarse-grained plot-level descriptions. *dplyr* offers us some useful tools for this kind of task in what is commonly called the "split-apply-combine" approach. We first *split* apart the data by some variable like `Plot_ID`, then *apply* functions to calculate descriptions of the data within each split apart level (e.g. within each plot), and then *combine* all those results in a convenient data object like a `tibble` or `data.frame`. To *split* we use the function `group_by` and to both *apply* and *combine* we use the function `summarize`. Often we clean up our final product with `ungroup` as we will see.
+
+As a motivating example, let's figure out the number of species in each plot
+
+```{r}
+# notice we're using the tibble version of the data
+nspp_by_plot <- group_by(all_dat_tib, Plot_ID) |> 
+    summarize(nspp = n_distinct(Scientific_name)) |> 
+    ungroup()
+
+nspp_by_plot
+```
+
+Great! It tells us the number of species for each `Plot_ID`. Let's unpack the code a bit: 
+
+- `group_by(all_dat_tib, Plot_ID)` splits the data up by `Plot_ID`
+- `summarize(nspp = n_distinct(Scientific_name))` computes the number of species
+    - `nspp = ....` means we will store those computed numbers in a *new* column called `nspp`
+    - `n_distinct(Scientific_name)` is the code that actually calculates the **n**umber of **distinct** species
+- `ungroup()` is not strictly *necessary* but its good practice so that our new `tibble` called `nspp_by_plot` is not, itself, split up by `Plot_ID` 
+
+But if we actually want to analyze how number of species is impacted by plot-level variables (like plot area, climate factors, etc.) we need to have more columns than just `Plot_ID` and `nspp`. To keep keep, for example, `Plot_Area` we could do this
+
+```{r}
+# notice we're using the tibble version of the data
+nspp_by_plot <- group_by(all_dat_tib, Plot_ID) |> 
+    summarize(area = first(Plot_Area), 
+              nspp = n_distinct(Scientific_name)) |> 
+    ungroup()
+
+nspp_by_plot
+```
+
+Notice that `summarize` can create multiple new columns---here we made `area` and `nspp`. We also used the function `first` which just extracts the first value from the column `Plot_Area` within each plot. Why the first value? Because for a given plot (and we are splitting the data by plot) all the values of `Plot_Area` will be the same and we are making a `tibble` that has one row for each plot, so we need a single number for plot area in each row. Might as well be the first value since they're all the same.
+
+But what if we want more than just `area` and `nspp`? We probably are interested in all the climate, geology, and human impact data too. It would be cumbersome to type out all those columns inside `summarize`. Luckily there is an efficient alternative
+
+```{r}
+nspp_by_plot <- group_by(all_dat_tib, Plot_ID) |> 
+    summarize(across(Island:elev_m, first), 
+              nspp = n_distinct(Scientific_name)) |> 
+    ungroup()
+
+nspp_by_plot
+```
+
+The way we get the first value of many different columns is `across(Island:elev_m, first)`. The function `across` applies `first` to each of the columns indicated by `Island:elev_m`.
+
+The above printed output helps us confirm that `across` worked, but the column `nspp` is not printed, and we might want to see it to make sure it looks right. How to do that? We can use `select`
+
+```{r}
+# choose a few columns in addition to `nspp`
+select(nspp_by_plot, c(Plot_ID, Island, lon, lat, nspp))
+```
+
+::: {.callout-note}
+
+## Your turn
+
+Use what you've just learned to make a `tibble` called `basal_by_plot` that calculates the basal area (again, sum of all DBH measurements) for each plot. Let's call the basal area column `basal_area`. Again keep all the plot-level data like we did in making `nspp_by_plot`.
+
+```{r}
+#| echo: false
+#| label: basal-soltuion
+
+
+basal_by_plot <- group_by(all_dat_tib, Plot_ID) |> 
+    summarize(across(Island:elev_m, first), 
+              basal_area = sum(DBH_cm)) |> 
+    ungroup()
+```
+
+:::
+
+There are a lot of other interesting things we could calculate: proportion of native species versus non-native, proportion of basal area of native species versus non-native, and many more. We need to think carefully about whether we want to make lots of separate `tibble`s for all these variables or not. When such a question arises, the answer is almost always *do **not*** make separate `tibble`s. All these `tibble`s would share exactly the same plot-level data. Rather than separate `tibble`s for all the new variables we might want to calculate, the better option is making one `tibble` with different columns for all those variables. That is the *tidy* approach. Unnecessarily separating `tibble`s introduces the risk of modifying one and not the other leading to inconsistent analyses of different variables that might not be easy to notice but could drastically alter your interpretation of the data.
+
+<!-- We have made two separate `tibble`s just for learning purposes. Let's now make one big one for storing all the  -->
+
 
 <!-- ## Visualizing data with *ggplot2* -->
 
@@ -851,12 +1023,12 @@ dat_by_plot <- group_by(all_dat, plot_id) |>
               nspp_native = scientific_name[native_status == "native"] |> 
                   unique() |> 
                   length(),
-              across(c(island:elem_m), first)) |> 
+              across(c(island:elev_m), first)) |> 
     ungroup()
     
 str(dat_by_plot)
 
-ggplot(filter(dat_by_plot, elem_m > 300), 
+ggplot(filter(dat_by_plot, elev_m > 300), 
        aes(age_yr, prop_native, color = island)) +
     geom_point(alpha = 0.25) +
     scale_color_viridis_d() +
