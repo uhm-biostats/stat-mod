@@ -11,7 +11,7 @@ book:
           chapters:
             - datasets-intro.qmd
             - care-fair.qmd
-            # - r-refresh.qmd
+            - r-refresh.qmd
             # - github.qmd
             # - dynamic-doc.qmd
             # - bring-it-together.qmd

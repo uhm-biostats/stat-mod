@@ -1,19 +1,821 @@
+---
+callout-icon: false
+---
+
 # R refresher 
 
-- 1st
-    - utility of RStudio projects
-    - code style 
-    - organizin data
-    - dplyr basics, pipe
-    - tibble
-    - tidyr::*_join
-- 2nd
-    - when to pipe and when to break
-    - group_by workflow
-    - ggplot
+## R and RStudio
+
+These tools have been described extensively elsewhere. For completeness we better link to one: [Carpentries' R for Ecologists](https://datacarpentry.github.io/R-ecology-lesson/introduction-r-rstudio.html).
+
+One distinction to emphasize: R is the language and environment for doing statistics, RStudio is a tool to make working with R a little easier. Here is a quick orientation to RStudio:
+
+![](img/rr/rstudio-layout.png)
+
+One way that RStudio is very useful is that it bundles our work into projects, each project living in a folder on our computer, and each getting a .Rproj file that saves administrative details about the project. RStudio automatically helps R find files we might need (like data files) inside the project. That's a big help for writing clear code, and code we can share with others. To follow along with this tutorial, make a new project with File > New Project... and choose "New Directory". Give your project the name "r-refresher" and save it somewhere on your computer. We will get more precise with naming and folder organization when we go over GitHub.
+
+You can customize the way RStudio looks by going to Tools > Global Options and then apply the options you'd like, including setting the Appearance to a dark theme like the one pictured above. There are a few options you should definitely modify. Under the General - Basic section, make sure your selections match this:
+
+![](img/rr/rstudio-hist.png){width="50%"}
+
+We don't want to save or restore Workspace and History because we will end up completely bogging R down with months or years worth of random things. The only things you should treat as permanent and needing to be saved are scripts and data files.
+
+Most R code we write should live in an R script. Open a new one with File > New File > R Script to follow along. Before we forget, let's save that file giving it the name `tutorial.R`.
+
+## A few notes on R style
+
+Andy your instructor has a problem (he's aware of it) about being obsessive with coding style. To make life easier on us all, here are some guidelines we'll stick to in the class:
+
+### Comments
+
+Use `#` for comments and make sure there is a space after the `#`. Comments should look 
+
+```{r}
+# like this
+
+```
+
+and not 
+
+```{r}
+#like this
+```
+
+### Assignment character
+
+R is a funny language, it let's you make an object in multiple ways:
+
+```{r}
+# this is the same
+x <- 10
+
+# as this
+x = 10
+
+# as this 
+10 -> x
+```
+
+We will stick to using the most common style: `x <- 10`. This is called "assignment" because we are assigning the value `10` to the object `x`.
+
+### Tab spacing
+
+Sometimes a long line of code can get broken up into multiple lines for ease of reading. Or some types of commands are nearly always broken up across lines. In these cases, new lines of code get tab indented and how wide the indent looks is up to you: 
+
+```{r}
+#| eval: false
+
+# 1 tab = 4 spaces
+data |> 
+    filter()
+
+# 1 tab = 2 spaces
+data |> 
+  filter()
+```
+
+RStudio defaults to making an indent two spaces wide. Let's not do that, let's use four spaces (Andy just finds it easier to read...aging eyes perhaps). Go to Tools > Global Options then select Code and set Tab width to `4`. I poke fun at myself, but truth is, if your code gets complex, the extra space is a huge help in avoiding syntax errors and finding bugs when they do occur.
+
+### Naming
+
+As we've already seen we need to name things (like `x <- 10`, here `x` is the name). There are lots of ways to do this
+
+```{r}
+# I'm camel case
+longNameOfSomething <- 100
+
+# I'm snake case
+long_name_of_something <- 100
+
+# I'm a bad idea, but technically not wrong
+long.name.of.something <- 100
+```
+
+No shade on `long.name.of.something` it's just that the dot `.` is usually reserved for a special purpose---*not* naming---across many programming languages (even, confusingly, kind of in R).  When we need to make a long name, let's use snake case for this class because the "data science community" seems to be adopting it across multiple languages (e.g. R and python). But also sometimes a short name will do the trick and doesn't need any kind of "case."
+
+## Real basic R
+
+You'll often here people talk about "objects." In R, everything is an object.
+
+```{r}
+# what you might call a scalar is an "object"
+x <- 10
+
+# what you might call a vector is an "object"
+y <- 1:10
+
+# even functions are objects
+mean
+```
+
+An object is just something that we make with code or is made for us with code. Objects come in different types
+
+### A few simple object types: numeric, character, factor
+
+```{r}
+# *numerics* hold numbers (whether a single number of many)
+x <- 10
+y <- 1:10
+
+# *characters* hold letter-type things (anything in quotes)
+a <- "word"
+b <- c("three", "little", "words")
+
+# *factors* are like numerics and characters combined:
+# they look like characters, but can behave like numbers if we need
+f <- factor(c("a", "b", "c"))
+
+f
+
+# cast the factor to numeric
+as.numeric(f)
+
+# can't do that with true characters
+as.numeric(b)
+```
+
+Factors have levels that tell R what order to think about the characters in. That will end up being useful for plotting!
+
+```{r}
+g <- factor(c("a", "b", "c"), levels = c("b", "c", "a"))
+
+g
+
+# notice how the numbers changed
+as.numeric(g)
+```
+
+The last "one-dimensional" type of object to learn about are booleans. These are just `TRUE`s and `FALSE`s that end up being very useful for wrangling data.
+
+```{r}
+# we can make a boolean like this
+bool <- c(TRUE, FALSE, TRUE)
+
+# booleans also come by making "logical" comparisons
+10 > 3
+
+# we can compare objects 
+y == x
+```
+
+The operation `==` is a comparison that asks is "this" equal to "that": `this == that`.
+
+We can already get a peek at how booleans can help wrangle data:
+
+```{r}
+b[bool]
+```
+
+What just happened? Putting `bool` inside square brackets `[]` after `b` extracted the value from `b` where `bool` was true.
+
+::: {.callout-note}
+
+## Your turn 
+
+Make a boolean object called `cool` that extracts the 2nd element of the object `b` that we made earlier
+
+```{r}
+#| eval: false
+
+b <- c("three", "little", "words")
+
+cool <- ....
+
+....
+```
+:::
+
+### Combining objects into something more data-like 
+
+We can combine these one-dimensional objects into 2D objects---these 2D objects are what we typically think of when we think of *data*.
+
+Combine 2 or more objects of the same type and same size (like three elements long) to make a `matrix`
+
+```{r}
+m <- cbind(f, g)
+m
+```
+
+Combine 2 or more objects of same **or** different types, but still of the same size, to make a `data.frame`.
+
+```{r}
+dat <- data.frame(b, f, bool)
+dat
+```
+
+We can make custom column names if we like
+
+```{r}
+new_dat <- data.frame(words = b, groups = f, included = bool)
+new_dat
+```
+
+We can access columns in a `data.frame` in multiple ways:
+
+```{r}
+# by name with the dollar sign
+new_dat$words
+
+# by name using square brackets and a comma to indicate we want columns
+new_dat[, "words"] 
+
+# by position using brackets
+new_dat[, 1]
+
+# with booleans and square brackets
+new_dat[, bool]
+
+```
+
+The `data.frame` is the data workhorse in R. There are also some things that seem confusing about them like this `new_dat$words` and this `new_dat[, "words"]` being equivalent. Those language design choices were made literal decades ago so we're stuck with them. We are about to learn some newer approaches to working with data that attempt to bring greater consistency and clarity, but sometimes these "old school" methods are needed for specific tasks, so they are worth knowing.
+
+::: {.callout-note}
+## Your turn
+
+Make a `data.frame` to hold data that look like these:
+
+```{r}
+#| echo: false
+
+# library(knitr)
+# library(kableExtra)
+library(gt)
+
+dat <- data.frame(x = 1:3, y = c(2, 8, 6), group = c("g1", "g1", "g2"))
+
+gt(dat)
+```
+
+:::
+
+*Sometimes* we may need to combine objects of different sizes, and maybe same or different types. That task requires one last type of object: the `list`
+
+```{r}
+l <- list(y, g)
+l
+```
+
+Lists can get special names too
+
+```{r}
+new_l <- list(nums = y, group = g)
+new_l
+```
+
+
+## Working with data
+
+In real practice, we are rarely making a `data.frame` by hand. We are usually reading it in from a file. Let's get the data we'll be working with for this class, downloading it into the folder where our RStudio project lives. First make a folder called `data` inside the folder holding your RStudio project. You can do that in your computers folder system, or from within RStudio by hitting the icon of a holder with a plus over in the Files panel.
+
+Your project folder should now have this structure
+
+```
+r-refresh/
+├─── data/
+├─── r-refresh.Rproj
+└─── tutorial.R
+```
+
+Now click the following to download each data set, making sure to save them in the `data` folder you just made
+
+- {{< downloadthis data/OpenNahele_Tree_Data.csv dname=OpenNahele_Tree_Data label="Download OpenNahele Data">}}
+- {{< downloadthis data/plot_climate.csv dname=data/plot_climate label="Download Climate Data">}}
+- {{< downloadthis data/hii_geo.csv dname=data/hii_geo label="Download Human Impact and Geo Data">}}
+
+### Keeping data tidy
+
+Let's read the data into R and have a look
+
+```{r}
+tree <- read.csv("data/OpenNahele_Tree_Data.csv")
+```
+
+One really *REALLY* nice thing about RStudio projects is that they take care of a lot of the headache around file paths for us. If I had to type out the full path to the data file it might look like `/Users/Andy/teaching/zool631/r-refresh/data/OpenNahele_Tree_Data.csv`
+or something else crazy depending on where I saved the folder `r-refresh` on my computer. Worse than the typing itself, if I shared my script, nobody else could just run it, they would have to modify the path. If they shared it back with me, I would have to change it again...and again...and again! RStudio let's us use *relative* paths. No matter where the RStudio "r-refresh" project lives on our computer, it tells R to start looking for files inside the `r-refresh` folder. 
+
+::: {.callout-note}
+
+## Your turn
+
+Read in the climate data and combined human impact and geology data. It's important we all use the same names so we can continue following along with this tutorial, so let's store the climate data in an object called `clim` and the human impact + geology data in an object called `geoh`. Your code will include something like this:
+
+```{r}
+#| eval: false
+
+clim <- .....
+geoh <- .....
+```
+
+```{r}
+#| echo: false
+
+clim <- read.csv("data/plot_climate.csv")
+geoh <- read.csv("data/hii_geo.csv")
+```
+
+:::
+
+To view the data we have a few options. We can always use a program or app like excel or google sheets to directly view the file. We can also look at the data from within R. Knowing how to look at data from within R is an important tool:
+
+- we need to be able to confirm the data were read in correctly
+- as we wrangle the data we'll need to quickly and repeatedly look at the data objects to make sure we've done the wrangling right
+
+```{r}
+#| eval: false
+
+# the `View` function opens up a tab where we can see the data.frame 
+# in a tabular display like a spread sheet
+
+View(tree)
+```
 
 
 ```{r}
+# the `head` function prints out the first few rows into the R console
+# this can look messy for `data.frame`s with many columns
+
+head(tree)
+
+# the `str` function prints out the *structure* of the data, showing you
+# the data type of each column and a preview of its contents
+
+str(tree)
+```
+
+
+::: {.callout-note}
+
+## Your turn
+
+Use `View`, `head`, and `str` to take a look at `clim` and `geoh`.
+
+:::
+
+Let's talk about the organization of the data. As stated in the chapter on [CARE and FAIR](care-fair.qmd), well organized data is integral to making data **I**nteroperable and **R**eusable which are integral to CARE as well. 
+
+The data in `tree` are organized so that each row is an individual tree and the columns represent data about that tree. Column `Island` tells us what island that particular tree was growing on. Column `PlotID` tells us the unique ID of the inventory plot where that tree was growing. `Island` and `PlotID` have many repeating values because many trees were sampled from the same plots on the same islands. The repeated values might seem like an inefficient way to store data, but actually there are many advantages to storing data this way.
+
+Consider an alternative: each unique `PlotID` gets its own row. Then we wouldn't need to repeat information about the plot, but we would be stumped with how to store data on the trees within the plot. Does each tree get its own row? Different plots have different numbers of trees and we can't have variable numbers of columns per row, so then we'd have a bunch of missing values? In terms of computer memory, columns are also very expensive to store, so a `data.frame` with many columns (but with little or no repeated information in rows) is actually much more *inefficient* to store compared to a `data.frame` with fewer columns but some repeated information across rows.
+
+The other advantage to organizing the data with rows as trees is that it focuses our attention as data analysts on what  the sampling unit is in these data.  The sampling unit is indeed the tree. We collect multiple data points---or variables---about each tree: its species ID, its diameter at breast height (DBH), which plot it is found in, etc. With individual sampling units in rows, each variable fits cleanly into a single column.
+
+We can contrast tree being the sampling unit with the level of sampling unit in the data sets `clim` and `geoh`. Here each row is indeed a unique plot. In these data, plot is the sampling unit. We do not have data about climate variables, geology variables, and human impact variables at the level of each individual tree, we only have that information at the level of plot. 
+
+If we want to combine all these data, and soon we will, then plot-level data like `rain_annual_mm` will be repeated across all the trees from the same plot. This might be an approximation of the estimated rainfall (in this example) each tree receives, or we might actually consider that the relevant biological scale for rainfall really is an entire plot, not the precise geographic location of where a tree's trunk meets the ground.
+
+Data organized with individual sampling units as rows and variables as columns have become known as tidy data [@wickham2014]. Hadly Wickham's [-@wickham2014] article on tidy data was not the first to champion this type of data organization (e.g. relational databases, the assumed data structure for regression and ANOVA in R) but it laid the groundwork for best practices in data organization that have subsequently enabled the development of coding tools in R and other languages that make working with data more clear and consistent.
+
+### Introducing the *dplyr* package
+
+The package *dplyr* by Wickham and colleagues [-@dplyr] is a central package for working with tidy data. To work with the *dplyr* package we need to load it into our R session. Try this:
+
+```{r}
+library(dplyr)
+```
+
+If your console prints out the same message, great!  You have loaded *dplyr* into your current R session. If you get an error message that looks like
+
+```
+Error in library(dplyr) : there is no package called ‘xyz’
+```
+
+That means the package *dplyr* is not installed on your computer. No problem, install it with this code:
+
+```{r}
+#| eval: false
+
+install.packages("dplyr", dependencies = TRUE)
+```
+
+You only need to run `install.packages("dplyr", dependencies = TRUE)` if the package is not available or if you suspect your version of the package is out-of-date. You do not need to, and should not, run `install.packages` every time you start an R session.  For this reason, don't put any calls to `install.packages` in your R script. Type (or paste) those directly into the console. But you *do* need to run `library` every time you want to load a package into an R session. So calls to `library` *should* go in your R script. Often it's considered best practice to put all calls to `library` at the top of a script.
+
+
+Now let's have a look at what *dplyr* can do. Before applying *dplyr* functions to the real data, let's use a toy data set that we can easily see when printed out in the R console:
+
+```{r}
+toy_data <- data.frame(tree_ID = 1:4, 
+                       species = c("sp1", "sp1", "sp2", "sp2"), 
+                       x1 = c(3.2, 2.9, 5.1, 5.8), 
+                       x2 = c(4.4, 3.6, 3.4, 5.1))
+
+toy_data
+```
+
+We can imagine `tree_ID` records the unique ID of each tree in some made-up inventory plot, `species` holds the made-up species ID, and `x1` and `x2` are some kind of measurements made on each tree.
+
+
+#### `select`
+
+What if we need to extract all the values in the `x1` column. The *dplyr* approach is:
+
+```{r}
+select(toy_data, x1)
+```
+
+Quick check-in: instead of the above output, did you get an error like this:
+
+```
+Error in select(toy_data, x1) : could not find function "select"
+```
+
+That's because you didn't actually *run* the command `library(dplyr)`, just go back and run that.
+
+Notice that we can reference the `x1` column without needing to use `$` and without needing to put it in quotes like `"x1"`. This is the most common approach, though there can be times when quoting the column name is helpful, and `select` allows us to do that:
+
+```{r}
+select(toy_data, "x1")
+```
+
+What if we want to select multiple columns at the same time? No problem:
+
+```{r}
+select(toy_data, species, x1)
+```
+
+What if we want to *remove* a certain column? Can!
+
+```{r}
+select(toy_data, -tree_ID)
+```
+
+In fact `select` uses a flexible approach to indicating columns called `<tidy-select>`. Here's one example: suppose we want to extract the very last column from the data:
+
+```{r}
+select(toy_data, last_col())
+```
+
+::: {.callout-note}
+
+## Your turn
+
+Have a look at the help documentation for `select`:
+
+```{r}
+#| eval: false
+
+?select
+```
+
+And figure out *two* ways of selecting both columns `x1` and `x2` that do not look like `select(toy_data, x1, x2)`.
+:::
+
+#### `filter`
+
+We can extract or remove columns now, but what about *rows*. That is the job for filter. Suppose we want only the rows corresponding to "sp1".  Here is the *dplyr* approach:
+
+```{r}
+filter(toy_data, species == "sp1")
+```
+
+Notice a few things there: we *do* need to put "sp1" in quotes because it is of type character; and we are using one of those logical comparisons `==`.  We saw logical comparisons earlier, but let's refresh. The `==` operator asks R a question *is* ***this*** *equal to* ***that****?* or in code `this == that`. So we are asking is `species` equal to `"sp1"` and where it is, give us `TRUE`, where it is not, give us `FALSE`. The function `filter` then uses those `TRUE`s and `FALSE`s to extract the rows we want.
+
+
+#### Logical operators
+
+There are a lot of logical operators and they are implemented in base R (we do not need *dplyr* to access them). Here is an accounting of the ones you are most likely to use
+
+| operator| purpose| example|
+|:-------:|:-------|:-------|
+| `==`    | equal? | `species == "sp1"` |
+| `!=`    | not equal? | `species != "sp1"` |
+| `<`     | less than? | `x1 < 3` |
+| `>`     | greater than? | `x1 > 3` |
+| `<=`    | less than or equal to? | `x1 <= 3` |
+| `>=`    | greater than or equal to? | `x1 >= 3` |
+| `&`     | combine comparisons with AND (both must be `TRUE`) | `x1 < 3 & x1 > 1` (can think of it mathematically as $1 < x_1 < 3$) |
+| `|`     | combine comparisons with OR (either can be `TRUE`) | `x1 < 3 | x1 > 5` |
+| `%in%`  | equal? but multiple comparisons | `species %in% c("sp1", "sp2")` (same as `species == "sp1" | species == "sp2"`) |
+| `is.na` | equal to `NA`? | `is.na(species)` |
+| `!`     | flip `TRUE` to `FALSE` and vice versa | `!is.na(species)` (pronounced "bang!") |
+
+: {tbl-colwidths="[10,25,75]"}
+
+::: {.callout-note}
+
+## Your turn
+
+Let's look under the hood a bit at what these logical operators are doing.  Use `select` to figure out what the comparison `species == "sp1"` is actually computing.
+
+Now try a few other operators out. Filter the `toy_data` so that we extract rows where `x2` is less than or equal to 5 but greater than 4.4.
+
+Now try to *predict* (without running any code) what this will produce:
+
+```{r}
+#| eval: false
+
+filter(toy_data, species %in% c("sp1", "sp2"))
+```
+
+Go ahead and run to code to see if you were right. If your prediction was off, why?
+:::
+
+#### `rename`
+
+Sometimes our data do not have columns with the best names. One might want to change the raw data in the spread sheet, but wait!  That might not be FAIR! What if you're working with data that has well defined metadata and you want to share your code with a friend? They download the same data set but your code doesn't work for them because you changed the column names in your copy of the raw data. Better to document the name change and make it reproducible by using code.
+
+Here's an example. The column names `x1` and `x2` maybe are not great. Maybe we want to call them what they really are. Imagine `x1` is specific leaf area (SLA) and `x2` is DBH. We can rename them like this:
+
+```{r}
+rename(toy_data, sla = x1, dbh = x2)
+```
+
+Sweet! Now have a look at `toy_data` again
+
+```{r}
+toy_data
+```
+
+Nothing changed. That is not an error or bug. The *dplyr* functions do not change the data object itself, they make a new copy of it with the modifications. If we want to use that output, we need to assign it to an object:
+
+```{r}
+clean_toy_data <- rename(toy_data, sla = x1, dbh = x2)
+```
+
+### `mutate`
+
+Sometimes we need to add a column to a `data.frame` based on a computation we make in R. Say, for example, we want to analyze the log of DBH rather than DBH itself. The best way to set ourselves up for success is to add a column to the data.
+
+```{r}
+mutate(clean_toy_data, log_dbh = log(dbh))
+```
+
+Again, if we actually want to keep that change, we need to assign it to an object. Maybe we just re-assign it to the same object name
+
+```{r}
+clean_toy_data <- mutate(clean_toy_data, log_dbh = log(dbh)) 
+
+clean_toy_data
+```
+
+
+### Piping
+
+What if we want to do multiple things to some data in order to arrive at the final object we want?  Suppose, for example, that we have `toy_data` and we want to make a new `data.frame` with only `"sp1"` in it, without the `tree_ID` column, and with `x1` and `x2` renamed appropriately?
+
+We could do that like this:
+
+```{r}
+dat_no_ID <- select(toy_data, -tree_ID)
+dat_just_sp1 <- filter(dat_no_ID, species == "sp1")
+final_dat <- rename(dat_just_sp1, sla = x1, dbh = x2)
+
+final_dat
+```
+
+The object `final_dat` is indeed what we want our `data.frame` to look like, but perhaps it was a little cumbersome writing out all those intermediate steps. Worse than cumbersome, all those object names in the intermediate steps introduce more and more opportunities for bugs and errors arising from typos or incorrect copy-pasting. We could just write-over the same object name over-and-over, that does reduce the risk of typos and incorrect copy-pasting.
+
+```{r}
+final_dat <- select(toy_data, -tree_ID)
+final_dat <- filter(dat_no_ID, species == "sp1")
+final_dat <- rename(dat_just_sp1, sla = x1, dbh = x2)
+
+final_dat
+```
+
+Again the `data.frame` we want, but many years of experience working with and teaching R has shown me that writing over the same name over-and-over introduces the risk that you might forget to run one line, or one line might error out without you noticing (possible in a long script) which leads to the final product being incorrect without you knowing. I've seen that cause plenty of headaches.
+
+We could instead *nest* the functions. Nesting functions is like this:
+
+```{r}
+sum(c(1, 4, 8))
+```
+
+R reads this from inside out: first it makes a vector `c(1, 4, 8)`, then it feeds that vector into `sum()`. Nesting just two simple functions like this example is pretty common and not necessarily something we need to avoid. But with our data wrangling case it is more complex:
+
+```{r}
+final_dat <- rename(filter(select(toy_data, -tree_ID), 
+                           species == "sp1"), 
+                    sla = x1, dbh = x2)
+
+final_dat
+```
+
+Again, the right `data.frame`. Breaking the code across multiple lines is critical for readability, and helps a little bit, but it is pretty hard to follow the flow of computations (they are kind of inside out and upside down) to understand what the code is doing.
+
+All these less-than-ideal solutions motivate another approach: the pipe (`|>`). The pipe operator lets you combine multiple computations in one workflow that is easier for human eyes to follow than nesting and avoids the issues with making or writing-over objects in intermediate steps.  Here's how it works
+
+```{r}
+# we could nest functions
+# this passes the output of c(1, 4, 8) into sum()
+sum(c(1, 4, 8))
+
+# or we could achieve the same computation by
+# piping the output of c(1, 4, 8) into sum()
+c(1, 4, 8) |> sum()
+```
+
+The pipe operator lets R compute the first command (`c(1, 4, 8)`) and then pass the output as the first argument into `sum()`. That lets us write the code from left to right in the actual order that the computations will be done by R. We can also add line breaks so we can visually order the computations top to bottom, again in the same actual order that R will process them:
+
+```{r}
+c(1, 4, 8) |> 
+    sum()
+```
+
+Now let's look at the data wrangling case using pipes
+
+```{r}
+final_dat <- select(toy_data, -tree_ID) |> 
+    filter(species == "sp1") |> 
+    rename(dsla = x1, dbh = x2)
+
+final_dat
+```
+
+That's the `data.frame` we want and hopefully a more clear, less error-prone way of getting there. One thing to note, that sometimes trips people up, is that after passing `toy_data` into `select`, we don't see any names of objects again. But remember, the *output* of `select` is being piped into `filter` as the first argument, and the output of `filter` is getting pipped into `rename` as the first argument.  If you got that, great! If not, here is one more way to think about it
+
+```{r}
+#| eval: false
+
+# don't try to run this, it is not valid R code
+final_dat <- select(toy_data, -tree_ID) |> 
+    filter(__hidden-output-of-select__, species == "sp1") |> 
+    rename(__hidden_output-of-filter__, dsla = x1, dbh = x2)
+```
+
+We don't see the output of `select` or `filter` but it is there under-the-hood.
+
+If typing out `|` and then `>` to make the pipe `|>` feels like gymnastics for your fingers, you can use the keyboard shortcut provided by RStudio. Look it up for your OS by going to Tools > Keyboard Shortcuts Help
+
+#### The *magrittr* pipe `%>%`
+
+If this is not your first time around the block with pipes, you probably know the *magrittr* pipe `%>%`. Following the [advice of Hadley Wickham and other pros](https://r4ds.hadley.nz/data-transform.html#sec-the-pipe) we will use the native pipe operator `|>`. In most cases your knowledge of the *magrittr* `%>%` will translate cleanly over to the native `|>`. Two key differences that commonly arise: 
+
+- This `c(1, 4, 8) %>% sum` is valid *magrittr* code, but this `c(1, 4, 8) |> sum` is not valid for the native `|>`, you must include parentheses with the function name: `c(1, 4, 8) |> sum()`
+- The placeholders are also different: `.` in *magrittr* and `_` for the native `|>`. There are other nuances with placeholders that we can address as they come up
+
+::: {.callout-note}
+
+## Your turn
+
+Now let's use these approaches with our real data. We'll work with the `tree` data specifically, and here's the goal:
+
+- make a `data.frame` with just the native species
+- remove rows where `Island` is `NA`
+- remove the columns `Cultivated_Status`, `Angiosperm`, and `Monocot`
+- make the column `DBH_cm` all lower case
+- add a column for log DBH and call it `log_dbg_cm`
+
+
+
+:::
+
+### Merging data
+
+Like we mentioned, we want to merge the tree, climate, and geology + human impact data. In database speak, this kind of task is called a "join." *dplyr* offers us three kinds of joins: `left_join`, `right_join`, `full_join`. To understand these, we'll use our toy data, but we need to make two other made-up `data.frames` to actually *join* things.
+
+Let's say we have some higher taxonomy in another `data.frame`
+
+```{r}
+tax <- data.frame(family = c("fam1", "fam2", "fam2"), 
+                  genus = c("gen1", "gen2", "gen3"), 
+                  species = c("sp1", "sp2", "sp3"))
+
+tax
+```
+
+I deliberately made fake taxonomic info for three species even though our `clean_toy_data` only has two.
+
+Let's say we have some species average trait values in another `data.frame`
+
+```{r}
+trt <- data.frame(species = c("sp1", "sp2", "sp3", "sp4"), 
+                  sla = c(3.1, 5.6, 5.4, 2.1), 
+                  leaf_nitrogen = c(8.7, 12.2, 12.7, 3.8), 
+                  growth_form = c("shrub/tree", "tree", "tree", "tree"))
+
+trt
+```
+
+Again, deliberately making a different number of species here.
+
+OK! So first let's join `clean_toy_data` with `tax`. Here's what `left_join` gives us
+
+```{r}
+toy_tax <- left_join(clean_toy_data, tax)
+
+toy_tax
+```
+
+Cool! The taxonomy info was added, and only for the species we actually have in `clean_toy_data`. It told us *how* it made the join too. The column `species` is shared across both `data.frame`s and `left_join` used that column for joining.
+
+::: {.callout-note}
+
+## Your turn
+
+- Try `full_join` with `clean_toy_data` and `tax`; describe any differences
+- Try `right_join(tax, trt)`; what's different?
+
+:::
+
+Let's put everything together. We can use `|>` to combine multiple joins. Also, imagine that `clean_toy_data` is the focus of our analysis, so we don't need the "extra" species from `tax` and `trt`. That means we'll use `left_join`.
+
+```{r}
+final_toy_data <- left_join(clean_toy_data, tax) |> 
+    left_join(trt)
+```
+
+Interesting, it says `join_by(species)` (that was from the first `left_join`) but then it says `join_by(species, sla)` which is from the second join. We better check what the data look like
+
+```{r}
+final_toy_data
+```
+
+We got no data from `trt`! The problem is that when we tried to join the output of `left_join(clean_toy_data, tax)` with `trt`, R tried to join not just with the shared column `species` but also the column `sla`, which has the same name in `clean_toy_data` and `trt`. That's unfortunate. But luckily we can tell R to not just join by all columns with the same name, we can tell it specific columns
+
+```{r}
+final_toy_data <- left_join(clean_toy_data, tax) |> 
+    left_join(trt, by = join_by(species))
+
+final_toy_data
+```
+
+Better! But now we have a column `sla.y`. We don't really need that. Perhaps the better approach would be to *remove* the `sla` column from `trt` before joining.  We can do that
+
+```{r}
+final_toy_data <- select(trt, -sla) |> 
+    right_join(clean_toy_data) |> 
+    left_join(tax)
+
+final_toy_data
+```
+
+All the data are joined, great! The columns are kind of in a funny order. Really that shouldn't deeply matter for the computer as long as they're all there. But us humans tend to like things arranged in a conceptual order. We can change the order of columns with `relocate`. That function also makes use of `<tidy-select>` to flexibly indicate which columns we want to work with. Here's one arrangement of columns that might make sense:
+
+```{r}
+final_toy_data <- select(trt, -sla) |> 
+    right_join(clean_toy_data) |> 
+    left_join(tax) |> 
+    relocate(c(tree_ID, family:genus), .before = species)
+
+final_toy_data
+```
+
+
+::: {.callout-note}
+
+## Your turn
+
+```{r}
+#| echo: false
+
+all_dat <- select(clim, -(lon:lat)) |> 
+    full_join(geoh) |>
+    full_join(tree) |>
+    select(-(Longitude:Latitude)) |> 
+    filter(!is.na(Island)) |> 
+    relocate(c(Island:Census, lon:lat), .after = PlotID)
+```
+
+Let's join the three real data sets we'll be working with! Let's call the product of joining all the data `all_dat`. Don't forget to also remove rows where `Island` is `NA`. Let's also re-arrange the columns so they are ordered like this: 
+
+```{r}
+#| echo: false
+#| output: asis 
+
+names(all_dat) |> 
+    (\(x) sprintf("- `%s`", x))() |> 
+    cat(sep = "\n")
+```
+
+:::
+
+### The `tibble`
+
+Printing `data.frame`s, even using `head`, can result in some hard-to-read output. The deeper you go in wrangling data you will also find some inconsistencies in the design choices (made decades ago) about how data.frames sometimes behave. For all those reasons, there is an alternative option that tries to retain all the good things about `data.frames`, be more-or-less interoperable with `data.frame`s, but also give us some improvements. This is the `tibble`. To work with `tibble`s we'll need the *tibble* package. To see the printing benefit of `tibble`s let's turn our monstrous `all_dat` object into a `tibble` and have a look:
+
+```{r}
+library(tibble) # if you don't have it use install.packages
+
+all_dat_tib <- as_tibble(all_dat)
+
+all_dat_tib
+```
+
+We don't even need to worry about using `head`, we get more information about each column (kind of like `str`), and columns don't run off the screen or wrap around the console, some are just not printed and we get a message about which ones were not printed.
+
+If we want to avoid `data.frame`s all together, we can read data directly into R as a `tibble` with the *readr* package:
+
+```{r}
+library(readr) # if you don't have it use install.packages
+
+tree_tib <- read_csv("data/OpenNahele_Tree_Data.csv")
+
+tree_tib
+
+```
+
+<!-- ### The split-apply-combine workflow -->
+
+<!-- ### To pipe or not to pipe -->
+
+<!-- ## Visualizing data with *ggplot2* -->
+
+
+```{r}
+#| echo: false
+#| eval: false
+
+
 library(dplyr)
 library(ggplot2)
 library(tibble)
@@ -83,6 +885,9 @@ ggplot(dat_by_plot, aes(rain_annual_mm, prop_native, color = island)) +
 
 ## Resources
 
-https://datacarpentry.github.io/R-ecology-lesson/
+The Carpentries has a great [R tutorial for ecologists](https://datacarpentry.github.io/R-ecology-lesson/). A few differences about their approach and ours: they use the *magrittr* pipe and instead of loading only the packages they need (like *dplyr* and *readr*) they load a massive collection of packages: *tidyverse*. That might seem convenient, but my (me, Andy, here) experience is that understanding which functions come from which specific packages is useful for writing reusable code.
 
-but note: they use `%>%` and load entire *tidyverse*
+Another great resource is a [course website by Jenny Bryan](https://stat545.com/index.html) who is one of those pros along side Hadley Wickham. The course website also uses `%>%` (though Jenny Bryan has more recently switched to `|>`) and *tidyverse*, so pay mind to those differences.
+
+## References
+
