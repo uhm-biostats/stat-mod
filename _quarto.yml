@@ -43,6 +43,9 @@ csl: conservation-biology.csl
 
 format:
   html:
+    fig-width: 4
+    fig-height: 4
+    out-width: 5in
     theme:
       - cosmo
     # css: styles.css
