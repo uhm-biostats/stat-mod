@@ -903,6 +903,8 @@ tree_tib
 
 Aggregating sampling units into more coarse-grained levels and calculating summary statistics is one of the most common tasks in data wrangling. Think of things like calculating the proportion of native species in each plot; or calculating the total basal area (sum of DBH) for each plot; or calculating the number of species found in each plot. Those are all examples of aggregating data on individual trees into more coarse-grained plot-level descriptions. *dplyr* offers us some useful tools for this kind of task in what is commonly called the "split-apply-combine" approach. We first *split* apart the data by some variable like `Plot_ID`, then *apply* functions to calculate descriptions of the data within each split apart level (e.g. within each plot), and then *combine* all those results in a convenient data object like a `tibble` or `data.frame`. To *split* we use the function `group_by` and to both *apply* and *combine* we use the function `summarize`. Often we clean up our final product with `ungroup` as we will see.
 
+### Learning the basics of the workflow
+
 As a motivating example, let's figure out the number of species in each plot
 
 ```{r}
@@ -975,12 +977,534 @@ basal_by_plot <- group_by(all_dat_tib, Plot_ID) |>
 
 :::
 
+
 There are a lot of other interesting things we could calculate: proportion of native species versus non-native, proportion of basal area of native species versus non-native, and many more. We need to think carefully about whether we want to make lots of separate `tibble`s for all these variables or not. When such a question arises, the answer is almost always *do **not*** make separate `tibble`s. All these `tibble`s would share exactly the same plot-level data. Rather than separate `tibble`s for all the new variables we might want to calculate, the better option is making one `tibble` with different columns for all those variables. That is the *tidy* approach. Unnecessarily separating `tibble`s introduces the risk of modifying one and not the other leading to inconsistent analyses of different variables that might not be easy to notice but could drastically alter your interpretation of the data.
 
-<!-- We have made two separate `tibble`s just for learning purposes. Let's now make one big one for storing all the  -->
+### Increasingly complex calculations inside `summarize`
+
+We have made two separate `tibble`s just for learning purposes. Let's now make one big one for storing all the data we might want to summarize at the plot level. The things we'll calculate are:
+
+- `nspp`: number of species
+- `nspp_native`: number of native species
+- `prop_spp_native`: proportion of species that are native
+- `basal`: basal area
+- `basal_native`: basal area of native species
+- `prop_basal_native`: proportion of basal area belonging to native species
+- `total_abund`: total abundance (how many trees in the plot)
+- `total_abund_native`: total abundance of native species
+- `prop_abund_native`: proportion of abundance belonging to native species
+
+We know how to count up unique species: `n_distinct`. We know how to sum up basal area: `sum`. For the other variables we need more tools. The simplest is getting total abundance: *dplyr* provides a function `n` that counts how many rows are in a split apart group created by `group_by`. Because each row is one tree, figuring out the number of rows will tell us the number of trees. Let's take what we know, plus `n`, and get half of the way to the plot-level `tibble` we want.
+
+```{r}
+# let's name our plot-level data object `dat_by_plot`
+dat_by_plot <- group_by(all_dat_tib, Plot_ID) |> 
+    summarize(across(Island:elev_m, first), 
+              nspp = n_distinct(Scientific_name), 
+              basal = sum(DBH_cm), 
+              total_abund = n()) |> 
+    ungroup()
+
+# let's look at the new columns we made
+select(dat_by_plot, Plot_ID:Island, nspp:total_abund)
+
+```
+
+Notice that to calculate number of rows we don't have to pass `n()` any arguments. `n` is an unusual function in that way, but a very useful one.
+
+How are we going to calculate these variables but for native species only? We are going to use booleans. Let's go back to our `clean_toy_data` for a moment to understand how booleans are going to help us. To make `clean_toy_data` a more relevant example, let's add a `native_status` column and make the whole thing a `tibble` called `toy_tib`.
+
+```{r}
+toy_tib <- mutate(clean_toy_data, 
+                  native_status = c("native", "native", 
+                                    "non-native", "non-native")) |> 
+    as_tibble()
+
+toy_tib
+
+```
+
+So we made up the `native_status` column such that "sp1" is native and "sp2" is non-native. Inside out `group_by` and `summarize` workflow we can make a boolean by "asking" `native_status == "native"`. R answers that question `TRUE` when a row in `native_status` *does* equal `"native"` and `FALSE` otherwise. We can see that same logic in action when we first looked at filtering:
+
+```{r}
+filter(toy_tib, native_status == "native")
+```
+
+Thinking back to the start of this tutorial, we also know that booleans can be used with square brackets (`[`) for subsetting:
+
+```{r}
+spp_vec <- c("sp1", "sp1", "sp2", "sp2")
+native_vec <- c("native", "native", "non-native", "non-native")
+
+spp_vec[native_vec == "native"]
+```
+
+If we have a subset of only native species names, we can calculate how many distinct names there are just like before:
+
+```{r}
+n_distinct(spp_vec[native_vec == "native"])
+```
+
+Let's see what that would look like the in `group_by` and `summarize` workflow
+
+```{r}
+# not assigning this to anything, just looking
+# and not bothering with all the other site-level data
+group_by(all_dat_tib, Plot_ID) |> 
+    summarize(nspp = n_distinct(Scientific_name), 
+              nspp_native = n_distinct(Scientific_name[Native_Status == "native"]))
+```
+
+That last line of code is a little long, we can easily break it across lines without causing errors
+
+```{r}
+#| eval: false
+
+group_by(all_dat_tib, Plot_ID) |> 
+    summarize(nspp = n_distinct(Scientific_name), 
+              nspp_native = n_distinct(
+                  Scientific_name[Native_Status == "native"]
+              ))
+```
+
+Notice sometimes we make a new like right after the opening `(` in a function call, that's totally acceptable style (some even prefer it).
+
+::: {.callout-note}
+
+## Your turn
+
+With this same `[` subsetting approach we can also calculate `basal_native`. Try giving that a go yourself. Again, no need to assign your calculations to an object, we're just figuring things out right now.
+
+```{r}
+#| eval: false
+#| echo: false
+#| label: basal-native-solution
+
+group_by(all_dat_tib, Plot_ID) |> 
+    summarize(basal = sum(DBH_cm), 
+              basal_native = sum(
+                  DBH_cm[Native_Status == "native"]
+              ))
+```
+
+:::
+
+We're going to use a convenient trick to calculate `total_abund_native`. Booleans can act like numbers when we want them to (specifically `TRUE` $\Leftrightarrow$ `1`, `FALSE` $\Leftrightarrow$ `0`).  So we can sum up a bunch of `TRUE`s and `FALSE`s and its the same as counting all the instances of `TRUE`:
+
+```{r}
+bool <- c(TRUE, FALSE, TRUE)
+
+sum(bool)
+```
+
+Because each row of the data is an individual tree and each row has one value for `Native_Status` we just need to sum up `Native_Status == "native"` to figure out the abundance of all native trees.
+
+```{r}
+group_by(all_dat_tib, Plot_ID) |> 
+    summarize(total_abund = n(), 
+              total_abund_native = sum(
+                  Native_Status == "native"
+              ))
+```
 
 
-<!-- ## Visualizing data with *ggplot2* -->
+The last type of variable we need to calculate is a proportion. A proportion is just a fraction: `frequency / total_observations`. So calculating the proportions we need is as simple as division, for example with abundance:
+
+```{r}
+group_by(all_dat_tib, Plot_ID) |> 
+    summarize(total_abund = n(), 
+              total_abund_native = sum(
+                  Native_Status == "native"
+              ), 
+              prop_abund_native = total_abund_native / total_abund)
+```
+
+::: {.callout-note}
+
+## Your turn
+
+```{r}
+#| echo: false
+#| message: false
+#| label: dat_by_plot-solution
+
+dat_by_plot <- group_by(all_dat_tib, Plot_ID) |> 
+    summarize(across(Island:elev_m, first), 
+              nspp = n_distinct(Scientific_name), 
+              nspp_native = n_distinct(
+                  Scientific_name[Native_Status == "native"]
+              ), 
+              prop_spp_native = nspp_native / nspp, 
+              basal = sum(DBH_cm), 
+              basal_native = sum(
+                  DBH_cm[Native_Status == "native"]
+              ),
+              prop_basal_native = basal_native / basal,
+              total_abund = n(), 
+              total_abund_native = sum(
+                  Native_Status == "native"
+              ), 
+              prop_abund_native = total_abund_native / total_abund) |> 
+    ungroup()
+```
+
+Taking everything we've figured out, make a final version of `dat_by_plot` with columns for all the site-level data (what we achieved with `across(Island:elev_m, first)`) and all the columns we want to calculate:
+
+```{r}
+#| echo: false
+#| output: asis
+
+select(dat_by_plot, nspp:total_abund_native) |> 
+    names() |> 
+    (\(x) sprintf("- `%s`", x))() |> 
+    cat(sep = "\n")
+```
+
+
+:::
+
+With our site-level data now in hand, let's make some visualizations
+
+## Visualizing data with *ggplot2*
+
+The *ggplot2* package is the current favorite way to make graphics in R. It's designed to build graphics by adding different components and stylistic choices until we arrive at the visualization we want. This layered approach allows us to make many different kinds of visualizations with a lot of room for customization.
+
+The first layer of a graphic made with *ggplot2* is a blank canvas that is aware of all the possible variables in data itself
+
+```{r}
+# first we need to load the package
+# remember `install.packages` if you need it
+library(ggplot2) 
+
+# `ggplot` is the core function for making 
+# graphics, they all start with ggplot
+ggplot(data = dat_by_plot)
+```
+
+Yes we are jumping straight into using the real plot-level data we just made! And we now have a blank canvas.
+
+Next we tell `ggplot` which variables from the data we actually want to visualize and how---which one will go on the x-axis, which on the y-axis, will others be used for color-coding different elements of the graphic, etc. Let's start by looking at a very basic relationship: how does the size of an inventory plot (`Plot_Area`) affect the number of species (`nspp`) found in that plot?  `Plot_Area` should go on the x-axis, `nspp` should go on the y-axis:
+
+```{r}
+ggplot(data = dat_by_plot, mapping = aes(x = Plot_Area, y = nspp)) 
+```
+
+Now you can see we have our axes set up. The argument `mapping` is how we indicate which variables we actually want to work with (we "map" the variable to a part of the graph). We have to wrap those variable names in the `aes` function because the choice of variable is considered a visual *aes*thetic of the graphic. We still, however, don't see any data other than the ranges on the axes. That's because there are many different ways we could visualize `Plot_Area` and `nspp`. But for our question we need a scatter plot. In *ggplot2* we get that by adding `geom_point()` to the mix
+
+```{r}
+ggplot(data = dat_by_plot, mapping = aes(x = Plot_Area, y = nspp)) + 
+    geom_point()
+```
+
+Wow we have a data visualization! Kind of a funny looking one, but something. All the different "kinds" of visualizations we can make are written in `geom_*` functions because those different kinds of visualizations are thought of as geometries by the authors of *ggplot2*.
+
+Before we address that our visualization is kind of funny looking, let's talk about being lazy with code. R lets us be lazy by not always forcing us to write the argument names. It matches up the inputs we give it with the arguments *by order*. So we can write this `ggplot(dat_by_plot, aes(x = Plot_Area, y = nspp))` and `ggplot` knows that the first input `dat_by_plot` should correspond to the first argument `data`. And `ggplot` knows that the second input `aes(x = Plot_Area, y = nspp)` should correspond to the second argument `mapping`. That same approach applies to the `x` and `y` arguments in `aes`, we can leave them *unnamed* and `aes` will figure it out. That means we can write a lot less code---be lazy (this approach is literally called lazy evaluation)---and get the same product.
+
+```{r}
+ggplot(dat_by_plot, aes(Plot_Area, nspp)) + 
+    geom_point()
+```
+
+Now what to do about the funny looking visualization. Its really those outliers with really large `Plot_Area`.  When we have a huge range across one axis with outliers, log-transforming it can help
+
+```{r}
+ggplot(dat_by_plot, aes(Plot_Area, nspp)) + 
+    geom_point() +
+    scale_x_continuous(transform = "log10")
+```
+
+Nice, we see that species richness generally increases with plot area. That makes sense. We achieved the log-transformation with `scale_x_continuous(transform = "log10")`. Breaking that down: `scale_x_continuous` because we want to change the *scale* of the *x*-axis which is a *continuous* variable and `transform = "log10"` because we want a log-transformation. You might ask why we had to name the argument `transform = "log10"` instead of just typing `scale_x_continuous("log10")`. The reason is that `transform` is not the first argument to ``scale_x_continuous`. Turns out `transform` is the $10^{th}$ argument and `name` is the first. We can skip over arguments 1 through 10 because *ggplot2* has given them meaningful **default** values---values it will automatically use for those arguments if we say nothing at all.  That is also why calling `geom_point()` without **any** arguments works: there are lots of arguments to `geom_point`, but they all have default values.
+
+Think back to ecology classes or biogeography. If you remember anything about the "species area relationship" you'll know that we tend to assume the affect of area $A$ on species richness $S$ is
+
+$$
+S = cA^z
+$$
+
+If we log both sides of that equation we get a linear equation
+
+$$
+\log(S) = \log(c) + z\log(A)
+$$
+
+That suggests we should log-transform both the x- and y-axes.
+
+::: {.callout-note}
+
+## Your turn
+
+Modify the `ggplot` code to log both the x- and y-axes. Do you have a guess of how to do it? Once you succeed your graphic will look like this
+
+```{r}
+#| echo: false
+#| label: sar-solution
+
+ggplot(dat_by_plot, aes(Plot_Area, nspp)) + 
+    geom_point() +
+    scale_x_continuous(transform = "log10") +
+    scale_y_continuous(transform = "log10")
+
+```
+
+While you're at it, compare the log-transformed plot and the not-log-transformed plot. What changes about the axes and why?
+
+:::
+
+What if other variables impact how species richness *tends* to increase with area? How could we add another variable to the plot without it looking like a ridiculous 3D thing? The most common approach is to color code the points (or perhaps modify another *aes*thetic like shape or size). Let's color points according to which island the inventory plots are on.
+
+
+```{r}
+ggplot(dat_by_plot, aes(Plot_Area, nspp, color = Island)) + 
+    geom_point() +
+    scale_x_continuous(transform = "log10") + 
+    scale_y_continuous(transform = "log10")
+```
+
+Crazy! There seem to be some interesting patterns, but it's kind of hard to see. We need to make some changes:
+
+- shorten the island names so the legend doesn't take up half the graphic
+- order the islands in a meaningful order (how about oldest to youngest)
+- pick better colors
+
+### Refining labels in `ggplot`s
+
+One option for refining the island names (considered a "label" in *ggplot2*) is to simply re-name them in the plot itself. We can use the layering function `scale_color_discrete` to specify what we want the labels to be:
+
+```{r}
+ggplot(dat_by_plot, aes(Plot_Area, nspp, color = Island)) + 
+    geom_point() +
+    scale_x_continuous(transform = "log10") + 
+    scale_y_continuous(transform = "log10") +
+    scale_color_discrete(labels = c("Hawaiʻi", "Kauaʻi", "Lānaʻi", 
+                                    "Maui", "Molokaʻi", "Oʻahu"))
+```
+
+Note that we have to be very careful to list the labels in the same order they appear in the legend. If we mess that up, our graphic will be just plain wrong. For that reason, this approach of changing the labels in the graph, is considered fragile and not best practice. Best practice is to refine the actual values of the variable (`Island`) in the data object itself. We can use `mutate` to modify the `Island` column and within `mutate` use `case_match` to create the more refined variable values we want:
+
+```{r}
+dat_by_plot <- mutate(dat_by_plot, 
+                      Island = case_match(
+                          Island, 
+                          "O'ahu Island (incl. Mokoli'i Islet)" ~ "Oʻahu", 
+                          "Hawai'i Island" ~ "Hawaiʻi", 
+                          "Maui Island" ~ "Maui", 
+                          "Moloka'i Island" ~ "Molokaʻi", 
+                          "Lana'i Island" ~ "Lānaʻi", 
+                          "Kaua'i Island" ~ "Kauaʻi"
+                      ))
+
+```
+
+You'll notice `case_match` uses a kind of funny syntax: `"old label" ~ "new label"`. This syntax indicates a mapping of the original value to a new value.
+
+This might also look kind of fragile: what if we misspell the old value we're trying to replace? Luckily, R will let you know (not the case with `scale_color_discrete(labels = c(....`), which makes this approach less fragile:
+
+```{r}
+mutate(dat_by_plot, 
+       Island = case_match(
+           Island, 
+           # deliberate misspelling
+           "Oahu (incl. Mokoli'i Islet)" ~ "Oʻahu", 
+           "Hawai'i Island" ~ "Hawaiʻi", 
+           "Maui Island" ~ "Maui", 
+           "Moloka'i Island" ~ "Molokaʻi", 
+           "Lana'i Island" ~ "Lānaʻi", 
+           "Kaua'i Island" ~ "Kauaʻi"
+       ))
+
+```
+
+We get an `NA` for what we misspelled. We would then easily see the `NA` in the graphic and know something went wrong so we could go back and fix it. 
+
+With the values themselves now aligning with what we want, we can make our graphic without need to specify labels in `scale_color_discrete(labels = c(....`
+
+```{r}
+ggplot(dat_by_plot, aes(Plot_Area, nspp, color = Island)) + 
+    geom_point() +
+    scale_x_continuous(transform = "log10") + 
+    scale_y_continuous(transform = "log10")
+```
+
+We still have the issue of islands showing up in a nonsense order. For this we have to go back to `factor`s, which, recall, are like `character` objects that have a sense of ranking or ordering. We will again use `mutate` to modify the `Island` column.
+
+```{r}
+dat_by_plot <- mutate(dat_by_plot, 
+                      Island = factor(
+                          Island, 
+                          levels = c("Kauaʻi", "Oʻahu", "Molokaʻi", 
+                                     "Lānaʻi", "Maui", "Hawaiʻi")
+                      ))
+
+```
+
+Again, if we misspell any of the `levels` we will get `NA` values in the `Island` column and be able to realize and fix our mistake. And now the islands display in a sensible order
+
+```{r}
+ggplot(dat_by_plot, aes(Plot_Area, nspp, color = Island)) + 
+    geom_point() +
+    scale_x_continuous(transform = "log10") + 
+    scale_y_continuous(transform = "log10")
+```
+
+
+::: {.callout-note}
+
+## Your turn
+
+The data wrangling we just did of shortening island names and making them factors was not exactly best practices for two reasons:
+
+1. we wrote-over the same object name; sometimes that's unavoidable, but when we can avoid it we should because it introduces opportunity for us to confuse ourselves
+2. we modified the data object `data_by_plot` without changing the objects it derives from: `all_dat_tib` and, in turn, `all_dat`. That means if we make a different data object from `all_dat_tib` or make other graphics/analyses directly from `all_dat` the variable values will be in conflict.  To fix the conflict (which we might plain forget to do) we'd have to write extra redundant code.
+
+Conflicting data versions and redundant code are the things of nightmares for the data analyst!
+
+So your task is to go all the way back in the script to where we first made `all_dat` and modify the `Island` column so the values have short (correct) names and are factors with appropriately ordered levels. Then make sure you also 
+
+- re-run the code that makes `all_dat_tib`
+- delete the code modifying `Islands` in the `dat_by_plot` object
+- and re-run the newly cleaned-up code making `dat_by_plot`
+
+```{r}
+#| echo: false
+#| message: false
+#| label: clean-up-solution
+
+all_dat <- select(clim, -(lon:lat)) |> 
+    full_join(geoh) |>
+    full_join(tree) |>
+    select(-(Longitude:Latitude)) |> 
+    filter(!is.na(Island)) |> 
+    relocate(c(Island:Census, lon:lat), .after = PlotID) |> 
+    rename(Plot_ID = PlotID) |> 
+    mutate(
+        Island = case_match(
+            Island, 
+            "O'ahu Island (incl. Mokoli'i Islet)" ~ "Oʻahu", 
+            "Hawai'i Island" ~ "Hawaiʻi", 
+            "Maui Island" ~ "Maui", 
+            "Moloka'i Island" ~ "Molokaʻi", 
+            "Lana'i Island" ~ "Lānaʻi", 
+            "Kaua'i Island" ~ "Kauaʻi"
+        ) |> 
+            factor(levels = c("Kauaʻi", "Oʻahu", "Molokaʻi", 
+                              "Lānaʻi", "Maui", "Hawaiʻi"))
+    )
+
+all_dat_tib <- as_tibble(all_dat)
+
+
+dat_by_plot <- group_by(all_dat_tib, Plot_ID) |> 
+    summarize(across(Island:elev_m, first), 
+              nspp = n_distinct(Scientific_name), 
+              nspp_native = n_distinct(
+                  Scientific_name[Native_Status == "native"]
+              ), 
+              basal = sum(DBH_cm), 
+              basal_native = sum(
+                  DBH_cm[Native_Status == "native"]
+              ), 
+              total_abund = n(), 
+              total_abund_native = sum(
+                  Native_Status == "native"
+              )) |> 
+    ungroup()
+
+```
+:::
+
+
+While we are on the topic of labels, we might as well improve the x- and y-axis labels. The default labels, you may notice, are just the column names. We could modify the data object again to have column names equal to the axis names we want. This is actually not the conventional approach; instead we usually modify the axis labels in the `ggplot` itself for two reasons: 
+
+1. often we want axis labels in normal human language with spaces and/or punctuation; spaces and some punctuation (but not all) *can* be allowed in column names, but it is not recommended
+2. the chances for introducing data representation errors are much lower in re-labeling axes compared to re-labeling data values
+
+To change axis labels we use `xlab` and `ylab`.
+
+```{r}
+ggplot(dat_by_plot, aes(Plot_Area, nspp, color = Island)) + 
+    geom_point() +
+    scale_x_continuous(transform = "log10") + 
+    scale_y_continuous(transform = "log10") +
+    xlab("Plot area (ha)") +
+    ylab("Number of species")
+```
+
+### Storing a `ggplot` as an object
+
+One pretty cool think about *ggplot* is that you can store a graphic as an object. Then if you want to continue adding layers to the visualization you can add them to the *object* like this:
+
+```{r}
+# store the basic graph set-up in an object 
+sar <- ggplot(dat_by_plot, aes(Plot_Area, nspp, color = Island)) + 
+    geom_point() +
+    scale_x_continuous(transform = "log10") + 
+    scale_y_continuous(transform = "log10")
+
+sar
+
+# now further refinement can be added to the *object*
+sar +
+    xlab("Plot area (ha)") +
+    ylab("Number of species")
+```
+
+### Customizing color
+
+The last customization of the graphic we set out to make was picking better colors. *ggplot2* has a lot of options to customize colors. All these options exist as functions with names starting with `scale_color_*`, including `scale_color_manual` which lets you have complete control over color coding data. Often complete control is over rated and we can let *ggplot2* automate some choices for us. A crowd favorite are the *viridis* color palettes. We will use `scale_color_viridis_d` with the `d` indicating that the data we are coloring have *d*iscrete (i.e. not continuous number) values.
+
+```{r}
+# remeber, we stored the core graphic in the `sar` object
+sar +
+    xlab("Plot area (ha)") +
+    ylab("Number of species") +
+    scale_color_viridis_d(option = "magma")
+```
+
+The argument `option = "magma"` chooses from several different pallets offered by *viridis* and seemed fitting for these data.
+
+::: {.callout-note}
+
+## Your turn
+
+Have a look at other arguments in `scale_color_viridis_d` (use the help documentation accessed with `?scale_color_viridis_d`) to see if you can further refine the color coding of islands
+
+:::
+
+### Faceting
+
+The patterns in the data are, frankly, still hard to see because multiple points fall on top of each other. There could be a few different approaches taken (some of which we'll look at in other contexts) like making points semi-transparent (although that works best when we are *not* color coding points) or jittering points (although that is not ideal for a scatter plot with `numeric` variables for both axes). Instead, our best option is to add *facets*, which split the data across multiple panels so we can see one group (`Island` in this case) per panel. Faceting is one super power of *ggplot2*.
+
+```{r}
+sar +
+    xlab("Plot area (ha)") +
+    ylab("Number of species") +
+    scale_color_viridis_d(option = "magma") +
+    facet_wrap(vars(Island))
+```
+
+The colors are now not strictly necessary, but neither are they unnecessary. What is, however, unnecessary is the legend so let's remove it
+
+```{r}
+sar +
+    xlab("Plot area (ha)") +
+    ylab("Number of species") +
+    scale_color_viridis_d(option = "magma") +
+    facet_wrap(vars(Island)) +
+    theme(legend.position = "none")
+```
+
+The last change we might like is making the points slightly transparent. That wasn't a great idea when all the islands had points on top of each other, but now with the facets, the transparent points can help us see if some areas of the graphic have a high density of data points compared to others. The argument `alpha` sets transparency and can be passed to either `geom_point` or `scale_color_viridis_d`. We'll pass it to `scale_color_viridis_d`
+
+```{r}
+sar +
+    xlab("Plot area (ha)") +
+    ylab("Number of species") +
+    scale_color_viridis_d(option = "magma", alpha = 0.5) +
+    facet_wrap(vars(Island)) +
+    theme(legend.position = "none")
+```
+
+### Coloring data based on a numerical variable
 
 
 ```{r}
