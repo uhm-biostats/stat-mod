@@ -4,6 +4,16 @@ callout-icon: false
 
 # R refresher 
 
+```{r}
+#| echo: false
+#| message: false
+
+knitr::opts_chunk$set(fig.width = 5, fig.height = 5, 
+                      out.width = "6in", out.height = "6in", 
+                      dpi = 144)
+```
+
+
 ## R and RStudio
 
 These tools have been described extensively elsewhere. For completeness we better link to one: [Carpentries' R for Ecologists](https://datacarpentry.github.io/R-ecology-lesson/introduction-r-rstudio.html).
@@ -1399,14 +1409,17 @@ dat_by_plot <- group_by(all_dat_tib, Plot_ID) |>
               nspp_native = n_distinct(
                   Scientific_name[Native_Status == "native"]
               ), 
+              prop_spp_native = nspp_native / nspp, 
               basal = sum(DBH_cm), 
               basal_native = sum(
                   DBH_cm[Native_Status == "native"]
               ), 
+              prop_basal_native = basal_native / basal,
               total_abund = n(), 
               total_abund_native = sum(
                   Native_Status == "native"
-              )) |> 
+              ), 
+              prop_abund_native = total_abund_native / total_abund) |> 
     ungroup()
 
 ```
@@ -1482,7 +1495,9 @@ sar +
     facet_wrap(vars(Island))
 ```
 
-The colors are now not strictly necessary, but neither are they unnecessary. What is, however, unnecessary is the legend so let's remove it
+The function `facet_wrap` needs to be told what variable to facet by, in this case `Island`. For reasons obscured deep in the design choices of *ggplot2* we have to put that variable inside the `vars` function for it to be used in faceting.
+
+With a faceted graphic the colors are now not strictly necessary, but neither are they unnecessary. What is, however, unnecessary is the legend so let's remove it
 
 ```{r}
 sar +
@@ -1506,76 +1521,188 @@ sar +
 
 ### Coloring data based on a numerical variable
 
+Up to now we used color to represent a categorical variable---island. We can also use color to represent a numerical variable. For example, what if the effect of area on species richness is modulated by the proportion of native versus non-native 
+
 
 ```{r}
-#| echo: false
-#| eval: false
+# we'll make a ggplot object for ease of
+# modifying later
+sar_nat <- ggplot(dat_by_plot, 
+                  aes(Plot_Area, nspp, 
+                      color = prop_abund_native)) + 
+    geom_point() +
+    scale_x_continuous(transform = "log10") + 
+    scale_y_continuous(transform = "log10") + 
+    xlab("Plot area (ha)") +
+    ylab("Number of species") +
+    facet_wrap(vars(Island)) 
+
+# view our first draft graphic
+sar_nat
+
+```
+
+Something interesting is going on here for sure, but the color pallet makes it a little hard to tell. Again the *viridis* color pallets will help us more clearly see the patterns.  We now use `scale_color_viridis_c`, with `c` for **c**ontinuous since the data we use for coloring are numeric.
+
+```{r}
+sar_nat +
+    scale_color_viridis_c()
+
+```
+
+Now we can really see that most of the time high richness plots are dominated by native trees, low richness plots are dominated by non-native trees. But also we can see there are plenty of deviations to this pattern, especially with some very diverse plots being mixed and some mono-dominate (single species) plots on Hawaiʻi being all native.
+
+One last cosmetic fix we might want to make is changing the name of the legend. We do this simply with the `name` argument passed to `scale_color_viridis_c`
+
+```{r}
+sar_nat +
+    scale_color_viridis_c(name = "Proportion\nnative trees")
+```
+
+Notice a little trick there to make the name wrap across two lines: the `\n` between "Proportion" and "native" introduces a newline. It is easy to introduce a newline when directly typing the text, but when text is pulled from the data (e.g. axis labels) there are better automated approaches, for example the `label_wrap` function in the *scales* package.
+
+### Graphics to show central tendency and spread across groups
+
+So far we have looked extensively at scatter plots. But there are a lot of other graphics out there. One very common group of graphics are those that show how the central tendency of data (and the spread about the center) change across different groups.  One intuitive grouping we have is island, so let's look at how some variables differ across islands. It is also a good idea to get a sense of how our data look before we embark on statistical analyses: understanding how the data look could inform what considerations we want to make in our analyses.
+
+#### The boxplot
+
+The box plot is a classic visualization of how the central tendency and spread of data change across groups. Let's look at the density of individuals per plot across islands. 
 
 
-library(dplyr)
-library(ggplot2)
-library(tibble)
-library(tidyr)
-library(janitor)
-library(readr)
+```{r}
+ggplot(dat_by_plot, aes(Island, total_abund / Plot_Area)) +
+    geom_boxplot() +
+    ylab(expression("Tree density ("*ha^-1*")"))
+```
+
+Three things to notice here: we can do *math* inside `ggplot` commands (e.g. we calculated density as `total_abund / Plot_Area`), the `geom_*` for a box plot is `geom_boxplot`, and we made a *fancy* y-axis label. In order the make "per hectare" (ha$^{-1}$) we used the `expression` function. This function prints out text as is (e.g. `"Tree density ("`) but then formats math syntax as math text (e.g. `*ha^-1*` gets formatted as $ha^{-1}$ and the `*` indicate no spaces).
+
+::: {.callout-note}
+
+## Your turn
+
+Make a box plot of a climatic, geologic, or human impact variable across the islands.
+
+:::
+
+#### The histogram
+
+Histograms are a great way to get a sense of how the data are distributed, including their central tendency and spread. Because *ggplot2* makes it so easy to facet graphics, we can easily view multiple histograms stack on top of each other
+
+```{r}
+ggplot(dat_by_plot, aes(total_abund / Plot_Area)) +
+    geom_histogram() +
+    facet_grid(vars(Island)) +
+    xlab(expression("Tree density ("*ha^-1*")")) +
+    ylab("Number of plots")
+
+```
+
+Because Hawaiʻi contains so many plots, the histogram heights are hard to read for the other plots. In such a situation we can consider if we want to over-ride the default graphic behavior and make the y-axis limits independent for each facet:
+
+```{r}
+ggplot(dat_by_plot, aes(total_abund / Plot_Area)) +
+    geom_histogram() +
+    facet_grid(vars(Island), scale = "free_y") +
+    xlab(expression("Tree density ("*ha^-1*")")) +
+    ylab("Number of plots")
+
+```
+
+Another solution is to use the increasingly popular "ridgeline plot" which shows (by default) a smoothed density representation of a histogram, and stacks the density curves in visually pleasing way. These graphics require an additional package: *ggridges*.
+
+```{r}
+library(ggridges)
+
+ggplot(dat_by_plot, 
+       aes(total_abund / Plot_Area, y = Island, fill = (Island))) +
+    geom_density_ridges() +
+    scale_fill_viridis_d(option = "magma") + 
+    theme(legend.position = "none")
+
+```
 
 
-tree <- read_csv("data/OpenNahele_Tree_Data.csv")
-clim <- read_csv("data/plot_climate.csv")
-geoh <- read_csv("data/hii_geo.csv")
+::: {.callout-note}
+
+## Your turn
+
+Make a ridgeline plot of a climatic, geologic, or human impact variable across the islands.
+
+:::
 
 
-all_dat <- select(clim, -(lon:lat)) |> 
-    full_join(geoh) |>
-    full_join(tree) |>
-    select(-(Longitude:Latitude)) |> 
-    filter(!is.na(Island)) |> 
-    mutate(Island = gsub(" Isl.*", "", Island)) |> 
-    clean_names()
+### Graphics to show proportions and frequencies
 
-str(all_dat)
+You may have seen many a bar graph (hopefully with error bars) used to show mean and uncertainty, but communicating that type of information is better suited to the visualizations we just covered. The bar graph is great for proportions and frequencies. 
 
-all_dat <- relocate(all_dat, c(island:census, lon:lat), .after = plot_id)
+When introducing the data we were curious about the number of plots where greater than three quarters of their trees belong to native species. We found that across the entire pae ʻāina this proportion is about `r round(mean(dat_by_plot$prop_abund_native >= 0.75) * 100, 0)`%. But what about for each island?  If we want to make a visual for that question, a bar graph would be a great choice.
 
-all_dat$island <- factor(all_dat$island, 
-                         levels = c("Kaua'i", "O'ahu", "Moloka'i", 
-                                    "Lana'i", "Maui", "Hawai'i"))
-
-dat_by_plot <- group_by(all_dat, plot_id) |> 
-    summarize(prop_native = mean(native_status == "native"), 
-              nspp = length(unique(scientific_name)),
-              nspp_native = scientific_name[native_status == "native"] |> 
-                  unique() |> 
-                  length(),
-              across(c(island:elev_m), first)) |> 
-    ungroup()
+```{r}
     
-str(dat_by_plot)
-
-ggplot(filter(dat_by_plot, elev_m > 300), 
-       aes(age_yr, prop_native, color = island)) +
-    geom_point(alpha = 0.25) +
-    scale_color_viridis_d() +
-    scale_x_continuous(transform = "log10")
-
-ggplot(dat_by_plot, aes(avbl_energy_annual_wm2, prop_native)) +
-    geom_point(alpha = 0.25) +
-    scale_color_viridis_d() + 
-    facet_wrap(vars(island))
-
-ggplot(dat_by_plot, aes(age_yr, nspp_native, color = island)) +
-    geom_point(alpha = 0.5) +
-    scale_color_viridis_d() +
-    scale_x_continuous(transform = "log10")
+ggplot(dat_by_plot, aes(Island, fill = prop_abund_native >= 0.75)) +
+    geom_bar()
 
 
-ggplot(dat_by_plot, aes(rain_annual_mm, prop_native, color = island)) +
-    geom_point(alpha = 0.5) +
-    scale_color_viridis_d() +
-    scale_x_continuous(transform = "log10")
+```
+
+Notice we again did some math inside `aes`: we created a boolean of whether or not `prop_abund_native` is greater than or equal to 0.75. But the y-axis is showing as a count rather than a proportion. To get a proportion we use `position = "fill"`
+
+```{r}
+    
+ggplot(dat_by_plot, aes(Island, fill = prop_abund_native >= 0.75)) +
+    geom_bar(position = "fill") 
+
+
+```
+
+::: {.callout-note}
+
+## Your turn
+
+Improve this graphic! Make it have better labels (pay close attention to the y-axis, its a proportion, but of what? What about the legend?) and give it better colors. You might find 
+
+```{r}
+#| eval: false
+#| echo: false
+#| label: bar-solution
+
+ggplot(dat_by_plot, aes(Island, fill = prop_abund_native >= 0.75)) +
+    geom_bar(position = "fill") +
+    scale_fill_discrete(name = "Possible\nwao akua", 
+                        labels = c("not likely", "likely"),
+                        palette = c("gray10", hsv(0.5, 1, 0.6))) +
+    ylab("Proportion of plots")
+
+
+```
+
+
+:::
 
 
 
+### Themes
+
+While we're on the topic of customizing appearances, let's talk about themes. The background grid seems very unnecessary in this last bar graph. How could we remove it? The quickest way is choosing a different *theme* for the visualization. There are many named themes like `theme_classic` that bundle multiple different cosmetic aspects of the graphic
+
+```{r}
+ggplot(dat_by_plot, aes(Island, fill = prop_abund_native >= 0.75)) +
+    geom_bar(position = "fill") +
+    theme_classic()
+```
+
+You can check out `?theme_classic` and it will take you to a help page with many different named themes.
+
+Different packages also offer custom themes. One popular one is `theme_cowplot` from the *cowplot* package.
+
+```{r}
+library(cowplot)
+
+ggplot(dat_by_plot, aes(Island, fill = prop_abund_native >= 0.75)) +
+    geom_bar(position = "fill") +
+    theme_cowplot()
 ```
 
 
