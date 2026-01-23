@@ -300,7 +300,12 @@ q[ii] |>
 
 ```
 
-But what is this all about:
+```{r}
+eval(parse(text = q[ii[-c(1:2, length(ii))]]))
+
+```
+
+We see the result of the computation gets printed out below the code. But what is this all about:
 
 
 ```{r}
