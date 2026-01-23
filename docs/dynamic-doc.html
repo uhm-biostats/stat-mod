@@ -479,7 +479,13 @@ sum(x)
 ```</code></pre>
 </div>
 </div>
-<p>But what is this all about:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">eval</span>(<span class="fu">parse</span>(<span class="at">text =</span> q[ii[<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="fu">length</span>(ii))]]))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 55</code></pre>
+</div>
+</div>
+<p>We see the result of the computation gets printed out below the code. But what is this all about:</p>
 <div class="cell s-output">
 <div class="cell-output cell-output-stdout">
 <pre><code>#| label: step-01</code></pre>
@@ -520,7 +526,7 @@ kable(d)
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="dynamic-doc_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="185"></p>
+<p><img src="dynamic-doc_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="185"></p>
 </figure>
 </div>
 </div>
