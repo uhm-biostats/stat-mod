@@ -1,12 +1,382 @@
-# Dynamic documents with quarto
+# Dynamic documents with *quarto*
 
-## Brief how-to
+## What is a dynamic document and how does quarto make it work?
 
-- yaml
-- headers
-- lists
-- code
+Dynamic documents are those that respond to changes in our data or code by automatically updating to reflect those changes. With dynamic documents you no longer need to have code in one file, graphics in multiple files elsewhere, and then copy and paste everything into another document when actually writing a paper, a report, or notes. Everything lives in one file and the nicely formatted finished product is generated from that one file.
+
+*Quarto* is the powerhouse that enables us to make these dynamic documents. Under the hood, *quarto* uses markdown, pandoc, and *knitr* to make all this possible. *Quarto* itself is not (just) an R package, so to seek help your best bet is the extensive [documentation online](https://quarto.org). *knitr* is an R package, but the best way to learn about it is also its extensive [documentation online](https://yihui.org/knitr/). We will cover much of the markdown you need to know in the next section. Only if you go deep into customizing the appearance of your documents do you need to dive into pandoc. For now, rest assured that what these incredible tools allow you to do is convert your code, figures, and simply-formatted text into beautiful pdf, html, or (beautiful? maybe not) word documents.
+
+It should be noted that *quarto* is the inheritor of *Rmarkdown* and pretty much everything on the web (or already in your head) about using *Rmarkdown* will apply to *quarto* as well.
+
+
+## Quick-start 
+
+Here is an example of a quarto document:
+
+```{r}
+#| echo: false
+#| classes: s-output
+
+readLines("example_quarto.qmd") |> cat(sep = "\n")
+```
+
+We can *render* that document into a pdf file that looks like this:
+
+
+```{r}
+#| echo: false
+#| message: false
+#| out-width: "50%"
+
+library(magick)
+
+if(!file.exists("example_quarto.pdf")) {
+    quarto::quarto_render("example_quarto.qmd", quiet = TRUE)
+}
+
+image_read_pdf("example_quarto.pdf") |> 
+    image_border(color = "#f1f3f5")
+```
+
+Pretty cool! But how does it all work. Here we go:
+
+### Rendering
+
+Rendering is made simple by RStudio. When you have a quarto document open, you will see a "Render" button. Hit that button and the rendering magic happens for you! RStudio comes pre-loaded with the quarto software and its dependencies needed for rendering. Rendering will produce an actual pdf file, and a preview of that file will show up in the "Viewer" tab.
+
+![](img/dyn-doc/render.png)
+
+If you want more control over rendering you can also use the R function `quarto_render` from the package *quarto*. For example in the console you could run
+
+```{r}
+#| eval: false
+
+library(quarto)
+
+quarto_render("example_quarto.qmd")
+```
+
+Have a look at `?quarto_render` for all the arguments that let you control the specifics of how your document is rendered.
+
+That's rendering, but how does the actual quarto document work
+
+### YAML header
+
+The first bit of the quarto document looked like this:
+
+```{r}
+#| echo: false
+#| classes: s-output
+
+q <- readLines("example_quarto.qmd")
+q[1:max(grep("---", q))] |> 
+    cat(sep = "\n")
+```
+
+In between the `---` is what's called the YAML header. This specifies metadata about the document. For example, we want to make a `pdf` document with `title` "The title." If we wanted to instead render an html document, all we need to do is change `format: pdf` to `format: html`.
+
+YAML lets you provide a *lot* of information that customizes or even adds content (like a bibliography) to your document. [Here](https://quarto-tdg.org/yaml) is a non-exhaustive accounting of some YAML options.
+
+### Markdown syntax
+
+Markdown is a markup language that lets you format text with simple *plain text*, meaning you can produce something fancy looking like different headers, lists, tables, with simple plain text characters like `#` and `-`. Alternative markup languages (like html or latex) require more laborious "markup" tags to achieve similar results to markdown, thus the attempt at a humors name for markdown. [Here](https://quarto.org/docs/authoring/markdown-basics.html) is an overview on markdown syntax.
+
+#### General formatting
+
+For *italics*, wrap text in a single asterisks `*like this*`; for **bold**, wrap text in double asterisks `**like this**`; and for ***italic bold***, wrap text in triple asterisks `***like this***`.
+
+#### Headers
+
+Markdown creates section headers with the hashtag: `#` is an H1 header, `##` is an H2 header (sub-header), `###` is an H3 header (sub-sub-header) and so on. You saw examples of these in the above example quarto document.
+
+#### Lists
+
+Bullet lists are generated with hyphens `-` like this:
+
+::: {.gb}
+
+```
+- one item
+- another item
+```
+
+:::
+
+Which will be rendered as:
+
+
+::: {.gb}
+
+- one item
+- another item
+
+::: 
+
+Numbered lists are generated with numbers:
+
+::: {.gb}
+
+```
+1. first
+1. second
+```
+
+:::
+
+gets rendered to 
+
+::: {.gb}
+
+1. first
+1. second
+
+:::
+
+Note: you don't need to use correct numbering, markdown figures it out for you.
+
+You can make hierarchical lists by tab indenting. This:
+
+::: {.gb}
+
+```
+- one item
+    - one smaller thought
+    - and another
+- another item
+```
+
+::: 
+
+produces this:
+
+::: {.gb}
+
+- one item
+    - one smaller thought
+    - and another
+- another item
+
+::: 
+
+And this:
+
+::: {.gb}
+
+```
+1. first
+    i. additionally 
+    iii. and more
+2. second
+```
+
+::: 
+
+produces this
+
+::: {.gb}
+
+1. first
+    i. additionally 
+    iii. and more
+2. second
+
+::: 
+
+#### Hyperlinks and images
+
+Those two items seem unrelated, but their markdown syntax is similar. You can link to a URL like this: `[Our website](https://uhm-biostats.github.io/stat-mod/)` which will produce formatted text like this:
+
+::: {.gb}
+
+[Our website](https://uhm-biostats.github.io/stat-mod/)
+
+:::
+
+Including an image looks almost the same. This:
+
+::: {.gb}
+
+```
+![An image from Kawika et al. 2018](img/data-intro/wao.png)
+```
+
+
+:::
+
+will be rendered as this:
+
+::: {.gb}
+<br>
+
+![An image from Kawika et al. 2018](img/data-intro/wao.png){width="50%" fig-align="left"}
+
+:::
+
+if you were to have that image file `wao.png` saved at the location `img/data-intro`. 
+
+You can also include an image from a URL:
+
+::: {.gb}
+
+```
+![Remember this old map?](https://uhm-biostats.github.io/stat-mod/datasets-intro_files/figure-html/fig-map-1.png)
+```
+
+:::
+
+::: {.gb}
+<br>
+
+![Remember this old map?](https://uhm-biostats.github.io/stat-mod/datasets-intro_files/figure-html/fig-map-1.png){width="75%" fig-align="left"}
+
+
+:::
+
+#### Tables
+
+Tables can be simply created with markdown like this:
+
+
+
+```{r}
+#| echo: false
+#| classes: s-output
+#| results: asis
+
+library(knitr)
+
+k <- readLines("kable_example.qmd")
+
+
+
+r <- k[grep("<- data\\.frame", k):(grep("kable\\(", k) - 1)]
+
+eval(parse(text = r))
+
+kt <- kable(d, format = "markdown") 
+
+cat("```", kt, "```", sep = "\n")
+
+
+
+```
+
+
+
+which is in turn rendered as 
+
+
+```{r}
+#| echo: false
+#| message: false
+
+if(!file.exists("kable_example.pdf")) {
+    quarto::quarto_render("kable_example.qmd", quiet = TRUE)
+}
+
+image_read_pdf("kable_example.pdf") |> 
+    image_crop("350x400+1100+250") |> 
+    image_border(color = "#f1f3f5")
+```
+
+
+
+### Code
+
+One of the most awesome things about *quarto* and *Rmarkdown* is that you can write code directly into the document and run it during the rendering process. We saw that in the example *quarto* document.
+
+Code lives in "chunks" and chunks have many options that you can specify to determine how and if the code is run and presented. Those options were first defined by [*knitr*](https://yihui.org/knitr/) and are not incorporated into *quarto*. See [documentation here](https://quarto.org/docs/computations/execution-options.html).
+
+Code chunks get indicated with triple back tick marks: ```` ``` ```` and the language of the code in curly brackets (`{r}`, we will only be using R) like this from the example document:
+
+
+```{r}
+#| echo: false
+#| classes: s-output
+
+ii <- (grep("step-01", q) - 1):max(grep("```", q))
+q[ii] |> 
+    cat(sep = "\n")
+
+```
+
+But what is this all about:
+
+
+```{r}
+#| echo: false
+#| classes: s-output
+
+q[ii[2]] |> 
+    cat(sep = "\n")
+
+```
+
+The `#|` is called a "hash pipe" (either the people who developed *quarto* are huge nerds who don't know better, or they know exactly what they're doing). The hash pipe is how we indicate code chunk options. A good habit to be in is always providing a `label:` to each code chunk. Some other options we've seen are `include:` which tells *quarto* if we want the code itself and its output to be printed in the rendered output; The default is `true` so `include: false` means run the code, but don't print it. We also say `echo: false` which means don't print the code, but *do* print the output. Other options we saw like `fig-width:` are for specifying details about how figures generated by code are displayed. 
+
+#### Figures and tables from code
+
+That's right! We can make figures with code and have them displayed in our rendered documents. 
+
+We can also make markdown-formatted tables with help from the *knitr* package. Here's an example
+
+
+::: {.gb}
+
+```{r}
+#| echo: false
+#| classes: s-output
+
+k <- readLines("kable_example.qmd")
+
+jj <- (grep("label: table", k) - 1):length(k)
+cat(k[jj], sep = "\n")
+
+```
+
+:::
+
+which produces the markdown table that previously we made by hand:
+
+::: {.gb}
+
+```{r}
+#| echo: false
+#| results: asis
+
+library(knitr)
+
+r <- k[grep("<- data\\.frame", k):(grep("kable\\(", k) - 1)]
+
+eval(parse(text = r))
+
+kt <- kable(d, format = "markdown") 
+
+cat("```", kt, "```", sep = "\n")
+
+```
+
+:::
+
+and is in turn rendered as 
+
+
+```{r}
+#| echo: false
+#| message: false
+
+if(!file.exists("kable_example.pdf")) {
+    quarto::quarto_render("kable_example.qmd", quiet = TRUE)
+}
+
+image_read_pdf("kable_example.pdf") |> 
+    image_crop("350x400+1100+250") |> 
+    image_border(color = "#f1f3f5")
+```
+
 
 ## Now it's your turn
 
-convert R refresh lab into qmd file and render. push to github
+In the previous chapter you produced an extensive R script with notes and code. Copy-paste and modify that big unruly R script into a nice qmd file and render it as a pdf. This pdf will be your own personal definitive R study guide and reference manual.
+
+

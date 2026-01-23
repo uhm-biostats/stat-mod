@@ -12,8 +12,8 @@ book:
             - datasets-intro.qmd
             - care-fair.qmd
             - r-refresh.qmd
+            - dynamic-doc.qmd
             # - github.qmd
-            # - dynamic-doc.qmd
             # - bring-it-together.qmd
         # - part: prob.qmd
         #   chapters:
@@ -45,5 +45,5 @@ format:
   html:
     theme:
       - cosmo
-    # css: styles.css
+    css: styles.css
     toc: true

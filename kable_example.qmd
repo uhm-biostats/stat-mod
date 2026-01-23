@@ -1,0 +1,21 @@
+---
+format: pdf
+---
+
+```{r}
+#| include: false
+
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r}
+#| label: table-example
+
+library(knitr)
+
+# make a simple data.frame
+d <- data.frame(group = c("A", "A", "B"), 
+                value = 1:3)
+
+kable(d)
+```

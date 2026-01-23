@@ -1,0 +1,50 @@
+---
+title: "The title"
+author: A research group
+format: pdf
+---
+
+```{r}
+#| label: setup
+#| include: false
+
+library(dplyr)
+library(tibble)
+library(ggplot2)
+```
+
+# Introduction
+
+Some background
+
+## More specific background
+
+@fig-concept explains our approach.
+
+```{r}
+#| label: fig-concept
+#| echo: false
+#| fig-width: 2
+#| fig-height: 2
+#| fig-cap: "Our conceptual workflow, nani me he pua lā"
+
+dat_concept <- tibble(
+    rad = seq(0, 2 * pi, length.out = 200), 
+    x = cos(rad) * cos(4 * rad), 
+    y = sin(rad) * cos(4 * rad)
+)
+
+ggplot(dat_concept, aes(x, y)) +
+    geom_polygon(fill = "coral")
+```
+
+# Methods
+
+Our analysis uses this kind of code
+
+```{r}
+#| label: step-01
+
+x <- 1:10
+sum(x)
+```
