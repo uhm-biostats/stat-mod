@@ -13,7 +13,7 @@ book:
             - care-fair.qmd
             - r-refresh.qmd
             - dynamic-doc.qmd
-            # - github.qmd
+            - github.qmd
             # - bring-it-together.qmd
         # - part: prob.qmd
         #   chapters:

@@ -158,7 +158,7 @@ Cloning means copying a remote repo, like one on GitHub, to your local computer.
 
 ### Stage and commit
 
-Once you have your git repo locally, you will start changing things. "Staging" changes (hitting the radio button next to a file name in RStudio's "Git" panel) let's git know to pay attention to the changes you made. We can stage changes from one or multiple files at a time. Once staged, we can then write a commit message. This message briefly records what changes were made and (perhaps) why or how.  These messages should be brief, think of them as notes to your future self (or collaborators). Recall from the intro to this chapter that git enables you to roll back to previous versions of your code (for example if you messed something up). The commit message is your way of knowing which version to roll back to.  We will cover how to roll back or recover past versions soon.
+Once you have your git repo locally, you will start changing files. "Staging" changes (hitting the radio button next to a file name in RStudio's "Git" panel) let's git know to pay attention to the changes you made. We can stage changes from one or multiple files at a time. Once staged, we can then write a commit message. This message briefly records what changes were made and (perhaps) why or how.  These messages should be brief, think of them as notes to your future self (or collaborators). Recall from the intro to this chapter that git enables you to roll back to previous versions of your code (for example if you messed something up). The commit message is your way of knowing which version to roll back to.  We will cover how to roll back or recover past versions soon.
 
 These changes, and their commit messages, still only exist locally on your computer. The next steps are about interacting with the repo hosted on GitHub.
 
@@ -183,7 +183,62 @@ Yet another option is to use the GitHub interface to view past versions. On the 
 
 ### Issues: toward working collaboratively 
 
+In collaborative work (whether collaborating with other people or "your future self") GitHub *issues* are a great tool for managing and organizing work. When you are working through a project by yourself or with others, you might find a need to jot down notes or to-do lists. Or you might find that code somebody else has written is not working the way it should. These are all great use cases for *Issues*. The idea of issues on GitHub originated with the need for users of open source software to report bugs---aka issues---to developers. But the utility of the issues feature goes far beyond bug reports.
+
+To make a new issue select the **Issues** tab on any GitHub repo and then click the green "New issue" button. Many issues in the context of team coordination and task management can be expressed simply with a title, for example, "complete code for *xyz* task." But you also have the ability to add detail in the "Add a description" field and, conveniently, you can format the description with markdown. So if your task "complete code for *xyz*" has multiple components and you want to list those out, perhaps even as a checklist, you could write in the description:
+
+::: {.gb}
+
+```
+- [ ] wrangle data so samples are rows
+- [ ] clean up column names
+- [ ] visualize x versus y
+```
+
+:::
+
+Which will render as 
+
+- [ ] wrangle data so samples are rows
+- [ ] clean up column names
+- [ ] visualize x versus y
+
+You can check your markdown by clicking the "Preview" tab of the description field. You can also use markdown (or simple plain text) to comment on issues and provide further detail, notes, or to-do's through comments.
+
+You can also assign issues to yourself or your team mates by clicking on the gear symbol next to "Assignees." Assigning work is an excellent way to coordinate a project. 
+
+There are a lot of further refinements you can make with issues like labels and grouping them in projects and/or milestones. You can read more about that [here](https://openscapes.github.io/series/core-lessons/github/github-issues.html).
+
 ### Working collaboratively: branches, forks, and pull requests
+
+The most challenging part about working collaboratively---from a technical perspective---is harmonizing different versions of code and text that you and your team mates produce. This is the job of branches, forks, and pull requests.  First let's imagine a scenario:
+
+You and a colleague are working on the same project which has one repo. You both make some changes and to files locally, commit those changes and (try) to push them to GitHub. But your two changes conflict! Perhaps you modify some plotting code to look like this:
+
+```{r}
+#| eval: false
+
+# use faceting to show different groups
+ggplot(dat, aes(treatment, value)) +
+    geom_boxplot() +
+    facet_wrap(vars(group))
+    
+
+```
+
+and your colleague modifies the code to look like this:
+
+```{r}
+#| eval: false
+
+# use color to show different groups
+ggplot(dat, aes(treatment, value, fill = group)) +
+    geom_boxplot() 
+    
+
+```
+
+If your colleague pushes to GitHub first, you will get an error when you try to push
 
 ## Resources
 
