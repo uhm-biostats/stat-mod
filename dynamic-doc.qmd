@@ -321,7 +321,7 @@ The `#|` is called a "hash pipe" (either the people who developed *quarto* are h
 
 #### Figures and tables from code
 
-That's right! We can make figures with code and have them displayed in our rendered documents. 
+That's right! We can make figures with code and have them displayed in our rendered documents. One 
 
 We can also make markdown-formatted tables with help from the *knitr* package. Here's an example
 
@@ -378,6 +378,24 @@ image_read_pdf("kable_example.pdf") |>
     image_crop("350x400+1100+250") |> 
     image_border(color = "#f1f3f5")
 ```
+
+#### Cross referencing
+
+We often want to refer to an figure of table like "Figure 1 shows such and such. Table 3 shows the other thing." To make the figure and table output of our code cross-referencable we need to use special labels inside the code chunks.
+
+In the example quarto file we made a figure and then referenced it. To allow that, we used this special code chunk label:
+
+```{r}
+#| classes: s-output
+
+cat(q[grep("label: fig-concept", q)])
+```
+
+The special part is that the label name starts with `fig-`. Then in our text we could cross reference the figure with the markdown code `@fig-concept`.
+
+Tables are similar, but we use the special label tag `tbl-`. For example if we made a table in a code chunk with `#| label: tbl-one_tab`, we could then cross reference the table with `@tbl-one_tab`.
+
+There is a lot more to learn about cross referencing (including in cases where we don't make figures or tables with code) and you can read more [here](https://quarto.org/docs/authoring/cross-references.html).
 
 
 ## Now it's your turn
