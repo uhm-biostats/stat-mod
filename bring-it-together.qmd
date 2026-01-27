@@ -1,1 +1,58 @@
 # CARE and FAIR in presenting data with dynamic documents on GitHub
+
+
+## CARE and FAIR consideration in Hawaiʻi
+
+Write out your manaʻo on CARE and FAIR in Hawaiʻi using class materials, class readings, and most especially your previously assigned written reflections on those readings.
+
+### Ideas for making data from Hawaiʻi CARE and FAIR
+
+
+
+## Describing *OpenNahele* and *Hawaiʻi Climate Data Portal Data*
+
+Delete this list once complete
+
+- read-in and join all data like we did in the R refresher lab (fine to copy paste over) for subsequent use
+- create a plot-level data object like we did in the R refresher lab (fine to copy paste over) for subsequent use
+- across the entire data set (*not* broken up by island or anything else) calculate 25%, 50%, and 75% quantiles for each numeric plot-level variable but not `Year` or `Census` or `lon` or `lat`. *Hints:* you can use the `quantile` function, you will need to set `na.rm = TRUE`, you can make a `data.frame` by hand if that makes most sense, or you can use `across` in combination with `reframe` (which is the *dplyr* approach)
+- use a ridgeline plot or stacked histograms to show distributions for all species richness, basal area, and abundance variables by island
+
+
+
+```{r}
+#| eval: false
+#| echo: false
+
+
+all_dat_tib |> 
+    reframe(across(Island:elev_m & where(is.numeric) & !(Year:lat), quantile, probs = c(0.25, 0.5, 0.75), na.rm = TRUE))
+```
+
+
+
+## Relating tree diversity to environmental predictors
+
+Delete this list once complete
+
+- create new plot-level columns for species richness---not proportions---that corrects for area (should be, e.g., `log(nspp) / log(Plot_Area)`)
+- make a figure for the response of species richness to plot area (as we did in R refresher lab, fine to copy paste)
+- make a figure showing, across all islands, proportion of plots with $\geq 75\%$ native trees (as we did in R refresher lab, fine to copy paste)
+- choose three other figures to make where you plot any kind of tree-related response variable (e.g. species richness) against an environmental predictor variable
+
+
+```{r}
+#| eval: false
+#| echo: false
+
+
+dat_by_plot <- mutate(dat_by_plot, 
+                      log_nspp_log_area = log(nspp) / log(Plot_Area)) 
+
+filter(dat_by_plot, Plot_Area < 10000) |> 
+    ggplot(aes(Plot_Area, log_nspp_log_area)) +
+    geom_hex() +
+    scale_x_continuous(transform = "log10")
+```
+
+
