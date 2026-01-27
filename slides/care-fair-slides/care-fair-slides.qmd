@@ -1,15 +1,5 @@
 ---
 title: "Introducing CARE and FAIR data principles"
-format:
-  revealjs: 
-    slide-number: true
-    preview-links: auto
-    auto-stretch: false
-    embed-resources: false
-    # css: slide-styles.css
-    # footer: '[link](url)'
-
-bibliography: ../../stat-mod.bib
 ---
 
 
@@ -467,7 +457,7 @@ This Label is being used by [community name or authorizing body] to allow this i
 
 :::
 
-## Implementing CARE with Local Contexts
+## Implementing CARE with Local Contexts {.scrollable}
 
 ### What's next?
 
@@ -477,16 +467,16 @@ This Label is being used by [community name or authorizing body] to allow this i
 
 ![source: @hutchins2023](../../img/care/leke-data.png)
 
-## Implementing CARE with Local Contexts
+## Implementing CARE with Local Contexts {.scrollable}
 
 ### What's next?
 
 - Getting journals to integrate CARE metadata
     - @hutchins2023 did it, but not with full journal support
 
-![source: @hutchins2023](img/care/leke.png)
+![source: @hutchins2023](../../img/care/leke.png)
 
-## Implementing CARE with Local Contexts
+## Implementing CARE with Local Contexts {.scrollable}
 
 ### What's next?
 
@@ -494,7 +484,7 @@ This Label is being used by [community name or authorizing body] to allow this i
     - @hutchins2023 did it, but not with full journal support
     - CARE metadata should be right up top with FAIR badges
 
-![source: @lim2021](img/care/jun.png)
+![source: @lim2021](../../img/care/jun.png)
 
 ## CARE and FAIR for this class
 

@@ -1,15 +1,5 @@
 ---
 title: "Introducing data we'll work with"
-format:
-  revealjs: 
-    slide-number: true
-    preview-links: auto
-    auto-stretch: false
-    embed-resources: false
-    # css: slide-styles.css
-    # footer: '[link](url)'
-
-bibliography: ../../stat-mod.bib
 ---
 
 
