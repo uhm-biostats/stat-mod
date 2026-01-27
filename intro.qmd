@@ -6,9 +6,12 @@ Here we will introduce the data we will work with throughout this course. In the
 Jump straight to:
 
 - Data we will work with: [lecture notes](datasets-intro.qmd), [slides](./_slides/slides/data-slides/data-slides.html){target="_blank"}
-- Lecture: [CARE and FAIR principles](care-fair.qmd)
-- Lab and lecture: [R refresher](r-refresh.qmd)
-- Lab and lecture: [Managing code with git and GitHub](github.qmd)
-- Lab and lecture: [Dynamic documents with quarto](dynamic-doc.qmd)
-- Lab: [Brining it all together](bring-it-together)
+- CARE and FAIR principles: [lecture notes](care-fair.qmd), [slides](./_slides/slides/care-fair-slides/care-fair-slides.html){target="_blank"}
+- [R refresher](r-refresh.qmd)
+- [Managing code with git and GitHub](github.qmd)
+- [Dynamic documents with quarto](dynamic-doc.qmd)
+- [Brining it all together](bring-it-together.qmd)
+
+
+
 
