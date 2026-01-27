@@ -212,16 +212,20 @@ You can cite a reference like this `[@hutchins2023]` which will get formatted in
 
 and then get rendered in the *References* section like
 
-::: {#refs}
-
-:::
-
 ::: {.gb}
-<br>
 
-![](img/dyn-doc/hutchins-ref.png)
+```{r}
+#| echo: false
+#| message: false
+
+image_read("img/dyn-doc/hutchins-ref.png") |>
+    image_crop("1250x180") |>
+    image_transparent("white", fuzz = 25) |>
+    image_border(color = "#f1f3f5")
+```
 
 :::
+
 
 Three things to note about citing references:
 
@@ -234,7 +238,7 @@ Including an image looks almost the same. This:
 ::: {.gb}
 
 ```
-![An image from Kawika et al. 2018](img/data-intro/wao.png)
+![An image from Winter et al. 2018](img/data-intro/wao.png)
 ```
 
 
@@ -243,11 +247,20 @@ Including an image looks almost the same. This:
 will be rendered as this:
 
 ::: {.gb}
-<br>
 
-![An image from Kawika et al. 2018](img/data-intro/wao.png){width="50%" fig-align="left"}
+```{r}
+#| echo: false
+#| message: false
+#| out-width: "50%"
+#| fig-cap: An image from Winter et al. 2018
+#| fig-align: left
+
+image_read("img/data-intro/wao.png") |> 
+    image_fill("#f1f3f5")
+```
 
 :::
+
 
 if you were to have that image file `wao.png` saved at the location `img/data-intro`. 
 
@@ -261,19 +274,28 @@ You can also include an image from a URL:
 
 :::
 
+
 ::: {.gb}
-<br>
 
-![Remember this old map?](https://uhm-biostats.github.io/stat-mod/datasets-intro_files/figure-html/fig-map-1.png){width="75%" fig-align="left"}
+```{r}
+#| echo: false
+#| message: false
+#| out-width: "75%"
+#| fig-cap: Remember this old map?
+#| fig-align: left
 
+image_read("https://uhm-biostats.github.io/stat-mod/datasets-intro_files/figure-html/fig-map-1.png") |> 
+    image_border(color = "#f1f3f5")
+```
 
 :::
+
 
 #### Tables
 
 Tables can be simply created with markdown like this:
 
-
+::: {.gb}
 
 ```{r}
 #| echo: false
@@ -298,10 +320,11 @@ cat("```", kt, "```", sep = "\n")
 
 ```
 
-
+:::
 
 which is in turn rendered as 
 
+::: {.gb}
 
 ```{r}
 #| echo: false
@@ -311,12 +334,15 @@ if(!file.exists("kable_example.pdf")) {
     quarto::quarto_render("kable_example.qmd", quiet = TRUE)
 }
 
-image_read_pdf("kable_example.pdf") |> 
+timg <- image_read_pdf("kable_example.pdf") |> 
     image_crop("350x400+1100+250") |> 
+    image_transparent("white", fuzz = 25) |>
     image_border(color = "#f1f3f5")
+
+timg
 ```
 
-
+:::
 
 ### Code
 
@@ -386,14 +412,6 @@ which produces the markdown table that previously we made by hand:
 #| echo: false
 #| results: asis
 
-library(knitr)
-
-r <- k[grep("<- data\\.frame", k):(grep("kable\\(", k) - 1)]
-
-eval(parse(text = r))
-
-kt <- kable(d, format = "markdown") 
-
 cat("```", kt, "```", sep = "\n")
 
 ```
@@ -402,19 +420,15 @@ cat("```", kt, "```", sep = "\n")
 
 and is in turn rendered as 
 
+::: {.gb}
 
 ```{r}
 #| echo: false
-#| message: false
 
-if(!file.exists("kable_example.pdf")) {
-    quarto::quarto_render("kable_example.qmd", quiet = TRUE)
-}
-
-image_read_pdf("kable_example.pdf") |> 
-    image_crop("350x400+1100+250") |> 
-    image_border(color = "#f1f3f5")
+timg
 ```
+
+:::
 
 #### Cross referencing
 
@@ -424,6 +438,7 @@ In the example quarto file we made a figure and then referenced it. To allow tha
 
 ```{r}
 #| classes: s-output
+#| echo: false
 
 cat(q[grep("label: fig-concept", q)])
 ```
