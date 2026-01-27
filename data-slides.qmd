@@ -19,7 +19,7 @@ opts_chunk$set(echo = FALSE,
                       message = FALSE, 
                       warning = FALSE)
 
-tree <- read.csv("../../data/OpenNahele_Tree_Data.csv")
+tree <- read.csv("data/OpenNahele_Tree_Data.csv")
 
 ```
 
@@ -29,7 +29,7 @@ tree <- read.csv("../../data/OpenNahele_Tree_Data.csv")
 We will use the [*OpenNahele*](https://datadryad.org/dataset/doi:10.5061/dryad.1kk02qr){target="_blank"} forest inventory plot data [@craven2018]
 
 
-![](../../docs/datasets-intro_files/figure-html/fig-map-1.png)
+![](docs/datasets-intro_files/figure-html/fig-map-1.png)
 
 
 
@@ -41,7 +41,7 @@ We will use the [*OpenNahele*](https://datadryad.org/dataset/doi:10.5061/dryad.1
 
 :::: {.column width="60%"} 
 
-![](../../docs/datasets-intro_files/figure-html/fig-map-1.png)
+![](docs/datasets-intro_files/figure-html/fig-map-1.png)
 
 <!-- instead need to make local img dir and ref that -->
 <!-- or maybe if data-slides folder lives in root itʻll all work -->
@@ -73,7 +73,7 @@ We will also use data from
 ```{r}
 #| label: tree-meta
 
-tmeta <- read.table("../../data/README_for_OpenNahele_Tree_Data.txt", 
+tmeta <- read.table("data/README_for_OpenNahele_Tree_Data.txt", 
                     sep = "\t", 
                     header = TRUE)
 names(tmeta) <- gsub("\\.", " ", names(tmeta))
@@ -88,7 +88,7 @@ kable(tmeta)
 ```{r}
 #| label: clim-meta
 
-cmeta <- read.table("../../data/README_for_plot_climate.txt", 
+cmeta <- read.table("data/README_for_plot_climate.txt", 
                     sep = "\t", 
                     header = TRUE)
 names(cmeta) <- gsub("\\.", " ", names(cmeta))
@@ -101,7 +101,7 @@ kable(cmeta)
 ### `README_for_hii_geo.txt`
 
 ```{r}
-gmeta <- read.table("../../data/README_for_hii_geo.txt", 
+gmeta <- read.table("data/README_for_hii_geo.txt", 
                     sep = "\t", 
                     header = TRUE)
 names(gmeta) <- gsub("\\.", " ", names(gmeta))
@@ -133,12 +133,12 @@ We will not go into visualizing and numerically describing the data just yet---t
 
 :::: {.column width="60%"}
 
-![*Kumulipo* - Ipo Nihipali](../../img/data-intro/kumulipo-ipo-nihipali.jpeg)
+![*Kumulipo* - Ipo Nihipali](img/data-intro/kumulipo-ipo-nihipali.jpeg)
 ::::
 
 :::: {.column width="40%"}
 
-![*Hāloa* - Maggie T. Sutrov](../../img/data-intro/haloa.png)
+![*Hāloa* - Maggie T. Sutrov](img/data-intro/haloa.png)
 
 ::::
 
@@ -157,7 +157,7 @@ We will not go into visualizing and numerically describing the data just yet---t
 
 library(cowplot)
 
-laau <- read.csv("../../data_raw/ethnobotany_bishop.csv") |> 
+laau <- read.csv("data_raw/ethnobotany_bishop.csv") |> 
     rename(name = Hawaiian.Name, 
            latin_name = Scientific.Name, 
            haole_name = Vernacular.Name) |> 
@@ -223,7 +223,7 @@ ggplot(laau2plot, aes(name, value, fill = ethno)) +
 
 **Wahi pana**
 
-![e.g. Puʻu Pueo](../../img/data-intro/puupueo.png){width="70%"}
+![e.g. Puʻu Pueo](img/data-intro/puupueo.png){width="70%"}
 
 ::::
 
@@ -238,7 +238,7 @@ prcnt_native <- round(mean(prop_native_plot$prop_native >= 0.75) * 100)
 
 **Wao** (`r prcnt_native`% of plots in wao akua?)
 
-![image source: @winter2018](../../img/data-intro/wao.png){width="80%"}
+![image source: @winter2018](img/data-intro/wao.png){width="80%"}
 
 ::::
 
@@ -248,7 +248,7 @@ prcnt_native <- round(mean(prop_native_plot$prop_native >= 0.75) * 100)
 
 **First:** A thought on whose knowledge counts as science
 
-![source: @gon2018](../../img/data-intro/gon.png)
+![source: @gon2018](img/data-intro/gon.png)
 
 ## Ecological questions we'll consider
 

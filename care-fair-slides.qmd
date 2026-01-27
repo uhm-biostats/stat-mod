@@ -19,7 +19,7 @@ opts_chunk$set(echo = FALSE,
                       message = FALSE, 
                       warning = FALSE)
 
-tree <- read.csv("../../data/OpenNahele_Tree_Data.csv")
+tree <- read.csv("data/OpenNahele_Tree_Data.csv")
 
 ```
 
@@ -110,7 +110,7 @@ Hyposmocoma (Hyposmocoma) kukilakila Doorenweerd, Austin & Rubinoff | United Sta
 
 library(magick)
 
-cr <- image_read("../../img/care/care.png")
+cr <- image_read("img/care/care.png")
 
 image_despeckle(cr, times = 4)|> 
     image_convolve(kernel = "Log:0x0.5", scaling = "100,100%")
@@ -124,7 +124,7 @@ Nānā i ke kumu
 
 :::: column
 
-![Prof. Darren Ranco](../../img/care/darren.png)
+![Prof. Darren Ranco](img/care/darren.png)
 
 ::::
 
@@ -200,7 +200,7 @@ Stephanie Carroll
 
 ### Indigenous metadata are key for CARE
 
-![](../../img/care/lc-concept.png)
+![](img/care/lc-concept.png)
 
 ## Implementing CARE with Local Contexts
 
@@ -218,7 +218,7 @@ Stephanie Carroll
 
 :::: {.column width="30%"}
 
-![Note: this Notice is being displayed here for educational purposes](../../img/care/otc-notice.png)
+![Note: this Notice is being displayed here for educational purposes](img/care/otc-notice.png)
 
 ::::
 
@@ -240,7 +240,7 @@ Stephanie Carroll
 
 :::: {.column width="30%"}
 
-![Note: this Notice is being displayed here for educational purposes and is not attached to data](../../img/care/attr-notice.png)
+![Note: this Notice is being displayed here for educational purposes and is not attached to data](img/care/attr-notice.png)
 
 ::::
 
@@ -263,7 +263,7 @@ Stephanie Carroll
 
 :::: {.column width="30%"}
 
-![Note: this Notice is being displayed here for educational purposes and is not attached to data](../../img/care/tk-notice.png)
+![Note: this Notice is being displayed here for educational purposes and is not attached to data](img/care/tk-notice.png)
 
 ::::
 
@@ -286,7 +286,7 @@ Stephanie Carroll
 
 :::: {.column width="30%"}
 
-![Note: this Notice is being displayed here for educational purposes and is not attached to data](../../img/care/bc-notice.png)
+![Note: this Notice is being displayed here for educational purposes and is not attached to data](img/care/bc-notice.png)
 
 ::::
 
@@ -325,7 +325,7 @@ Stephanie Carroll
 
 :::: {.column width="30%"}
 
-![Note: this Label is being displayed here for educational purposes and is not attached to data](../../img/care/tk-attribution.png)
+![Note: this Label is being displayed here for educational purposes and is not attached to data](img/care/tk-attribution.png)
 
 ::::
 
@@ -345,7 +345,7 @@ This Label is being used to correct historical mistakes or exclusions pertaining
 
 :::: {.column width="30%"}
 
-![Note: this Label is being displayed here for educational purposes and is not attached to data](../../img/care/bc-provenance.png)
+![Note: this Label is being displayed here for educational purposes and is not attached to data](img/care/bc-provenance.png)
 
 ::::
 
@@ -369,7 +369,7 @@ This Label is being used to affirm an inherent interest Indigenous people have i
 
 :::: {.column width="30%"}
 
-![Note: this Label is being displayed here for educational purposes and is not attached to data](../../img/care/tk-culturally-sensitive.png)
+![Note: this Label is being displayed here for educational purposes and is not attached to data](img/care/tk-culturally-sensitive.png)
 
 ::::
 
@@ -392,7 +392,7 @@ This Label is being used to indicate that this material has cultural and/or hist
 
 :::: {.column width="30%"}
 
-![Note: this Label is being displayed here for educational purposes and is not attached to data](../../img/care/bc-consent-verified.png)
+![Note: this Label is being displayed here for educational purposes and is not attached to data](img/care/bc-consent-verified.png)
 
 ::::
 
@@ -416,7 +416,7 @@ This Label is being used to verify that [community name or authorizing party] ha
 
 :::: {.column width="30%"}
 
-![Note: this Label is being displayed here for educational purposes and is not attached to data](../../img/care/tk-non-commercial.png)
+![Note: this Label is being displayed here for educational purposes and is not attached to data](img/care/tk-non-commercial.png)
 
 ::::
 
@@ -439,7 +439,7 @@ This material has been designated as being available for non-commercial use. You
 
 :::: {.column width="30%"}
 
-![Note: this Label is being displayed here for educational purposes and is not attached to data](../../img/care/bc-research.png)
+![Note: this Label is being displayed here for educational purposes and is not attached to data](img/care/bc-research.png)
 
 ::::
 
@@ -465,7 +465,7 @@ This Label is being used by [community name or authorizing body] to allow this i
     - [Local Contexts' work with GBIF](https://localcontexts.org/gbif-pilot-using-tk-and-bc-labels/)
     - Harmonize CARE metadata with existing scientific community metadata standards, e.g., @hutchins2023
 
-![source: @hutchins2023](../../img/care/leke-data.png)
+![source: @hutchins2023](img/care/leke-data.png)
 
 ## Implementing CARE with Local Contexts {.scrollable}
 
@@ -474,7 +474,7 @@ This Label is being used by [community name or authorizing body] to allow this i
 - Getting journals to integrate CARE metadata
     - @hutchins2023 did it, but not with full journal support
 
-![source: @hutchins2023](../../img/care/leke.png)
+![source: @hutchins2023](img/care/leke.png)
 
 ## Implementing CARE with Local Contexts {.scrollable}
 
@@ -484,7 +484,7 @@ This Label is being used by [community name or authorizing body] to allow this i
     - @hutchins2023 did it, but not with full journal support
     - CARE metadata should be right up top with FAIR badges
 
-![source: @lim2021](../../img/care/jun.png)
+![source: @lim2021](img/care/jun.png)
 
 ## CARE and FAIR for this class
 

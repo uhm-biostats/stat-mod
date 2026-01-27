@@ -1,7 +1,7 @@
 project:
-  output-dir: docs/_slides
+  output-dir: docs
   render:
-    - "slides/**/*.qmd"
+    - "*-slides.qmd"
 
 format:
   revealjs:
