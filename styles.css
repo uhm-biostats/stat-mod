@@ -12,3 +12,11 @@
     width: 100%;
     height: 475px;
 }
+
+div.callout-caution {
+  border-left-color: #0052CC !important;
+}
+
+div.callout-caution.callout-style-default > .callout-header {
+  background-color: #A3B4CC !important;
+}

@@ -191,14 +191,19 @@ Make a boolean object called `cool` that extracts the 2nd element of the object 
 b <- c("three", "little", "words")
 ```
 
+::: {.callout-caution collapse="true"}
+
+## Solution
+
 ```{r}
-#| echo: false
 #| label: cool-solution
 
-b <- c("three", "little", "words")
-
 cool <- c(FALSE, TRUE, FALSE)
+
+b[cool]
 ```
+
+:::
 
 :::
 
@@ -262,6 +267,19 @@ dat <- data.frame(x = 1:3, y = c(2, 8, 6), group = c("g1", "g1", "g2"))
 gt(dat)
 ```
 
+::: {.callout-caution collapse="true"}
+
+## Solution
+
+```{r}
+dat <- data.frame(x = 1:3, y = c(2, 8, 6), group = c("g1", "g1", "g2"))
+
+dat
+```
+
+:::
+
+
 :::
 
 *Sometimes* we may need to combine objects of different sizes, and maybe same or different types. That task requires one last type of object: the `list`
@@ -322,13 +340,18 @@ clim <- .....
 geoh <- .....
 ```
 
+::: {.callout-caution collapse="true"}
+
+## Solution
+
 ```{r}
-#| echo: false
 #| label: dat-read-solution
 
 clim <- read.csv("data/plot_climate.csv")
 geoh <- read.csv("data/hii_geo.csv")
 ```
+
+:::
 
 :::
 
@@ -475,15 +498,20 @@ Have a look at the help documentation for `select`:
 
 And figure out *two* ways of selecting both columns `x1` and `x2` that do not look like `select(toy_data, x1, x2)`.
 
+::: {.callout-caution collapse="true"}
+
+## Solution
+
 ```{r}
-#| echo: false
-#| eval: false
 #| label: select-solution
 
 select(toy_data, x1:x2)
 select(toy_data, starts_with("x"))
 
 ```
+
+:::
+
 :::
 
 ### `filter`
@@ -523,24 +551,32 @@ There are a lot of logical operators and they are implemented in base R (we do n
 
 Let's look under the hood a bit at what these logical operators are doing.  Use `select` to figure out what the comparison `species == "sp1"` is actually computing.
 
+::: {.callout-caution collapse="true"}
+
+## Solution
+
 ```{r}
-#| echo: false
-#| eval: false
 #| label: logic-select-solution
 
 select(toy_data, species) == "sp1"
 
 ```
 
+:::
+
 Now try a few other operators out. Filter the `toy_data` so that we extract rows where `x2` is less than or equal to 5 but greater than 3.4.
 
+::: {.callout-caution collapse="true"}
+
+## Solution
+
 ```{r}
-#| echo: false
-#| eval: false
 #| label: gte-solution
 
 filter(toy_data, x2 <= 5 & x2 > 3.4)
 ```
+
+:::
 
 Now try to *predict* (without running any code) what this will produce:
 
@@ -734,9 +770,11 @@ Now let's use these approaches with our real data. We'll work with the `tree` da
 - make the column `DBH_cm` all lower case
 - add a column for log DBH and call it `log_dbh_cm`
 
+::: {.callout-caution collapse="true"}
+
+## Solution
+
 ```{r}
-#| echo: false
-#| eval: false
 #| label: real-dplyr-solution
 
 nat_spp <- filter(tree, Native_Status == "native" & 
@@ -746,6 +784,8 @@ nat_spp <- filter(tree, Native_Status == "native" &
     mutate(log_dbh_cm = log(dbh_cm))
 
 ```
+
+:::
 
 :::
 
@@ -795,9 +835,11 @@ Cool! The taxonomy info was added, and only for the species we actually have in 
 - Try `full_join` with `clean_toy_data` and `tax`; describe any differences
 - Try `right_join(tax, trt)`; what's different?
 
+::: {.callout-caution collapse="true"}
+
+## Solution
+
 ```{r}
-#| echo: false
-#| eval: false
 #| message: false
 #| label: toy-join-solution
 
@@ -806,6 +848,8 @@ full_join(clean_toy_data, tax)
 right_join(tax, trt)
 
 ```
+
+:::
 
 :::
 
@@ -857,6 +901,7 @@ final_toy_data
 
 ## Your turn
 
+
 ```{r}
 #| echo: false
 #| label: real-join-solution
@@ -881,6 +926,24 @@ names(all_dat) |>
     (\(x) sprintf("- `%s`", x))() |> 
     cat(sep = "\n")
 ```
+
+::: {.callout-caution collapse="true"}
+
+## Solution
+
+```{r}
+#| eval: false
+
+all_dat <- select(clim, -(lon:lat)) |> 
+    full_join(geoh) |>
+    full_join(tree) |>
+    select(-(Longitude:Latitude)) |> 
+    filter(!is.na(Island)) |> 
+    relocate(c(Island:Census, lon:lat), .after = PlotID) |> 
+    rename(Plot_ID = PlotID)
+```
+
+:::
 
 :::
 
@@ -1085,9 +1148,12 @@ Notice sometimes we make a new like right after the opening `(` in a function ca
 
 With this same `[` subsetting approach we can also calculate `basal_native`. Try giving that a go yourself. Again, no need to assign your calculations to an object, we're just figuring things out right now.
 
+
+::: {.callout-caution collapse="true"}
+
+## Solution
+
 ```{r}
-#| eval: false
-#| echo: false
 #| label: basal-native-solution
 
 group_by(all_dat_tib, Plot_ID) |> 
@@ -1096,6 +1162,8 @@ group_by(all_dat_tib, Plot_ID) |>
                   DBH_cm[Native_Status == "native"]
               ))
 ```
+
+:::
 
 :::
 
