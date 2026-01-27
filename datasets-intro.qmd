@@ -1,5 +1,7 @@
 # Data we will work with
 
+Jump to [slides](#sec-slides).
+
 ## Intorducing the data
 
 We will be working with data from forest monitoring plots across the pae ʻāina Hawaiʻi as well as environmental and geophysical data measured or interpolated at these monitoring plots. The forest monitoring plot data are organized and distributed in a data resource called [*OpenNahele*](https://datadryad.org/dataset/doi:10.5061/dryad.1kk02qr){target="_blank"} [@craven2018]. 
@@ -163,25 +165,13 @@ Of those possible generalities, we will look into a couple---with statistical mo
 - Can data on human impacts and climate help us understand how invasive/non-native species occupy ecosystems [investigated, for example, by @blackburn2011; @fortini2013]
 
 
+## Slides {#sec-slides}
+
+```{=html}
+<iframe class="slide-deck" src="./_slides/slides/data-slides/data-slides.html"></iframe>
+```
+
+
 ## References
 
 
-```{r}
-#| echo: true
-#| eval: false
-
-library(quarto)
-
-system("rm -fr docs/data-slides")
-system("mkdir docs/data-slides")
-
-quarto_render(input = "slides/data-slides/data-slides.qmd", 
-              output_file = "index.html",
-              quiet = FALSE)
-
-system("cp -r slides/data-slides docs")
-```
-
-<!-- ```{=html} -->
-<!-- <iframe src="data-slides/" width="100%" height="475px" style="border: 1px solid #ccc;"></iframe> -->
-<!-- ``` -->

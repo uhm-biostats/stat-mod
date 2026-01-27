@@ -1,0 +1,11 @@
+project:
+  output-dir: docs/_slides
+  render:
+    - "slides/**/*.qmd"
+
+format:
+  revealjs:
+    slide-number: true
+    preview-links: auto
+    auto-stretch: false
+    embed-resources: false
