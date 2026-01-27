@@ -1,0 +1,506 @@
+---
+title: "Introducing CARE and FAIR data principles"
+---
+
+
+
+```{r}
+#| label: setup
+#| echo: false
+#| message: false
+#| warning: false
+
+
+library(ggplot2)
+library(knitr)
+library(dplyr)
+
+opts_chunk$set(echo = FALSE, 
+                      message = FALSE, 
+                      warning = FALSE)
+
+tree <- read.csv("data/OpenNahele_Tree_Data.csv")
+
+```
+
+
+## 
+
+![image credit: @care](https://images.squarespace-cdn.com/content/v1/5d3799de845604000199cd24/1567592451970-2R8XFL670QNMAGDRV7ED/Be+FAIR+and+CARE.png?format=2500w){width="150%"}
+
+## FAIR
+
+### Findable
+
+- digital object identifier (DOI)
+- searchable (meta)data
+
+
+**GBIF example**
+
+- DOI: [10.15468/s6ctus](https://doi.org/10.15468/s6ctus){target="_blank"}
+- search: [occurrences](https://www.gbif.org/occurrence/search?occurrence_status=present){target="_blank"}
+
+## FAIR
+
+### Accessible
+
+- only require open source tools to access (meta)data
+- API
+
+
+**GBIF example**
+
+- [API](https://techdocs.gbif.org/en/openapi/){target="_blank"}
+
+## FAIR
+
+### Interoperable
+
+- use open community standards
+- (meta)data are licenced for re-use
+- API
+
+
+**GBIF example**
+
+- Open community standard: [Darwin Core](https://dwc.tdwg.org/terms/){target="_blank"}
+
+## FAIR {.scrollable}
+
+### Reusable
+
+- (meta)data are licenced for re-use
+- requires robust and clear metadata
+
+
+**GBIF example**
+
+- CC0 Licence: [10.15468/s6ctus](https://doi.org/10.15468/s6ctus){target="_blank"}
+- Well-organized tabular data (more on that in R refresher)
+
+|Scientific name | Country or area | Coordinates | Event date | Occurrence status | Basis of record | Dataset | Kingdom | Phylum | Class | Order | Family | Genus | Species|
+|:--|:--|:--|:--|:--|:--|:--|:--|:--|:--|:--|:--|:--|:--|
+Hyposmocoma (Hyposmocoma) kukilakila Doorenweerd, Austin & Rubinoff | United States of America | 28.7N, 15.2W | 2003 Jun 28 | Present | Material citation | Five New Species of Hawaiian Endemic Fancy Case Caterpillars from a Recently Established Forest Reserve on Maui (Cosmopterigidae: Hyposmocoma) | Animalia | Arthropoda | Insecta | Lepidoptera | Cosmopterigidae | Hyposmocoma | Hyposmocoma kukilakila |
+
+## Let's look at data for this class
+
+- [*OpenNahele*](https://datadryad.org/dataset/doi:10.5061/dryad.1kk02qr){target="_blank"}
+- [Hawaiʻi Climate Data Portal](https://www.hawaii.edu/climate-data-portal/climate-atlas/){target="_blank"}
+
+## Ethics of FAIR
+
+- Disparities in science funding access [@ma2015; @petersen2021; @chen2022; @nguyen2023; @larregue2024] 
+- Replication crisis [@nosek2015; @fair; @parker2016; @filazzola2021]
+- Publicly funded data [@stebbins2013; @maglia2015nsf]
+
+## CARE
+
+### What are Indigenous data?
+
+
+## CARE {.scrollable}
+
+```{r}
+#| label: care-img
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-cap: "image credit: @carroll2020care"
+
+library(magick)
+
+cr <- image_read("img/care/care.png")
+
+image_despeckle(cr, times = 4)|> 
+    image_convolve(kernel = "Log:0x0.5", scaling = "100,100%")
+```
+
+## CARE
+
+Nānā i ke kumu
+
+::: columns
+
+:::: column
+
+![Prof. Darren Ranco](img/care/darren.png)
+
+::::
+
+:::: column
+
+**Who gets to decide** 
+
+::::
+
+:::
+
+## CARE
+
+Nānā i ke kumu
+
+::: columns
+
+:::: column
+
+![image credit: @care](https://images.squarespace-cdn.com/content/v1/5d3799de845604000199cd24/1567592451970-2R8XFL670QNMAGDRV7ED/Be+FAIR+and+CARE.png?format=2500w){width="150%"}
+
+::::
+
+:::: column
+
+Māui Hudson
+
+Jane Anderson
+
+Stephanie Carroll
+
+- **FAIR for whom?** FAIR for only some is not FAIR at all
+
+::::
+
+:::
+
+
+## CARE
+
+### Collective benefit
+
+- Data hold potential for abundant benefits (not just money)
+- Should benefit community/communities of origin
+
+
+## CARE
+
+### Authority to control
+
+- Indigenous peoples have a right to govern Indigenous data
+- Data are central to governance
+- FAIR can support authority to control
+
+## CARE
+
+### Responsibility 
+
+- Responsibility to engage with respect, reciprocity, and earned trust
+- Commit to collaborate
+- Seek mutual understanding and regard for multiple worldviews
+
+## CARE
+
+### Ethics
+
+- Centering the rights and wellbeing of Indigenous peoples
+- Confront power imbalances
+- Recognize gravity of work
+
+
+## Implementing CARE with Local Contexts
+
+### Indigenous metadata are key for CARE
+
+![](img/care/lc-concept.png)
+
+## Implementing CARE with Local Contexts
+
+### A researcher applies Notices and notifies communities
+
+- Notices are metadata available to researchers to indicate potential presence of Indigenous rights and interests 
+- They allow researchers to fulfill, in part, their **R**esponsibility under CARE
+
+
+## Implementing CARE with Local Contexts
+
+### Open to Collaborate
+
+::: columns
+
+:::: {.column width="30%"}
+
+![Note: this Notice is being displayed here for educational purposes](img/care/otc-notice.png)
+
+::::
+
+:::: {.column width="70%"}
+
+- *Engagement notice*
+- Indicate a researcher's or institution's commitment to CARE principles 
+- See full information [here](https://localcontexts.org/notice/open-to-collaborate/)
+
+::::
+
+:::
+
+## Implementing CARE with Local Contexts
+
+### Attribution Incomplete
+
+::: columns
+
+:::: {.column width="30%"}
+
+![Note: this Notice is being displayed here for educational purposes and is not attached to data](img/care/attr-notice.png)
+
+::::
+
+:::: {.column width="70%"}
+
+- *Disclosure notice*
+- Indicates that attribution (including provenance and contributors) is incomplete, inaccurate, or missing
+- See full information [here](https://localcontexts.org/notice/attribution-incomplete/).
+
+::::
+
+:::
+
+
+## Implementing CARE with Local Contexts
+
+### Traditional Knowledge
+
+::: columns
+
+:::: {.column width="30%"}
+
+![Note: this Notice is being displayed here for educational purposes and is not attached to data](img/care/tk-notice.png)
+
+::::
+
+:::: {.column width="70%"}
+
+- *Disclosure notice*
+- Indicates that data representing Traditional Knowledge carry Indigenous rights, protocols, and responsibilities
+- See full information [here](https://localcontexts.org/notice/tk-notice/)
+
+::::
+
+:::
+
+
+## Implementing CARE with Local Contexts
+
+### Biocultural
+
+::: columns
+
+:::: {.column width="30%"}
+
+![Note: this Notice is being displayed here for educational purposes and is not attached to data](img/care/bc-notice.png)
+
+::::
+
+:::: {.column width="70%"}
+
+- *Disclosure notice*
+- Affirms the rights of Indigenous peoples to govern the stewardship of data generated from biological sources within their traditional lands, waters, and territories
+- See full information [here](https://localcontexts.org/notice/bc-notice/)
+
+::::
+
+:::
+
+
+## Implementing CARE with Local Contexts
+
+### A researcher applies Notices and notifies communities
+
+- Notices do *not* articulate the actual rights, interests, protocols of Indigenous peoples
+- Notices are intended to be replaced by Labels
+
+
+## Implementing CARE with Local Contexts
+
+### A community applies Labels
+
+- Labels *do* articulate the actual rights, interests, protocols of Indigenous peoples
+- Only communities can apply Labels
+- Communities can customize Labels
+
+## Implementing CARE with Local Contexts {.scrollable}
+
+### Provenance Labels
+
+::: columns
+
+:::: {.column width="30%"}
+
+![Note: this Label is being displayed here for educational purposes and is not attached to data](img/care/tk-attribution.png)
+
+::::
+
+:::: {.column width="70%"}
+
+[**TK Attribution (TK A)**](https://localcontexts.org/label/tk-attribution/)
+
+*Template Text*
+
+This Label is being used to correct historical mistakes or exclusions pertaining to this material. This is especially in relation to the names of the people involved in performing or making this work and/or correctly naming the community from which it originally derives. As a user you are being asked to also apply the correct attribution in any future use of this work.
+
+::::
+
+:::
+
+::: columns
+
+:::: {.column width="30%"}
+
+![Note: this Label is being displayed here for educational purposes and is not attached to data](img/care/bc-provenance.png)
+
+::::
+
+:::: {.column width="70%"}
+
+[**BC Provenance (BC P)**](https://localcontexts.org/label/bc-provenance/)
+
+*Template Text*
+
+This Label is being used to affirm an inherent interest Indigenous people have in the scientific collections and data about communities, peoples, and the biodiversity found within traditional lands, waters and territories. [Community name or authorizing party] retains the right to be named and associated with it into the future. This association reflects a significant relationship and responsibility to [the species or biological entity] and associated scientific collections and data.
+
+::::
+
+:::
+
+## Implementing CARE with Local Contexts {.scrollable}
+
+### Permission Labels
+
+::: columns
+
+:::: {.column width="30%"}
+
+![Note: this Label is being displayed here for educational purposes and is not attached to data](img/care/tk-culturally-sensitive.png)
+
+::::
+
+:::: {.column width="70%"}
+
+[**TK Culturally Sensitive (TK CS)**](https://localcontexts.org/label/tk-culturally-sensitive/)
+
+*Template Text*
+
+This Label is being used to indicate that this material has cultural and/or historical sensitivities. The Label asks for care to be taken when this material is accessed, used, and circulated, especially when materials are first returned or reunited with communities of origin. In some instances, this Label will indicate that there are specific permissions for use of this material required directly from the community itself.
+
+::::
+
+:::
+
+<br />
+
+
+::: columns
+
+:::: {.column width="30%"}
+
+![Note: this Label is being displayed here for educational purposes and is not attached to data](img/care/bc-consent-verified.png)
+
+::::
+
+:::: {.column width="70%"}
+
+[**BC Consent Verified (BC CV)**](https://localcontexts.org/label/bc-consent-verified/)
+
+*Template Text*
+
+This Label is being used to verify that [community name or authorizing party] have consent conditions in place for the use of this information, collections, data, and digital sequence information. [These can be found at ….].
+
+::::
+
+:::
+
+## Implementing CARE with Local Contexts {.scrollable}
+
+### Protocol Labels
+
+::: columns
+
+:::: {.column width="30%"}
+
+![Note: this Label is being displayed here for educational purposes and is not attached to data](img/care/tk-non-commercial.png)
+
+::::
+
+:::: {.column width="70%"}
+
+[**TK Non-Commercial (TK NC)**](https://localcontexts.org/label/tk-non-commercial/)
+
+*Template Text*
+
+This material has been designated as being available for non-commercial use. You are allowed to use this material for non-commercial purposes including for research, study, or public presentation and/or online in blogs or non-commercial websites. This Label asks you to think and act with fairness and responsibility towards this material and the original custodians.
+
+::::
+
+:::
+
+<br />
+
+
+::: columns
+
+:::: {.column width="30%"}
+
+![Note: this Label is being displayed here for educational purposes and is not attached to data](img/care/bc-research.png)
+
+::::
+
+:::: {.column width="70%"}
+
+[**BC Research Use (BC R)**](https://localcontexts.org/label/bc-research-use/)
+
+*Template Text*
+
+This Label is being used by [community name or authorizing body] to allow this information, collection, data, and digital sequence information (DSI) to be used for unspecified research purposes. This Label does not provide permission for commercialization activities.
+
+[Optional return of research results statement]
+
+::::
+
+:::
+
+## Implementing CARE with Local Contexts {.scrollable}
+
+### What's next?
+
+- Getting large supposedly FAIR-compliant data repositories to be CARE
+    - [Local Contexts' work with GBIF](https://localcontexts.org/gbif-pilot-using-tk-and-bc-labels/)
+    - Harmonize CARE metadata with existing scientific community metadata standards, e.g., @hutchins2023
+
+![source: @hutchins2023](img/care/leke-data.png)
+
+## Implementing CARE with Local Contexts {.scrollable}
+
+### What's next?
+
+- Getting journals to integrate CARE metadata
+    - @hutchins2023 did it, but not with full journal support
+
+![source: @hutchins2023](img/care/leke.png)
+
+## Implementing CARE with Local Contexts {.scrollable}
+
+### What's next?
+
+- Getting journals to integrate CARE metadata
+    - @hutchins2023 did it, but not with full journal support
+    - CARE metadata should be right up top with FAIR badges
+
+![source: @lim2021](img/care/jun.png)
+
+## CARE and FAIR for this class
+
+Data are pseudo-FAIR compliant but not CARE (so cannot really be FAIR)
+
+## CARE and FAIR for this class
+
+Compromises:
+
+- Place-based teaching and research honors Hawaiʻi
+- *But:* current data options are non-CARE-complying
+- We can identify ways our individual use can align with CARE
+- *But:* our individual respect for CARE does not correct the larger problem
+- We can collaborate to envision how these data could meet the CARE principles
+- *But:* that vision may not be achievable 
+
+
+## References
+

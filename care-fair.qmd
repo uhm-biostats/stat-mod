@@ -371,7 +371,7 @@ We will proceed in working with these data but our first assignment for this cou
 ## Slides {#sec-slides}
 
 ```{=html}
-<iframe class="slide-deck" src="./_slides/slides/care-fair-slides/care-fair-slides.html"></iframe>
+<iframe class="slide-deck" src="care-fair-slides.html"></iframe>
 ```
 
 ## References
