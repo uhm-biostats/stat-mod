@@ -36,6 +36,10 @@ book:
         #     - lin-lstsqrs.qmd
 
 
+bibliography: stat-mod.bib
+csl: conservation-biology.csl
+
+
 comments:
     hypothesis: false
 
