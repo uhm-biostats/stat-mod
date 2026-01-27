@@ -55,7 +55,27 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -316,7 +336,9 @@ sum(x)
 </div>
 </div>
 </div>
-<p>Pretty cool! But how does it all work. Here we go:</p>
+<p>Pretty cool! But how does it all work. First, let’s open a quarto document and copy paste the above code into it. For a new quarto document go File &gt; New File &gt; Quarto Document…</p>
+<p><img src="img/dyn-doc/new-qmd.png" class="img-fluid" style="width:75.0%"></p>
+<p>You will see the above options. You can mostly ignore everything, but do make sure that “Use visual markdown editor” is <strong>unselected</strong> (you can select to use the visual editor later after you learn markdown basics). Delete any text RStudio pre-populates in the .qmd file and copy the example from this website.</p>
 <section id="rendering" class="level3" data-number="4.2.1">
 <h3 data-number="4.2.1" class="anchored" data-anchor-id="rendering"><span class="header-section-number">4.2.1</span> Rendering</h3>
 <p>Rendering is made simple by RStudio. When you have a quarto document open, you will see a “Render” button. Hit that button and the rendering magic happens for you! RStudio comes pre-loaded with the quarto software and its dependencies needed for rendering. Rendering will produce an actual pdf file, and a preview of that file will show up in the “Viewer” tab.</p>
@@ -420,12 +442,28 @@ format: pdf
 </ol>
 </div>
 </section>
-<section id="hyperlinks-and-images" class="level4" data-number="4.2.3.4">
-<h4 data-number="4.2.3.4" class="anchored" data-anchor-id="hyperlinks-and-images"><span class="header-section-number">4.2.3.4</span> Hyperlinks and images</h4>
-<p>Those two items seem unrelated, but their markdown syntax is similar. You can link to a URL like this: <code>[Our website](https://uhm-biostats.github.io/stat-mod/)</code> which will produce formatted text like this:</p>
+<section id="hyperlinks-bibliographic-references-and-images" class="level4" data-number="4.2.3.4">
+<h4 data-number="4.2.3.4" class="anchored" data-anchor-id="hyperlinks-bibliographic-references-and-images"><span class="header-section-number">4.2.3.4</span> Hyperlinks, bibliographic references, and images</h4>
+<p>Those items seem unrelated, but their markdown syntax is similar.</p>
+<p>You can link to a URL like this: <code>[Our website](https://uhm-biostats.github.io/stat-mod/)</code> which will produce formatted text like this:</p>
 <div class="gb">
 <p><a href="https://uhm-biostats.github.io/stat-mod/">Our website</a></p>
 </div>
+<p>You can cite a reference like this <code>[@hutchins2023]</code> which will get formatted in the text like this:</p>
+<div class="gb">
+<p>…cite a reference like this <span class="citation" data-cites="hutchins2023">(<a href="#ref-hutchins2023" role="doc-biblioref">Hutchins et al. 2023</a>)</span>…</p>
+</div>
+<p>and then get rendered in the <em>References</em> section like</p>
+<div class="gb">
+<p><br></p>
+<p><img src="img/dyn-doc/hutchins-ref.png" class="img-fluid"></p>
+</div>
+<p>Three things to note about citing references:</p>
+<ul>
+<li>Include at the very end of your .qmd file a section <code>## References</code>, the works cited will print after this</li>
+<li>You need to store your references in a .bib file, more on that <a href="https://quarto.org/docs/authoring/citations.html">here</a></li>
+<li>That link will also tell you more about how you can customize the bibliography style with a csl file, you can browse many options <a href="https://www.zotero.org/styles">here</a>. This website uses the <a href="https://www.zotero.org/styles/conservation-biology?source=1"><em>Conservation Biology</em> style</a></li>
+</ul>
 <p>Including an image looks almost the same. This:</p>
 <div class="gb">
 <pre><code>![An image from Kawika et al. 2018](img/data-intro/wao.png)</code></pre>
@@ -566,6 +604,11 @@ kable(d)
 <p>In the previous chapter you produced an extensive R script with notes and code. Copy-paste and modify that big unruly R script into a nice qmd file and render it as a pdf. This pdf will be your own personal definitive R study guide and reference manual.</p>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-hutchins2023" class="csl-entry" role="listitem">
+Hutchins L, Mc Cartney A, Graham N, Gillespie R, Guzman A. 2023. Arthropods are kin: Operationalizing indigenous data sovereignty to respectfully utilize genomic data from indigenous lands. Molecular Ecology Resources <strong>25</strong>:e13822. Wiley Online Library.
+</div>
+</div>
 </section>
 
 </main> <!-- /main -->

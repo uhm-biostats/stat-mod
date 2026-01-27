@@ -70,6 +70,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -168,8 +197,19 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#care-and-fair-consideration-in-hawaiʻi" id="toc-care-and-fair-consideration-in-hawaiʻi" class="nav-link active" data-scroll-target="#care-and-fair-consideration-in-hawaiʻi"><span class="header-section-number">6.1</span> CARE and FAIR consideration in Hawaiʻi</a>
+  <ul class="collapse">
+  <li><a href="#ideas-for-making-data-from-hawaiʻi-care-and-fair" id="toc-ideas-for-making-data-from-hawaiʻi-care-and-fair" class="nav-link" data-scroll-target="#ideas-for-making-data-from-hawaiʻi-care-and-fair"><span class="header-section-number">6.1.1</span> Ideas for making data from Hawaiʻi CARE and FAIR</a></li>
+  </ul></li>
+  <li><a href="#describing-opennahele-and-hawaiʻi-climate-data-portal-data" id="toc-describing-opennahele-and-hawaiʻi-climate-data-portal-data" class="nav-link" data-scroll-target="#describing-opennahele-and-hawaiʻi-climate-data-portal-data"><span class="header-section-number">6.2</span> Describing <em>OpenNahele</em> and <em>Hawaiʻi Climate Data Portal Data</em></a></li>
+  <li><a href="#relating-tree-diversity-to-environmental-predictors" id="toc-relating-tree-diversity-to-environmental-predictors" class="nav-link" data-scroll-target="#relating-tree-diversity-to-environmental-predictors"><span class="header-section-number">6.3</span> Relating tree diversity to environmental predictors</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -193,8 +233,35 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<section id="care-and-fair-consideration-in-hawaiʻi" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="care-and-fair-consideration-in-hawaiʻi"><span class="header-section-number">6.1</span> CARE and FAIR consideration in Hawaiʻi</h2>
+<p>Write out your manaʻo on CARE and FAIR in Hawaiʻi using class materials, class readings, and most especially your previously assigned written reflections on those readings.</p>
+<section id="ideas-for-making-data-from-hawaiʻi-care-and-fair" class="level3" data-number="6.1.1">
+<h3 data-number="6.1.1" class="anchored" data-anchor-id="ideas-for-making-data-from-hawaiʻi-care-and-fair"><span class="header-section-number">6.1.1</span> Ideas for making data from Hawaiʻi CARE and FAIR</h3>
+</section>
+</section>
+<section id="describing-opennahele-and-hawaiʻi-climate-data-portal-data" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="describing-opennahele-and-hawaiʻi-climate-data-portal-data"><span class="header-section-number">6.2</span> Describing <em>OpenNahele</em> and <em>Hawaiʻi Climate Data Portal Data</em></h2>
+<p>Delete this list once complete</p>
+<ul>
+<li>read-in and join all data like we did in the R refresher lab (fine to copy paste over) for subsequent use</li>
+<li>create a plot-level data object like we did in the R refresher lab (fine to copy paste over) for subsequent use</li>
+<li>across the entire data set (<em>not</em> broken up by island or anything else) calculate 25%, 50%, and 75% quantiles for each numeric plot-level variable but not <code>Year</code> or <code>Census</code> or <code>lon</code> or <code>lat</code>. <em>Hints:</em> you can use the <code>quantile</code> function, you will need to set <code>na.rm = TRUE</code>, you can make a <code>data.frame</code> by hand if that makes most sense, or you can use <code>across</code> in combination with <code>reframe</code> (which is the <em>dplyr</em> approach)</li>
+<li>use a ridgeline plot or stacked histograms to show distributions for all species richness, basal area, and abundance variables by island</li>
+</ul>
+</section>
+<section id="relating-tree-diversity-to-environmental-predictors" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="relating-tree-diversity-to-environmental-predictors"><span class="header-section-number">6.3</span> Relating tree diversity to environmental predictors</h2>
+<p>Delete this list once complete</p>
+<ul>
+<li>create new plot-level columns for species richness—not proportions—that corrects for area (should be, e.g., <code>log(nspp) / log(Plot_Area)</code>)</li>
+<li>make a figure for the response of species richness to plot area (as we did in R refresher lab, fine to copy paste)</li>
+<li>make a figure showing, across all islands, proportion of plots with <span class="math inline">\(\geq 75\%\)</span> native trees (as we did in R refresher lab, fine to copy paste)</li>
+<li>choose three other figures to make where you plot any kind of tree-related response variable (e.g.&nbsp;species richness) against an environmental predictor variable</li>
+</ul>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
