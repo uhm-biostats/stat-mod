@@ -1,3 +1,7 @@
+---
+suppress-bibliography: true
+---
+
 # Dynamic documents with *quarto*
 
 ## What is a dynamic document and how does quarto make it work?
@@ -207,6 +211,10 @@ You can cite a reference like this `[@hutchins2023]` which will get formatted in
 :::
 
 and then get rendered in the *References* section like
+
+::: {#refs}
+
+:::
 
 ::: {.gb}
 <br>
