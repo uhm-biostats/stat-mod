@@ -9,3 +9,4 @@ format:
     preview-links: auto
     auto-stretch: false
     embed-resources: false
+    controls: true
