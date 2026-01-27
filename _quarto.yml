@@ -1,8 +1,6 @@
 profile:
   default: book
 
-author: "Andy Rominger"
-
 bibliography: stat-mod.bib
 csl: conservation-biology.csl
 

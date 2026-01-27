@@ -15,7 +15,7 @@ book:
             - r-refresh.qmd
             - dynamic-doc.qmd
             - github.qmd
-            # - bring-it-together.qmd
+            - bring-it-together.qmd
         # - part: prob.qmd
         #   chapters:
         #     - prob-intro-lecture.qmd
