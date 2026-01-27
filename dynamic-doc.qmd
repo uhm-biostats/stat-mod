@@ -38,7 +38,11 @@ image_read_pdf("example_quarto.pdf") |>
     image_border(color = "#f1f3f5")
 ```
 
-Pretty cool! But how does it all work. Here we go:
+Pretty cool! But how does it all work. First, let's open a quarto document and copy paste the above code into it. For a new quarto document go File > New File > Quarto Document... 
+
+![](img/dyn-doc/new-qmd.png){width="75%"}
+
+You will see the above options. You can mostly ignore everything, but do make sure that "Use visual markdown editor" is **unselected** (you can select to use the visual editor later after you learn markdown basics). Delete any text RStudio pre-populates in the .qmd file and copy the example from this website.
 
 ### Rendering
 
@@ -182,15 +186,40 @@ produces this
 
 ::: 
 
-#### Hyperlinks and images
+#### Hyperlinks, bibliographic references, and images
 
-Those two items seem unrelated, but their markdown syntax is similar. You can link to a URL like this: `[Our website](https://uhm-biostats.github.io/stat-mod/)` which will produce formatted text like this:
+Those items seem unrelated, but their markdown syntax is similar. 
+
+You can link to a URL like this: `[Our website](https://uhm-biostats.github.io/stat-mod/)` which will produce formatted text like this:
 
 ::: {.gb}
 
 [Our website](https://uhm-biostats.github.io/stat-mod/)
 
 :::
+
+You can cite a reference like this `[@hutchins2023]` which will get formatted in the text like this:
+
+::: {.gb}
+
+...cite a reference like this [@hutchins2023]...
+
+:::
+
+and then get rendered in the *References* section like
+
+::: {.gb}
+<br>
+
+![](img/dyn-doc/hutchins-ref.png)
+
+:::
+
+Three things to note about citing references:
+
+- Include at the very end of your .qmd file a section `## References`, the works cited will print after this
+- You need to store your references in a .bib file, more on that [here](https://quarto.org/docs/authoring/citations.html)
+- That link will also tell you more about how you can customize the bibliography style with a csl file, you can browse many options [here](https://www.zotero.org/styles). This website uses the [*Conservation Biology* style](https://www.zotero.org/styles/conservation-biology?source=1)
 
 Including an image looks almost the same. This:
 
