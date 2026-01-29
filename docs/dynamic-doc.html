@@ -211,11 +211,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#what-is-a-dynamic-document-and-how-does-quarto-make-it-work" id="toc-what-is-a-dynamic-document-and-how-does-quarto-make-it-work" class="nav-link active" data-scroll-target="#what-is-a-dynamic-document-and-how-does-quarto-make-it-work"><span class="header-section-number">4.1</span> What is a dynamic document and how does quarto make it work?</a></li>
   <li><a href="#quick-start" id="toc-quick-start" class="nav-link" data-scroll-target="#quick-start"><span class="header-section-number">4.2</span> Quick-start</a>
-  <ul class="collapse">
+  <ul>
   <li><a href="#rendering" id="toc-rendering" class="nav-link" data-scroll-target="#rendering"><span class="header-section-number">4.2.1</span> Rendering</a></li>
   <li><a href="#yaml-header" id="toc-yaml-header" class="nav-link" data-scroll-target="#yaml-header"><span class="header-section-number">4.2.2</span> YAML header</a></li>
-  <li><a href="#markdown-syntax" id="toc-markdown-syntax" class="nav-link" data-scroll-target="#markdown-syntax"><span class="header-section-number">4.2.3</span> Markdown syntax</a></li>
-  <li><a href="#code" id="toc-code" class="nav-link" data-scroll-target="#code"><span class="header-section-number">4.2.4</span> Code</a></li>
+  <li><a href="#markdown-syntax" id="toc-markdown-syntax" class="nav-link" data-scroll-target="#markdown-syntax"><span class="header-section-number">4.2.3</span> Markdown syntax</a>
+  <ul class="collapse">
+  <li><a href="#general-formatting" id="toc-general-formatting" class="nav-link" data-scroll-target="#general-formatting"><span class="header-section-number">4.2.3.1</span> General formatting</a></li>
+  <li><a href="#headers" id="toc-headers" class="nav-link" data-scroll-target="#headers"><span class="header-section-number">4.2.3.2</span> Headers</a></li>
+  <li><a href="#lists" id="toc-lists" class="nav-link" data-scroll-target="#lists"><span class="header-section-number">4.2.3.3</span> Lists</a></li>
+  <li><a href="#hyperlinks-and-images" id="toc-hyperlinks-and-images" class="nav-link" data-scroll-target="#hyperlinks-and-images"><span class="header-section-number">4.2.3.4</span> Hyperlinks and images</a></li>
+  <li><a href="#bibliographic-references" id="toc-bibliographic-references" class="nav-link" data-scroll-target="#bibliographic-references"><span class="header-section-number">4.2.3.5</span> Bibliographic references</a></li>
+  <li><a href="#tables" id="toc-tables" class="nav-link" data-scroll-target="#tables"><span class="header-section-number">4.2.3.6</span> Tables</a></li>
+  </ul></li>
+  <li><a href="#code" id="toc-code" class="nav-link" data-scroll-target="#code"><span class="header-section-number">4.2.4</span> Code</a>
+  <ul class="collapse">
+  <li><a href="#figures-and-tables-from-code" id="toc-figures-and-tables-from-code" class="nav-link" data-scroll-target="#figures-and-tables-from-code"><span class="header-section-number">4.2.4.1</span> Figures and tables from code</a></li>
+  <li><a href="#cross-referencing" id="toc-cross-referencing" class="nav-link" data-scroll-target="#cross-referencing"><span class="header-section-number">4.2.4.2</span> Cross referencing</a></li>
+  </ul></li>
   </ul></li>
   <li><a href="#now-its-your-turn" id="toc-now-its-your-turn" class="nav-link" data-scroll-target="#now-its-your-turn"><span class="header-section-number">4.3</span> Now it’s your turn</a></li>
   </ul>
@@ -422,35 +434,13 @@ format: pdf
 </ol>
 </div>
 </section>
-<section id="hyperlinks-bibliographic-references-and-images" class="level4" data-number="4.2.3.4">
-<h4 data-number="4.2.3.4" class="anchored" data-anchor-id="hyperlinks-bibliographic-references-and-images"><span class="header-section-number">4.2.3.4</span> Hyperlinks, bibliographic references, and images</h4>
+<section id="hyperlinks-and-images" class="level4" data-number="4.2.3.4">
+<h4 data-number="4.2.3.4" class="anchored" data-anchor-id="hyperlinks-and-images"><span class="header-section-number">4.2.3.4</span> Hyperlinks and images</h4>
 <p>Those items seem unrelated, but their markdown syntax is similar.</p>
 <p>You can link to a URL like this: <code>[Our website](https://uhm-biostats.github.io/stat-mod/)</code> which will produce formatted text like this:</p>
 <div class="gb">
 <p><a href="https://uhm-biostats.github.io/stat-mod/">Our website</a></p>
 </div>
-<p>You can cite a reference like this <code>[@hutchins2023]</code> which will get formatted in the text like this:</p>
-<div class="gb">
-<p>…cite a reference like this <span class="citation" data-cites="hutchins2023">(Hutchins et al. 2023)</span>…</p>
-</div>
-<p>and then get rendered in the <em>References</em> section like</p>
-<div class="gb">
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="dynamic-doc_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="635"></p>
-</figure>
-</div>
-</div>
-</div>
-</div>
-<p>Three things to note about citing references:</p>
-<ul>
-<li>Include at the very end of your .qmd file a section <code>## References</code>, the works cited will print after this</li>
-<li>You need to store your references in a .bib file, more on that <a href="https://quarto.org/docs/authoring/citations.html">here</a></li>
-<li>That link will also tell you more about how you can customize the bibliography style with a csl file, you can browse many options <a href="https://www.zotero.org/styles">here</a>. This website uses the <a href="https://www.zotero.org/styles/conservation-biology?source=1"><em>Conservation Biology</em> style</a></li>
-</ul>
 <p>Including an image looks almost the same. This:</p>
 <div class="gb">
 <pre><code>![An image from Winter et al. 2018](img/data-intro/wao.png)</code></pre>
@@ -461,7 +451,7 @@ format: pdf
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-left">
 <figure class="figure">
-<p><img src="dynamic-doc_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<p><img src="dynamic-doc_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" style="width:50.0%"></p>
 <figcaption>An image from Winter et al.&nbsp;2018</figcaption>
 </figure>
 </div>
@@ -478,7 +468,7 @@ format: pdf
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-left">
 <figure class="figure">
-<p><img src="dynamic-doc_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" style="width:75.0%"></p>
+<p><img src="dynamic-doc_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" style="width:75.0%"></p>
 <figcaption>Remember this old map?</figcaption>
 </figure>
 </div>
@@ -486,8 +476,33 @@ format: pdf
 </div>
 </div>
 </section>
-<section id="tables" class="level4" data-number="4.2.3.5">
-<h4 data-number="4.2.3.5" class="anchored" data-anchor-id="tables"><span class="header-section-number">4.2.3.5</span> Tables</h4>
+<section id="bibliographic-references" class="level4" data-number="4.2.3.5">
+<h4 data-number="4.2.3.5" class="anchored" data-anchor-id="bibliographic-references"><span class="header-section-number">4.2.3.5</span> Bibliographic references</h4>
+<p>You can cite a reference like this <code>[@hutchins2023]</code> which will get formatted in the text like this:</p>
+<div class="gb">
+<p>…cite a reference like this <span class="citation" data-cites="hutchins2023">(Hutchins et al. 2023)</span>…</p>
+</div>
+<p>and then get rendered in the <em>References</em> section like</p>
+<div class="gb">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="dynamic-doc_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="635"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>Three things to note about citing references:</p>
+<ul>
+<li>Include at the very end of your .qmd file a section <code>## References</code>, the works cited will print after this</li>
+<li>You need to store your references in a .bib file, more on that <a href="https://quarto.org/docs/authoring/citations.html">here</a></li>
+<li>That link will also tell you more about how you can customize the bibliography style with a csl file, you can browse many options <a href="https://www.zotero.org/styles">here</a>. This website uses the <a href="https://www.zotero.org/styles/conservation-biology?source=1"><em>Conservation Biology</em> style</a></li>
+</ul>
+</section>
+<section id="tables" class="level4" data-number="4.2.3.6">
+<h4 data-number="4.2.3.6" class="anchored" data-anchor-id="tables"><span class="header-section-number">4.2.3.6</span> Tables</h4>
 <p>Tables can be simply created with markdown like this:</p>
 <div class="gb">
 <div class="cell s-output">
