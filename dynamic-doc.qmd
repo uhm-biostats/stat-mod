@@ -190,7 +190,7 @@ produces this
 
 ::: 
 
-#### Hyperlinks, bibliographic references, and images
+#### Hyperlinks and images
 
 Those items seem unrelated, but their markdown syntax is similar. 
 
@@ -202,36 +202,6 @@ You can link to a URL like this: `[Our website](https://uhm-biostats.github.io/s
 
 :::
 
-You can cite a reference like this `[@hutchins2023]` which will get formatted in the text like this:
-
-::: {.gb}
-
-...cite a reference like this [@hutchins2023]...
-
-:::
-
-and then get rendered in the *References* section like
-
-::: {.gb}
-
-```{r}
-#| echo: false
-#| message: false
-
-image_read("img/dyn-doc/hutchins-ref.png") |>
-    image_crop("1250x180") |>
-    image_transparent("white", fuzz = 25) |>
-    image_border(color = "#f1f3f5")
-```
-
-:::
-
-
-Three things to note about citing references:
-
-- Include at the very end of your .qmd file a section `## References`, the works cited will print after this
-- You need to store your references in a .bib file, more on that [here](https://quarto.org/docs/authoring/citations.html)
-- That link will also tell you more about how you can customize the bibliography style with a csl file, you can browse many options [here](https://www.zotero.org/styles). This website uses the [*Conservation Biology* style](https://www.zotero.org/styles/conservation-biology?source=1)
 
 Including an image looks almost the same. This:
 
@@ -290,6 +260,38 @@ image_read("https://uhm-biostats.github.io/stat-mod/datasets-intro_files/figure-
 
 :::
 
+#### Bibliographic references
+
+You can cite a reference like this `[@hutchins2023]` which will get formatted in the text like this:
+
+::: {.gb}
+
+...cite a reference like this [@hutchins2023]...
+
+:::
+
+and then get rendered in the *References* section like
+
+::: {.gb}
+
+```{r}
+#| echo: false
+#| message: false
+
+image_read("img/dyn-doc/hutchins-ref.png") |>
+    image_crop("1250x180") |>
+    image_transparent("white", fuzz = 25) |>
+    image_border(color = "#f1f3f5")
+```
+
+:::
+
+
+Three things to note about citing references:
+
+- Include at the very end of your .qmd file a section `## References`, the works cited will print after this
+- You need to store your references in a .bib file, more on that [here](https://quarto.org/docs/authoring/citations.html)
+- That link will also tell you more about how you can customize the bibliography style with a csl file, you can browse many options [here](https://www.zotero.org/styles). This website uses the [*Conservation Biology* style](https://www.zotero.org/styles/conservation-biology?source=1)
 
 #### Tables
 
