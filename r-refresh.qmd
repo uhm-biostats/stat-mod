@@ -1037,6 +1037,8 @@ select(nspp_by_plot, c(Plot_ID, Island, lon, lat, nspp))
 
 Use what you've just learned to make a `tibble` called `basal_by_plot` that calculates the basal area (again, sum of all DBH measurements) for each plot. Let's call the basal area column `basal_area`. Again keep all the plot-level data like we did in making `nspp_by_plot`.
 
+::: {.callout-cauthion collapse="true"}
+
 ```{r}
 #| echo: false
 #| label: basal-soltuion
@@ -1047,6 +1049,8 @@ basal_by_plot <- group_by(all_dat_tib, Plot_ID) |>
               basal_area = sum(DBH_cm)) |> 
     ungroup()
 ```
+
+:::
 
 :::
 
@@ -1238,6 +1242,34 @@ select(dat_by_plot, nspp:total_abund_native) |>
     cat(sep = "\n")
 ```
 
+::: {.callout-caution collapse="true"}
+
+## Solution
+
+```{r}
+#| eval: false
+
+dat_by_plot <- group_by(all_dat_tib, Plot_ID) |> 
+    summarize(across(Island:elev_m, first), 
+              nspp = n_distinct(Scientific_name), 
+              nspp_native = n_distinct(
+                  Scientific_name[Native_Status == "native"]
+              ), 
+              prop_spp_native = nspp_native / nspp, 
+              basal = sum(DBH_cm), 
+              basal_native = sum(
+                  DBH_cm[Native_Status == "native"]
+              ),
+              prop_basal_native = basal_native / basal,
+              total_abund = n(), 
+              total_abund_native = sum(
+                  Native_Status == "native"
+              ), 
+              prop_abund_native = total_abund_native / total_abund) |> 
+    ungroup()
+```
+
+:::
 
 :::
 
@@ -1313,6 +1345,10 @@ That suggests we should log-transform both the x- and y-axes.
 
 Modify the `ggplot` code to log both the x- and y-axes. Do you have a guess of how to do it? Once you succeed your graphic will look like this
 
+::: {.callout-caution collapse="true"}
+
+## Solution
+
 ```{r}
 #| echo: false
 #| label: sar-solution
@@ -1323,6 +1359,8 @@ ggplot(dat_by_plot, aes(Plot_Area, nspp)) +
     scale_y_continuous(transform = "log10")
 
 ```
+
+:::
 
 While you're at it, compare the log-transformed plot and the not-log-transformed plot. What changes about the axes and why?
 
@@ -1436,24 +1474,23 @@ The data wrangling we just did of shortening island names and making them factor
 
 Conflicting data versions and redundant code are the things of nightmares for the data analyst!
 
-So your task is to go all the way back in the script to where we first made `all_dat` and modify the `Island` column so the values have short (correct) names and are factors with appropriately ordered levels. Then make sure you also 
+So your task is to go all the way back in the script to where we first read in the `tree` data and modify the `Island` column so the values have short (correct) names and are factors with appropriately ordered levels. Then make sure you also 
 
+- re-run the code that makes `all_dat` and `all_dat_tib`
 - re-run the code that makes `all_dat_tib`
 - delete the code modifying `Islands` in the `dat_by_plot` object
 - and re-run the newly cleaned-up code making `dat_by_plot`
+
+::: {.callout-caution collapse="true"}
+
+## Solution
 
 ```{r}
 #| echo: false
 #| message: false
 #| label: clean-up-solution
 
-all_dat <- select(clim, -(lon:lat)) |> 
-    full_join(geoh) |>
-    full_join(tree) |>
-    select(-(Longitude:Latitude)) |> 
-    filter(!is.na(Island)) |> 
-    relocate(c(Island:Census, lon:lat), .after = PlotID) |> 
-    rename(Plot_ID = PlotID) |> 
+tree <- read.csv("data/OpenNahele_Tree_Data.csv") |> 
     mutate(
         Island = case_match(
             Island, 
@@ -1467,6 +1504,15 @@ all_dat <- select(clim, -(lon:lat)) |>
             factor(levels = c("Kauaʻi", "Oʻahu", "Molokaʻi", 
                               "Lānaʻi", "Maui", "Hawaiʻi"))
     )
+
+all_dat <- select(clim, -(lon:lat)) |> 
+    full_join(geoh) |>
+    full_join(tree) |>
+    select(-(Longitude:Latitude)) |> 
+    filter(!is.na(Island)) |> 
+    relocate(c(Island:Census, lon:lat), .after = PlotID) |> 
+    rename(Plot_ID = PlotID)
+    
 
 all_dat_tib <- as_tibble(all_dat)
 
@@ -1491,6 +1537,9 @@ dat_by_plot <- group_by(all_dat_tib, Plot_ID) |>
     ungroup()
 
 ```
+
+:::
+
 :::
 
 
@@ -1542,14 +1591,6 @@ sar +
 ```
 
 The argument `option = "magma"` chooses from several different pallets offered by *viridis* and seemed fitting for these data.
-
-::: {.callout-note}
-
-## Your turn
-
-Have a look at other arguments in `scale_color_viridis_d` (use the help documentation accessed with `?scale_color_viridis_d`) to see if you can further refine the color coding of islands
-
-:::
 
 ### Faceting
 
@@ -1729,23 +1770,28 @@ ggplot(dat_by_plot, aes(Island, fill = prop_abund_native >= 0.75)) +
 
 ## Your turn
 
-Improve this graphic! Make it have better labels (pay close attention to the y-axis, its a proportion, but of what? What about the legend?) and give it better colors. You might find 
+Improve this graphic! Make it have better labels (pay close attention to the y-axis, its a proportion, but of what? What about the legend?) and give it better colors. 
+
+::: {.callout-caution collapse="true"}
+
+## Solution 
 
 ```{r}
 #| eval: false
-#| echo: false
 #| label: bar-solution
 
 ggplot(dat_by_plot, aes(Island, fill = prop_abund_native >= 0.75)) +
     geom_bar(position = "fill") +
     scale_fill_discrete(name = "Possible\nwao akua", 
                         labels = c("not likely", "likely"),
+                        # just one idea for colors, choose your own
                         palette = c("gray10", hsv(0.5, 1, 0.6))) +
     ylab("Proportion of plots")
 
 
 ```
 
+:::
 
 :::
 
