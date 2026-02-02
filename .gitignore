@@ -5,6 +5,6 @@
 .DS_Store
 /.quarto/
 data_raw/
-foo.R
+/_class-examples/
 
 **/*.quarto_ipynb
