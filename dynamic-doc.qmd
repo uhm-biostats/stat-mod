@@ -366,6 +366,8 @@ q[ii] |>
 ```
 
 ```{r}
+#| echo: false
+
 eval(parse(text = q[ii[-c(1:2, length(ii))]]))
 
 ```
@@ -456,4 +458,7 @@ There is a lot more to learn about cross referencing (including in cases where w
 
 In the previous chapter you produced an extensive R script with notes and code. Copy-paste and modify that big unruly R script into a nice qmd file and render it as a pdf. This pdf will be your own personal definitive R study guide and reference manual.
 
+## Resources
+
+As already mentioned, quarto has [extensive documentation online](https://quarto.org/docs/guide/).
 
