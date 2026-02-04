@@ -20,7 +20,8 @@ y <- grep("---", l) |>
 b <- l[!(l %in% y)]
 
 # write only the body for use with `{{< include %s >}}`
-fb <- gsub("\\.qmd", "_bonly.qmd", f)
+# fb <- gsub("\\.qmd", "_bonly.qmd", f)
+fb <- tempfile(fileext = ".qmd")
 
 writeLines(b, fb)
 ```
