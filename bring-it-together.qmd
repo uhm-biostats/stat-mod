@@ -1,8 +1,8 @@
-# CARE and FAIR in presenting data with dynamic documents on GitHub
+# CARE and FAIR in presenting data with dynamic documents
 
 This lab will work through planning and envisioning CARE and FAIR approaches to data in Hawaiʻi as well as visualizing and numerically summarizing the data we will use in this course. You can download the template `.qmd` file for this lab here:
 
-{{< downloadthis labs/lab01-data.qmd dname=lab01-data label="Download lab01-data.qmd">}}
+{{< downloadthis labs/lab01-data.qmd dname=lab01-data label="Download lab template">}}
 
 ```{r}
 #| include: false
@@ -17,7 +17,8 @@ y <- grep("---", l) |>
     (\(x) l[x])()
 
 # only the body
-b <- l[!(l %in% y)]
+b <- l[!(l %in% y)] |> 
+    gsub("\\*Delete this .* once complete\\*", "", x = _)
 
 # write only the body for use with `{{< include %s >}}`
 # fb <- gsub("\\.qmd", "_bonly.qmd", f)
@@ -27,6 +28,7 @@ writeLines(b, fb)
 ```
 
 Note: the yaml header of this file is a little more complex than we have seen before
+
 
 ```{r}
 #| echo: false
@@ -44,7 +46,8 @@ The template will prompt you to work through the following sections.
 #| echo: false
 #| results: asis
 
-m <- knitr::knit_child(fb, quiet = TRUE)
+m <- knitr::knit_child(fb, options = list(include = FALSE), 
+                       quiet = TRUE)
 
 cat(m, sep = "\n")
 ```

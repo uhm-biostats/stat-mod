@@ -1,5 +1,5 @@
 ---
-title: "CARE and FAIR in presenting data with dynamic documents on GitHub"
+title: "CARE and FAIR in presenting data with dynamic documents"
 format: 
     pdf: 
         include-in-header:
@@ -12,22 +12,55 @@ author:
     - etc
 ---
 
+```{r}
+#| label: setup
+#| include: false
+
+# load all necessary packages
+# ... you need to do this! can delete this comment once done
+```
+
 ## CARE and FAIR consideration in Hawaiʻi
 
-Write out your manaʻo on CARE and FAIR in Hawaiʻi using class materials, class readings, and most especially your previously assigned written reflections on those readings.
+*Delete this prompt once complete*
+
+Write out your manaʻo on CARE and FAIR in Hawaiʻi generally using class materials, class readings, and most especially your previously assigned written reflections on those readings. This section might serve as background on the reasons for aspiring to CARE and FAIR principles and any challenges we might face in operationalizing them.
 
 ### Ideas for making data from Hawaiʻi CARE and FAIR
 
+*Delete this prompt once complete*
+
+Using as a specific example the data we're working with in this course, propose some ideas for making the data comply with CARE and FAIR. Recall, the data sources are the *OpenNahele* database hosted on [Data Dryad](https://datadryad.org) and the [Hawaiʻi Climate Data Portal](https://www.hawaii.edu/climate-data-portal/) hosted through the University of Hawaiʻi. How could these data repositories, and the specific data sets/resources, become more CARE and FAIR?
 
 
 ## Describing *OpenNahele* and *Hawaiʻi Climate Data Portal Data*
 
-Delete this list once complete
+Let's read-in the data from a url rather than having to download the data repeatedly or refer to data stored in a different project on our local computers
 
-- read-in and join all data like we did in the R refresher lab (fine to copy paste over) for subsequent use
+```{r}
+#| label: read-data
+
+# this is the part of the url that will be 
+# the same for all data files
+base_url <- paste("https://raw.githubusercontent.com/uhm-biostats/stat-mod",
+                  "refs/heads/main/data", 
+                  sep = "/")
+
+tree <- read.csv(paste(base_url, "OpenNahele_Tree_Data.csv", sep = "/"))
+clim <- read.csv(paste(base_url, "plot_climate.csv", sep = "/"))
+geoh <- read.csv(paste(base_url, "hii_geo.csv", sep = "/"))
+```
+
+*Delete this list once complete*
+
+- join all data like we did in the R refresher lab (fine to copy paste over) for subsequent use
 - create a plot-level data object like we did in the R refresher lab (fine to copy paste over) for subsequent use
-- across the entire data set (*not* broken up by island or anything else) calculate 25%, 50%, and 75% quantiles for each numeric plot-level variable but not `Year` or `Census` or `lon` or `lat`. *Hints:* you can use the `quantile` function, you will need to set `na.rm = TRUE`, you can make a `data.frame` by hand if that makes most sense, or you can use `across` in combination with `reframe` (which is the *dplyr* approach)
-- use a ridgeline plot or stacked histograms to show distributions for all species richness, basal area, and abundance variables by island
+- across the entire data set (*not* broken up by island or anything else) calculate 25%, 50%, and 75% quantiles for each numeric plot-level variable but not `Year` or `Census` or `lon` or `lat`. *Hints:* 
+    - you can use the `quantile` function, you will need to set `na.rm = TRUE`
+    - you can make a `data.frame` by hand if that makes most sense
+    - or you can use `across` in combination with `reframe` (which is the *dplyr* approach)
+- use a ridgeline plot or stacked histograms to show distributions for all variables relating to species richness, basal area, and abundance by island
+- for all figures and tables, include a caption and also refer to the figure/table in narrative text that explains why you are making the visualization/table
 
 
 
@@ -44,12 +77,13 @@ all_dat_tib |>
 
 ## Relating tree diversity to environmental predictors
 
-Delete this list once complete
+*Delete this list once complete*
 
 - create new plot-level columns for species richness---not proportions---that corrects for area (should be, e.g., `log(nspp) / log(Plot_Area)`)
 - make a figure for the response of species richness to plot area (as we did in R refresher lab, fine to copy paste)
 - make a figure showing, across all islands, proportion of plots with $\geq 75\%$ native trees (as we did in R refresher lab, fine to copy paste)
-- choose three other figures to make where you plot any kind of tree-related response variable (e.g. species richness) against an environmental predictor variable
+- choose three other figures to make where you plot any kind of diversity-related response variable (e.g. species richness, native species richness) against an environmental predictor variable
+- for all figures, include a caption and also refer to the figure in narrative text that explains why you are making the visualization
 
 
 ```{r}
