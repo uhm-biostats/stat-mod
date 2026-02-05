@@ -63,18 +63,6 @@ geoh <- read.csv(paste(base_url, "hii_geo.csv", sep = "/"))
 - for all figures and tables, include a caption and also refer to the figure/table in narrative text that explains why you are making the visualization/table
 
 
-
-```{r}
-#| eval: false
-#| echo: false
-
-
-all_dat_tib |> 
-    reframe(across(Island:elev_m & where(is.numeric) & !(Year:lat), quantile, probs = c(0.25, 0.5, 0.75), na.rm = TRUE))
-```
-
-
-
 ## Relating tree diversity to environmental predictors
 
 *Delete this list once complete*
@@ -86,17 +74,5 @@ all_dat_tib |>
 - for all figures, include a caption and also refer to the figure in narrative text that explains why you are making the visualization
 
 
-```{r}
-#| eval: false
-#| echo: false
 
-
-dat_by_plot <- mutate(dat_by_plot, 
-                      log_nspp_log_area = log(nspp) / log(Plot_Area)) 
-
-filter(dat_by_plot, Plot_Area < 10000) |> 
-    ggplot(aes(Plot_Area, log_nspp_log_area)) +
-    geom_hex() +
-    scale_x_continuous(transform = "log10")
-```
 
