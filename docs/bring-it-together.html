@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>6&nbsp; CARE and FAIR in presenting data with dynamic documents on GitHub – Intro to Statistical Modeling</title>
+<title>6&nbsp; CARE and FAIR in presenting data with dynamic documents – Intro to Statistical Modeling</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -42,6 +42,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-27c261d06b905028a18691de25d09dde.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/quarto-contrib/downloadthis-1.9.1/downloadthis.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -112,7 +113,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./intro.html">Introductory material</a></li><li class="breadcrumb-item"><a href="./bring-it-together.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">CARE and FAIR in presenting data with dynamic documents on GitHub</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./intro.html">Introductory material</a></li><li class="breadcrumb-item"><a href="./bring-it-together.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">CARE and FAIR in presenting data with dynamic documents</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -187,7 +188,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./bring-it-together.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">CARE and FAIR in presenting data with dynamic documents on GitHub</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">CARE and FAIR in presenting data with dynamic documents</span></span></a>
   </div>
 </li>
       </ul>
@@ -214,9 +215,9 @@ window.Quarto = {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./intro.html">Introductory material</a></li><li class="breadcrumb-item"><a href="./bring-it-together.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">CARE and FAIR in presenting data with dynamic documents on GitHub</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./intro.html">Introductory material</a></li><li class="breadcrumb-item"><a href="./bring-it-together.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">CARE and FAIR in presenting data with dynamic documents</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">CARE and FAIR in presenting data with dynamic documents on GitHub</span></h1>
+<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">CARE and FAIR in presenting data with dynamic documents</span></h1>
 </div>
 
 
@@ -233,31 +234,68 @@ window.Quarto = {
 </header>
 
 
+<p>This lab will work through planning and envisioning CARE and FAIR approaches to data in Hawaiʻi as well as visualizing and numerically summarizing the data we will use in this course. You can download the template <code>.qmd</code> file for this lab here:</p>
+<p><a href="#dnldts3452" onclick="fetch('data:text/plain;base64,LS0tCnRpdGxlOiAiQ0FSRSBhbmQgRkFJUiBpbiBwcmVzZW50aW5nIGRhdGEgd2l0aCBkeW5hbWljIGRvY3VtZW50cyIKZm9ybWF0OiAKICAgIHBkZjogCiAgICAgICAgaW5jbHVkZS1pbi1oZWFkZXI6CiAgICAgICAgICAgIHRleHQ6IHwKICAgICAgICAgICAgICAgIFx1c2VwYWNrYWdle25ld3VuaWNvZGVjaGFyfQogICAgICAgICAgICAgICAgXG5ld3VuaWNvZGVjaGFye8q7fXtgfSAKYXV0aG9yOiAKICAgIC0geW91ciBuYW1lIGhlcmUKICAgIC0geW91ciBuYW1lIGhlcmUKICAgIC0gZXRjCi0tLQoKYGBge3J9CiN8IGxhYmVsOiBzZXR1cAojfCBpbmNsdWRlOiBmYWxzZQoKIyBsb2FkIGFsbCBuZWNlc3NhcnkgcGFja2FnZXMKIyAuLi4geW91IG5lZWQgdG8gZG8gdGhpcyEgY2FuIGRlbGV0ZSB0aGlzIGNvbW1lbnQgb25jZSBkb25lCmBgYAoKIyMgQ0FSRSBhbmQgRkFJUiBjb25zaWRlcmF0aW9uIGluIEhhd2FpyrtpCgoqRGVsZXRlIHRoaXMgcHJvbXB0IG9uY2UgY29tcGxldGUqCgpXcml0ZSBvdXQgeW91ciBtYW5hyrtvIG9uIENBUkUgYW5kIEZBSVIgaW4gSGF3YWnKu2kgZ2VuZXJhbGx5IHVzaW5nIGNsYXNzIG1hdGVyaWFscywgY2xhc3MgcmVhZGluZ3MsIGFuZCBtb3N0IGVzcGVjaWFsbHkgeW91ciBwcmV2aW91c2x5IGFzc2lnbmVkIHdyaXR0ZW4gcmVmbGVjdGlvbnMgb24gdGhvc2UgcmVhZGluZ3MuIFRoaXMgc2VjdGlvbiBtaWdodCBzZXJ2ZSBhcyBiYWNrZ3JvdW5kIG9uIHRoZSByZWFzb25zIGZvciBhc3BpcmluZyB0byBDQVJFIGFuZCBGQUlSIHByaW5jaXBsZXMgYW5kIGFueSBjaGFsbGVuZ2VzIHdlIG1pZ2h0IGZhY2UgaW4gb3BlcmF0aW9uYWxpemluZyB0aGVtLgoKIyMjIElkZWFzIGZvciBtYWtpbmcgZGF0YSBmcm9tIEhhd2FpyrtpIENBUkUgYW5kIEZBSVIKCipEZWxldGUgdGhpcyBwcm9tcHQgb25jZSBjb21wbGV0ZSoKClVzaW5nIGFzIGEgc3BlY2lmaWMgZXhhbXBsZSB0aGUgZGF0YSB3ZSdyZSB3b3JraW5nIHdpdGggaW4gdGhpcyBjb3Vyc2UsIHByb3Bvc2Ugc29tZSBpZGVhcyBmb3IgbWFraW5nIHRoZSBkYXRhIGNvbXBseSB3aXRoIENBUkUgYW5kIEZBSVIuIFJlY2FsbCwgdGhlIGRhdGEgc291cmNlcyBhcmUgdGhlICpPcGVuTmFoZWxlKiBkYXRhYmFzZSBob3N0ZWQgb24gW0RhdGEgRHJ5YWRdKGh0dHBzOi8vZGF0YWRyeWFkLm9yZykgYW5kIHRoZSBbSGF3YWnKu2kgQ2xpbWF0ZSBEYXRhIFBvcnRhbF0oaHR0cHM6Ly93d3cuaGF3YWlpLmVkdS9jbGltYXRlLWRhdGEtcG9ydGFsLykgaG9zdGVkIHRocm91Z2ggdGhlIFVuaXZlcnNpdHkgb2YgSGF3YWnKu2kuIEhvdyBjb3VsZCB0aGVzZSBkYXRhIHJlcG9zaXRvcmllcywgYW5kIHRoZSBzcGVjaWZpYyBkYXRhIHNldHMvcmVzb3VyY2VzLCBiZWNvbWUgbW9yZSBDQVJFIGFuZCBGQUlSPwoKCiMjIERlc2NyaWJpbmcgKk9wZW5OYWhlbGUqIGFuZCAqSGF3YWnKu2kgQ2xpbWF0ZSBEYXRhIFBvcnRhbCBEYXRhKgoKTGV0J3MgcmVhZC1pbiB0aGUgZGF0YSBmcm9tIGEgdXJsIHJhdGhlciB0aGFuIGhhdmluZyB0byBkb3dubG9hZCB0aGUgZGF0YSByZXBlYXRlZGx5IG9yIHJlZmVyIHRvIGRhdGEgc3RvcmVkIGluIGEgZGlmZmVyZW50IHByb2plY3Qgb24gb3VyIGxvY2FsIGNvbXB1dGVycwoKYGBge3J9CiN8IGxhYmVsOiByZWFkLWRhdGEKCiMgdGhpcyBpcyB0aGUgcGFydCBvZiB0aGUgdXJsIHRoYXQgd2lsbCBiZSAKIyB0aGUgc2FtZSBmb3IgYWxsIGRhdGEgZmlsZXMKYmFzZV91cmwgPC0gcGFzdGUoImh0dHBzOi8vcmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbS91aG0tYmlvc3RhdHMvc3RhdC1tb2QiLAogICAgICAgICAgICAgICAgICAicmVmcy9oZWFkcy9tYWluL2RhdGEiLCAKICAgICAgICAgICAgICAgICAgc2VwID0gIi8iKQoKdHJlZSA8LSByZWFkLmNzdihwYXN0ZShiYXNlX3VybCwgIk9wZW5OYWhlbGVfVHJlZV9EYXRhLmNzdiIsIHNlcCA9ICIvIikpCmNsaW0gPC0gcmVhZC5jc3YocGFzdGUoYmFzZV91cmwsICJwbG90X2NsaW1hdGUuY3N2Iiwgc2VwID0gIi8iKSkKZ2VvaCA8LSByZWFkLmNzdihwYXN0ZShiYXNlX3VybCwgImhpaV9nZW8uY3N2Iiwgc2VwID0gIi8iKSkKYGBgCgoqRGVsZXRlIHRoaXMgbGlzdCBvbmNlIGNvbXBsZXRlKgoKLSBqb2luIGFsbCBkYXRhIGxpa2Ugd2UgZGlkIGluIHRoZSBSIHJlZnJlc2hlciBsYWIgKGZpbmUgdG8gY29weSBwYXN0ZSBvdmVyKSBmb3Igc3Vic2VxdWVudCB1c2UKLSBjcmVhdGUgYSBwbG90LWxldmVsIGRhdGEgb2JqZWN0IGxpa2Ugd2UgZGlkIGluIHRoZSBSIHJlZnJlc2hlciBsYWIgKGZpbmUgdG8gY29weSBwYXN0ZSBvdmVyKSBmb3Igc3Vic2VxdWVudCB1c2UKLSBhY3Jvc3MgdGhlIGVudGlyZSBkYXRhIHNldCAoKm5vdCogYnJva2VuIHVwIGJ5IGlzbGFuZCBvciBhbnl0aGluZyBlbHNlKSBjYWxjdWxhdGUgMjUlLCA1MCUsIGFuZCA3NSUgcXVhbnRpbGVzIGZvciBlYWNoIG51bWVyaWMgcGxvdC1sZXZlbCB2YXJpYWJsZSBidXQgbm90IGBZZWFyYCBvciBgQ2Vuc3VzYCBvciBgbG9uYCBvciBgbGF0YC4gKkhpbnRzOiogCiAgICAtIHlvdSBjYW4gdXNlIHRoZSBgcXVhbnRpbGVgIGZ1bmN0aW9uLCB5b3Ugd2lsbCBuZWVkIHRvIHNldCBgbmEucm0gPSBUUlVFYAogICAgLSB5b3UgY2FuIG1ha2UgYSBgZGF0YS5mcmFtZWAgYnkgaGFuZCBpZiB0aGF0IG1ha2VzIG1vc3Qgc2Vuc2UKICAgIC0gb3IgeW91IGNhbiB1c2UgYGFjcm9zc2AgaW4gY29tYmluYXRpb24gd2l0aCBgcmVmcmFtZWAgKHdoaWNoIGlzIHRoZSAqZHBseXIqIGFwcHJvYWNoKQotIHVzZSBhIHJpZGdlbGluZSBwbG90IG9yIHN0YWNrZWQgaGlzdG9ncmFtcyB0byBzaG93IGRpc3RyaWJ1dGlvbnMgZm9yIGFsbCB2YXJpYWJsZXMgcmVsYXRpbmcgdG8gc3BlY2llcyByaWNobmVzcywgYmFzYWwgYXJlYSwgYW5kIGFidW5kYW5jZSBieSBpc2xhbmQKLSBmb3IgYWxsIGZpZ3VyZXMgYW5kIHRhYmxlcywgaW5jbHVkZSBhIGNhcHRpb24gYW5kIGFsc28gcmVmZXIgdG8gdGhlIGZpZ3VyZS90YWJsZSBpbiBuYXJyYXRpdmUgdGV4dCB0aGF0IGV4cGxhaW5zIHdoeSB5b3UgYXJlIG1ha2luZyB0aGUgdmlzdWFsaXphdGlvbi90YWJsZQoKCgpgYGB7cn0KI3wgZXZhbDogZmFsc2UKI3wgZWNobzogZmFsc2UKCgphbGxfZGF0X3RpYiB8PiAKICAgIHJlZnJhbWUoYWNyb3NzKElzbGFuZDplbGV2X20gJiB3aGVyZShpcy5udW1lcmljKSAmICEoWWVhcjpsYXQpLCBxdWFudGlsZSwgcHJvYnMgPSBjKDAuMjUsIDAuNSwgMC43NSksIG5hLnJtID0gVFJVRSkpCmBgYAoKCgojIyBSZWxhdGluZyB0cmVlIGRpdmVyc2l0eSB0byBlbnZpcm9ubWVudGFsIHByZWRpY3RvcnMKCipEZWxldGUgdGhpcyBsaXN0IG9uY2UgY29tcGxldGUqCgotIGNyZWF0ZSBuZXcgcGxvdC1sZXZlbCBjb2x1bW5zIGZvciBzcGVjaWVzIHJpY2huZXNzLS0tbm90IHByb3BvcnRpb25zLS0tdGhhdCBjb3JyZWN0cyBmb3IgYXJlYSAoc2hvdWxkIGJlLCBlLmcuLCBgbG9nKG5zcHApIC8gbG9nKFBsb3RfQXJlYSlgKQotIG1ha2UgYSBmaWd1cmUgZm9yIHRoZSByZXNwb25zZSBvZiBzcGVjaWVzIHJpY2huZXNzIHRvIHBsb3QgYXJlYSAoYXMgd2UgZGlkIGluIFIgcmVmcmVzaGVyIGxhYiwgZmluZSB0byBjb3B5IHBhc3RlKQotIG1ha2UgYSBmaWd1cmUgc2hvd2luZywgYWNyb3NzIGFsbCBpc2xhbmRzLCBwcm9wb3J0aW9uIG9mIHBsb3RzIHdpdGggJFxnZXEgNzVcJSQgbmF0aXZlIHRyZWVzIChhcyB3ZSBkaWQgaW4gUiByZWZyZXNoZXIgbGFiLCBmaW5lIHRvIGNvcHkgcGFzdGUpCi0gY2hvb3NlIHRocmVlIG90aGVyIGZpZ3VyZXMgdG8gbWFrZSB3aGVyZSB5b3UgcGxvdCBhbnkga2luZCBvZiBkaXZlcnNpdHktcmVsYXRlZCByZXNwb25zZSB2YXJpYWJsZSAoZS5nLiBzcGVjaWVzIHJpY2huZXNzLCBuYXRpdmUgc3BlY2llcyByaWNobmVzcykgYWdhaW5zdCBhbiBlbnZpcm9ubWVudGFsIHByZWRpY3RvciB2YXJpYWJsZQotIGZvciBhbGwgZmlndXJlcywgaW5jbHVkZSBhIGNhcHRpb24gYW5kIGFsc28gcmVmZXIgdG8gdGhlIGZpZ3VyZSBpbiBuYXJyYXRpdmUgdGV4dCB0aGF0IGV4cGxhaW5zIHdoeSB5b3UgYXJlIG1ha2luZyB0aGUgdmlzdWFsaXphdGlvbgoKCmBgYHtyfQojfCBldmFsOiBmYWxzZQojfCBlY2hvOiBmYWxzZQoKCmRhdF9ieV9wbG90IDwtIG11dGF0ZShkYXRfYnlfcGxvdCwgCiAgICAgICAgICAgICAgICAgICAgICBsb2dfbnNwcF9sb2dfYXJlYSA9IGxvZyhuc3BwKSAvIGxvZyhQbG90X0FyZWEpKSAKCmZpbHRlcihkYXRfYnlfcGxvdCwgUGxvdF9BcmVhIDwgMTAwMDApIHw+IAogICAgZ2dwbG90KGFlcyhQbG90X0FyZWEsIGxvZ19uc3BwX2xvZ19hcmVhKSkgKwogICAgZ2VvbV9oZXgoKSArCiAgICBzY2FsZV94X2NvbnRpbnVvdXModHJhbnNmb3JtID0gImxvZzEwIikKYGBgCgo=').then(res => res.blob()).then(blob => {
+      const downloadURL = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      document.body.appendChild(a);
+      a.href = downloadURL;
+      a.download = 'lab01-data.qmd'; a.click();
+      window.URL.revokeObjectURL(downloadURL);
+      document.body.removeChild(a);
+        });"><button class="btn btn-default downloadthis  " id="dnldts3452"><i class="bi bi-download"></i> Download lab template </button></a></p>
+<p>Note: the yaml header of this file is a little more complex than we have seen before</p>
+<div class="cell s-output">
+<div class="cell-output cell-output-stdout">
+<pre><code>---
+title: "CARE and FAIR in presenting data with dynamic documents"
+format: 
+    pdf: 
+        include-in-header:
+            text: |
+                \usepackage{newunicodechar}
+                \newunicodechar{ʻ}{`} 
+author: 
+    - your name here
+    - your name here
+    - etc
+---</code></pre>
+</div>
+</div>
+<p>You now can see how to cleanly include multiple authors. We also see our first example of customizing PDF output with <code>\usepackage</code> which is how we load a LaTeX package (same idea as an R package), in this case to support directly typing the unicode ʻokina.</p>
+<p>The template will prompt you to work through the following sections.</p>
 <section id="care-and-fair-consideration-in-hawaiʻi" class="level2" data-number="6.1">
 <h2 data-number="6.1" class="anchored" data-anchor-id="care-and-fair-consideration-in-hawaiʻi"><span class="header-section-number">6.1</span> CARE and FAIR consideration in Hawaiʻi</h2>
-<p>Write out your manaʻo on CARE and FAIR in Hawaiʻi using class materials, class readings, and most especially your previously assigned written reflections on those readings.</p>
+<p>Write out your manaʻo on CARE and FAIR in Hawaiʻi generally using class materials, class readings, and most especially your previously assigned written reflections on those readings. This section might serve as background on the reasons for aspiring to CARE and FAIR principles and any challenges we might face in operationalizing them.</p>
 <section id="ideas-for-making-data-from-hawaiʻi-care-and-fair" class="level3" data-number="6.1.1">
 <h3 data-number="6.1.1" class="anchored" data-anchor-id="ideas-for-making-data-from-hawaiʻi-care-and-fair"><span class="header-section-number">6.1.1</span> Ideas for making data from Hawaiʻi CARE and FAIR</h3>
+<p>Using as a specific example the data we’re working with in this course, propose some ideas for making the data comply with CARE and FAIR. Recall, the data sources are the <em>OpenNahele</em> database hosted on <a href="https://datadryad.org">Data Dryad</a> and the <a href="https://www.hawaii.edu/climate-data-portal/">Hawaiʻi Climate Data Portal</a> hosted through the University of Hawaiʻi. How could these data repositories, and the specific data sets/resources, become more CARE and FAIR?</p>
 </section>
 </section>
 <section id="describing-opennahele-and-hawaiʻi-climate-data-portal-data" class="level2" data-number="6.2">
 <h2 data-number="6.2" class="anchored" data-anchor-id="describing-opennahele-and-hawaiʻi-climate-data-portal-data"><span class="header-section-number">6.2</span> Describing <em>OpenNahele</em> and <em>Hawaiʻi Climate Data Portal Data</em></h2>
-<p>Delete this list once complete</p>
+<p>Let’s read-in the data from a url rather than having to download the data repeatedly or refer to data stored in a different project on our local computers</p>
 <ul>
-<li>read-in and join all data like we did in the R refresher lab (fine to copy paste over) for subsequent use</li>
+<li>join all data like we did in the R refresher lab (fine to copy paste over) for subsequent use</li>
 <li>create a plot-level data object like we did in the R refresher lab (fine to copy paste over) for subsequent use</li>
-<li>across the entire data set (<em>not</em> broken up by island or anything else) calculate 25%, 50%, and 75% quantiles for each numeric plot-level variable but not <code>Year</code> or <code>Census</code> or <code>lon</code> or <code>lat</code>. <em>Hints:</em> you can use the <code>quantile</code> function, you will need to set <code>na.rm = TRUE</code>, you can make a <code>data.frame</code> by hand if that makes most sense, or you can use <code>across</code> in combination with <code>reframe</code> (which is the <em>dplyr</em> approach)</li>
-<li>use a ridgeline plot or stacked histograms to show distributions for all species richness, basal area, and abundance variables by island</li>
+<li>across the entire data set (<em>not</em> broken up by island or anything else) calculate 25%, 50%, and 75% quantiles for each numeric plot-level variable but not <code>Year</code> or <code>Census</code> or <code>lon</code> or <code>lat</code>. <em>Hints:</em>
+<ul>
+<li>you can use the <code>quantile</code> function, you will need to set <code>na.rm = TRUE</code></li>
+<li>you can make a <code>data.frame</code> by hand if that makes most sense</li>
+<li>or you can use <code>across</code> in combination with <code>reframe</code> (which is the <em>dplyr</em> approach)</li>
+</ul></li>
+<li>use a ridgeline plot or stacked histograms to show distributions for all variables relating to species richness, basal area, and abundance by island</li>
+<li>for all figures and tables, include a caption and also refer to the figure/table in narrative text that explains why you are making the visualization/table</li>
 </ul>
 </section>
 <section id="relating-tree-diversity-to-environmental-predictors" class="level2" data-number="6.3">
 <h2 data-number="6.3" class="anchored" data-anchor-id="relating-tree-diversity-to-environmental-predictors"><span class="header-section-number">6.3</span> Relating tree diversity to environmental predictors</h2>
-<p>Delete this list once complete</p>
 <ul>
 <li>create new plot-level columns for species richness—not proportions—that corrects for area (should be, e.g., <code>log(nspp) / log(Plot_Area)</code>)</li>
 <li>make a figure for the response of species richness to plot area (as we did in R refresher lab, fine to copy paste)</li>
 <li>make a figure showing, across all islands, proportion of plots with <span class="math inline">\(\geq 75\%\)</span> native trees (as we did in R refresher lab, fine to copy paste)</li>
-<li>choose three other figures to make where you plot any kind of tree-related response variable (e.g.&nbsp;species richness) against an environmental predictor variable</li>
+<li>choose three other figures to make where you plot any kind of diversity-related response variable (e.g.&nbsp;species richness, native species richness) against an environmental predictor variable</li>
+<li>for all figures, include a caption and also refer to the figure in narrative text that explains why you are making the visualization</li>
 </ul>
 
 
