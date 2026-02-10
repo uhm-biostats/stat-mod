@@ -1,8 +1,9 @@
 # Probability
 
+We will cover concepts from probability theory that are necessary for this course without diving too far into the weeds. Most importantly we will cover random variables, core rules of probability including conditional probability, common probability distributions, and the Central Limit Theorem.
 
-About this site
+Jump straight to:
 
-```{r}
-1 + 1
-```
+- Introducing probability [lecture notes](prob-intro.qmd), [slides](prob-slides.html){target="_blank"}
+- [Probability distributions](prob-dist.qmd)
+- [Simulating probabilistic data](prob-sim-data.qmd)
