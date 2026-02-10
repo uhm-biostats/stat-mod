@@ -16,13 +16,11 @@ book:
             - dynamic-doc.qmd
             - github.qmd
             - bring-it-together.qmd
-        # - part: prob.qmd
-        #   chapters:
-        #     - prob-intro-lecture.qmd
-        #     - prob-intro-lab.qmd
-        #     - prob-rules-lecture.qmd
-        #     - prob-rules-lab.qmd
-        #     - prob-sim-data.qmd
+        - part: prob.qmd
+          chapters:
+            - prob-intro.qmd
+            - prob-dist.qmd
+            - prob-sim-data.qmd
         # - part: likelihood-intro.qmd
         #   chapters:
         #     - binom-lec.qmd
