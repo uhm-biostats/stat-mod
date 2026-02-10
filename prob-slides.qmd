@@ -1,12 +1,6 @@
 ---
 title: "Introducing probability"
-format:
-  revealjs:
-    slide-number: true
-    preview-links: auto
-    auto-stretch: false
-    embed-resources: false
-    controls: true
+
 bibliography: stat-mod.bib
 csl: conservation-biology.csl
 ---
