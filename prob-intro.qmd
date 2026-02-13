@@ -1,75 +1,529 @@
 # Introduction to probability
 
+```{r}
+#| label: setup
+#| include: false
 
+library(magick)
+library(grid)
+library(knitr)
+library(ape)
+library(ggplot2)
 
-```{=html}
-<div style="text-align: center;">
-  <svg id="dice" width="300" height="150" style="cursor: pointer;">
-    <!-- Dice will be drawn here -->
-  </svg>
-  <p id="sum" style="font-size: 24px; margin-top: 20px;"></p>
-</div>
-
-<script>
-const svg = document.getElementById('dice');
-
-function drawDie(x, y, value) {
-  const size = 60;
-  const dotRadius = 5;
-  const dotColor = '#000';
-  
-  // Draw die background
-  const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-  rect.setAttribute('x', x);
-  rect.setAttribute('y', y);
-  rect.setAttribute('width', size);
-  rect.setAttribute('height', size);
-  rect.setAttribute('fill', 'white');
-  rect.setAttribute('stroke', 'black');
-  rect.setAttribute('stroke-width', '2');
-  rect.setAttribute('rx', '5');
-  svg.appendChild(rect);
-  
-  // Dot positions for each value
-  const dots = {
-    1: [[0.5, 0.5]],
-    2: [[0.25, 0.25], [0.75, 0.75]],
-    3: [[0.25, 0.25], [0.5, 0.5], [0.75, 0.75]],
-    4: [[0.25, 0.25], [0.75, 0.25], [0.25, 0.75], [0.75, 0.75]],
-    5: [[0.25, 0.25], [0.75, 0.25], [0.5, 0.5], [0.25, 0.75], [0.75, 0.75]],
-    6: [[0.25, 0.25], [0.75, 0.25], [0.25, 0.5], [0.75, 0.5], [0.25, 0.75], [0.75, 0.75]]
-  };
-  
-  // Draw dots
-  dots[value].forEach(([dx, dy]) => {
-    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    circle.setAttribute('cx', x + dx * size);
-    circle.setAttribute('cy', y + dy * size);
-    circle.setAttribute('r', dotRadius);
-    circle.setAttribute('fill', dotColor);
-    svg.appendChild(circle);
-  });
-}
-
-function rollDice() {
-  // Clear previous dice
-  svg.innerHTML = '';
-  
-  // Roll two dice
-  const die1 = Math.floor(Math.random() * 6) + 1;
-  const die2 = Math.floor(Math.random() * 6) + 1;
-  
-  // Draw dice
-  drawDie(60, 45, die1);
-  drawDie(140, 45, die2);
-  
-}
-
-// Initial roll
-rollDice();
-
-// Roll on click
-svg.addEventListener('click', rollDice);
-</script>
+opts_chunk$set(echo = FALSE, 
+               message = FALSE, 
+               warning = FALSE)
 ```
 
+Probability is a pervasive part of our world. If the world was not probabilistic in some way, there would be no surprises, uncertainty, or variability (though some argue that chaos could give us a close second). Probability is the spice of life you might say.  In this course we will assume you have had previous exposure to introductory probability in a previous math or statistics course. We will just refresh on the basics needed for the material ahead of us.
+
+To start we'll play a probabilistic eco-evolutionary game.
+
+## Simulating ecology and evolution with dice
+
+How does biodiversity come to be? Many researchers have been motivated by that question. One unexpected answer was: what if it's all just random? That is the answer codified in the Unified Neutral Theory of Biodiversity (UNTB; @hubbell2001). This theory, in an only slightly simplified form, puts forward the following mechanisms: suppose we have $J$ individuals (e.g. 36) living in a local community, and suppose we have an effectively infinite metacommunity[^1] with a never ending source of propagules that could potential disperse into the local community, then in every time step:
+
+- with *equal* ***probability***, pick a random individual in the local community to die
+- replace that individual with either:
+    - dispersal from the metacommunity with ***probability*** $m$, ...or...
+    - local birth with ***probability*** $1 - m$ (the individual chosen to die can still give birth)
+- choose the replacement individual (from either local community or metacommunity) with *equal* ***probability*** across all possible individuals
+- the replacement individual undergoes speciation with ***probability*** $\nu$
+
+[^1]: The only simplification we use is that the full model allows the metacommunity to evolve and here we assume the metacommunity is static. This simplification is not without precedent: others [e.g. @rosindell2013] have argued that the vast size of the metacommunity makes its dynamics so slow compared to the local community so as to be effectively fixed.
+
+As simple as this theory is, it can produce shockingly realistic predictions for species richness and the distribution of abundances across species [@hubbell2001; @rosindell2011]. Here is an example of a simulated local community inspired by the real life composition of *Tetragnatha* spiders on Haleakalā [@gillespie2004]. 
+
+```{r}
+#| label: one-untb
+#| fig-cap: |
+#|     See @sec-cred for spider names and image credits
+image_read("img/prob/game/f8-4.png") |> 
+    image_crop("1000x1000+330+330")
+```
+
+
+
+
+The grid is for display and accounting purposes only, it does not represent actual spatial proximity of organisms.
+
+
+Now here is our challenge: let's run the UNTB on this 6x6 grid using only two 6-sided dice and an assumption about the proportion of species in the metacommunity. Let's also set $m = \frac{1}{3}$ and $\nu = \frac{1}{36}$. Think of it like a game. How can we play this game?  Here are the rules:
+
+1. Roll both dice, they give us the coordinates of the spider that dies
+2. Roll again for local birth or dispersal from the metacommunity:
+    - if the first die is 2 or less, that's dispersal with probability $\frac{1}{3}$
+        - choose an immigrant from the metacommunity based on their proportion: think of having different proportions of spiders in a bag
+        - reach in a grab a spider (don't worry, they don't bite): you will typically grab one with a higher proportion
+    - if the first die is greater than 2, that's birth 
+        - roll the dice again
+        - now they give us the coordinates of the parent who will give birth
+3. Replace the dead individual with the new one from either birth or immigration
+4. Roll the dice to check for speciation: if you get (1, 1) that corresponds to a probability of $\frac{1}{36}$
+
+Here are 8 rounds of this game on loop:
+
+```{r}
+#| label: game-ani
+#| cache: true
+
+fffrms <- list.files("img/prob/game", full.names = TRUE)
+frms <- image_read(fffrms[1])
+
+for(f in fffrms[-1]) {
+    frms <- c(frms, image_read(f))
+}
+
+image_animate(frms, fps = 1)
+```
+
+
+What did you notice?  Perhaps:
+
+- This is a boring game (a matter of personal opinion)
+- Most of the time death is replaced by local birth---makes sense, local birth has a higher probability
+- Speciation never happened! Also makes sense, it's even more unlikely
+
+Here are some questions:
+
+- But wait, why does dispersal happen less than local birth and speciation even less?
+- Why does rolling two dice to pick who dies or who gives birth result in equal probability across the 6x6 grid?
+- Why does rolling 2 or less on the first die amount to probability of $\frac{1}{3}$?
+- Why does rolling (1, 1) amount to probability of $\frac{1}{36}$?
+- What is the probability of birth? Why do we only need specify the probability of death?
+
+The answers lie in meaning and rules of probability.
+
+## Probability as counting and long-term frequency
+
+Why is the probability of rolling one die and getting a 2 $\mathbb{P}(2) = \frac{1}{6}$? The reason lies in counting: there is one and only one way to get a 2 and there are six different outcomes for a 6-sided die. Probability is just the number of ways we can arrive at a given outcome (like rolling a 2) divided by the total number of possible outcomes:
+
+$$
+\begin{align}
+\mathbb{P}(\text{specific outcome}) &= \frac{\text{Num. ways of getting that outcome}}{\text{Total num. possible outcomes}}
+\end{align}
+$$
+$$
+\begin{align}
+\Rightarrow \mathbb{P}(\text{rolling 2}) &= \frac{\text{Num. ways of rolling a 2}}{\text{Sides of die}} \\
+&= \frac{1}{6}
+\end{align}
+$$
+
+By a similar logic, the probability of an event can also be thought of as the number of times we observe that event divided by the total number of observations. So in eight rounds of playing our UNTB game, we saw one dispersal event, that suggests
+
+$$
+\mathbb{P}(\text{dispersal}) = \frac{1}{8}
+$$
+
+We know that is not correct because we setup the game such that $\mathbb{P}(\text{dispersal}) = m = \frac{1}{3}$. The difference is due to the fact that we only played eight rounds. If we had played 1,000,000 rounds, our estimate of $\mathbb{P}(\text{dispersal}) = \frac{\text{num. dispersal events}}{\text{game rounds}}$ would converge on the correct answer of $\frac{1}{3}$. 
+
+This interpretation of probability as long term frequency is why outcomes with low probability happen less often compared to outcomes with higher probability.
+
+## Rules of probability
+
+We still have more questions. Those can be answered with the rules of probability. Here's the start of our list of rules:
+
+- Probabilities sum to 1 (something has to happen)
+- Probabilities add (probability of this ***or*** that = $\mathbb{P}(this) + \mathbb{P}(that)$)
+- Probabilities multiply (probability of this ***and*** that = $\mathbb{P}(this) \mathbb{P}(that)$)
+- But not always...
+
+We'll get to the "not always..." momentarily.
+
+### Probabilities sum to 1
+
+This is why we can say "probability of dispersal is $m = \frac{1}{3}$" and know that probability of local birth $\mathbb{P}(\text{birth}) = 1 - \frac{1}{3} = \frac{2}{3}$. In the UNTB there are only two ways to replace a death: dispersal or birth; the probabilities of all the possible outcomes have to sum to 1.  Put another way: with probability 1 (100% for sure) something has to happen.
+
+### Probabilities add
+
+This is true for *independent* events: if we want to know whether one or the other happens, we can add their probabilities. Independent means that one event does not determine the outcome of another. Whether or not the first die comes up 1 or it comes up 2, neither of those possibly scenarios can influence the other, so the probability of *1* ***or*** *2* is just the sum of their respective probabilities: 
+
+$$
+\begin{align}
+\mathbb{P}(\text{1 OR 2}) &= \mathbb{P}(\text{1}) + \mathbb{P}(\text{2}) \\
+&= \frac{1}{6} + \frac{1}{6} \\&
+= \frac{1}{3}
+\end{align}
+$$
+
+### Probabilities multiply
+
+This is also true for *independent* events: if we want to know whether *both* events happen, we can multiply their probabilities. This is why the probability of rolling a 1 and 1 is \frac{1}{36}:
+
+$$
+\begin{align}
+\mathbb{P}(\text{1 AND 1}) &= \mathbb{P}(1) \times \mathbb{P}(1) \\
+&= \frac{1}{6} \times \frac{1}{6} \\
+&= \frac{1}{36}
+\end{align}
+$$
+
+### Conditional probability
+
+Now we deal with the "but not always..." When discussing adding and multiplying probabilities, we emphasized that this applies to *independent* events. For *non-independent* events, we can still add and multiply but we must account for non-independence with conditional probabilities.
+
+Take this as an example: speciation never occurred in our simulation because its probability was small ($\nu = \frac{1}{36}$) and we were unlucky. We could increase the chances of speciation by increasing $\nu$, let's set $\nu = \frac{1}{12}$. How could we get that with dice? One option is to say speciation happens if the sum of our two dice is exactly 4
+
+$$
+\nu = \mathbb{P}(\text{sum} = 4) = \frac{1}{12}
+$$
+
+Why is that the case? Again, we can use counting. There are three ways to get a sum of 4: (1, 3), (2, 2), (3, 1). And there are $6 \times 6 = 36$ possible outcomes of rolling two dice so 
+
+$$
+\begin{align}
+\mathbb{P}(\text{sum} = 4) &= \frac{\text{num. ways to get sum = 4}}{\text{num. possible outcomes}} \\
+&= \frac{3}{36} \\
+&= \frac{1}{12}
+\end{align}
+$$
+
+A probability tree can help visualize that logic. A probability tree lays out all the possible outcomes:
+
+```{r}
+#| label: prob-tree-prep
+#| include: false
+
+d <- paste(1:6, collapse = ", ")
+dd <- paste(paste0("(", rep(d, 6), ")"), collapse = ", ")
+
+tre <- read.tree(text = sprintf("(%s);", dd))
+plot(tre)
+
+foo <- get("last_plot.phylo", envir = .PlotPhyloEnv)
+
+xy <- cbind(foo$xx, foo$yy)
+frm <- xy[foo$edge[, 1], ]
+tto <- xy[foo$edge[, 2], ]
+
+frm[frm[, 1] == 30, 1] <- 2.1
+tto[tto[, 1] == 30, 1] <- 1.9
+tto[tto[, 1] == 35, 1] <- 3.9
+
+
+d1 <- foo$edge[, 1] - min(foo$edge[, 1])
+d2 <- tto[, 2] %% 6
+d2[d2 == 0] <- 6
+
+success <- d1 + d2 == 4 | (tto[, 2] < 20 & frm[, 1] < 2)
+```
+
+```{r}
+#| label: prob-tree
+#| fig-width: 6
+#| fig-height: 5
+#| fig-align: center
+#| cache: true
+
+par(mar = rep(0.1, 4), lwd = 2)
+plot(rbind(frm, tto), type = "n", axes = FALSE)
+
+rect(0, -1, 2.05, 100, col = "gray90", border = "white")
+rect(2.1, -1, 10, 100, col = "gray90", border = "white")
+
+text(1, 36, label = "die 1", cex = 1.4)
+text(3, 36, label = "die 2", cex = 1.4)
+
+segments(frm[, 1], frm[, 2],  tto[, 1], tto[, 2])
+text(2, seq(3.5, 33.5, by = 6), labels = 1:6, 
+     col = rep(c("red", "black"), each = 3))
+text(4, 1:36, labels = rep(1:6, 6), 
+     col = c(rep("black", 2), "red", rep("black", 4), "red", 
+             rep("black", 4), "red", rep("black", 21)))
+
+
+segments(frm[success, 1], frm[success, 2],  
+         tto[success, 1], tto[success, 2], 
+         col = "red")
+```
+
+The red segments show all the branches (3) that lead to the desired outcome.
+
+What does this have to do with non-independent events? Suppose I told you that speciation occurred (!) meaning that the sum of our dice was 4. No I ask: what is the probability the first die was less than or equal to 2? Our previous way of calculating this outcome was 
+
+$$
+\begin{align}
+\mathbb{P}(\text{1 OR 2}) &= \mathbb{P}(\text{1}) + \mathbb{P}(\text{2}) \\
+&= \frac{1}{6} + \frac{1}{6} \\&
+= \frac{1}{3}
+\end{align}
+$$
+
+but that is no longer correct. Why? Because I gave you additional information: speciation occurred. We are no longer counting up the ways to get a 1 or a 2 compared to *all* the possible outcomes for the first die, we have to *condition* on the fact that the sum of the two dice is 4. Thus we don't want the straight probability $\mathbb{P}(\text{1 OR 2})$, we want the *conditional* probability of rolling a 1 or 2 *given* the sum is 4: $\mathbb{P}(\text{1 OR 2} \mid \text{sum} = 4)$. That mathematical expression is read "probability of 1 or 2 given sum equals 4."
+
+We can still use counting to figure out this probability, but we have to change the realm of possible outcomes we count over to be only those consistent with the given information: $\text{sum} = 4$. Here is our updated probability tree:
+
+```{r}
+#| label: cond-prob-tree
+#| fig-width: 6
+#| fig-height: 2.5
+#| fig-align: center
+#| cache: true
+#| fig-cap: |
+#|     Branches not consistent with given infomration are cropped or grayed-out
+
+par(mar = rep(0.1, 4), lwd = 2)
+plot(rbind(frm, tto), type = "n", axes = FALSE, 
+     ylim = c(min(frm, tto), 
+              max(frm, tto) - 0.5 * diff(range(frm, tto))))
+
+rect(0, -1, 2.05, 100, col = "gray90", border = "white")
+rect(2.1, -1, 10, 100, col = "gray90", border = "white")
+
+text(1, 36/2, label = "die 1", cex = 1.4)
+text(3, 36/2, label = "die 2", cex = 1.4)
+
+segments(frm[tto[, 2] < 36 / 2 + 1, 1], frm[tto[, 2] < 36 / 2 + 1, 2],  
+         tto[tto[, 2] < 36 / 2 + 1, 1], tto[tto[, 2] < 36 / 2 + 1, 2], 
+         col = "gray")
+
+
+text(2, seq(3.5, 33.5, by = 6), labels = 1:6, 
+     col = rep(c("red", "black"), c(2, 4)))
+text(4, 1:36, labels = rep(1:6, 6), 
+     col = c(rep("gray", 2), "red", rep("gray", 4), "red", 
+             rep("gray", 4), "black", rep("gray", 21)))
+
+
+segments(frm[success, 1], frm[success, 2],  
+         tto[success, 1], tto[success, 2], 
+         col = "black")
+
+ii <- 1:4
+segments(frm[success, 1][ii], frm[success, 2][ii],  
+         tto[success, 1][ii], tto[success, 2][ii], 
+         col = "red")
+
+
+
+```
+
+We only have 3 possible outcomes consistent with the given information, and 2 of those produce an outcome where the first die is less than or equal to 2. So
+
+$$
+\mathbb{P}(\text{1 OR 2} \mid \text{sum} = 4) = \frac{2}{3}
+$$
+
+There is also a related approach to the same answer directly using probabilities of the respective events.  When we think about the denominator (3) in the above counting approach it represents the conditional information: how many ways can we roll for a sum of 4? We could also directly use the probability of rolling a sum of 4: $\mathbb{P}(\text{sum} = 4) = \frac{3}{36}= \frac{1}{12}$ as a way to condition on the sum being equal to 4 in this equation:
+
+$$
+\mathbb{P}(\text{die}_1 \leq 2 \mid \text{sum} = 4) = \frac{\mathbb{P}(\text{die}_1 \leq 2 \text{ AND sum} = 4)}{\mathbb{P}(\text{sum} = 4)}
+$$
+
+What does the numerator mean? That is the probability that the first die is less than 2 and the sum is 4. Using the first probability tree we see there are two ways to achieve that outcome out of 36 possible outcomes so $\mathbb{P}(\text{die}_1 \leq 2 \text{ AND sum} = 4) = \frac{2}{36}$. Putting that all together, our above equation for $\mathbb{P}(\text{die}_1 \leq 2 \mid \text{sum} = 4)$ is telling us to take the probability that both the first die is $\leq 2$ and the sum = 4, and then re-scale that probability by the probability $\mathbb{P}(\text{sum} = 4)$ because we indeed already know that the sum does equal 4. Sure enough the math is mathing:
+
+$$
+\begin{align}
+\mathbb{P}(\text{die}_1 \leq 2 \mid \text{sum} = 4) &= \frac{\mathbb{P}(\text{die}_1 \leq 2 \text{ AND sum} = 4)}{\mathbb{P}(\text{sum} = 4)} \\
+&= \frac{2/36}{3/36} \\
+&= \frac{2}{3}
+\end{align}
+$$
+
+Just a note of caution: the mathematical notation for conditional probability "A given B" $\mathbb{P}(A \mid B)$ looks a lot like the logical `OR` operator in R and other programming languages: `A | B`. They are different! Technically in math notation "OR" is written as the union $A \cup B$. So just pay attention to the distinction of whether you are talking/reading about conditional probabilities or trying to calculate a `TRUE`/`FALSE` quantity.
+
+
+### Final list of probability rules
+
+There are more, but for now what we need to know is:
+
+- Probabilities sum to 1 (something has to happen)
+- For *independent* events:
+    - Probabilities add <br>
+    (prob. this ***or*** that = $\mathbb{P}(this) + \mathbb{P}(that)$)
+    - Probabilities multiply <br>
+    (prob. this ***and*** that = $\mathbb{P}(this) \mathbb{P}(that)$)
+- For *non-independent* events conditional probabilities apply
+    - $\mathbb{P}(A \mid B)$ means "prob. of A given B"
+    - $\mathbb{P}(A \mid B) = \frac{\mathbb{P}(A \& B)}{\mathbb{P}(B)}$
+
+
+## Random variables
+
+Probabilities describe the uncertainty in the value of an outcome. There is uncertainty in the number of dispersal events that will occur during 8 or 8,000 rounds of playing this game. There is uncertainty in the number of species that will be present at any given time. These quantities like number of dispersal events or number of species are examples of *random variables*. Random variables are things we might like to measure or predict but with values that are not fixed, that have some amount of uncertainty. In our game the total number of individuals was fixed at 36. This is an example of a variable---I could change the setup of the game and change this value---so the number is free to *vary* but its value is not random. Conversely, we do not control the value of a random variable, instead the different values a random variable can take on are determined by the probabilities of those different values. The set of all those values and their probabilities have a central role in statistics: they are probability distributions.
+
+## Probability distributions
+
+```{r}
+#| label: binom-setup
+#| fig-width: 5
+#| fig-height: 4
+
+bgfill <- "#595959"
+prfill <- "#FF9900"
+
+N <- 8
+p <- 1/3
+
+pmf <- data.frame(n = 0:N, d = dbinom(0:N, N, p))
+pmf$less <- ifelse(pmf$n <= 2, "true", "false")
+
+pless <- pmf$d[pmf$less == "true"] |> round(3)
+psum <- sprintf("$\\mathbb{P}(n = %s)$", 
+                pmf$n[pmf$less == "true"]) |> 
+    paste(collapse = " + ")
+
+bgp <- ggplot(pmf, aes(n, d)) +
+    geom_bar(stat = "identity", fill = bgfill) +
+    xlab("Number of dispersal events") +
+    ylab("Probability") +
+    cowplot::theme_cowplot()
+
+```
+
+Probability distributions tell us how random variables behave: which values are more likely than others and whether some values are perhaps not even possible. Let's return to the example of the number of dispersal events. Suppose we play our UNTB game `r N` times with a probability of dispersal $m = \frac{1}{3}$. Here is a visualization of the probability distribution of number of dispersal events:
+
+```{r}
+#| label: binom
+#| fig-width: 5
+#| fig-height: 4
+
+bgp
+
+```
+
+
+### Probability Mass Function
+
+The height of the bars is the probability of observing that many dispersal events. The fact that the heights corresponds to probability means this probability distribution is a *probability mass function* or PMF. A PMF applies to any random variable that takes on discrete values like integers (0, 1, 2, ...).
+
+We observed 1 dispersal event and this probability distribution tells us the probability of observing 1 dispersal event in 8 rounds of the game is `r dbinom(1, N, p) |> round(3)`.
+
+If we want to know about the probability of a range of values we can simply add the heights of the bars. For example the probability of observing `r which(pmf$less == "true") |> max()` or few dispersal events is `r psum` = `r paste(pless, collapse = " + ")` = `r sum(pless)`. The sum of all the bars is 1 because that's a rule of probability: all probabilities sum to 1---something has to happen, even if that "something" is, e.g., 0 dispersal events.
+
+
+```{r}
+#| label: binom-pr
+#| fig-width: 5
+#| fig-height: 4
+
+bgp +
+    geom_bar(aes(n, d, fill = less), 
+             stat = "identity") +
+    scale_fill_discrete(palette = c(bgfill, prfill)) +
+    theme(legend.position = "none")
+
+```
+
+
+## Probability Density Function
+
+What about the probability distribution for a random variable this is not discrete but is *continuous* like diameter at breast height (DBH)? For such random variables the probability of any exact value with possibly infinite precision (e.g. DBH = 12.6301194... cm) is vanishingly small to the point of being undefinable. We will never see *exactly* that DBH. So if we visualize a probability distribution for a continuous random variable, the height on the vertical axis will not be, strictly speaking, a probability. Rather we call it *probability density* and work with probability density functions (PDF).
+
+```{r}
+#| label: norm
+#| fig-width: 5
+#| fig-height: 4
+
+m <- 2
+s <- 0.5
+q <- m - 0.25
+
+ngp <- ggplot(data.frame(x = m + 3.5 * c(-s, s)), aes(x)) +
+    cowplot::theme_cowplot() +
+    xlab("log10(DBH)") +
+    ylab("density") + 
+    stat_function(fun = dnorm, 
+                  args = list(mean = m, sd = s),
+                  geom = "area", fill = hsv(0.5, 0.0, 0.5))
+
+
+
+ngp 
+
+
+```
+
+Probability density still gives us an impression of which values are more likely than others. To be precise, the area under the curve of a PDF over any region is indeed probability. For example, the probability $\mathbb{P}(\log_{10}\text{DBH} \leq `r q`) = `r pnorm(q, m, s) |> round(3)`$.
+
+```{r}
+#| label: norm-pr
+#| fig-width: 5
+#| fig-height: 4
+
+ngp + stat_function(fun = dnorm, 
+                    args = list(mean = m, sd = s),
+                    xlim = c(m -3.5 * s, q),
+                    geom = "area", fill = hsv(0.1, 1, 1))
+
+```
+
+
+## Spider image credits {#sec-cred}
+
+```{r}
+#| label: img-cred
+#| fig-width: 9
+#| fig-height: 6
+#| fig-cap: |
+#|     all images modified by A. Rominger
+#| cache: true
+
+
+brev <- image_read("img/prob/t_brevignatha.png") |> 
+    image_transparent("white", fuzz = 10)
+kama <- image_read("img/prob/t_kamakou.png") |> 
+    image_transparent("white", fuzz = 10)
+kiko <- image_read("img/prob/t_kikokiko.png") |> 
+    image_transparent("white", fuzz = 10)
+macr <- image_read("img/prob/t_macracantha.png") |> 
+    image_transparent("white", fuzz = 10)
+quas <- image_read("img/prob/t_quasimodo.png") |> 
+    image_transparent("white", fuzz = 10)
+rest <- image_read("img/prob/t_restricta.png") |> 
+    image_transparent("white", fuzz = 10)
+waik <- image_read("img/prob/t_waikamoi.png") |> 
+    image_transparent("white", fuzz = 10)
+
+
+nanana <- c("brev", "kama", "kiko", "macr", 
+            "quas", "rest", "waik")
+
+nainoa <- c("Tetragnatha\nbrevignatha", "T. kamakou", "T. kikokiko", 
+            "T. macracantha", "T. quasimodo", "T. restricta", 
+            "T. waikamoi")
+
+cred <- c(rep("D. Cotoras", 4), 
+          "T. Iwane", "B. Wang", "D. Cotoras")
+
+grid.newpage()
+# pushViewport(viewport(xscale = c(0, 4), yscale = c(0, 1 + length(nanana))))
+
+
+for(i in 1:length(nanana)) {
+    pushViewport(
+        viewport(unit(0.5, "npc"), 
+                 unit(1 - i / length(nanana) + 
+                          (1 / length(nanana) / 2), 
+                      "npc"), 
+                 width = unit(1, "npc"), 
+                 height = unit(1 / length(nanana), "npc"))
+    )
+    
+    
+    grid.rect(0.1, 0.5, width = (2 / 3) * 1/length(nanana))
+    
+    get(nanana[i]) |>
+        grid.raster(x = 0.1, y = 0.5,
+                    height = 0.9)
+    
+    grid.text(nainoa[i],
+              x = 0.2, y = 0.5,
+              just = "left",
+              gp = gpar(fontsize = 18, fontface = "italic"))
+
+    grid.text(sprintf("image credit: %s", cred[i]),
+              x = 0.5, y = 0.5,
+              just = "left",
+              gp = gpar(fontsize = 18),
+              default.units = "native")
+    
+    popViewport()
+}
+
+```
+
+
+
+## References
