@@ -53,14 +53,14 @@ waik <- image_read("img/prob/t_waikamoi.png") |>
 
 nanana <- c("brev", "kama", "kiko", "macr", 
             "quas", "rest", "waik")
-xy <- expand.grid(x = 1:4, y = 1:4)
+xy <- expand.grid(x = 1:6, y = 1:6)
 
 set.seed(3)
 s <- c(nanana, 
        sample(nanana, size = nrow(xy) - length(nanana), replace = TRUE))
 
 grid.newpage()
-pushViewport(viewport(xscale = c(0.2, 4.8), yscale = c(0.2, 4.8)))
+pushViewport(viewport(xscale = c(0.2, 6.8), yscale = c(0.2, 6.8)))
 
 
 for(i in 1:nrow(xy)) {
@@ -508,7 +508,7 @@ Probability also can result from *long term* frequency:
 If I ran our "game" 10,000 times and recorded 831 dispersal events, what would you guess would be $\mathbb{P}(\text{dispersal}) = m$?
 
 ```{r}
-#| include: true
+#| echo: true
 
 831 / 10000
 ```
@@ -745,7 +745,7 @@ ngp + stat_function(fun = dnorm,
 
 If we "add up" (technically integrate) the area under the *PDF* curve we again arrive at a real probability
 
-e.g., according to this *PDF* $\mathbb{P}(\log_{10}(DBH) \leq 3) = `r pnorm(m - 0.25, m, s) |> round(3)`$
+e.g., according to this *PDF* $\mathbb{P}(\log_{10}(DBH) \leq `r m - 0.25`) = `r pnorm(m - 0.25, m, s) |> round(3)`$
 ::::
 
 :::
