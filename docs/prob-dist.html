@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>8&nbsp; Using the rules of probability in practice – Intro to Statistical Modeling</title>
+<title>8&nbsp; Probability distributions in R – Intro to Statistical Modeling</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -43,6 +78,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-27c261d06b905028a18691de25d09dde.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/quarto-contrib/downloadthis-1.9.1/downloadthis.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -71,6 +107,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -84,7 +149,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./prob.html">Probability</a></li><li class="breadcrumb-item"><a href="./prob-dist.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Using the rules of probability in practice</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./prob.html">Probability</a></li><li class="breadcrumb-item"><a href="./prob-dist.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Probability distributions in R</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -182,7 +247,7 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./prob-dist.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Using the rules of probability in practice</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Probability distributions in R</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -198,15 +263,48 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#probability-distributions-in-r" id="toc-probability-distributions-in-r" class="nav-link active" data-scroll-target="#probability-distributions-in-r"><span class="header-section-number">8.1</span> Probability distributions in R</a></li>
+  <li><a href="#binomial" id="toc-binomial" class="nav-link" data-scroll-target="#binomial"><span class="header-section-number">8.2</span> Binomial</a>
+  <ul>
+  <li><a href="#dbinom" id="toc-dbinom" class="nav-link" data-scroll-target="#dbinom"><span class="header-section-number">8.2.1</span> <code>dbinom</code></a></li>
+  <li><a href="#pbinom" id="toc-pbinom" class="nav-link" data-scroll-target="#pbinom"><span class="header-section-number">8.2.2</span> <code>pbinom</code></a></li>
+  <li><a href="#qbinom" id="toc-qbinom" class="nav-link" data-scroll-target="#qbinom"><span class="header-section-number">8.2.3</span> <code>qbinom</code></a></li>
+  <li><a href="#rbinom" id="toc-rbinom" class="nav-link" data-scroll-target="#rbinom"><span class="header-section-number">8.2.4</span> <code>rbinom</code></a></li>
+  </ul></li>
+  <li><a href="#poisson" id="toc-poisson" class="nav-link" data-scroll-target="#poisson"><span class="header-section-number">8.3</span> Poisson</a>
+  <ul>
+  <li><a href="#dpois" id="toc-dpois" class="nav-link" data-scroll-target="#dpois"><span class="header-section-number">8.3.1</span> <code>dpois</code></a></li>
+  <li><a href="#ppois" id="toc-ppois" class="nav-link" data-scroll-target="#ppois"><span class="header-section-number">8.3.2</span> <code>ppois</code></a></li>
+  <li><a href="#qpois" id="toc-qpois" class="nav-link" data-scroll-target="#qpois"><span class="header-section-number">8.3.3</span> <code>qpois</code></a></li>
+  <li><a href="#rpois" id="toc-rpois" class="nav-link" data-scroll-target="#rpois"><span class="header-section-number">8.3.4</span> <code>rpois</code></a></li>
+  </ul></li>
+  <li><a href="#negative-binomial" id="toc-negative-binomial" class="nav-link" data-scroll-target="#negative-binomial"><span class="header-section-number">8.4</span> Negative Binomial</a>
+  <ul>
+  <li><a href="#dnbinom" id="toc-dnbinom" class="nav-link" data-scroll-target="#dnbinom"><span class="header-section-number">8.4.1</span> <code>dnbinom</code></a></li>
+  <li><a href="#pnbinom" id="toc-pnbinom" class="nav-link" data-scroll-target="#pnbinom"><span class="header-section-number">8.4.2</span> <code>pnbinom</code></a></li>
+  <li><a href="#qnbibom" id="toc-qnbibom" class="nav-link" data-scroll-target="#qnbibom"><span class="header-section-number">8.4.3</span> <code>qnbibom</code></a></li>
+  <li><a href="#rnbinom" id="toc-rnbinom" class="nav-link" data-scroll-target="#rnbinom"><span class="header-section-number">8.4.4</span> <code>rnbinom</code></a></li>
+  </ul></li>
+  <li><a href="#normal" id="toc-normal" class="nav-link" data-scroll-target="#normal"><span class="header-section-number">8.5</span> Normal</a>
+  <ul>
+  <li><a href="#dnorm" id="toc-dnorm" class="nav-link" data-scroll-target="#dnorm"><span class="header-section-number">8.5.1</span> <code>dnorm</code></a></li>
+  <li><a href="#pnorm" id="toc-pnorm" class="nav-link" data-scroll-target="#pnorm"><span class="header-section-number">8.5.2</span> <code>pnorm</code></a></li>
+  <li><a href="#rnorm" id="toc-rnorm" class="nav-link" data-scroll-target="#rnorm"><span class="header-section-number">8.5.3</span> <code>rnorm</code></a></li>
+  </ul></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./prob.html">Probability</a></li><li class="breadcrumb-item"><a href="./prob-dist.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Using the rules of probability in practice</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./prob.html">Probability</a></li><li class="breadcrumb-item"><a href="./prob-dist.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Probability distributions in R</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Using the rules of probability in practice</span></h1>
+<h1 class="title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Probability distributions in R</span></h1>
 </div>
 
 
@@ -223,8 +321,185 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<p>This lab will introduce you (or provide a refresher) to working with common probability distributions in R. You can download the template <code>.qmd</code> file for this lab here:</p>
+<p><a href="#dnldts12620" onclick="fetch('data:text/plain;base64,LS0tCnRpdGxlOiAiUHJvYmFiaWxpdHkgZGlzdHJpYnV0aW9ucyBhbmQgc2ltdWxhdGluZyBkYXRhIGluIFIiCmZvcm1hdDogCiAgICBwZGY6IAogICAgICAgIGluY2x1ZGUtaW4taGVhZGVyOgogICAgICAgICAgICB0ZXh0OiB8CiAgICAgICAgICAgICAgICBcdXNlcGFja2FnZXtuZXd1bmljb2RlY2hhcn0KICAgICAgICAgICAgICAgIFxuZXd1bmljb2RlY2hhcnvKu317YH0gCmF1dGhvcjogCiAgICAtIHlvdXIgbmFtZSBoZXJlCiAgICAtIHlvdXIgbmFtZSBoZXJlCiAgICAtIGV0YwotLS0KCmBgYHtyfQojfCBsYWJlbDogc2V0dXAKCiMgbG9hZCBhbGwgbmVjZXNzYXJ5IHBhY2thZ2VzCiMgLi4uIHlvdSBtYXkgbmVlZCB0byBhZGQgdG8gdGhpcyEgY2FuIGRlbGV0ZSB0aGlzIGNvbW1lbnQgb25jZSBkb25lCmxpYnJhcnkoZ2dwbG90MikKCmBgYAoKIyMgUHJvYmFiaWxpdHkgZGlzdHJpYnV0aW9ucyBpbiBSCgpUaGVyZSBhcmUgYSBtdWx0aXR1ZGUgb2YgcHJvYmFiaWxpdHkgZGlzdHJpYnV0aW9ucyBhdmFpbGFibGUgdG8gdXNlIHRocm91Z2ggUiwgbm90IHRvIG1lbnRpb24gYSB3aG9sZSBtdWx0aXR1ZGUgbW9yZSB2aWEgY29udHJpYnV0ZWQgcGFja2FnZXMuIFIgZnVuY3Rpb25zIHJlbGF0ZWQgdG8gZGlzdHJpYnV0aW9ucyBhbmQgcmFuZG9tIHZhcmlhYmxlcyBjb21lIGluIGZvdXIgdmFyaWV0aWVzOgoKLSBgZGAgZnVuY3Rpb25zIChlLmcuIGBkbm9ybWAgZm9yIHRoZSBub3JtYWwgZGlzdHJpYnV0aW9uKSBwcm92aWRlIGFjY2VzcyB0byBwcm9iYWJpbGl0eSBtYXNzIGZ1bmN0aW9ucyAoUE1GKSBmb3IgZGlzY3JldGUgcmFuZG9tIHZhcmlhYmxlcyBhbmQgcHJvYmFiaWxpdHkgZGVuc2l0eSBmdW5jdGlvbnMgKFBERikgZm9yIGNvbnRpbnVvdXMgcmFuZG9tIHZhcmlhYmxlcwotIGBwYCBmdW5jdGlvbnMgKGUuZy4gYHBub3JtYCkgcHJvdmlkZSBhY2Nlc3MgdG8gcHJvYmFiaWxpdHkgY2FsY3VsYXRpb25zIG92ZXIgcmFuZ2VzIG9mIHZhbHVlcwotIGBxYCBmdW5jdGlvbnMgKGUuZy4gYHFub3JtYCkgYWxsb3cgdXMgdG8gY2FsY3VsYXRlIHF1YW50aWxlcyBvZiBwcm9iYWJpbGl0eSBkaXN0cmlidXRpb25zIAotIGByYCBmdW5jdGlvbnMgKGUuZy4gYHJub3JtYCkgYWxsb3cgdXMgdG8gZHJhdyByYW5kb20gbnVtYmVycyBmcm9tIHByb2JhYmlsaXR5IGRpc3RyaWJ1dGlvbnMKClIgY2hvb3NlcyB0byBlbmNvZGUgYm90aCBQTUZzIGFuZCBQREZzIGFzIGBkYCBmdW5jdGlvbnMgc28gaXQgaXMgb24gdXMgYXMgdXNlcnMgdG8ga25vdyB3aGV0aGVyIHRoZSBvdXRwdXQgb2YgYSBgZGAgZnVuY3Rpb24gaXMgYSB0cnVlIHByb2JhYmlsaXR5IChmb3IgUE1Gcykgb3IgYSBwcm9iYWJpbGl0eSBkZW5zaXR5IChmb3IgUERGcykuIAoKVGhlIGBwYCBmdW5jdGlvbnMgZWl0aGVyIHN1bSB1cCBwcm9iYWJpbGl0aWVzIGZyb20gUE1GcyBvciBjYWxjdWxhdGUgYXJlYXMgdW5kZXIgUERGIGN1cnZlcywgc28gaW4gYW55IGFwcGxpY2F0aW9uIHdlIGFsd2F5cyBnZXQgYSAqKipwKioqcm9iYWJpbGl0eSBmcm9tIGEgYHBgIGZ1bmN0aW9uLiBUZWNobmljYWxseSB0aGVzZSBgcGAgZnVuY3Rpb25zIHJlcHJlc2VudCBjdW11bGF0aXZlIG1hc3MgKENNRikgb3IgY3VtdWxhdGl2ZSBkZW5zaXR5IGZ1bmN0aW9ucyAoQ0RGKSBiZWNhdXNlIHRoZXkgY2FsY3VsYXRlIGhvdyBtdWNoIHByb2JhYmlsaXR5IGhhcyAiYWNjdW11bGF0ZWQiIGFjcm9zcyBnaXZlbiB2YWx1ZXMgb2YgdGhlIHJhbmRvbSB2YXJpYWJsZSBhc3NvY2lhdGVkIHdpdGggdGhlIHByb2JhYmlsaXR5IGRpc3RyaWJ1dGlvbi4KCldpdGggdGhhdCBpbnRybyBvdXQgb2YgdGhlIHdheSB3ZSB3aWxsIHdvcmsgdGhyb3VnaCBzcGVjaWZpYyBkaXN0cmlidXRpb25zLgoKCiMjIEJpbm9taWFsCgpMZXQncyByZXR1cm4gdG8gdGhlIGV4YW1wbGUgb2YgdGhlIG51bWJlciBvZiBkaXNwZXJzYWwgZXZlbnRzIG92ZXIgYSBmaXhlZCBudW1iZXIgb2YgdGltZSBzdGVwcyBmcm9tIHRoZSBzaW1wbGlmaWVkIGdhbWUgdmVyc2lvbiBvZiB0aGUgVW5pZmllZCBOZXV0cmFsIFRoZW9yeSBvZiBCaW9kaXZlcnNpdHkgdGhhdCB3ZSBbcHJldmlvdXNseSBkaXNjdXNzZWRdKGh0dHBzOi8vdWhtLWJpb3N0YXRzLmdpdGh1Yi5pby9zdGF0LW1vZC9wcm9iLWludHJvLmh0bWwpLiBGb3Igc2ltcGxpY2l0eSwgbGV0J3Mgd29yayB3aXRoIG11bHRpcGxlcyBvZiAxMCBmb3IgcHJvYmFiaWxpdGllcyBhbmQgbnVtYmVycyBvZiB0aW1lIHN0ZXBzOiAkXG1hdGhiYntQfShcdGV4dHtkaXNwZXJzYWx9KSA9ICQgYG0gPSAwLjFgIGFuZCBudW1iZXIgb2YgdGltZSBzdGVwcyA9IGBOID0gMTBgLiBXaGF0IGlzIHRoZSBwcm9iYWJpbGl0eSBvZiBvYnNlcnZpbmcgZXhhY3RseSAxIGRpc3BlcnNhbCBldmVudCBnaXZlbiB0aGVzZSBjb25kaXRpb25zPwoKVGhhdCBpcyBhIGpvYiBmb3IgdGhlIGJpbm9taWFsIGRpc3RyaWJ1dGlvbiB3aGljaCBSIHJlZmVycyB0byBhcyBgYmlub21gIHdpdGggYWxsIHRoZSBkaXN0cmlidXRpb25zIGZ1bmN0aW9uczogYGRiaW5vbWAsIGBwYmlub21gLCBgcWJpbm9tYCwgYHJiaW5vbWAuIFdlIHdhbnQgYSBwcm9iYWJpbGl0eSBvZiBvbmUgZGlzY3JldGUgKHRoaW5rIFBNRikgdmFsdWUsIHNvIHdlIGNhbiB1c2UgYGRiaW5vbWAKCmBgYHtyfQojfCBsYWJlbDogZmlyc3QtYmlub20tZXgKCiMgc2V0dXAgcGFyYW1ldGVycwptIDwtIDAuMQpOIDwtIDEwCgpkYmlub20oMSwgc2l6ZSA9IE4sIHByb2IgPSBtKQpgYGAKCk5vdGljZSBob3cgd2UgdXNlIGBkYmlub21gIChhbmQgaW5kZWVkIGhvdyB3ZSB3aWxsIHVzZSBhbnkgYGRgIGZ1bmN0aW9uKToKCi0gdGhlIGZpcnN0IGFyZ3VtZW50IGlzIHRoZSB2YWx1ZSBvZiB0aGUgcmFuZG9tIHZhcmlhYmxlIGZvciB3aGljaCB3ZSB3YW50IHRvIGNhbGN1bGF0ZSBhIHByb2JhYmlsaXR5IChvciBkZW5zaXR5KQotIGFmdGVyIHRoYXQgY29tZSBhIHNlcXVlbmNlIG9mIGFyZ3VtZW50cyB3aG9zZSBuYW1lcyBjb3JyZXNwb25kIHRvIHBhcmFtZXRlcnMgb2YgdGhlIHByb2JhYmlsaXR5IGRpc3RyaWJ1dGlvbgoKCldpdGggYSBiaW5vbWlhbCBkaXN0cmlidXRpb24gd2Ugb2Z0ZW4gcmVmZXIgdG8gdGhlIHJhbmRvbSB2YXJpYWJsZSBhcyB0aGUgIm51bWJlciBvZiBzdWNjZXNzZXMsIiBpbiB0aGlzIGNhc2UgdGhlbiBudW1iZXIgb2YgZGlzcGVyc2FsIGV2ZW50cyBpcyBudW1iZXIgb2Ygc3VjY2Vzc2VzLiBUaGUgbnVtYmVyIG9mIG9ic2VydmF0aW9ucyBpcyBvZnRlbiBjYWxsZWQgIm51bWJlciBvZiB0cmlhbHMsIiBpbiB0aGlzIGNhc2UgdGhlbiBudW1iZXIgb2YgdHJpYWxzIGlzIG51bWJlciBvZiBnYW1lIGl0ZXJhdGlvbnMuIAoKWW91J2xsIG5vdGljZSB0aGUgcHJvYmFiaWxpdHkgb2YgMSBzdWNjZXNzIGluICBgciBOYCB0cmlhbHMgaXMgYHIgZGJpbm9tKDEsIE4sIG0pYCBidXQgd2Ugc2V0IHRoZSBwcm9iYWJpbGl0eSAkXG1hdGhiYntQfShcdGV4dHtkaXNwZXJzYWx9KSA9IG0gPSBgciBtYCQuIFdoeSBhcmUgdGhleSBub3QgdGhlIHNhbWU/IE9yIGF0IGxlYXN0IG5vdCBhbiBvYnZpb3VzIG11bHRpcGxpY2F0aW9uIG9yIGFkZGl0aW9uIG9mIG9uZSBhbm90aGVyPyBUaGUgcmVhc29uIGlzIGNvdW50aW5nLiBUaGUgcHJvYmFiaWxpdHkgb2YgZXhhY3RseSAxIHN1Y2Nlc3MgaW4gYHIgTmAgdHJpYWxzIGNvbnNpc3RzIG9mIG1hbnkgd2F5cyB0byBhcnJpdmUgYXQgdGhhdCBvdXRjb21lLiBJZiBgMGAgaXMgbm8gc3VjY2VzcyBhbmQgYDFgIGlzIHN1Y2Nlc3MsIGhlcmUgYXJlIGp1c3QgYSBmZXcgb2YgdGhlIHdheXMgd2UgY2FuIGdldCBleGFjdGx5IDEgc3VjY2VzczoKCiQkClxiZWdpbnthbGlnbn0KJlx0ZXh0ezEsIGByIHJlcCgwLCBOIC0gMSlgfSBcXAomXHRleHR7MCwgMSwgYHIgcmVwKDAsIE4gLSAyKWB9IFxcCiZcdGV4dHswLCAwLCAxLCBgciByZXAoMCwgTiAtIDMpYH0gXFwKJlxjZG90cwpcZW5ke2FsaWdufQokJAoKVGhlIGNvdW50aW5nIGdldHMgaW5jcmVhc2luZ2x5IGNvbXBsZXggd2l0aCBoaWdoZXIgbnVtYmVycyBvZiBzdWNjZXNzZXMgYW5kIHRyaWFscy4gTHVja2lseSwgdGhlIGAqYmlub21gIGZ1bmN0aW9ucyB0YWtlIGNhcmUgb2YgdGhhdCBmb3IgdXMuIExldCdzIGdvIG92ZXIgdGhlIGZhbWlseS4KCiMjIyBgZGJpbm9tYAoKQ2FsY3VsYXRlIHRoZSBwcm9iYWJpbGl0eSBvZiAwLCAxLCAyLCBhbmQgMyBzdWNjZXNzZXMgb3V0IG9mIDEwIHRyaWFscyB3aXRoIGEgcHJvYmFiaWxpdHkgb2Ygc3VjY2VzcyBlcXVhbCB0byAwLjIuCgoKIyMjIGBwYmlub21gCgpVc2luZyB0aGUgc2FtZSBwYXJhbWV0ZXJzIGNhbGN1bGF0ZSB0aGUgcHJvYmFiaWxpdHkgb2Ygb2JzZXJ2aW5nIDMgb3IgbGVzcyBzdWNjZXNzZXMsIGkuZS4sICRcbWF0aGJie1B9KFx0ZXh0e3N1Y2Nlc3Nlc30gXGxlcSAzKSQuIAoKRmlyc3QgdXNlIHlvdXIgY2FsY3VsYXRpb25zIGluIHRoZSBwcmV2aW91cyBzdGVwIHRvIGFycml2ZSBhdCB0aGUgYW5zd2VyLiBOZXh0IGZpZ3VyZSBvdXQgaG93IHRvIHVzZSB0aGUgYHBiaW5vbWAgZnVuY3Rpb24gdG8gYXJyaXZlIGF0IHRoZSBzYW1lIGFuc3dlci4KCkZpbmFsbHkgdXNlIHRoZSBgcGJpbm9tYCBmdW5jdGlvbiB0byBjYWxjdWxhdGUgdGhlIHByb2JhYmlsaXR5IG9mIG9ic2VydmluZyAqZ3JlYXRlciB0aGFuKiAzIHN1Y2Nlc3NlcyB1c2luZyB0aGUgc2FtZSBwYXJhbWV0ZXJzIGFzIGJlZm9yZS4gCgoKIyMjIGBxYmlub21gCgpUaGUgYHFgIGZ1bmN0aW9uIHR1cm5zIHRoaXMgY2FsY3VsYXRpb24gYXJvdW5kLiBSYXRoZXIgdGhhbiBjYWxjdWxhdGUgdGhlIHByb2JhYmlsaXR5IGZvciBhIG51bWJlciBvZiBzdWNjZXNzZXMgJFxsZXEgbiQsIGBxYmlub21gIGZpZ3VyZXMgb3V0IHdoYXQgdmFsdWUsIGNhbGwgaXQgJHEkLCB0aGUgcmFuZG9tIHZhcmlhYmxlIG5lZWRzIHRvIHRha2Ugb24gc3VjaCB0aGF0IHdlIGdldCBiYWNrIGEgc3BlY2lmaWMgcHJvYmFiaWxpdHkgJHAkOiBzbyBhbGwgYHFgIGZ1bmN0aW9ucyBzb2x2ZSB0aGlzIGVxdWF0aW9uIGZvciAkcSQ6ICRcbWF0aGJie1B9KG4gXGxlcSBxKSA9IHAkLgoKVXNlIGBxYmlub21gIHRvIGZpZ3VyZSBvdXQgd2hhdCB2YWx1ZSBjdXRzIHRoZSBiaW5vbWlhbCBkaXN0cmlidXRpb24sIGFzIHByZXZpb3VzbHkgcGFyYW1ldGVyaXplZCwgaW4gaGFsZiAoaS5lLiAwLjUgcHJvYmFiaWxpdHkpLiAKCiMjIyBgcmJpbm9tYAoKVGhlIGByYCBmdW5jdGlvbnMgbGV0IHVzIGRyYXcgcmFuZG9tIG51bWJlcnMgZnJvbSBwcm9iYWJpbGl0eSBkaXN0cmlidXRpb25zLiBHaXZlIGl0IGEgdHJ5IHdpdGggdGhlIHNhbWUgYmlub21pYWwgZGlzdHJpYnV0aW9uIHdlJ3ZlIGJlZW4gd29ya2luZyB3aXRoOiBkcmF3IDIwIG51bWJlcnMuCgpOb3cgbGV0J3MgdHJ5IHRvIHZpc3VhbGl6ZSB0aGUgc2hhcGUgb2YgdGhlIGJpbm9taWFsIFBNRiBidXQgd2l0aCBhIGhpc3RvZ3JhbSBvZiByYW5kb20gbnVtYmVycy4gV2UgbmVlZCBtYW55IG1vcmUgZHJhd3MgdGhhbiAyMCB0byBtYWtlIHRoZSBoaXN0b2dyYW0gbG9vayBjbG9zZSB0byB0aGUgYWN0dWFsIFBNRiwgbGV0J3MgZ28gZm9yIDEwLDAwMC4gS2VlcCBpbiBtaW5kIHRoYXQgdG8gdXNlIGBnZ3Bsb3RgIHdlIG5lZWQgdG8gc3RvcmUgdGhlIHJhbmRvbSBudW1iZXJzIGluIGEgYGRhdGEuZnJhbWVgIG9yIGB0aWJibGVgLgoKIyMgUG9pc3NvbgoKVGhlIFBvaXNzb24gZGlzdHJpYnV0aW9uIGlzIHZlcnkgdXNlZnVsIGluIGVjb2xvZ3ktLS1pdCBpcyBvZnRlbiB1c2VkIHRvIG1vZGVsIHRoZSBwcm9iYWJpbGl0eSBkaXN0cmlidXRpb24gb2YgY291bnRzLCBmb3IgZXhhbXBsZSBudW1iZXJzIG9mIGluZGl2aWR1YWxzIG9yIG51bWJlcnMgb2Ygc3BlY2llcy4gSXQgaGFzIG9ubHkgb25lIHBhcmFtZXRlciwgdGhlIG1lYW4gdmFsdWUsIG9mdGVuIGNhbGxlZCAkXGxhbWJkYSQuIExldCdzIHVzZSBgZHBvaXNgIHRvIGdldCBhIHNlbnNlIG9mIHRoZSBzaGFwZSBvZiB0aGUgZGlzdHJpYnV0aW9uIGJ5IHZpc3VhbGl6aW5nIHRoZSBQTUYuIEJlY2F1c2Ugd2UgdXNlIGBkcG9pc2AgdG8gY2FsY3VsYXRlIHRoZSBhY3R1YWwgcHJvYmFiaWxpdGllcyB3ZSB3b24ndCB1c2UgYSBoaXN0b2dyYW0gYnV0IHJhdGhlciBhIGJhciBwbG90LgoKYGBge3J9CiN8IGxhYmVsOiBmaWctcG9pcy1wbWYKI3wgZmlnLWNhcDogIkV4YW1wbGUgUE1GIG9mIHRoZSBQb2lzc29uIGRpc3RyaWJ1dGlvbiIKCiMgdGhlIHJhbmdlIG9mIHJhbmRvbSB2YXJpYWJsZSB2YWx1ZXMgd2UnbGwKIyBjYWxjdWxhdGUgcHJvYmFiaWxpdGllcyBmb3IKbm4gPC0gMDozMAoKIyB0aGUgUG9pc3NvbiBwYXJhbWV0ZXIgbGFtYmRhIGZvciB0aGUgbWVhbiB2YWx1ZQpsYSA8LSA4CgojIHN0b3JlIHJhbmdlIG9mIHZhbHVlcyBhbmQgcHJvYmFiaWxpdGllcyBpbiBkYXRhLmZyYW1lCnBvaXNfcG1mIDwtIGRhdGEuZnJhbWUobiA9IG5uLCBkID0gZHBvaXMobm4sIGxhKSkKCgoKZ2dwbG90KHBvaXNfcG1mLCBhZXMobiwgZCkpICsKICAgIGdlb21fYmFyKHN0YXQgPSAiaWRlbnRpdHkiKSArCiAgICB4bGFiKCJDb3VudCIpICsKICAgIHlsYWIoIlByb2JhYmlsaXR5IikKYGBgCgoKTGV0J3Mgd2FsayB0aHJvdWdoIGFsbCB0aGUgYHBvaXNgIGZ1bmN0aW9ucyBsaWtlIHdlIGRpZCB3aXRoIGBiaW5vbWAuCgoKIyMjIGBkcG9pc2AKClVzZSBgZHBvaXNgIHdpdGggdGhlIHNhbWUgcGFyYW1ldGVycyB3ZSd2ZSBiZWVuIHVzaW5nIHRvIGNhbGN1bGF0ZSB0aGUgcHJvYmFiaWxpdHkgb2YgdGhlIHJhbmRvbSB2YXJpYWJsZSBiZWluZyBlcXVhbCB0byBlYWNoIG9mIDcsIDgsIDksIGFuZCAxMC4KCgojIyMgYHBwb2lzYAoKVXNlIGBwcG9pc2AgdG8gY2FsY3VsYXRlIHRoZSBwcm9iYWJpbGl0eSAkXG1hdGhiYntQfSg3IFxsZXEgbiBcbGVxIDEwKSQgZnJvbSB0aGUgUG9pc3NvbiBkaXN0cmlidXRpb24gd2UndmUgYmVlbiB3b3JraW5nIHdpdGguIE5vdGU6IHlvdSBjYW4gY29uZmlybSB5b3UgaGF2ZSB0aGUgcmlnaHQgYW5zd2VyIHVzaW5nIHRoZSBwcmV2aW91cyBjYWxjdWxhdGlvbiB3aXRoIGBkcG9pc2AsIGJ1dCBtYWtlIHN1cmUgeW91IGFsc28gZmlndXJlIG91dCBob3cgdG8gdXNlIGBwcG9pc2AuCgojIyMgYHFwb2lzYAoKVXNlIGBxcG9pc2AgdG8gZmluZCB0aGUgMjUlLCA1MCUsIGFuZCA3NSUgcXVhbnRpbGVzIG9mIHRoZSBQb2lzc29uIGRpc3RyaWJ1dGlvbiB3aXRoICRcbGFtYmRhID0gOCQgdGhhdCB3ZSd2ZSBiZWVuIHdvcmtpbmcgd2l0aC4KCiMjIyBgcnBvaXNgCgpNYWtlIGEgaGlzdG9ncmFtIHVzaW5nIGBycG9pc2AgdGhhdCBzaG91bGQgbG9vayBzaW1pbGFyIHRvIHRoZSBQTUYgaW4gQGZpZy1wb2lzLXBtZgoKCgojIyBOZWdhdGl2ZSBCaW5vbWlhbAoKVGhlIG9uZSBkb3duc2lkZSBvZiB0aGUgUG9pc3NvbiBkaXN0cmlidXRpb24gaXMgdGhhdCB3aXRoIG9ubHkgb25lIHBhcmFtZXRlciAkXGxhbWJkYSQsIGl0IGNhbiBoYXZlIGEgaGVhcmQgdGltZSBtaW1pY2tpbmcgcmVhbCB3b3JsZCBkYXRhLiBJbiBlY29sb2d5IGluIHBhcnRpY3VsYXIgY291bnRzIGFyZSBvZnRlbiAiemVyby1pbmZsYXRlZCwiIG1lYW5pbmcgdGhhdCBjb21wYXJlZCB0byB0aGUgUG9pc3NvbiBkaXN0cmlidXRpb24gdGhlcmUgYXJlIHRvbyBtYW55IDAgY291bnRzLiBPbmUgc29sdXRpb24gaXMgdGhlIG5lZ2F0aXZlIGJpbm9taWFsIGRpc3RyaWJ1dGlvbiB3aGljaCwgaW4gYWRkaXRpb24gdG8gYSBwYXJhbWV0ZXIgZm9yIHRoZSBtZWFuLCBoYXMgYSBwYXJhbWV0ZXIgJGskIChjYWxsZWQgYHNpemVgIGluIFIpIHRoYXQgY2FuIHNoaWZ0IHRoZSB3ZWlnaHQgb2YgcHJvYmFiaWxpdGllcyBtb3JlIHRvd2FyZCAwIGFuZCBzbWFsbCB2YWx1ZXMuIFdoZW4gJGskIGlzIGluZmluaXRlIChwcmFjdGljYWxseSBzcGVha2luZyBqdXN0IGEgKmxhcmdlKiBudW1iZXIgbGlrZSAxMCwwMDAgd2lsbCBkbykgdGhlIG5lZ2F0aXZlIGJpbm9taWFsIGlzIG1hdGhlbWF0aWNhbGx5IGVxdWl2YWxlbnQgdG8gdGhlIFBvaXNzb24gZGlzdHJpYnV0aW9uLiBCdXQgYW55IHNtYWxsZXIgdmFsdWUgb2YgJGsgPiAwJCB3aWxsIGFkZCBleHRyYSBwcm9iYWJpbGl0eSBmb3Igc21hbGwgdmFsdWVzIG9mIHRoZSByYW5kb20gdmFyaWFibGUuCgpUaGUgbWVhbiBwYXJhbWV0ZXIgZm9yIHRoZSBuZWdhdGl2ZSBiaW5vbWlhbCBpcyBvZnRlbiBjYWxsZWQgJFxtdSQgYW5kLCBhZ2FpbiwgdGhlIHBhcmFtZXRlciB0aGF0IHNoaWZ0cyB0aGUgYmFsYW5jZSB0b3dhcmQgc21hbGwgdmFsdWVzIGlzICRrJCwgdGhvdWdoIGluc2lkZSBSJ3MgYG5iaW5vbWAgZnVuY3Rpb25zIHRoZXkgY2FsbCBpdCBgc2l6ZWAuIExldCdzIGFnYWluIHdhbGsgdGhyb3VnaCBhbGwgdGhlIGBuYmlub21gIGZ1bmN0aW9ucy4KCiMjIyBgZG5iaW5vbWAKClRvIHByb3ZlIHRoZSBwb2ludCBhYm91dCB6ZXJvLWluZmxhdGlvbiwgbGV0J3MgY29tcGFyZSB0aGUgbmVnYXRpdmUgYmlub21pYWwgd2l0aCBtZWFuIDggdG8gdGhlIFBvaXNzb24gd2l0aCBtZWFuIDguIFNwZWNpZmljYWxseSBsZXQncyBsb29rIGF0IHRoZSBwcm9iYWJpbGl0eSAkXG1hdGhiYntQfShuID0gMCkkIGZvciBib3RoLiBXZSB3aWxsIG5lZWQgdG8gc2VsZWN0IHZhbHVlcyBmb3IgdGhlICRrJCA9IGBzaXplYCBwYXJhbWV0ZXIgYXMgd2VsbCwgbGV0J3MgdHJ5IHZhbHVlcyBvZiBgMC4xYCwgYDFgLCBhbmQgYDJgLiBIZXJlIGlzIGhvdyBgZG5iaW5vbWAgd29ya3MgZm9yICRrID0gMC4xJDoKCmBgYHtyfQojIHJlbWVtYmVyIHNpemUgPSBrCmRuYmlub20oMCwgbXUgPSA4LCBzaXplID0gMC4xKQpgYGAKCk5vdyB5b3UgdGFrZSBpdCBmcm9tIGhlcmUhCgojIyMgYHBuYmlub21gCgpVc2UgYHBuYmlub21gIHRvIGNhbGN1bGF0ZSB0aGUgcHJvYmFiaWxpdHkgJFxtYXRoYmJ7UH0obiBcbGVxIDQpJCB3aXRoIHRoZSB0aHJlZSBkaWZmZXJlbnQgdmFsdWVzIG9mICRrJCB3ZSd2ZSBiZWVuIHdvcmtpbmcgd2l0aC4KCiMjIyBgcW5iaWJvbWAKClVzZSBgcW5iaWJvbWAgdG8gZmluZCB3aGF0IHZhbHVlIGN1dHMgdGhlIHByb2JhYmlsaXR5IGRpc3RyaWJ1dGlvbiBpbiBoYWxmIGZvciBlYWNoIG9mIHRoZSAkayQgdmFsdWVzIHdlJ3ZlIGJlZW4gd29ya2luZyB3aXRoLgoKIyMjIGBybmJpbm9tYAoKQWRkIHRvIHRoZSBoaXN0b2dyYW0geW91IG1hZGUgdXNpbmcgYHJwb2lzYCBhbm90aGVyIGhpc3RvZ3JhbSBkZXJpdmVkIGZyb20gYHJuYmlub21gIHdpdGggJGskID0gYHNpemUgPSAxYC4gWW91IGNhbiB1c2UgZGlmZmVyZW50IGZpbGxzIHdpdGggdHJhbnNwYXJlbnQgY29sb3JzIG9yIGZhY2V0aW5nLCBkZXBlbmRpbmcgb24gd2hpY2ggeW91IHByZWZlci4KCiMjIE5vcm1hbAoKVGhlIG5vcm1hbCBkaXN0cmlidXRpb24gaXMgYSB3b3JraG9yc2Ugb2Ygc3RhdGlzdGljcywgYXMgd2Ugd2lsbCBzZWUuIEl0IGlzIG9mdGVuIHRoZSBwcmVzdW1lZCBkaXN0cmlidXRpb24gZm9yIGFueSAqY29udGludW91cyogcmFuZG9tIHZhcmlhYmxlLiBUaGF0IGFzc3VtcHRpb24gaXMgbm90IHdpdGhvdXQgcHJlY2VkZW50IChhcyB3ZSB3aWxsIHNlZSBpbiB0aGUgbmV4dCBsYWIpLiBGb3Igbm93IHdlIHdpbGwganVzdCBnZXQgYW50aXF1YXRlZCB3aXRoIHRoZSBkaXN0cmlidXRpb24uCgpBIG5vcm1hbCBkaXN0cmlidXRpb24gaGFzIHR3byBwYXJhbWV0ZXJzOiBhZ2FpbiBpdCBoYXMgYSBwYXJhbWV0ZXIgZm9yIHRoZSBtZWFuLCBvZnRlbiByZWZlcnJlZCB0byBhcyAkXG11JCwgYnV0IHNpbXBseSBjYWxsZWQgYG1lYW5gIGluIFIncyBgbm9ybWAgZnVuY3Rpb25zLiBJdCBhbHNvIGhhcyBhIHBhcmFtZXRlciBmb3IgdGhlIHZhcmlhbmNlIG9mIHRoZSBkaXN0cmlidXRpb24gJFxzaWdtYV4yJC4gV2Ugb2Z0ZW4gdGhpbmsgb2YgdGhlIHN0YW5kYXJkIGRldmlhdGlvbiAkXHNpZ21hJCBpbnN0ZWFkIG9mIHRoZSB2YXJpYW5jZSBiZWNhdXNlIGl0IGlzIGVpdGhlciB0byB0aGluayBpbiB0ZXJtcyBvZiBsaW5lYXIgbnVtYmVycyByYXRoZXIgdGhhbiBzcXVhcmVkIG51bWJlcnMuIFIncyBgbm9ybWAgZnVuY3Rpb25zIHVzZSB0aGUgc3RhbmRhcmQgZGV2aWF0aW9uIGFuZCBjYWxsIGl0IGBzZGAuCgoKIyMjIGBkbm9ybWAKClRoZSBwcm9iYWJpbGl0eSBkZW5zaXR5IGZ1bmN0aW9uIChQREYpIG9mIGEgbm9ybWFsIHJhbmRvbSB2YXJpYWJsZSBpcyAqbm90KiBzdHJpY3RseSBzcGVha2luZyBwcm9iYWJpbGl0eS4gQnV0IHRoZSBzaGFwZSBvZiB0aGUgUERGIGlzIHN0aWxsIGhlbHBmdWwgZm9yIHRoaW5raW5nIGFib3V0IHdoaWNoIHZhbHVlcyBvZiB0aGUgcmFuZG9tIHZhcmlhYmxlIGFyZSBtb3JlIHByb2JhYmxlIHRoYW4gb3RoZXJzLiAKClVzZSBgZG5vcm1gIHdpdGggYG1lYW4gPSAyYCBhbmQgYHNkID0gMWAgdG8gbWFrZSBhIHZpc3VhbGl6YXRpb24gb2YgdGhlIFBERi4gTm90ZTogd2UgYXJlIG5vdCB3b3JraW5nIHdpdGggYSBQTUYsIHNvIGBnZW9tX2JhcmAgaXMgbm90IHRoZSBjb3JyZWN0IGNob2ljZSBoZXJlOyBpbnN0ZWFkLCB0cnkgYGdlb21fbGluZWAuCgoKIyMjIGBwbm9ybWAKCkZpbmQgdGhlIHZhbHVlIHRoYXQgY3V0cyBhIG5vcm1hbCBkaXN0cmlidXRpb24gaW4gaGFsZiB3aGVuIGBtZWFuID0gMmAsIGBzZCA9IDFgIGNvbXBhcmVkIHRvIGBtZWFuID0gMmAsIGBzZCA9IDNgLiBEbyB5b3UgZXhwZWN0IHRob3NlIDUwJSBxdWFudGlsZSB2YWx1ZXMgdG8gYmUgdGhlIHNhbWUgb3IgZGlmZmVyZW50PyAgTm93IGNvbXBhcmUgdGhlIDUwJSBxdWFudGlsZSB2YWx1ZXMgZm9yIG5vcm1hbCBkaXN0cmlidXRpb25zIHdpdGggYG1lYW4gPSAyYCwgYHNkID0gMWAgdmVyc3VzIGBtZWFuID0gNGAsIGBzZCA9IDFgLgoKIyMjIGBybm9ybWAKCk1ha2UgYSBoaXN0b2dyYW0gdXNpbmcgYHJub3JtYCB3aXRoIGEgYG1lYW5gIGFuZCBgc2RgIG9mIHlvdXIgY2hvb3NpbmcuCgoKPCEtLSAjIyBTaW11bGF0aW5nIEJpbm9taWFsIGRhdGE6IHByZXNlbmNlIGFuZCBhYnNlbmNlIGFjcm9zcyBhbiBlbnZpcm9ubWVudGFsIGdyYWRpZW50IC0tPgoKPCEtLSAjIyBTaW11bGF0aW5nIE5vcm1hbCBkYXRhIC0tPgoKPCEtLSAjIyMgVGhlIENlbnRyYWwgTGltaXQgVGhlb3JlbSAtLT4KCjwhLS0gIyMjIFNpbXVsYXRpbmcgZGlhbWV0ZXIgYXQgYnJlYXN0IGhlaWdodCBhY3Jvc3MgZGlmZmVyZW50IGVudmlyb25tZW50cyBhbmQgbGlmZSBoaXN0b3JpZXMgLS0+Cgo=').then(res => res.blob()).then(blob => {
+      const downloadURL = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      document.body.appendChild(a);
+      a.href = downloadURL;
+      a.download = 'lab02-prob.qmd'; a.click();
+      window.URL.revokeObjectURL(downloadURL);
+      document.body.removeChild(a);
+        });"><button class="btn btn-default downloadthis  " id="dnldts12620"><i class="bi bi-download"></i> Download lab template </button></a></p>
+<p>The template will prompt you to work through the following sections.</p>
+<section id="probability-distributions-in-r" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="probability-distributions-in-r"><span class="header-section-number">8.1</span> Probability distributions in R</h2>
+<p>There are a multitude of probability distributions available to use through R, not to mention a whole multitude more via contributed packages. R functions related to distributions and random variables come in four varieties:</p>
+<ul>
+<li><code>d</code> functions (e.g.&nbsp;<code>dnorm</code> for the normal distribution) provide access to probability mass functions (PMF) for discrete random variables and probability density functions (PDF) for continuous random variables</li>
+<li><code>p</code> functions (e.g.&nbsp;<code>pnorm</code>) provide access to probability calculations over ranges of values</li>
+<li><code>q</code> functions (e.g.&nbsp;<code>qnorm</code>) allow us to calculate quantiles of probability distributions</li>
+<li><code>r</code> functions (e.g.&nbsp;<code>rnorm</code>) allow us to draw random numbers from probability distributions</li>
+</ul>
+<p>R chooses to encode both PMFs and PDFs as <code>d</code> functions so it is on us as users to know whether the output of a <code>d</code> function is a true probability (for PMFs) or a probability density (for PDFs).</p>
+<p>The <code>p</code> functions either sum up probabilities from PMFs or calculate areas under PDF curves, so in any application we always get a <strong><em>p</em></strong>robability from a <code>p</code> function. Technically these <code>p</code> functions represent cumulative mass (CMF) or cumulative density functions (CDF) because they calculate how much probability has “accumulated” across given values of the random variable associated with the probability distribution.</p>
+<p>With that intro out of the way we will work through specific distributions.</p>
+</section>
+<section id="binomial" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="binomial"><span class="header-section-number">8.2</span> Binomial</h2>
+<p>Let’s return to the example of the number of dispersal events over a fixed number of time steps from the simplified game version of the Unified Neutral Theory of Biodiversity that we <a href="https://uhm-biostats.github.io/stat-mod/prob-intro.html">previously discussed</a>. For simplicity, let’s work with multiples of 10 for probabilities and numbers of time steps: $() = $ <code>m = 0.1</code> and number of time steps = <code>N = 10</code>. What is the probability of observing exactly 1 dispersal event given these conditions?</p>
+<p>That is a job for the binomial distribution which R refers to as <code>binom</code> with all the distributions functions: <code>dbinom</code>, <code>pbinom</code>, <code>qbinom</code>, <code>rbinom</code>. We want a probability of one discrete (think PMF) value, so we can use <code>dbinom</code></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># setup parameters</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fl">0.1</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">dbinom</span>(<span class="dv">1</span>, <span class="at">size =</span> N, <span class="at">prob =</span> m)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.3874205</code></pre>
+</div>
+</div>
+<p>Notice how we use <code>dbinom</code> (and indeed how we will use any <code>d</code> function):</p>
+<ul>
+<li>the first argument is the value of the random variable for which we want to calculate a probability (or density)</li>
+<li>after that come a sequence of arguments whose names correspond to parameters of the probability distribution</li>
+</ul>
+<p>With a binomial distribution we often refer to the random variable as the “number of successes,” in this case then number of dispersal events is number of successes. The number of observations is often called “number of trials,” in this case then number of trials is number of game iterations.</p>
+<p>You’ll notice the probability of 1 success in 10 trials is 0.3874205 but we set the probability <span class="math inline">\(\mathbb{P}(\text{dispersal}) = m = 0.1\)</span>. Why are they not the same? Or at least not an obvious multiplication or addition of one another? The reason is counting. The probability of exactly 1 success in 10 trials consists of many ways to arrive at that outcome. If <code>0</code> is no success and <code>1</code> is success, here are just a few of the ways we can get exactly 1 success:</p>
+<p><span class="math display">\[
+\begin{align}
+&amp;\text{1, 0, 0, 0, 0, 0, 0, 0, 0, 0} \\
+&amp;\text{0, 1, 0, 0, 0, 0, 0, 0, 0, 0} \\
+&amp;\text{0, 0, 1, 0, 0, 0, 0, 0, 0, 0} \\
+&amp;\cdots
+\end{align}
+\]</span></p>
+<p>The counting gets increasingly complex with higher numbers of successes and trials. Luckily, the <code>*binom</code> functions take care of that for us. Let’s go over the family.</p>
+<section id="dbinom" class="level3" data-number="8.2.1">
+<h3 data-number="8.2.1" class="anchored" data-anchor-id="dbinom"><span class="header-section-number">8.2.1</span> <code>dbinom</code></h3>
+<p>Calculate the probability of 0, 1, 2, and 3 successes out of 10 trials with a probability of success equal to 0.2.</p>
+</section>
+<section id="pbinom" class="level3" data-number="8.2.2">
+<h3 data-number="8.2.2" class="anchored" data-anchor-id="pbinom"><span class="header-section-number">8.2.2</span> <code>pbinom</code></h3>
+<p>Using the same parameters calculate the probability of observing 3 or less successes, i.e., <span class="math inline">\(\mathbb{P}(\text{successes} \leq 3)\)</span>.</p>
+<p>First use your calculations in the previous step to arrive at the answer. Next figure out how to use the <code>pbinom</code> function to arrive at the same answer.</p>
+<p>Finally use the <code>pbinom</code> function to calculate the probability of observing <em>greater than</em> 3 successes using the same parameters as before.</p>
+</section>
+<section id="qbinom" class="level3" data-number="8.2.3">
+<h3 data-number="8.2.3" class="anchored" data-anchor-id="qbinom"><span class="header-section-number">8.2.3</span> <code>qbinom</code></h3>
+<p>The <code>q</code> function turns this calculation around. Rather than calculate the probability for a number of successes <span class="math inline">\(\leq n\)</span>, <code>qbinom</code> figures out what value, call it <span class="math inline">\(q\)</span>, the random variable needs to take on such that we get back a specific probability <span class="math inline">\(p\)</span>: so all <code>q</code> functions solve this equation for <span class="math inline">\(q\)</span>: <span class="math inline">\(\mathbb{P}(n \leq q) = p\)</span>.</p>
+<p>Use <code>qbinom</code> to figure out what value cuts the binomial distribution, as previously parameterized, in half (i.e.&nbsp;0.5 probability).</p>
+</section>
+<section id="rbinom" class="level3" data-number="8.2.4">
+<h3 data-number="8.2.4" class="anchored" data-anchor-id="rbinom"><span class="header-section-number">8.2.4</span> <code>rbinom</code></h3>
+<p>The <code>r</code> functions let us draw random numbers from probability distributions. Give it a try with the same binomial distribution we’ve been working with: draw 20 numbers.</p>
+<p>Now let’s try to visualize the shape of the binomial PMF but with a histogram of random numbers. We need many more draws than 20 to make the histogram look close to the actual PMF, let’s go for 10,000. Keep in mind that to use <code>ggplot</code> we need to store the random numbers in a <code>data.frame</code> or <code>tibble</code>.</p>
+</section>
+</section>
+<section id="poisson" class="level2" data-number="8.3">
+<h2 data-number="8.3" class="anchored" data-anchor-id="poisson"><span class="header-section-number">8.3</span> Poisson</h2>
+<p>The Poisson distribution is very useful in ecology—it is often used to model the probability distribution of counts, for example numbers of individuals or numbers of species. It has only one parameter, the mean value, often called <span class="math inline">\(\lambda\)</span>. Let’s use <code>dpois</code> to get a sense of the shape of the distribution by visualizing the PMF. Because we use <code>dpois</code> to calculate the actual probabilities we won’t use a histogram but rather a bar plot.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># the range of random variable values we'll</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate probabilities for</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>nn <span class="ot">&lt;-</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">30</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># the Poisson parameter lambda for the mean value</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>la <span class="ot">&lt;-</span> <span class="dv">8</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># store range of values and probabilities in data.frame</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>pois_pmf <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">n =</span> nn, <span class="at">d =</span> <span class="fu">dpois</span>(nn, la))</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(pois_pmf, <span class="fu">aes</span>(n, d)) <span class="sc">+</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">"Count"</span>) <span class="sc">+</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">"Probability"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-pois-pmf" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-pois-pmf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="prob-dist_files/figure-html/fig-pois-pmf-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-pois-pmf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8.1: Example PMF of the Poisson distribution
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Let’s walk through all the <code>pois</code> functions like we did with <code>binom</code>.</p>
+<section id="dpois" class="level3" data-number="8.3.1">
+<h3 data-number="8.3.1" class="anchored" data-anchor-id="dpois"><span class="header-section-number">8.3.1</span> <code>dpois</code></h3>
+<p>Use <code>dpois</code> with the same parameters we’ve been using to calculate the probability of the random variable being equal to each of 7, 8, 9, and 10.</p>
+</section>
+<section id="ppois" class="level3" data-number="8.3.2">
+<h3 data-number="8.3.2" class="anchored" data-anchor-id="ppois"><span class="header-section-number">8.3.2</span> <code>ppois</code></h3>
+<p>Use <code>ppois</code> to calculate the probability <span class="math inline">\(\mathbb{P}(7 \leq n \leq 10)\)</span> from the Poisson distribution we’ve been working with. Note: you can confirm you have the right answer using the previous calculation with <code>dpois</code>, but make sure you also figure out how to use <code>ppois</code>.</p>
+</section>
+<section id="qpois" class="level3" data-number="8.3.3">
+<h3 data-number="8.3.3" class="anchored" data-anchor-id="qpois"><span class="header-section-number">8.3.3</span> <code>qpois</code></h3>
+<p>Use <code>qpois</code> to find the 25%, 50%, and 75% quantiles of the Poisson distribution with <span class="math inline">\(\lambda = 8\)</span> that we’ve been working with.</p>
+</section>
+<section id="rpois" class="level3" data-number="8.3.4">
+<h3 data-number="8.3.4" class="anchored" data-anchor-id="rpois"><span class="header-section-number">8.3.4</span> <code>rpois</code></h3>
+<p>Make a histogram using <code>rpois</code> that should look similar to the PMF in <a href="#fig-pois-pmf" class="quarto-xref">Figure&nbsp;<span>8.1</span></a></p>
+</section>
+</section>
+<section id="negative-binomial" class="level2" data-number="8.4">
+<h2 data-number="8.4" class="anchored" data-anchor-id="negative-binomial"><span class="header-section-number">8.4</span> Negative Binomial</h2>
+<p>The one downside of the Poisson distribution is that with only one parameter <span class="math inline">\(\lambda\)</span>, it can have a heard time mimicking real world data. In ecology in particular counts are often “zero-inflated,” meaning that compared to the Poisson distribution there are too many 0 counts. One solution is the negative binomial distribution which, in addition to a parameter for the mean, has a parameter <span class="math inline">\(k\)</span> (called <code>size</code> in R) that can shift the weight of probabilities more toward 0 and small values. When <span class="math inline">\(k\)</span> is infinite (practically speaking just a <em>large</em> number like 10,000 will do) the negative binomial is mathematically equivalent to the Poisson distribution. But any smaller value of <span class="math inline">\(k &gt; 0\)</span> will add extra probability for small values of the random variable.</p>
+<p>The mean parameter for the negative binomial is often called <span class="math inline">\(\mu\)</span> and, again, the parameter that shifts the balance toward small values is <span class="math inline">\(k\)</span>, though inside R’s <code>nbinom</code> functions they call it <code>size</code>. Let’s again walk through all the <code>nbinom</code> functions.</p>
+<section id="dnbinom" class="level3" data-number="8.4.1">
+<h3 data-number="8.4.1" class="anchored" data-anchor-id="dnbinom"><span class="header-section-number">8.4.1</span> <code>dnbinom</code></h3>
+<p>To prove the point about zero-inflation, let’s compare the negative binomial with mean 8 to the Poisson with mean 8. Specifically let’s look at the probability <span class="math inline">\(\mathbb{P}(n = 0)\)</span> for both. We will need to select values for the <span class="math inline">\(k\)</span> = <code>size</code> parameter as well, let’s try values of <code>0.1</code>, <code>1</code>, and <code>2</code>. Here is how <code>dnbinom</code> works for <span class="math inline">\(k = 0.1\)</span>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># remember size = k</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dnbinom</span>(<span class="dv">0</span>, <span class="at">mu =</span> <span class="dv">8</span>, <span class="at">size =</span> <span class="fl">0.1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.644394</code></pre>
+</div>
+</div>
+<p>Now you take it from here!</p>
+</section>
+<section id="pnbinom" class="level3" data-number="8.4.2">
+<h3 data-number="8.4.2" class="anchored" data-anchor-id="pnbinom"><span class="header-section-number">8.4.2</span> <code>pnbinom</code></h3>
+<p>Use <code>pnbinom</code> to calculate the probability <span class="math inline">\(\mathbb{P}(n \leq 4)\)</span> with the three different values of <span class="math inline">\(k\)</span> we’ve been working with.</p>
+</section>
+<section id="qnbibom" class="level3" data-number="8.4.3">
+<h3 data-number="8.4.3" class="anchored" data-anchor-id="qnbibom"><span class="header-section-number">8.4.3</span> <code>qnbibom</code></h3>
+<p>Use <code>qnbibom</code> to find what value cuts the probability distribution in half for each of the <span class="math inline">\(k\)</span> values we’ve been working with.</p>
+</section>
+<section id="rnbinom" class="level3" data-number="8.4.4">
+<h3 data-number="8.4.4" class="anchored" data-anchor-id="rnbinom"><span class="header-section-number">8.4.4</span> <code>rnbinom</code></h3>
+<p>Add to the histogram you made using <code>rpois</code> another histogram derived from <code>rnbinom</code> with <span class="math inline">\(k\)</span> = <code>size = 1</code>. You can use different fills with transparent colors or faceting, depending on which you prefer.</p>
+</section>
+</section>
+<section id="normal" class="level2" data-number="8.5">
+<h2 data-number="8.5" class="anchored" data-anchor-id="normal"><span class="header-section-number">8.5</span> Normal</h2>
+<p>The normal distribution is a workhorse of statistics, as we will see. It is often the presumed distribution for any <em>continuous</em> random variable. That assumption is not without precedent (as we will see in the next lab). For now we will just get antiquated with the distribution.</p>
+<p>A normal distribution has two parameters: again it has a parameter for the mean, often referred to as <span class="math inline">\(\mu\)</span>, but simply called <code>mean</code> in R’s <code>norm</code> functions. It also has a parameter for the variance of the distribution <span class="math inline">\(\sigma^2\)</span>. We often think of the standard deviation <span class="math inline">\(\sigma\)</span> instead of the variance because it is either to think in terms of linear numbers rather than squared numbers. R’s <code>norm</code> functions use the standard deviation and call it <code>sd</code>.</p>
+<section id="dnorm" class="level3" data-number="8.5.1">
+<h3 data-number="8.5.1" class="anchored" data-anchor-id="dnorm"><span class="header-section-number">8.5.1</span> <code>dnorm</code></h3>
+<p>The probability density function (PDF) of a normal random variable is <em>not</em> strictly speaking probability. But the shape of the PDF is still helpful for thinking about which values of the random variable are more probable than others.</p>
+<p>Use <code>dnorm</code> with <code>mean = 2</code> and <code>sd = 1</code> to make a visualization of the PDF. Note: we are not working with a PMF, so <code>geom_bar</code> is not the correct choice here; instead, try <code>geom_line</code>.</p>
+</section>
+<section id="pnorm" class="level3" data-number="8.5.2">
+<h3 data-number="8.5.2" class="anchored" data-anchor-id="pnorm"><span class="header-section-number">8.5.2</span> <code>pnorm</code></h3>
+<p>Find the value that cuts a normal distribution in half when <code>mean = 2</code>, <code>sd = 1</code> compared to <code>mean = 2</code>, <code>sd = 3</code>. Do you expect those 50% quantile values to be the same or different? Now compare the 50% quantile values for normal distributions with <code>mean = 2</code>, <code>sd = 1</code> versus <code>mean = 4</code>, <code>sd = 1</code>.</p>
+</section>
+<section id="rnorm" class="level3" data-number="8.5.3">
+<h3 data-number="8.5.3" class="anchored" data-anchor-id="rnorm"><span class="header-section-number">8.5.3</span> <code>rnorm</code></h3>
+<p>Make a histogram using <code>rnorm</code> with a <code>mean</code> and <code>sd</code> of your choosing.</p>
+<!-- ## Simulating Binomial data: presence and absence across an environmental gradient -->
+<!-- ## Simulating Normal data -->
+<!-- ### The Central Limit Theorem -->
+<!-- ### Simulating diameter at breast height across different environments and life histories -->
 
 
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
