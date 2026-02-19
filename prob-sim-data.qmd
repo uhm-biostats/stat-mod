@@ -127,13 +127,13 @@ Suppose we want to simulate some data we've (hypothetically) sampled of DBH acro
 For simplicity, assume annual rainfall can be simulated as random numbers drawn from a uniform distribution with `min = 1` and `max = 50`. Then, let's assume the relationship between *average* log(DBH) and rainfall looks like this:
 
 $$
-\bar{\log(\text{DBH})} = 10 + 3 \times \text{(annual rainfall)}
+\text{mean}\left(\log(\text{DBH}_{native}) \right) = 10 + 3 \times \text{(annual rainfall)}
 $$
 
 But let's make it a little more interesting too. Let's suppose the above equation is the relationship for native taxa. For non-native taxa let's assume the relationship is 
 
 $$
-\bar{\log(\text{DBH}_{non-native})} = 6 + 5 \times \text{(annual rainfall)}
+\text{mean}\left(\log(\text{DBH}_{non-native}) \right) = 6 + 5 \times \text{(annual rainfall)}
 $$
 
 One last thing we'll need to assume: let's say the standard deviation of log(DBH) for all taxa is constant across rainfall and equal to 2.
