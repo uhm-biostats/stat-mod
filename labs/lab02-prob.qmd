@@ -200,12 +200,3 @@ Find the value that cuts a normal distribution in half when `mean = 2`, `sd = 1`
 
 Make a histogram using `rnorm` with a `mean` and `sd` of your choosing.
 
-
-<!-- ## Simulating Binomial data: presence and absence across an environmental gradient -->
-
-<!-- ## Simulating Normal data -->
-
-<!-- ### The Central Limit Theorem -->
-
-<!-- ### Simulating diameter at breast height across different environments and life histories -->
-
