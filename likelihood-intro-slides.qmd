@@ -1,0 +1,438 @@
+---
+title: "Introducing likelihood"
+
+format:
+  revealjs:
+    slide-number: true
+    preview-links: auto
+    auto-stretch: false
+    embed-resources: false
+    controls: true
+    code-line-numbers: false
+---
+
+```{r}
+#| label: setup
+#| echo: false
+#| message: false
+#| warning: false
+
+
+library(ggplot2)
+library(knitr)
+library(cowplot)
+
+opts_chunk$set(echo = TRUE)
+```
+
+
+## Figuring out probability of success from data
+
+::: {.columns}
+
+:::: {.column}
+
+Suppose we go looking for kāhuli
+
+![image credit: DOFAW](img/intro-like/kahuli.jpg){width="50%"}
+::::
+
+:::: {.column}
+
+And out of 8 visits we find them 2 times
+
+```{r}
+kahuli <- c(0, 0, 1, 0, 1, 0, 0, 0)
+kahuli
+```
+
+This is a binomial situation with 8 trials, but what is $p$?
+
+::::
+
+:::
+
+
+
+## Figuring out probability of success from data
+
+This is a binomial situation with 8 trials, but what is $p$?
+
+```{r}
+kahuli
+```
+
+Let's ask ourselves: what's the probability of these data given different values of $p$? For example, $\mathbb{P}(n = 2 \mid N = 8, p = 0.9)$:
+
+```{r}
+p <- 0.9
+dbinom(2, size = 8, prob = p)
+```
+
+
+
+## Figuring out probability of success from data
+
+This is a binomial situation with 8 trials, but what is $p$?
+
+```{r}
+kahuli
+```
+
+Find the value of $p$ for which $\mathbb{P}(n = 2 \mid N = 8, p)$ is *highest*, that is a good guess for the value of $p$ 
+
+
+## Figuring out probability of success from data
+
+Find the value of $p$ for which $\mathbb{P}(n = 2 \mid N = 8, p)$ is *highest*, that is a good guess for the value of $p$ 
+
+```{r}
+pp <- seq(0, 1, by = 0.05)
+
+l <- dbinom(2, size = 8, prob = pp)
+l
+```
+
+
+## Figuring out probability of success from data
+
+Find the value of $p$ for which $\mathbb{P}(n = 2 \mid N = 8, p)$ is *highest*, that is a good guess for the value of $p$ 
+
+```{r}
+#| echo: false
+#| fig-width: 8
+#| fig-height: 4
+#| fig-align: center
+
+lik_fun <- data.frame(pp, l)
+
+gp_lik <- ggplot(lik_fun, aes(pp, l)) +
+    geom_point(size = 6) +
+    geom_line(linewidth = 2) +
+    xlab("p") +
+    ylab("P(n = 2 | N = 8, p)") +
+    theme(axis.text = element_text(size = 20), 
+          axis.title = element_text(size = 22, face = "italic"))
+
+gp_lik
+```
+
+## Figuring out probability of success from data
+
+::: {.columns}
+
+:::: {.column width=70%}
+
+$\mathbb{P}(n = 2 \mid N = 8, p)$ is *highest* when $p = 0.25$
+
+```{r}
+#| echo: false
+#| fig-width: 8
+#| fig-height: 4
+#| fig-align: center
+
+
+gp_lik +
+    geom_vline(xintercept = 0.25, color = "red", linewidth = 2)
+
+
+```
+
+::::
+
+:::: {.column width=30%}
+
+Interesting! 
+
+We learned probability is also *frequency*
+
+The frequency of successes was $\frac{2}{8} = 0.25$
+
+::::
+
+:::
+
+
+## Figuring out probability of success from data
+
+::: {.columns}
+
+:::: {.column width=70%}
+
+$\mathbb{P}(n = 2 \mid N = 8, p)$ is *highest* when $p = 0.25$
+
+```{r}
+#| echo: false
+#| fig-width: 8
+#| fig-height: 4
+#| fig-align: center
+
+
+gp_lik +
+    geom_vline(xintercept = 0.25, color = "red", linewidth = 2)
+
+
+```
+
+::::
+
+:::: {.column width=30%}
+
+So we figured out a fancy way of finding $p = \frac{2}{8} = 0.25$
+
+But this matters because *frequency* in more complex data will not be so clear cut
+
+::::
+
+:::
+
+## Figuring out probability of success from data
+
+What we figured out is in fact the *likelihood function*
+
+::: {.columns}
+
+:::: {.column width=70%}
+
+$\mathbb{P}(\text{data} \mid \text{parameters})$
+
+```{r}
+#| echo: false
+#| fig-width: 8
+#| fig-height: 4
+#| fig-align: center
+
+
+gp_lik +
+    geom_vline(xintercept = 0.25, color = "red", linewidth = 2)
+
+
+```
+
+::::
+
+:::: {.column width=30%}
+
+And that maximizing it gives us a good estimate of the parameters
+
+::::
+
+:::
+
+
+## Maximum likelihood estimation (MLE): presence/absence
+
+Let's return to the simulated presence/absence data
+
+$$
+\begin{aligned}
+\mathbb{P}(\text{presence}) &\sim Binom(N = 1, ~p) \\
+p &= \frac{1}{1 + e^{-(-2 + 0.001 \times (\text{elevation}))}}
+\end{aligned}
+$$
+
+```{r}
+set.seed(123)
+nobs <- 50
+elev <- runif(nobs, 0, 5000)
+p <- 1 / (1 + exp(-(-2 + 0.001 * elev)))
+y <- rbinom(nobs, size = 1, prob = p)
+dat <- data.frame(elev, y)
+```
+
+
+## Maximum likelihood estimation (MLE): presence/absence
+
+Let's return to the simulated presence/absence data
+
+::: {.columns}
+
+:::: {.column width=70%}
+
+```{r}
+#| echo: false
+#| fig-width: 8
+#| fig-height: 4
+#| fig-align: center
+
+gp_pa <- ggplot(dat, aes(elev, y)) +
+    geom_point(size = 6, alpha = 0.5) +
+    xlab("Simulated elevation") + 
+    ylab("Simulated\npresence/absence") +
+    theme(axis.text = element_text(size = 20), 
+          axis.title = element_text(size = 24))
+
+gp_pa + 
+    geom_function(fun = \(x) 1 / (1 + exp(-(-2 + 0.001 * x))), 
+                  linewidth = 2) +
+    annotate(geom = "text", x = 1900, y = 0.4, 
+             label = expression(p == frac(1 , (1 + exp(-(a[0] + a[1] * elev))))), 
+             hjust = "left", size = 8)
+```
+
+::::
+
+:::: {.column width=30%}
+
+Can we use MLE to find the values of $\hat{a_0}$ and $\hat{a_1}$ and will they close to the true values of $a_0 = -2$ and $a_1 = 0.001$?
+
+::::
+
+:::
+
+
+## Maximum likelihood estimation (MLE): presence/absence
+
+
+
+Can we use MLE to find the values of $\hat{a_0}$ and $\hat{a_1}$?
+
+We need `dbinom`. But what should `size` be and `prob` be?
+
+
+## Maximum likelihood estimation (MLE): presence/absence
+
+
+Can we use MLE to find the values of $\hat{a_0}$ and $\hat{a_1}$?
+
+We need `dbinom`. But what should `size` be and `prob` be?
+
+
+$$
+\begin{aligned}
+\mathbb{P}(y \mid N = 1, ~p = f(x)) = ~&\mathbb{P}(y_1 \mid N = 1, ~p_1 = f(x_1)) \times \\
+&\mathbb{P}(y_2 \mid N = 1, ~p_2 = f(x_2)) \times \cdots \times \\
+&\mathbb{P}(y_n \mid N = 1, ~p_n = f(x_n)) \\
+= ~&\prod_{i = 1}^n \mathbb{P}(y_i \mid N = 1, ~p_i = f(x_i))
+\end{aligned}
+$$
+
+
+## Maximum likelihood estimation (MLE): presence/absence
+
+
+Can we use MLE to find the values of $\hat{a_0}$ and $\hat{a_1}$?
+
+We need `dbinom`. But what should `size` be and `prob` be?
+
+
+$$
+\mathbb{P}(y \mid N = 1, ~p = f(x)) = \prod_{i = 1}^n \mathbb{P}(y_i \mid N = 1, ~p_i = f(x_i))
+$$
+
+```{r}
+try_a0 <- -1 # close-ish to the truth
+try_a1 <- 0.1
+l <- dbinom(y, size = 1, 
+            prob = 1 / (1 + exp(-(try_a0 + try_a1 * elev)))) |> 
+    prod()
+```
+
+
+## Maximum likelihood estimation (MLE): presence/absence
+
+
+$$
+\mathbb{P}(y \mid N = 1, ~p = f(x)) = \prod_{i = 1}^n \mathbb{P}(y_i \mid N = 1, ~p_i = f(x_i))
+$$
+
+Sweet! What is the value of the likelihood function?
+
+. . .
+
+```{r}
+l
+```
+
+. . .
+
+...oh no
+
+
+
+## Maximum likelihood estimation (MLE): presence/absence
+
+
+$$
+\mathbb{P}(y \mid N = 1, ~p = f(x)) = \prod_{i = 1}^n \mathbb{P}(y_i \mid N = 1, ~p_i = f(x_i))
+$$
+
+***The issue:*** multiplying many numbers less than 1 $\Rightarrow$ very small number that our computer can't deal with.
+
+Not to worry! ***Math to the rescue!***
+
+## Maximum likelihood estimation (MLE): presence/absence
+
+
+$$
+\mathbb{P}(y \mid N = 1, ~p = f(x)) = \prod_{i = 1}^n \mathbb{P}(y_i \mid N = 1, ~p_i = f(x_i))
+$$
+
+$$
+\begin{aligned}
+\Rightarrow \log (\mathbb{P}(y &\mid N = 1, ~p = f(x)) ) \\
+&= \log \left(\prod_{i = 1}^n \mathbb{P}(y_i \mid N = 1, ~p_i = f(x_i)) \right) \\
+&= \sum_{i = 1}^n\log \left(\mathbb{P}(y_i \mid N = 1, ~p_i = f(x_i)) \right)
+\end{aligned}
+$$
+
+
+## Maximum likelihood estimation (MLE): presence/absence
+
+
+$$
+\begin{aligned}
+\log (\mathbb{P}(y &\mid N = 1, ~p = f(x)) ) \\
+&= \sum_{i = 1}^n\log \left(\mathbb{P}(y_i \mid N = 1, ~p_i = f(x_i)) \right)
+\end{aligned}
+$$
+
+
+Logging both sides turns multiplication into addition 
+
+
+## Maximum likelihood estimation (MLE): presence/absence
+
+
+Logging both sides turns multiplication into addition ***and doesn't change our parameter estimates***
+
+
+
+```{r}
+#| echo: false
+#| fig-width: 10
+#| fig-height: 4
+#| fig-align: center
+
+gp_loglik <- ggplot(lik_fun, aes(pp, log(l))) +
+    geom_point(size = 6) +
+    geom_line(linewidth = 2) +
+    xlab("p") +
+    ylab("log(P(n = 2 | N = 8, p))") +
+    theme(axis.text = element_text(size = 20), 
+          axis.title = element_text(size = 22, face = "italic")) +
+    geom_vline(xintercept = 0.25, color = "red", linewidth = 2)
+
+gp_lik <- gp_lik +
+    geom_vline(xintercept = 0.25, color = "red", linewidth = 2)
+
+plot_grid(gp_lik, gp_loglik)
+
+```
+
+## Maximum likelihood estimation (MLE): presence/absence
+
+
+So we always work with the ***log likelihood function***
+
+
+
+```{r}
+#| echo: false
+#| fig-width: 8
+#| fig-height: 4
+#| fig-align: center
+
+gp_loglik
+
+```
