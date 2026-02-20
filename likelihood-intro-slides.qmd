@@ -322,7 +322,7 @@ $$
 
 ```{r}
 try_a0 <- -1 # close-ish to the truth
-try_a1 <- 0.1
+try_a1 <- 0.005
 l <- dbinom(y, size = 1, 
             prob = 1 / (1 + exp(-(try_a0 + try_a1 * elev)))) |> 
     prod()
@@ -436,3 +436,87 @@ So we always work with the ***log likelihood function***
 gp_loglik
 
 ```
+
+## Maximum likelihood estimation (MLE): presence/absence
+
+Now we return to find the values of $\hat{a_0}$ and $\hat{a_1}$
+
+
+```{r}
+try_a0 <- -1 # close-ish to the truth
+try_a1 <- 0.005
+
+# log likelihood now
+ll <- dbinom(y, size = 1, 
+            prob = 1 / (1 + exp(-(try_a0 + try_a1 * elev))), 
+            log = TRUE) |> 
+    sum()
+
+ll
+```
+
+That is a number we can work with!
+
+
+## Maximum likelihood estimation (MLE): presence/absence
+
+Looking over a range of $\hat{a_0}$ and $\hat{a_1}$ values we see a maximum!
+
+::: {.columns}
+
+:::: {.column width=70%}
+
+```{r}
+#| echo: false
+#| fig-width: 7
+#| fig-height: 5
+#| fig-align: center
+
+
+try_a <- expand.grid(a0 = seq(-8, 1, length.out = 40), 
+                     a1 = seq(0.0001, 0.007, length.out = 40))
+
+
+ll <- sapply(1:nrow(try_a), function(i) {
+    dbinom(y, size = 1, 
+            prob = 1 / (1 + exp(-(try_a$a0[i] + try_a$a1[i] * elev))), 
+            log = TRUE) |> 
+    sum()
+})
+
+ll <- data.frame(try_a, loglik = ll)
+
+
+
+ggplot(ll, aes(a0, a1, z = loglik)) +
+    geom_tile(aes(fill = loglik)) +
+    scale_fill_viridis_c() +
+    geom_contour(color = "black") +
+    xlab(expression(hat(a[0]))) +
+    ylab(expression(hat(a[1]))) +
+    scale_x_continuous(expand = FALSE) +
+    scale_y_continuous(expand = FALSE) +
+    geom_point(data = ll[which.max(ll$loglik), ], 
+               mapping = aes(a0, a1), 
+               shape = 4, size = 2, stroke = 2) +
+    theme(axis.text = element_text(size = 20), 
+          axis.title = element_text(size = 22))
+```
+
+::::
+
+:::: {.column width=30%}
+
+And our estimates
+
+$\hat{a_0}$ = `r ll[which.max(ll$loglik), "a0"]` <br>
+$\hat{a_1}$ = `r ll[which.max(ll$loglik), "a1"]`
+
+Are close to the true values
+
+$a_0 = -2$  <br>
+$a_1 = 0.001$
+
+::::
+
+:::
