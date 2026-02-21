@@ -520,3 +520,223 @@ $a_1 = 0.001$
 ::::
 
 :::
+
+## Maximum likelihood estimation (MLE): presence/absence
+
+How do we really find the maximum of the likelihood function?
+
+::: {.columns}
+
+:::: {.column width=70%}
+
+```{r}
+#| echo: false
+#| fig-width: 7
+#| fig-height: 5
+#| fig-align: center
+
+
+try_a <- expand.grid(a0 = seq(-8, 1, length.out = 40), 
+                     a1 = seq(0.0001, 0.007, length.out = 40))
+
+
+ll <- sapply(1:nrow(try_a), function(i) {
+    dbinom(y, size = 1, 
+            prob = 1 / (1 + exp(-(try_a$a0[i] + try_a$a1[i] * elev))), 
+            log = TRUE) |> 
+    sum()
+})
+
+ll <- data.frame(try_a, loglik = ll)
+
+
+
+gpll <- ggplot(ll, aes(a0, a1, z = loglik)) +
+    geom_tile(aes(fill = loglik)) +
+    scale_fill_viridis_c() +
+    geom_contour(color = "black") +
+    xlab(expression(hat(a[0]))) +
+    ylab(expression(hat(a[1]))) +
+    scale_x_continuous(expand = FALSE) +
+    scale_y_continuous(expand = FALSE) +
+    theme(axis.text = element_text(size = 20), 
+          axis.title = element_text(size = 22)) +
+    geom_point(data = ll[which.max(ll$loglik), ], 
+               mapping = aes(a0, a1), 
+               shape = 4, size = 2, stroke = 2)
+
+gpll
+
+```
+
+::::
+
+:::: {.column width=30%}
+
+And our estimates
+
+$\hat{a_0}$ = `r ll[which.max(ll$loglik), "a0"]` <br>
+$\hat{a_1}$ = `r ll[which.max(ll$loglik), "a1"]`
+
+Are close to the true values
+
+$a_0 = -2$  <br>
+$a_1 = 0.001$
+
+::::
+
+:::
+
+
+## Maximizing the likelihood function
+
+One approach is to use an algorithm to find the maximum
+
+::: {.columns}
+
+:::: {.column}
+
+
+```{r}
+#| eval: false
+
+# find the maximum 
+llmax <- optim(
+    # initial values
+    par = c(-3, 0.005), 
+    # log likelihood fun
+    fn = llfun,
+    # data
+    y = y, elev = elev, 
+    # `fnscale` = -1 means maximize
+    control = list(fnscale = -1)
+)
+
+
+```
+
+Where do we get the `llfun` function?
+
+::::
+
+:::: {.column}
+
+```{r}
+#| echo: false
+#| fig-width: 5
+#| fig-height: 3
+#| fig-align: center
+
+
+gpll
+```
+
+`optim` traverses the space to find the maximum
+
+::::
+
+:::
+
+
+## Maximizing the likelihood function
+
+Where do we get the `llfun` function? <br>
+We have to make it
+
+
+
+```{r}
+llfun <- function(a, y, elev) {
+    dbinom(x = y, size = 1, 
+           prob = 1 / (1 + exp(-(a[1] + a[2] * elev))), 
+           log = TRUE) |> 
+        sum()
+}
+
+# find the maximum 
+llmax <- optim(par = c(-3, 0.005), 
+               fn = llfun,
+               y = y, elev = elev, 
+               control = list(fnscale = -1))
+```
+
+
+## Maximizing the likelihood function
+
+The output of `optim` is a list, each element is accessed with `$`
+
+
+::: {.columns}
+
+:::: {.column}
+
+```{r}
+llmax
+
+```
+
+::::
+
+:::: {.column}
+
+```
+
+
+<-- the max likelihood estimates
+
+
+<-- value of log lik function at max
+
+
+
+
+
+
+<-- 0 means algorithm "converged"
+    a good thing!
+
+```
+
+::::
+
+:::
+
+
+## Maximum likelihood estimation (MLE): presence/absence
+
+How do we really find the maximum of the likelihood function?
+
+. . . 
+
+Another approach is using math to maximize the log likelihood function
+
+. . .
+
+Where the derivative is 0, that's the maximum
+
+$\frac{d}{d \text{params}} \log \mathbb{P}(\text{data} \mid \text{params}) = 0$
+
+. . .
+
+Turns out this is solvable only in some cases like when data come from a normal distribution
+
+
+## Interpreting likelihood
+
+::: {.incremental}
+
+- $\log\mathscr{L} = \sum\log\mathbb{P}(\text{data} \mid \text{parameters})$ depends on the data being *independent* and *identically distributed*
+- the likelihood function is not a probability density function
+- in fact the values of the (log) likelihood function are *random variables*
+
+:::
+
+
+## Interpreting likelihood
+
+
+- The estimate we get from maximizing the (log) likelihood function has good statistical properties
+    - *consistent:* will converge on correct answer as sample size $\rightarrow \infty$
+    - *least variance:* of consistent estimators it has the smallest variance
+
+
