@@ -21,12 +21,11 @@ book:
             - prob-intro.qmd
             - prob-dist.qmd
             - prob-sim-data.qmd
-        # - part: likelihood-intro.qmd
-        #   chapters:
-        #     - binom-lec.qmd
-        #     - binom-lab.qmd
-        #     - ml-method.qmd
-        #     - norm-lab.qmd
+        - part: likelihood-intro.qmd
+          chapters:
+            - likelihood-lec.qmd
+            - binom-lab.qmd
+            - norm-lab.qmd
         # - part: lin-mod.qmd
         #   chapters:
         #     - mods-howto.qmd

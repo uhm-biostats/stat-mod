@@ -1,1 +1,9 @@
 # Introducing the method of maximum likelihood
+
+We will use our knowledge of R and probability to build intuition about what likelihood is and how it is used to make inference via the method of Maximum Likelihood Estimation.
+
+Jump straight to:
+
+- Introducing likelihood, [slides](likelihood-intro-slides.html){target="_blank"}
+- [Working with binomial likelihoods](prob-dist.qmd)
+- [Working with normal likelihoods](prob-sim-data.qmd)

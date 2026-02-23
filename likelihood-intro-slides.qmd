@@ -1,14 +1,5 @@
 ---
 title: "Introducing likelihood"
-
-format:
-  revealjs:
-    slide-number: true
-    preview-links: auto
-    auto-stretch: false
-    embed-resources: false
-    controls: true
-    code-line-numbers: false
 ---
 
 ```{r}
