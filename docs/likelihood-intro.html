@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>9&nbsp; Simulating probabilistic data – Intro to Statistical Modeling</title>
+<title>Introducing the method of maximum likelihood – Intro to Statistical Modeling</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,41 +20,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
@@ -65,8 +30,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./likelihood-intro.html" rel="next">
-<link href="./prob-dist.html" rel="prev">
+<link href="./likelihood-lec.html" rel="next">
+<link href="./prob-sim-data.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -106,35 +71,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -148,7 +84,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./prob.html">Probability</a></li><li class="breadcrumb-item"><a href="./prob-sim-data.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Simulating probabilistic data</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./likelihood-intro.html">Introducing the method of maximum likelihood</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -251,7 +187,7 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./prob-sim-data.html" class="sidebar-item-text sidebar-link active">
+  <a href="./prob-sim-data.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Simulating probabilistic data</span></span></a>
   </div>
 </li>
@@ -259,7 +195,7 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="./likelihood-intro.html" class="sidebar-item-text sidebar-link">
+            <a href="./likelihood-intro.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Introducing the method of maximum likelihood</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -291,31 +227,15 @@ window.Quarto = {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Table of contents</h2>
-   
-  <ul>
-  <li><a href="#simulating-normally-distributed-data" id="toc-simulating-normally-distributed-data" class="nav-link active" data-scroll-target="#simulating-normally-distributed-data"><span class="header-section-number">9.1</span> Simulating normally-distributed data</a>
-  <ul>
-  <li><a href="#the-central-limit-theorem" id="toc-the-central-limit-theorem" class="nav-link" data-scroll-target="#the-central-limit-theorem"><span class="header-section-number">9.1.1</span> The Central Limit Theorem</a>
-  <ul class="collapse">
-  <li><a href="#for-loops" id="toc-for-loops" class="nav-link" data-scroll-target="#for-loops"><span class="header-section-number">9.1.1.1</span> For loops</a></li>
-  <li><a href="#normal-from-uniform" id="toc-normal-from-uniform" class="nav-link" data-scroll-target="#normal-from-uniform"><span class="header-section-number">9.1.1.2</span> Normal from uniform</a></li>
-  <li><a href="#normal-from-sample" id="toc-normal-from-sample" class="nav-link" data-scroll-target="#normal-from-sample"><span class="header-section-number">9.1.1.3</span> Normal from <code>sample</code></a></li>
-  </ul></li>
-  <li><a href="#simulating-diameter-at-breast-height-across-different-environments-and-life-histories" id="toc-simulating-diameter-at-breast-height-across-different-environments-and-life-histories" class="nav-link" data-scroll-target="#simulating-diameter-at-breast-height-across-different-environments-and-life-histories"><span class="header-section-number">9.1.2</span> Simulating diameter at breast height across different environments and life histories</a></li>
-  </ul></li>
-  <li><a href="#simulating-binomial-data-presence-and-absence-across-an-environmental-gradient" id="toc-simulating-binomial-data-presence-and-absence-across-an-environmental-gradient" class="nav-link" data-scroll-target="#simulating-binomial-data-presence-and-absence-across-an-environmental-gradient"><span class="header-section-number">9.2</span> Simulating binomial data: presence and absence across an environmental gradient</a></li>
-  </ul>
-</nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./prob.html">Probability</a></li><li class="breadcrumb-item"><a href="./prob-sim-data.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Simulating probabilistic data</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Simulating probabilistic data</span></h1>
+<h1 class="title">Introducing the method of maximum likelihood</h1>
 </div>
 
 
@@ -332,168 +252,15 @@ window.Quarto = {
 </header>
 
 
-<p>In this lab you will continue adding to the <code>lab02-prob.qmd</code> file that you downloaded and started working on in the <a href="./prob-dist.html">last lab</a>. Where you see section headers below, copy those section headers and use the appropriate number of <code>##</code> hashtags to make them sections at the right depth. Where you see code below, copy it and put it into your own code chunk with appropriate labels and other chunk options.</p>
-<section id="simulating-normally-distributed-data" class="level2" data-number="9.1">
-<h2 data-number="9.1" class="anchored" data-anchor-id="simulating-normally-distributed-data"><span class="header-section-number">9.1</span> Simulating normally-distributed data</h2>
-<section id="the-central-limit-theorem" class="level3" data-number="9.1.1">
-<h3 data-number="9.1.1" class="anchored" data-anchor-id="the-central-limit-theorem"><span class="header-section-number">9.1.1</span> The Central Limit Theorem</h3>
-<p>So why is it that statistics so often assumes data are normally distributed? There is one decent reason: the Central Limit Theorem. This theorem explains why and under what circumstances data might (perhaps surprisingly) end up being normally distributed.</p>
-<p>The theorem says this: if you take any kind of data, or random variables generally, and add them up, the distribution of that summation will be approximately normal. The approximation gets better and better the greater the number of random variables in the sum: if the sum is over three data points, the approximation is ok, if over 1,000 data points the approximation is great. If we had infinite data points the summation would be perfectly normally distributed, not even an approximation.</p>
-<p>Why is this relevant? Two reasons:</p>
-<ol type="1">
-<li>In statistics we are often focused on the mean, the equation for the mean is <span class="math inline">\(\frac{1}{N} \sum_{i = 1}^N x_i\)</span>. So the mean is just a summation, therefore should often be normal.</li>
-<li>If biological outcomes result from lots of constituent processes that are additive in nature (like multiple independent genetic loci contributing to one trait) then perhaps measurements of that biological outcome could be normally distributed.</li>
-</ol>
-<p>We won’t dive into the math of this theorem, instead we’ll simulate it.</p>
-<p>Let’s begin with something obviously not random: the so called “uniform” distribution. This is also one more distribution for us to learn about. In R we have <code>dunif</code>, <code>punif</code>, <code>qunif</code>, and <code>runif</code> just like other probability distribution functions. The uniform distribution takes parameters <code>min</code> and <code>max</code> and has perfectly equal probability density for all values in between. Let’s make a histogram of random uniform numbers between 0 and 1 to prove the point</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># a data.frame of 1000 random uniform numbers</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>unif_dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">runif</span>(<span class="dv">1000</span>, <span class="dv">0</span>, <span class="dv">1</span>))</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(unif_dat, <span class="fu">aes</span>(x)) <span class="sc">+</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>`stat_bin()` using `bins = 30`. Pick better value `binwidth`.</code></pre>
-</div>
-<div class="cell-output-display">
-<div id="fig-unif" class="quarto-float quarto-figure quarto-figure-center anchored" width="672">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-unif-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="prob-sim-data_files/figure-html/fig-unif-1.png" id="fig-unif" class="img-fluid figure-img" width="672">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-unif-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;9.1
-</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p>The counts bounce around a little, but pretty much no one region is more probable than another. How could we get a normal distribution from that? If we sum up 1000 random uniform numbers and do that over and over again we will be able to plot a histogram of normal-looking random variables.</p>
-<p>But how will we repeat something over and over? There are many ways in R, but we’ll learn one of the most fundamental ways: a for loop.</p>
-<section id="for-loops" class="level4" data-number="9.1.1.1">
-<h4 data-number="9.1.1.1" class="anchored" data-anchor-id="for-loops"><span class="header-section-number">9.1.1.1</span> For loops</h4>
-<p>For loops let you repeat code as many times as you like. That can be very useful when simulating things. But let’s start with something simple to see how it works. Say we want to print out the result of <code>10 * 1</code>, <code>10 * 2</code>, …, up to <code>10 * 5</code>. Writing or copy-pasting that would be boring. If going all the up to <code>10 * 100000000</code> it would be impossible. Here’s how a for loop helps us:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>) {</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="dv">10</span> <span class="sc">*</span> i)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 10
-[1] 20
-[1] 30
-[1] 40
-[1] 50</code></pre>
-</div>
-</div>
-<p>The result is not surprising, but how we got there is worth unpacking. Inside the for loop we see the (indented) code <code>print(10 * i)</code>. That’s the code that is getting run over and over again. But how does R know the value of <code>i</code>? With the for loop we are telling R to first assign <code>i</code> the <code>1</code> and run the code <code>print(10 * i)</code>. Once done, the for loop tells R to come back to the beginning and assign <code>i</code> the value <code>2</code>, and so on and so forth.</p>
-<p>Printing the result is one thing, but we can’t work with the printed output because it’s not saved to an object. Let’s modify the for loop code to save the calculation to an object called <code>times10</code>:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># make an empty object to hold the output of the for loop</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>times10 <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="at">length =</span> <span class="dv">5</span>)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>) {</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    times10[i] <span class="ot">&lt;-</span> <span class="dv">10</span> <span class="sc">*</span> i</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>times10</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 10 20 30 40 50</code></pre>
-</div>
-</div>
-<p>Now we can do things with the vector <code>times10</code>. But how did we make it? First we initialized an empty vector. Then inside the for loop instead of printing the multiplication result, we saved it to the <span class="math inline">\(i^{th}\)</span> position in the <code>times10</code> vector.</p>
-<p>We now have the tools to run our Central Limit Theorem simulation</p>
-</section>
-<section id="normal-from-uniform" class="level4" data-number="9.1.1.2">
-<h4 data-number="9.1.1.2" class="anchored" data-anchor-id="normal-from-uniform"><span class="header-section-number">9.1.1.2</span> Normal from uniform</h4>
-<p>Let’s repeat for 10,000 times the experiment of summing up 1,000 uniform random variables.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># make an object to store the number of simulations </span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># we'll run</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>nsim <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># make a vector to hold to summations</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>rsum <span class="ot">&lt;-</span> <span class="fu">numeric</span>(nsim)</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co"># run the simulation</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>nsim) {</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    rsum[i] <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">runif</span>(<span class="dv">1000</span>, <span class="dv">0</span>, <span class="dv">1</span>))</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>And now let’s visualize the output to see if it looks normal.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># make a data.frame out of the simulation results</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>sim_dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> rsum)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(sim_dat, <span class="fu">aes</span>(x)) <span class="sc">+</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>`stat_bin()` using `bins = 30`. Pick better value `binwidth`.</code></pre>
-</div>
-<div class="cell-output-display">
-<div id="fig-unif-sim" class="quarto-float quarto-figure quarto-figure-center anchored" width="672">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-unif-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="prob-sim-data_files/figure-html/fig-unif-sim-1.png" id="fig-unif-sim" class="img-fluid figure-img" width="672">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-unif-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;9.2
-</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p>Pretty cool!</p>
-</section>
-<section id="normal-from-sample" class="level4" data-number="9.1.1.3">
-<h4 data-number="9.1.1.3" class="anchored" data-anchor-id="normal-from-sample"><span class="header-section-number">9.1.1.3</span> Normal from <code>sample</code></h4>
-<p>Now you give it a try! But instead of <code>runif</code> let’s be even crazier and use the <code>sample</code> function. The function <code>sample</code> is a useful one to know: it can produce a random sample from just about any vector-like thing we give it. Let’s sample 20 numbers between 1 and 10, sum those, and see what their distribution is.</p>
-<p>First check out how <code>sample</code> works:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="at">size =</span> <span class="dv">20</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> [1]  2  2  5  4  9  2  9  7  3  8  7  9  9  8 10 10  8  8  7  5</code></pre>
-</div>
-</div>
-<p>The <code>replace = TRUE</code> bit is important: that tells R to allow itself to re-sample the same number rather than draw 20 different numbers between 1 and 10 (which is impossible).</p>
-<p>Now modify the for loop and <code>ggplot</code> code to see if the Central Limit Theorem applies here.</p>
-</section>
-</section>
-<section id="simulating-diameter-at-breast-height-across-different-environments-and-life-histories" class="level3" data-number="9.1.2">
-<h3 data-number="9.1.2" class="anchored" data-anchor-id="simulating-diameter-at-breast-height-across-different-environments-and-life-histories"><span class="header-section-number">9.1.2</span> Simulating diameter at breast height across different environments and life histories</h3>
-<p>Diameter at breast height (DBH) might be a biological variable that results from many additive processes, and thus potentially be normally distributed. But it rarely if ever is. <em>However</em>, <span class="math inline">\(\log(\text{DBH})\)</span> is quite often approximately normal, so what’s going on. Remember this rule about logarithms: <span class="math inline">\(\log(a \times b \times c) = \log(a) + \log(b) + \log(c)\)</span>. So if DBH results from many <em>multiplicative</em> processes, then log-transformed DBH might indeed have reason to be normally-distributed. Let’s assume that’s the case, at least for simulation purposes.</p>
-<p>Suppose we want to simulate some data we’ve (hypothetically) sampled of DBH across an environmental gradient like rainfall, and suppose DBH positively responds to rainfall. Let’s simulate these data. Here’s what you need to know:</p>
-<p>For simplicity, assume annual rainfall can be simulated as random numbers drawn from a uniform distribution with <code>min = 1</code> and <code>max = 50</code>. Then, let’s assume the relationship between <em>average</em> log(DBH) and rainfall looks like this:</p>
-<p><span class="math display">\[
-\text{mean}\left(\log(\text{DBH}_{native}) \right) = 10 + 3 \times \text{(annual rainfall)}
-\]</span></p>
-<p>But let’s make it a little more interesting too. Let’s suppose the above equation is the relationship for native taxa. For non-native taxa let’s assume the relationship is</p>
-<p><span class="math display">\[
-\text{mean}\left(\log(\text{DBH}_{non-native}) \right) = 6 + 5 \times \text{(annual rainfall)}
-\]</span></p>
-<p>One last thing we’ll need to assume: let’s say the standard deviation of log(DBH) for all taxa is constant across rainfall and equal to 2.</p>
-<p>Now simulate data for 40 native trees and 40 non-native trees, put it all in one <code>data.frame</code> and visualize it with <code>ggplot</code>.</p>
-</section>
-</section>
-<section id="simulating-binomial-data-presence-and-absence-across-an-environmental-gradient" class="level2" data-number="9.2">
-<h2 data-number="9.2" class="anchored" data-anchor-id="simulating-binomial-data-presence-and-absence-across-an-environmental-gradient"><span class="header-section-number">9.2</span> Simulating binomial data: presence and absence across an environmental gradient</h2>
-<p>From the <a href="./prob-dist.html">last lab</a> we know how to draw random numbers from a binomial distribution with <code>rbinom</code>. For the case of presence-absence data we need to set the <code>size</code> parameter of <code>rbinom</code> to 1. That will give us a random sample of <code>0</code>’s and <code>1</code>’s (absences and presences). But what about the <code>prop</code> parameter? We interpret it as probability of presence and we’re interested in how it changes, in this case, across an environmental gradient like, say, elevation.</p>
-<p>In the case of simulating presence and absence across an environmental gradient like elevation we need to somehow <em>scale</em> that gradient into a number bound between 0 and 1 while also reflecting how the probability of presence changes across the gradient. Most often that is the job of the expit function:</p>
-<p><span class="math display">\[
-expit(z) = \frac{1}{1 + e^{-z}}
-\]</span></p>
-<p>The output of this function will always be greater than 0 but less than 1. People also often think in terms of the inverse of this function: the logit. The logit scales a number, like a probability, bound between 0 and 1 into a number that has no bounds <span class="math inline">\((-\infty, \infty)\)</span>. The logit let’s us write a clean equation of how probability of presence changes acorss a gradient like elevation, for example</p>
-<p><span class="math display">\[
-logit(p) = -2 + 0.001 \times (\text{elevation})
-\]</span></p>
-<p>But for <code>rbinom</code> we don’t need <span class="math inline">\(logit(p)\)</span>, we need <span class="math inline">\(p\)</span>. We can get <span class="math inline">\(p\)</span> by going back to the expit function (which solves the above equation).</p>
-<p><span class="math display">\[
-p = \frac{1}{1 + e^{-(-2 + 0.001 \times (\text{elevation}))}}
-\]</span></p>
-<p>Let’s use that equation for our simulation purposes. But we need elevation: we can assume elevation comes from a uniform distribution with <code>min = 0</code> and <code>max = 5000</code>.</p>
-<p>Now simulate 50 presence/absence data points across elevation and visualize them with <code>ggplot</code>. Note: we don’t need to specify standard deviation or variance. Why?</p>
+<p>We will use our knowledge of R and probability to build intuition about what likelihood is and how it is used to make inference via the method of Maximum Likelihood Estimation.</p>
+<p>Jump straight to:</p>
+<ul>
+<li>Introducing likelihood, <a href="likelihood-intro-slides.html" target="_blank">slides</a></li>
+<li><a href="./prob-dist.html">Working with binomial likelihoods</a></li>
+<li><a href="./prob-sim-data.html">Working with normal likelihoods</a></li>
+</ul>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -898,13 +665,13 @@ p = \frac{1}{1 + e^{-(-2 + 0.001 \times (\text{elevation}))}}
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./prob-dist.html" class="pagination-link" aria-label="Probability distributions in R">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Probability distributions in R</span></span>
+      <a href="./prob-sim-data.html" class="pagination-link" aria-label="Simulating probabilistic data">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Simulating probabilistic data</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./likelihood-intro.html" class="pagination-link" aria-label="Introducing the method of maximum likelihood">
-        <span class="nav-page-text">Introducing the method of maximum likelihood</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./likelihood-lec.html" class="pagination-link" aria-label="Introducing likelihood">
+        <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Introducing likelihood</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

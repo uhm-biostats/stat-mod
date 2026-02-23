@@ -212,8 +212,8 @@
 </div><div class="column">
 <p>And out of 8 visits we find them 2 times</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="" aria-hidden="true" tabindex="-1"></a>kahuli <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>)</span>
-<span id="cb1-2"><a href="" aria-hidden="true" tabindex="-1"></a>kahuli</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a>kahuli <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>)</span>
+<span id="cb1-2"><a href=""></a>kahuli</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0 0 1 0 1 0 0 0</code></pre>
 </div>
@@ -225,15 +225,15 @@
 <h2>Figuring out probability of success from data</h2>
 <p>This is a binomial situation with 8 trials, but what is <span class="math inline">\(p\)</span>?</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="" aria-hidden="true" tabindex="-1"></a>kahuli</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a>kahuli</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0 0 1 0 1 0 0 0</code></pre>
 </div>
 </div>
 <p>Let’s ask ourselves: what’s the probability of these data given different values of <span class="math inline">\(p\)</span>? For example, <span class="math inline">\(\mathbb{P}(n = 2 \mid N = 8, p = 0.9)\)</span>:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fl">0.9</span></span>
-<span id="cb5-2"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">dbinom</span>(<span class="dv">2</span>, <span class="at">size =</span> <span class="dv">8</span>, <span class="at">prob =</span> p)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href=""></a>p <span class="ot">&lt;-</span> <span class="fl">0.9</span></span>
+<span id="cb5-2"><a href=""></a><span class="fu">dbinom</span>(<span class="dv">2</span>, <span class="at">size =</span> <span class="dv">8</span>, <span class="at">prob =</span> p)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 2.268e-05</code></pre>
 </div>
@@ -243,7 +243,7 @@
 <h2>Figuring out probability of success from data</h2>
 <p>This is a binomial situation with 8 trials, but what is <span class="math inline">\(p\)</span>?</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="" aria-hidden="true" tabindex="-1"></a>kahuli</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href=""></a>kahuli</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0 0 1 0 1 0 0 0</code></pre>
 </div>
@@ -254,10 +254,10 @@
 <h2>Figuring out probability of success from data</h2>
 <p>Find the value of <span class="math inline">\(p\)</span> for which <span class="math inline">\(\mathbb{P}(n = 2 \mid N = 8, p)\)</span> is <em>highest</em>, that is a good guess for the value of <span class="math inline">\(p\)</span></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="" aria-hidden="true" tabindex="-1"></a>pp <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.05</span>)</span>
-<span id="cb9-2"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="" aria-hidden="true" tabindex="-1"></a>l <span class="ot">&lt;-</span> <span class="fu">dbinom</span>(<span class="dv">2</span>, <span class="at">size =</span> <span class="dv">8</span>, <span class="at">prob =</span> pp)</span>
-<span id="cb9-4"><a href="" aria-hidden="true" tabindex="-1"></a>l</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href=""></a>pp <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.05</span>)</span>
+<span id="cb9-2"><a href=""></a></span>
+<span id="cb9-3"><a href=""></a>l <span class="ot">&lt;-</span> <span class="fu">dbinom</span>(<span class="dv">2</span>, <span class="at">size =</span> <span class="dv">8</span>, <span class="at">prob =</span> pp)</span>
+<span id="cb9-4"><a href=""></a>l</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] 0.000000e+00 5.145643e-02 1.488035e-01 2.376042e-01 2.936013e-01
  [6] 3.114624e-01 2.964755e-01 2.586868e-01 2.090189e-01 1.569492e-01
@@ -348,12 +348,12 @@ p &amp;= \frac{1}{1 + e^{-(-2 + 0.001 \times (\text{elevation}))}}
 \end{aligned}
 \]</span></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb11-2"><a href="" aria-hidden="true" tabindex="-1"></a>nobs <span class="ot">&lt;-</span> <span class="dv">50</span></span>
-<span id="cb11-3"><a href="" aria-hidden="true" tabindex="-1"></a>elev <span class="ot">&lt;-</span> <span class="fu">runif</span>(nobs, <span class="dv">0</span>, <span class="dv">5000</span>)</span>
-<span id="cb11-4"><a href="" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(<span class="sc">-</span>(<span class="sc">-</span><span class="dv">2</span> <span class="sc">+</span> <span class="fl">0.001</span> <span class="sc">*</span> elev)))</span>
-<span id="cb11-5"><a href="" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(nobs, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">prob =</span> p)</span>
-<span id="cb11-6"><a href="" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(elev, y)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href=""></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb11-2"><a href=""></a>nobs <span class="ot">&lt;-</span> <span class="dv">50</span></span>
+<span id="cb11-3"><a href=""></a>elev <span class="ot">&lt;-</span> <span class="fu">runif</span>(nobs, <span class="dv">0</span>, <span class="dv">5000</span>)</span>
+<span id="cb11-4"><a href=""></a>p <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(<span class="sc">-</span>(<span class="sc">-</span><span class="dv">2</span> <span class="sc">+</span> <span class="fl">0.001</span> <span class="sc">*</span> elev)))</span>
+<span id="cb11-5"><a href=""></a>y <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(nobs, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">prob =</span> p)</span>
+<span id="cb11-6"><a href=""></a>dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(elev, y)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="maximum-likelihood-estimation-mle-presenceabsence-1" class="slide level2">
@@ -400,11 +400,11 @@ p &amp;= \frac{1}{1 + e^{-(-2 + 0.001 \times (\text{elevation}))}}
 \mathbb{P}(y \mid N = 1, ~p = f(x)) = \prod_{i = 1}^n \mathbb{P}(y_i \mid N = 1, ~p_i = f(x_i))
 \]</span></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="" aria-hidden="true" tabindex="-1"></a>try_a0 <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">1</span> <span class="co"># close-ish to the truth</span></span>
-<span id="cb12-2"><a href="" aria-hidden="true" tabindex="-1"></a>try_a1 <span class="ot">&lt;-</span> <span class="fl">0.005</span></span>
-<span id="cb12-3"><a href="" aria-hidden="true" tabindex="-1"></a>l <span class="ot">&lt;-</span> <span class="fu">dbinom</span>(y, <span class="at">size =</span> <span class="dv">1</span>, </span>
-<span id="cb12-4"><a href="" aria-hidden="true" tabindex="-1"></a>            <span class="at">prob =</span> <span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(<span class="sc">-</span>(try_a0 <span class="sc">+</span> try_a1 <span class="sc">*</span> elev)))) <span class="sc">|&gt;</span> </span>
-<span id="cb12-5"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">prod</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href=""></a>try_a0 <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">1</span> <span class="co"># close-ish to the truth</span></span>
+<span id="cb12-2"><a href=""></a>try_a1 <span class="ot">&lt;-</span> <span class="fl">0.005</span></span>
+<span id="cb12-3"><a href=""></a>l <span class="ot">&lt;-</span> <span class="fu">dbinom</span>(y, <span class="at">size =</span> <span class="dv">1</span>, </span>
+<span id="cb12-4"><a href=""></a>            <span class="at">prob =</span> <span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(<span class="sc">-</span>(try_a0 <span class="sc">+</span> try_a1 <span class="sc">*</span> elev)))) <span class="sc">|&gt;</span> </span>
+<span id="cb12-5"><a href=""></a>    <span class="fu">prod</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="maximum-likelihood-estimation-mle-presenceabsence-5" class="slide level2">
@@ -415,7 +415,7 @@ p &amp;= \frac{1}{1 + e^{-(-2 + 0.001 \times (\text{elevation}))}}
 <p>Sweet! What is the value of the likelihood function?</p>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="" aria-hidden="true" tabindex="-1"></a>l</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href=""></a>l</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1.986698e-38</code></pre>
 </div>
@@ -486,16 +486,16 @@ p &amp;= \frac{1}{1 + e^{-(-2 + 0.001 \times (\text{elevation}))}}
 <h2>Maximum likelihood estimation (MLE): presence/absence</h2>
 <p>Now we return to find the values of <span class="math inline">\(\hat{a_0}\)</span> and <span class="math inline">\(\hat{a_1}\)</span></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="" aria-hidden="true" tabindex="-1"></a>try_a0 <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">1</span> <span class="co"># close-ish to the truth</span></span>
-<span id="cb15-2"><a href="" aria-hidden="true" tabindex="-1"></a>try_a1 <span class="ot">&lt;-</span> <span class="fl">0.005</span></span>
-<span id="cb15-3"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-4"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># log likelihood now</span></span>
-<span id="cb15-5"><a href="" aria-hidden="true" tabindex="-1"></a>ll <span class="ot">&lt;-</span> <span class="fu">dbinom</span>(y, <span class="at">size =</span> <span class="dv">1</span>, </span>
-<span id="cb15-6"><a href="" aria-hidden="true" tabindex="-1"></a>            <span class="at">prob =</span> <span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(<span class="sc">-</span>(try_a0 <span class="sc">+</span> try_a1 <span class="sc">*</span> elev))), </span>
-<span id="cb15-7"><a href="" aria-hidden="true" tabindex="-1"></a>            <span class="at">log =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb15-8"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>()</span>
-<span id="cb15-9"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-10"><a href="" aria-hidden="true" tabindex="-1"></a>ll</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href=""></a>try_a0 <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">1</span> <span class="co"># close-ish to the truth</span></span>
+<span id="cb15-2"><a href=""></a>try_a1 <span class="ot">&lt;-</span> <span class="fl">0.005</span></span>
+<span id="cb15-3"><a href=""></a></span>
+<span id="cb15-4"><a href=""></a><span class="co"># log likelihood now</span></span>
+<span id="cb15-5"><a href=""></a>ll <span class="ot">&lt;-</span> <span class="fu">dbinom</span>(y, <span class="at">size =</span> <span class="dv">1</span>, </span>
+<span id="cb15-6"><a href=""></a>            <span class="at">prob =</span> <span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(<span class="sc">-</span>(try_a0 <span class="sc">+</span> try_a1 <span class="sc">*</span> elev))), </span>
+<span id="cb15-7"><a href=""></a>            <span class="at">log =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb15-8"><a href=""></a>    <span class="fu">sum</span>()</span>
+<span id="cb15-9"><a href=""></a></span>
+<span id="cb15-10"><a href=""></a>ll</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] -86.81176</code></pre>
 </div>
@@ -550,17 +550,17 @@ p &amp;= \frac{1}{1 + e^{-(-2 + 0.001 \times (\text{elevation}))}}
 <div class="columns">
 <div class="column">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># find the maximum </span></span>
-<span id="cb17-2"><a href="" aria-hidden="true" tabindex="-1"></a>llmax <span class="ot">&lt;-</span> <span class="fu">optim</span>(</span>
-<span id="cb17-3"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="co"># initial values</span></span>
-<span id="cb17-4"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="at">par =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="fl">0.005</span>), </span>
-<span id="cb17-5"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="co"># log likelihood fun</span></span>
-<span id="cb17-6"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="at">fn =</span> llfun,</span>
-<span id="cb17-7"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="co"># data</span></span>
-<span id="cb17-8"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> y, <span class="at">elev =</span> elev, </span>
-<span id="cb17-9"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="co"># `fnscale` = -1 means maximize</span></span>
-<span id="cb17-10"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="at">control =</span> <span class="fu">list</span>(<span class="at">fnscale =</span> <span class="sc">-</span><span class="dv">1</span>)</span>
-<span id="cb17-11"><a href="" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href=""></a><span class="co"># find the maximum </span></span>
+<span id="cb17-2"><a href=""></a>llmax <span class="ot">&lt;-</span> <span class="fu">optim</span>(</span>
+<span id="cb17-3"><a href=""></a>    <span class="co"># initial values</span></span>
+<span id="cb17-4"><a href=""></a>    <span class="at">par =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="fl">0.005</span>), </span>
+<span id="cb17-5"><a href=""></a>    <span class="co"># log likelihood fun</span></span>
+<span id="cb17-6"><a href=""></a>    <span class="at">fn =</span> llfun,</span>
+<span id="cb17-7"><a href=""></a>    <span class="co"># data</span></span>
+<span id="cb17-8"><a href=""></a>    <span class="at">y =</span> y, <span class="at">elev =</span> elev, </span>
+<span id="cb17-9"><a href=""></a>    <span class="co"># `fnscale` = -1 means maximize</span></span>
+<span id="cb17-10"><a href=""></a>    <span class="at">control =</span> <span class="fu">list</span>(<span class="at">fnscale =</span> <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb17-11"><a href=""></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Where do we get the <code>llfun</code> function?</p>
 </div><div class="column">
@@ -580,18 +580,18 @@ p &amp;= \frac{1}{1 + e^{-(-2 + 0.001 \times (\text{elevation}))}}
 <h2>Maximizing the likelihood function</h2>
 <p>Where do we get the <code>llfun</code> function? <br> We have to make it</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="" aria-hidden="true" tabindex="-1"></a>llfun <span class="ot">&lt;-</span> <span class="cf">function</span>(a, y, elev) {</span>
-<span id="cb18-2"><a href="" aria-hidden="true" tabindex="-1"></a>    <span class="fu">dbinom</span>(<span class="at">x =</span> y, <span class="at">size =</span> <span class="dv">1</span>, </span>
-<span id="cb18-3"><a href="" aria-hidden="true" tabindex="-1"></a>           <span class="at">prob =</span> <span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(<span class="sc">-</span>(a[<span class="dv">1</span>] <span class="sc">+</span> a[<span class="dv">2</span>] <span class="sc">*</span> elev))), </span>
-<span id="cb18-4"><a href="" aria-hidden="true" tabindex="-1"></a>           <span class="at">log =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb18-5"><a href="" aria-hidden="true" tabindex="-1"></a>        <span class="fu">sum</span>()</span>
-<span id="cb18-6"><a href="" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb18-7"><a href="" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-8"><a href="" aria-hidden="true" tabindex="-1"></a><span class="co"># find the maximum </span></span>
-<span id="cb18-9"><a href="" aria-hidden="true" tabindex="-1"></a>llmax <span class="ot">&lt;-</span> <span class="fu">optim</span>(<span class="at">par =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="fl">0.005</span>), </span>
-<span id="cb18-10"><a href="" aria-hidden="true" tabindex="-1"></a>               <span class="at">fn =</span> llfun,</span>
-<span id="cb18-11"><a href="" aria-hidden="true" tabindex="-1"></a>               <span class="at">y =</span> y, <span class="at">elev =</span> elev, </span>
-<span id="cb18-12"><a href="" aria-hidden="true" tabindex="-1"></a>               <span class="at">control =</span> <span class="fu">list</span>(<span class="at">fnscale =</span> <span class="sc">-</span><span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href=""></a>llfun <span class="ot">&lt;-</span> <span class="cf">function</span>(a, y, elev) {</span>
+<span id="cb18-2"><a href=""></a>    <span class="fu">dbinom</span>(<span class="at">x =</span> y, <span class="at">size =</span> <span class="dv">1</span>, </span>
+<span id="cb18-3"><a href=""></a>           <span class="at">prob =</span> <span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(<span class="sc">-</span>(a[<span class="dv">1</span>] <span class="sc">+</span> a[<span class="dv">2</span>] <span class="sc">*</span> elev))), </span>
+<span id="cb18-4"><a href=""></a>           <span class="at">log =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb18-5"><a href=""></a>        <span class="fu">sum</span>()</span>
+<span id="cb18-6"><a href=""></a>}</span>
+<span id="cb18-7"><a href=""></a></span>
+<span id="cb18-8"><a href=""></a><span class="co"># find the maximum </span></span>
+<span id="cb18-9"><a href=""></a>llmax <span class="ot">&lt;-</span> <span class="fu">optim</span>(<span class="at">par =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="fl">0.005</span>), </span>
+<span id="cb18-10"><a href=""></a>               <span class="at">fn =</span> llfun,</span>
+<span id="cb18-11"><a href=""></a>               <span class="at">y =</span> y, <span class="at">elev =</span> elev, </span>
+<span id="cb18-12"><a href=""></a>               <span class="at">control =</span> <span class="fu">list</span>(<span class="at">fnscale =</span> <span class="sc">-</span><span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="maximizing-the-likelihood-function-2" class="slide level2">
@@ -600,7 +600,7 @@ p &amp;= \frac{1}{1 + e^{-(-2 + 0.001 \times (\text{elevation}))}}
 <div class="columns">
 <div class="column">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="" aria-hidden="true" tabindex="-1"></a>llmax</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href=""></a>llmax</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$par
 [1] -2.471963670  0.001518592
