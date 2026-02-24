@@ -1,5 +1,13 @@
 ---
 title: "Introducing likelihood"
+
+format:
+  revealjs:
+    slide-number: true
+    preview-links: auto
+    auto-stretch: false
+    embed-resources: false
+    controls: true
 ---
 
 ```{r}
@@ -729,5 +737,70 @@ Turns out this is solvable only in some cases like when data come from a normal 
 - The estimate we get from maximizing the (log) likelihood function has good statistical properties
     - *consistent:* will converge on correct answer as sample size $\rightarrow \infty$
     - *least variance:* of consistent estimators it has the smallest variance
+
+
+<!-- save for next time -->
+
+<!-- ## Moʻokūʻauhau of likelihood -->
+
+<!-- ::: {.columns} -->
+
+<!-- :::: {.column width=30%} -->
+
+<!-- ![](img/intro-like/fisher.jpeg) -->
+<!-- :::: -->
+
+<!-- :::: {.column width=30%} -->
+
+<!-- Ronald Fisher -->
+
+<!-- ::: {.incremental} -->
+
+<!-- - proposed likelihood methods starting in 1912 -->
+<!-- - racist -->
+<!-- - eugenicist -->
+<!-- - pawn of big tobacco -->
+
+<!-- ::: -->
+
+<!-- :::: -->
+
+<!-- ## Moʻokūʻauhau of likelihood -->
+
+<!-- ::: {.columns} -->
+
+<!-- :::: {.column width=30%} -->
+
+<!-- ![](img/intro-like/fisher.jpeg) -->
+
+<!-- Ronald Fisher -->
+
+
+
+<!-- - proposed likelihood methods starting in 1912 -->
+<!-- - racist -->
+<!-- - eugenicist -->
+<!-- - pawn of big tobacco -->
+
+
+
+<!-- :::: -->
+
+<!-- :::: {.column width=70%} -->
+
+<!-- > "Available scientific knowledge provides a firm basis for believing that the groups of mankind differ in their innate capacity for intellectual and emotional development" -->
+
+
+<!-- *"I am sorry that there should be propaganda in favour of miscegenation* [bigoted term for marriage between perceived racial groups] *in North America as I am sure it can do nothing but harm"* -->
+<!-- \vspace{1em} -->
+
+<!-- *"Unfortunately, considerable propaganda is now being developed to convince the public that cigarette smoking is dangerous"* [Fisher was funded by the tobacco industry] -->
+
+<!-- :::: -->
+
+
+
+<!-- ::: -->
+
 
 
