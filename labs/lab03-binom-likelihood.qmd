@@ -33,7 +33,7 @@ tree <- read.csv("https://raw.githubusercontent.com/uhm-biostats/stat-mod/refs/h
 
 We will use the plot as the unit of replication and we will make the assumption that plots are *independent* (one of the requirements of the maximum likelihood estimation technique we will use). With that in mind the tasks are:
 
-*Delete this list once complete, or perhaps make some bullets a subheader, up to you!*
+*You can delete this list once complete, or perhaps make some bullets a subheader, up to you!*
 
 - use a split-apply-combine approach (think `group_by` and `summarize` from *dplyr*) to calculate number of plots with *any* (hint, hint `any`) non-native trees as well as total number of plots
 - figure out the likelihood function and put it into an R function
@@ -115,6 +115,6 @@ Try out the suggestion of using the `"Brent"` method. To figure out how, have a 
 
 We also know we can calculate probability by divided number of "successes" by total number of trials. Let's confirm that the probability calculated as proportion of "successes" and the probability of "success" are the same if not very very close (within "machine precision").
 
-*Delete this prompt once complete*
+*You can delete this prompt once complete*
 
 First, what is the number of "successes"? I've been putting success in quotes because in our case it is whether a plot has at least one non-native tree. What is the total number of trials? With that you can calculate the proportion and compare to the output of `optim`.
