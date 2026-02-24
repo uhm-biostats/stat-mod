@@ -1,0 +1,120 @@
+---
+title: "Estimating probability of occurrence"
+format: 
+    pdf: 
+        include-in-header:
+            text: |
+                \usepackage{newunicodechar}
+                \newunicodechar{ʻ}{`} 
+author: 
+    - your name here
+---
+
+```{r}
+#| label: setup
+
+# load all necessary packages
+# ... you may need to add to this! can delete this comment once done
+library(ggplot2)
+library(dplyr)
+
+```
+
+## Probability of occurrence of non-native taxa
+
+We will use the data in the *OpenNahele* data set to estimate the probability of encountering a non-native tree in a forest plot. First we read in the data from github:
+
+```{r}
+#| label: readin-data
+#| eval: false
+
+tree <- read.csv("https://raw.githubusercontent.com/uhm-biostats/stat-mod/refs/heads/main/data/OpenNahele_Tree_Data.csv")
+```
+
+We will use the plot as the unit of replication and we will make the assumption that plots are *independent* (one of the requirements of the maximum likelihood estimation technique we will use). With that in mind the tasks are:
+
+*Delete this list once complete, or perhaps make some bullets a subheader, up to you!*
+
+- use a split-apply-combine approach (think `group_by` and `summarize` from *dplyr*) to calculate number of plots with *any* (hint, hint `any`) non-native trees as well as total number of plots
+- figure out the likelihood function and put it into an R function
+- make a plot of the likelihood funciton across the relevant range of parameters
+- use `optim` to find the maximum likelihood estimates
+
+
+## Writing custom functions
+
+Recall that functions contain code that we want to use repeatedly without having to copy-paste the code over and over. Let's build a log likelihood function together.
+
+Start with just some code to calculate the log of one conditional probability $\mathbb{P}(x = 10 \mid N = 100, p = 0.2)$ for the random variable $n$ which has a binomial distribution:
+
+```{r}
+#| label: one-ll
+
+dbinom(x = 2, size = 100, prob = 0.2, log = TRUE)
+```
+
+Now write code for the log of the conditional probability $\mathbb{P}(x = 1 \mid N = 20, p = 0.1)$
+
+```{r}
+#| label: another-ll
+
+dbinom(x = 1, size = 20, prob = 0.1, log = TRUE)
+```
+
+Which arguments changed? `x`, `size`, and `prob`.  Those are the ones we want to allow to vary when we write our own function. One more step to getting us there: pull out those values we want to pass to variable arguments and let them be their own objects
+
+```{r}
+#| label: values-to-objects
+
+value_for_x <- 1
+value_for_N <- 20
+value_for_p <- 0.1
+
+dbinom(x = value_for_x, size = value_for_N, prob = value_for_p, log = TRUE)
+```
+
+Same same!  But here's the transition to a function: rather than create those objects to hold values of variable arguments, we declare those would-be-objects as arguments in our own custom function
+
+```{r}
+#| label: ll-binom
+
+# notice I'm putting `p` first on purpose
+ll_binom <- function(p, x, N) {
+    dbinom(x = x, size = N, prob = p, log = TRUE)
+}
+
+# try it out:
+ll_binom(p = 0.1, x = 1, N = 20)
+ll_binom(p = 0.2, x = 2, N = 100)
+
+```
+
+Often functions contain many more lines of code, but this function was still necessary to make because we ultimately want to optimize with the `optim` function that requires the parameter we're optimizing over to be the first parameter.
+
+A note about this log likelihood function: we don't need to sum up multiple log probabilities because the entire likelihood to captured by the binomial probability mass function. This is unique to the situation where our data are a collection of 0's and 1's as the response variable and we have no explanatory variables. 
+
+When writing your own likelihood function you might choose to not include as many arguments, specifically ask yourself if, in your case, the `size` and `prob` arguments to `dbinom` need to be allowed to vary, or can they be fixed?
+
+## Optimizing the likelihood
+
+
+*Delete this prompt once complete*
+
+When you use `optim` you will get a warning message: 
+
+```
+Warning message:
+In optim(0.1, ll_binom, x = 1, N = 12, control = list(fnscale = -1)) :
+  one-dimensional optimization by Nelder-Mead is unreliable:
+use "Brent" or optimize() directly
+```
+
+Try out the suggestion of using the `"Brent"` method. To figure out how, have a look at the `optim` help documentation and pay close attention to the `method`, `lower`, and `upper` arguments.
+
+## Comparing the maximum likelihood estimate to the proportion of "successes"
+
+We also know we can calculate probability by divided number of "successes" by total number of trials. Let's confirm that the probability calculated as proportion of "successes" and the probability of "success" are the same if not very very close (within "machine precision").
+
+*Delete this prompt once complete*
+
+First, what is the number of "successes"? I've been putting success in quotes because in our case it is whether a plot has at least one non-native tree. What is the total number of trials? With that you can calculate the proportion and compare to the output of `optim`.

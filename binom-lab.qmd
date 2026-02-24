@@ -1,2 +1,44 @@
 # Estimating probability of occurrence 
 
+This lab will introduce you to creating a log likelihood function and finding its maximum. You can download the template `.qmd` file for this lab here:
+
+{{< downloadthis labs/lab03-binom-likelihood.qmd dname=lab03-binom-likelihood label="Download lab template">}}
+
+The template will prompt you to work through the following sections.
+
+```{r}
+#| include: false
+
+library(ggplot2)
+
+# the lab qmd file
+f <- "labs/lab03-binom-likelihood.qmd"
+l <- readLines(f)
+
+# the yaml
+iyaml <- grep("---|```", l) |> 
+    (\(x) x[1]:x[4])()
+
+# only the body
+b <- l[-iyaml] |> 
+    gsub("\\*Delete this .* once complete\\*", "", x = _)
+
+# write only the body for use with `{{< include %s >}}`
+# fb <- gsub("\\.qmd", "_bonly.qmd", f)
+fb <- tempfile(fileext = ".qmd")
+
+writeLines(b, fb)
+
+m <- knitr::knit_child(fb, options = list(include = TRUE), 
+                       quiet = TRUE)
+```
+
+```{r}
+#| echo: false
+#| results: asis
+
+cat(m, sep = "\n")
+```
+
+
+
