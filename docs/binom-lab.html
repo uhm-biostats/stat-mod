@@ -20,6 +20,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -43,6 +78,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-27c261d06b905028a18691de25d09dde.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/quarto-contrib/downloadthis-1.9.1/downloadthis.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -71,6 +107,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -227,8 +292,17 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#probability-of-occurrence-of-non-native-taxa" id="toc-probability-of-occurrence-of-non-native-taxa" class="nav-link active" data-scroll-target="#probability-of-occurrence-of-non-native-taxa"><span class="header-section-number">11.1</span> Probability of occurrence of non-native taxa</a></li>
+  <li><a href="#writing-custom-functions" id="toc-writing-custom-functions" class="nav-link" data-scroll-target="#writing-custom-functions"><span class="header-section-number">11.2</span> Writing custom functions</a></li>
+  <li><a href="#optimizing-the-likelihood" id="toc-optimizing-the-likelihood" class="nav-link" data-scroll-target="#optimizing-the-likelihood"><span class="header-section-number">11.3</span> Optimizing the likelihood</a></li>
+  <li><a href="#comparing-the-maximum-likelihood-estimate-to-the-proportion-of-successes" id="toc-comparing-the-maximum-likelihood-estimate-to-the-proportion-of-successes" class="nav-link" data-scroll-target="#comparing-the-maximum-likelihood-estimate-to-the-proportion-of-successes"><span class="header-section-number">11.4</span> Comparing the maximum likelihood estimate to the proportion of “successes”</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -252,8 +326,97 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<p>This lab will introduce you to creating a log likelihood function and finding its maximum. You can download the template <code>.qmd</code> file for this lab here:</p>
+<p><a href="#dnldts33090" onclick="fetch('data:text/plain;base64,LS0tCnRpdGxlOiAiRXN0aW1hdGluZyBwcm9iYWJpbGl0eSBvZiBvY2N1cnJlbmNlIgpmb3JtYXQ6IAogICAgcGRmOiAKICAgICAgICBpbmNsdWRlLWluLWhlYWRlcjoKICAgICAgICAgICAgdGV4dDogfAogICAgICAgICAgICAgICAgXHVzZXBhY2thZ2V7bmV3dW5pY29kZWNoYXJ9CiAgICAgICAgICAgICAgICBcbmV3dW5pY29kZWNoYXJ7yrt9e2B9IAphdXRob3I6IAogICAgLSB5b3VyIG5hbWUgaGVyZQotLS0KCmBgYHtyfQojfCBsYWJlbDogc2V0dXAKCiMgbG9hZCBhbGwgbmVjZXNzYXJ5IHBhY2thZ2VzCiMgLi4uIHlvdSBtYXkgbmVlZCB0byBhZGQgdG8gdGhpcyEgY2FuIGRlbGV0ZSB0aGlzIGNvbW1lbnQgb25jZSBkb25lCmxpYnJhcnkoZ2dwbG90MikKbGlicmFyeShkcGx5cikKCmBgYAoKIyMgUHJvYmFiaWxpdHkgb2Ygb2NjdXJyZW5jZSBvZiBub24tbmF0aXZlIHRheGEKCldlIHdpbGwgdXNlIHRoZSBkYXRhIGluIHRoZSAqT3Blbk5haGVsZSogZGF0YSBzZXQgdG8gZXN0aW1hdGUgdGhlIHByb2JhYmlsaXR5IG9mIGVuY291bnRlcmluZyBhIG5vbi1uYXRpdmUgdHJlZSBpbiBhIGZvcmVzdCBwbG90LiBGaXJzdCB3ZSByZWFkIGluIHRoZSBkYXRhIGZyb20gZ2l0aHViOgoKYGBge3J9CiN8IGxhYmVsOiByZWFkaW4tZGF0YQojfCBldmFsOiBmYWxzZQoKdHJlZSA8LSByZWFkLmNzdigiaHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL3VobS1iaW9zdGF0cy9zdGF0LW1vZC9yZWZzL2hlYWRzL21haW4vZGF0YS9PcGVuTmFoZWxlX1RyZWVfRGF0YS5jc3YiKQpgYGAKCldlIHdpbGwgdXNlIHRoZSBwbG90IGFzIHRoZSB1bml0IG9mIHJlcGxpY2F0aW9uIGFuZCB3ZSB3aWxsIG1ha2UgdGhlIGFzc3VtcHRpb24gdGhhdCBwbG90cyBhcmUgKmluZGVwZW5kZW50KiAob25lIG9mIHRoZSByZXF1aXJlbWVudHMgb2YgdGhlIG1heGltdW0gbGlrZWxpaG9vZCBlc3RpbWF0aW9uIHRlY2huaXF1ZSB3ZSB3aWxsIHVzZSkuIFdpdGggdGhhdCBpbiBtaW5kIHRoZSB0YXNrcyBhcmU6CgoqRGVsZXRlIHRoaXMgbGlzdCBvbmNlIGNvbXBsZXRlLCBvciBwZXJoYXBzIG1ha2Ugc29tZSBidWxsZXRzIGEgc3ViaGVhZGVyLCB1cCB0byB5b3UhKgoKLSB1c2UgYSBzcGxpdC1hcHBseS1jb21iaW5lIGFwcHJvYWNoICh0aGluayBgZ3JvdXBfYnlgIGFuZCBgc3VtbWFyaXplYCBmcm9tICpkcGx5ciopIHRvIGNhbGN1bGF0ZSBudW1iZXIgb2YgcGxvdHMgd2l0aCAqYW55KiAoaGludCwgaGludCBgYW55YCkgbm9uLW5hdGl2ZSB0cmVlcyBhcyB3ZWxsIGFzIHRvdGFsIG51bWJlciBvZiBwbG90cwotIGZpZ3VyZSBvdXQgdGhlIGxpa2VsaWhvb2QgZnVuY3Rpb24gYW5kIHB1dCBpdCBpbnRvIGFuIFIgZnVuY3Rpb24KLSBtYWtlIGEgcGxvdCBvZiB0aGUgbGlrZWxpaG9vZCBmdW5jaXRvbiBhY3Jvc3MgdGhlIHJlbGV2YW50IHJhbmdlIG9mIHBhcmFtZXRlcnMKLSB1c2UgYG9wdGltYCB0byBmaW5kIHRoZSBtYXhpbXVtIGxpa2VsaWhvb2QgZXN0aW1hdGVzCgoKIyMgV3JpdGluZyBjdXN0b20gZnVuY3Rpb25zCgpSZWNhbGwgdGhhdCBmdW5jdGlvbnMgY29udGFpbiBjb2RlIHRoYXQgd2Ugd2FudCB0byB1c2UgcmVwZWF0ZWRseSB3aXRob3V0IGhhdmluZyB0byBjb3B5LXBhc3RlIHRoZSBjb2RlIG92ZXIgYW5kIG92ZXIuIExldCdzIGJ1aWxkIGEgbG9nIGxpa2VsaWhvb2QgZnVuY3Rpb24gdG9nZXRoZXIuCgpTdGFydCB3aXRoIGp1c3Qgc29tZSBjb2RlIHRvIGNhbGN1bGF0ZSB0aGUgbG9nIG9mIG9uZSBjb25kaXRpb25hbCBwcm9iYWJpbGl0eSAkXG1hdGhiYntQfSh4ID0gMTAgXG1pZCBOID0gMTAwLCBwID0gMC4yKSQgZm9yIHRoZSByYW5kb20gdmFyaWFibGUgJG4kIHdoaWNoIGhhcyBhIGJpbm9taWFsIGRpc3RyaWJ1dGlvbjoKCmBgYHtyfQojfCBsYWJlbDogb25lLWxsCgpkYmlub20oeCA9IDIsIHNpemUgPSAxMDAsIHByb2IgPSAwLjIsIGxvZyA9IFRSVUUpCmBgYAoKTm93IHdyaXRlIGNvZGUgZm9yIHRoZSBsb2cgb2YgdGhlIGNvbmRpdGlvbmFsIHByb2JhYmlsaXR5ICRcbWF0aGJie1B9KHggPSAxIFxtaWQgTiA9IDIwLCBwID0gMC4xKSQKCmBgYHtyfQojfCBsYWJlbDogYW5vdGhlci1sbAoKZGJpbm9tKHggPSAxLCBzaXplID0gMjAsIHByb2IgPSAwLjEsIGxvZyA9IFRSVUUpCmBgYAoKV2hpY2ggYXJndW1lbnRzIGNoYW5nZWQ/IGB4YCwgYHNpemVgLCBhbmQgYHByb2JgLiAgVGhvc2UgYXJlIHRoZSBvbmVzIHdlIHdhbnQgdG8gYWxsb3cgdG8gdmFyeSB3aGVuIHdlIHdyaXRlIG91ciBvd24gZnVuY3Rpb24uIE9uZSBtb3JlIHN0ZXAgdG8gZ2V0dGluZyB1cyB0aGVyZTogcHVsbCBvdXQgdGhvc2UgdmFsdWVzIHdlIHdhbnQgdG8gcGFzcyB0byB2YXJpYWJsZSBhcmd1bWVudHMgYW5kIGxldCB0aGVtIGJlIHRoZWlyIG93biBvYmplY3RzCgpgYGB7cn0KI3wgbGFiZWw6IHZhbHVlcy10by1vYmplY3RzCgp2YWx1ZV9mb3JfeCA8LSAxCnZhbHVlX2Zvcl9OIDwtIDIwCnZhbHVlX2Zvcl9wIDwtIDAuMQoKZGJpbm9tKHggPSB2YWx1ZV9mb3JfeCwgc2l6ZSA9IHZhbHVlX2Zvcl9OLCBwcm9iID0gdmFsdWVfZm9yX3AsIGxvZyA9IFRSVUUpCmBgYAoKU2FtZSBzYW1lISAgQnV0IGhlcmUncyB0aGUgdHJhbnNpdGlvbiB0byBhIGZ1bmN0aW9uOiByYXRoZXIgdGhhbiBjcmVhdGUgdGhvc2Ugb2JqZWN0cyB0byBob2xkIHZhbHVlcyBvZiB2YXJpYWJsZSBhcmd1bWVudHMsIHdlIGRlY2xhcmUgdGhvc2Ugd291bGQtYmUtb2JqZWN0cyBhcyBhcmd1bWVudHMgaW4gb3VyIG93biBjdXN0b20gZnVuY3Rpb24KCmBgYHtyfQojfCBsYWJlbDogbGwtYmlub20KCiMgbm90aWNlIEknbSBwdXR0aW5nIGBwYCBmaXJzdCBvbiBwdXJwb3NlCmxsX2Jpbm9tIDwtIGZ1bmN0aW9uKHAsIHgsIE4pIHsKICAgIGRiaW5vbSh4ID0geCwgc2l6ZSA9IE4sIHByb2IgPSBwLCBsb2cgPSBUUlVFKQp9CgojIHRyeSBpdCBvdXQ6CmxsX2Jpbm9tKHAgPSAwLjEsIHggPSAxLCBOID0gMjApCmxsX2Jpbm9tKHAgPSAwLjIsIHggPSAyLCBOID0gMTAwKQoKYGBgCgpPZnRlbiBmdW5jdGlvbnMgY29udGFpbiBtYW55IG1vcmUgbGluZXMgb2YgY29kZSwgYnV0IHRoaXMgZnVuY3Rpb24gd2FzIHN0aWxsIG5lY2Vzc2FyeSB0byBtYWtlIGJlY2F1c2Ugd2UgdWx0aW1hdGVseSB3YW50IHRvIG9wdGltaXplIHdpdGggdGhlIGBvcHRpbWAgZnVuY3Rpb24gdGhhdCByZXF1aXJlcyB0aGUgcGFyYW1ldGVyIHdlJ3JlIG9wdGltaXppbmcgb3ZlciB0byBiZSB0aGUgZmlyc3QgcGFyYW1ldGVyLgoKQSBub3RlIGFib3V0IHRoaXMgbG9nIGxpa2VsaWhvb2QgZnVuY3Rpb246IHdlIGRvbid0IG5lZWQgdG8gc3VtIHVwIG11bHRpcGxlIGxvZyBwcm9iYWJpbGl0aWVzIGJlY2F1c2UgdGhlIGVudGlyZSBsaWtlbGlob29kIHRvIGNhcHR1cmVkIGJ5IHRoZSBiaW5vbWlhbCBwcm9iYWJpbGl0eSBtYXNzIGZ1bmN0aW9uLiBUaGlzIGlzIHVuaXF1ZSB0byB0aGUgc2l0dWF0aW9uIHdoZXJlIG91ciBkYXRhIGFyZSBhIGNvbGxlY3Rpb24gb2YgMCdzIGFuZCAxJ3MgYXMgdGhlIHJlc3BvbnNlIHZhcmlhYmxlIGFuZCB3ZSBoYXZlIG5vIGV4cGxhbmF0b3J5IHZhcmlhYmxlcy4gCgpXaGVuIHdyaXRpbmcgeW91ciBvd24gbGlrZWxpaG9vZCBmdW5jdGlvbiB5b3UgbWlnaHQgY2hvb3NlIHRvIG5vdCBpbmNsdWRlIGFzIG1hbnkgYXJndW1lbnRzLCBzcGVjaWZpY2FsbHkgYXNrIHlvdXJzZWxmIGlmLCBpbiB5b3VyIGNhc2UsIHRoZSBgc2l6ZWAgYW5kIGBwcm9iYCBhcmd1bWVudHMgdG8gYGRiaW5vbWAgbmVlZCB0byBiZSBhbGxvd2VkIHRvIHZhcnksIG9yIGNhbiB0aGV5IGJlIGZpeGVkPwoKIyMgT3B0aW1pemluZyB0aGUgbGlrZWxpaG9vZAoKCipEZWxldGUgdGhpcyBwcm9tcHQgb25jZSBjb21wbGV0ZSoKCldoZW4geW91IHVzZSBgb3B0aW1gIHlvdSB3aWxsIGdldCBhIHdhcm5pbmcgbWVzc2FnZTogCgpgYGAKV2FybmluZyBtZXNzYWdlOgpJbiBvcHRpbSgwLjEsIGxsX2Jpbm9tLCB4ID0gMSwgTiA9IDEyLCBjb250cm9sID0gbGlzdChmbnNjYWxlID0gLTEpKSA6CiAgb25lLWRpbWVuc2lvbmFsIG9wdGltaXphdGlvbiBieSBOZWxkZXItTWVhZCBpcyB1bnJlbGlhYmxlOgp1c2UgIkJyZW50IiBvciBvcHRpbWl6ZSgpIGRpcmVjdGx5CmBgYAoKVHJ5IG91dCB0aGUgc3VnZ2VzdGlvbiBvZiB1c2luZyB0aGUgYCJCcmVudCJgIG1ldGhvZC4gVG8gZmlndXJlIG91dCBob3csIGhhdmUgYSBsb29rIGF0IHRoZSBgb3B0aW1gIGhlbHAgZG9jdW1lbnRhdGlvbiBhbmQgcGF5IGNsb3NlIGF0dGVudGlvbiB0byB0aGUgYG1ldGhvZGAsIGBsb3dlcmAsIGFuZCBgdXBwZXJgIGFyZ3VtZW50cy4KCiMjIENvbXBhcmluZyB0aGUgbWF4aW11bSBsaWtlbGlob29kIGVzdGltYXRlIHRvIHRoZSBwcm9wb3J0aW9uIG9mICJzdWNjZXNzZXMiCgpXZSBhbHNvIGtub3cgd2UgY2FuIGNhbGN1bGF0ZSBwcm9iYWJpbGl0eSBieSBkaXZpZGVkIG51bWJlciBvZiAic3VjY2Vzc2VzIiBieSB0b3RhbCBudW1iZXIgb2YgdHJpYWxzLiBMZXQncyBjb25maXJtIHRoYXQgdGhlIHByb2JhYmlsaXR5IGNhbGN1bGF0ZWQgYXMgcHJvcG9ydGlvbiBvZiAic3VjY2Vzc2VzIiBhbmQgdGhlIHByb2JhYmlsaXR5IG9mICJzdWNjZXNzIiBhcmUgdGhlIHNhbWUgaWYgbm90IHZlcnkgdmVyeSBjbG9zZSAod2l0aGluICJtYWNoaW5lIHByZWNpc2lvbiIpLgoKKkRlbGV0ZSB0aGlzIHByb21wdCBvbmNlIGNvbXBsZXRlKgoKRmlyc3QsIHdoYXQgaXMgdGhlIG51bWJlciBvZiAic3VjY2Vzc2VzIj8gSSd2ZSBiZWVuIHB1dHRpbmcgc3VjY2VzcyBpbiBxdW90ZXMgYmVjYXVzZSBpbiBvdXIgY2FzZSBpdCBpcyB3aGV0aGVyIGEgcGxvdCBoYXMgYXQgbGVhc3Qgb25lIG5vbi1uYXRpdmUgdHJlZS4gV2hhdCBpcyB0aGUgdG90YWwgbnVtYmVyIG9mIHRyaWFscz8gV2l0aCB0aGF0IHlvdSBjYW4gY2FsY3VsYXRlIHRoZSBwcm9wb3J0aW9uIGFuZCBjb21wYXJlIHRvIHRoZSBvdXRwdXQgb2YgYG9wdGltYC4K').then(res => res.blob()).then(blob => {
+      const downloadURL = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      document.body.appendChild(a);
+      a.href = downloadURL;
+      a.download = 'lab03-binom-likelihood.qmd'; a.click();
+      window.URL.revokeObjectURL(downloadURL);
+      document.body.removeChild(a);
+        });"><button class="btn btn-default downloadthis  " id="dnldts33090"><i class="bi bi-download"></i> Download lab template </button></a></p>
+<p>The template will prompt you to work through the following sections.</p>
+<section id="probability-of-occurrence-of-non-native-taxa" class="level2" data-number="11.1">
+<h2 data-number="11.1" class="anchored" data-anchor-id="probability-of-occurrence-of-non-native-taxa"><span class="header-section-number">11.1</span> Probability of occurrence of non-native taxa</h2>
+<p>We will use the data in the <em>OpenNahele</em> data set to estimate the probability of encountering a non-native tree in a forest plot. First we read in the data from github:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>tree <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"https://raw.githubusercontent.com/uhm-biostats/stat-mod/refs/heads/main/data/OpenNahele_Tree_Data.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>We will use the plot as the unit of replication and we will make the assumption that plots are <em>independent</em> (one of the requirements of the maximum likelihood estimation technique we will use). With that in mind the tasks are:</p>
+<p><em>Delete this list once complete, or perhaps make some bullets a subheader, up to you!</em></p>
+<ul>
+<li>use a split-apply-combine approach (think <code>group_by</code> and <code>summarize</code> from <em>dplyr</em>) to calculate number of plots with <em>any</em> (hint, hint <code>any</code>) non-native trees as well as total number of plots</li>
+<li>figure out the likelihood function and put it into an R function</li>
+<li>make a plot of the likelihood funciton across the relevant range of parameters</li>
+<li>use <code>optim</code> to find the maximum likelihood estimates</li>
+</ul>
+</section>
+<section id="writing-custom-functions" class="level2" data-number="11.2">
+<h2 data-number="11.2" class="anchored" data-anchor-id="writing-custom-functions"><span class="header-section-number">11.2</span> Writing custom functions</h2>
+<p>Recall that functions contain code that we want to use repeatedly without having to copy-paste the code over and over. Let’s build a log likelihood function together.</p>
+<p>Start with just some code to calculate the log of one conditional probability <span class="math inline">\(\mathbb{P}(x = 10 \mid N = 100, p = 0.2)\)</span> for the random variable <span class="math inline">\(n\)</span> which has a binomial distribution:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dbinom</span>(<span class="at">x =</span> <span class="dv">2</span>, <span class="at">size =</span> <span class="dv">100</span>, <span class="at">prob =</span> <span class="fl">0.2</span>, <span class="at">log =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -16.5798</code></pre>
+</div>
+</div>
+<p>Now write code for the log of the conditional probability <span class="math inline">\(\mathbb{P}(x = 1 \mid N = 20, p = 0.1)\)</span></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dbinom</span>(<span class="at">x =</span> <span class="dv">1</span>, <span class="at">size =</span> <span class="dv">20</span>, <span class="at">prob =</span> <span class="fl">0.1</span>, <span class="at">log =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -1.308703</code></pre>
+</div>
+</div>
+<p>Which arguments changed? <code>x</code>, <code>size</code>, and <code>prob</code>. Those are the ones we want to allow to vary when we write our own function. One more step to getting us there: pull out those values we want to pass to variable arguments and let them be their own objects</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>value_for_x <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>value_for_N <span class="ot">&lt;-</span> <span class="dv">20</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>value_for_p <span class="ot">&lt;-</span> <span class="fl">0.1</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">dbinom</span>(<span class="at">x =</span> value_for_x, <span class="at">size =</span> value_for_N, <span class="at">prob =</span> value_for_p, <span class="at">log =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -1.308703</code></pre>
+</div>
+</div>
+<p>Same same! But here’s the transition to a function: rather than create those objects to hold values of variable arguments, we declare those would-be-objects as arguments in our own custom function</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># notice I'm putting `p` first on purpose</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>ll_binom <span class="ot">&lt;-</span> <span class="cf">function</span>(p, x, N) {</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">dbinom</span>(<span class="at">x =</span> x, <span class="at">size =</span> N, <span class="at">prob =</span> p, <span class="at">log =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co"># try it out:</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ll_binom</span>(<span class="at">p =</span> <span class="fl">0.1</span>, <span class="at">x =</span> <span class="dv">1</span>, <span class="at">N =</span> <span class="dv">20</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -1.308703</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ll_binom</span>(<span class="at">p =</span> <span class="fl">0.2</span>, <span class="at">x =</span> <span class="dv">2</span>, <span class="at">N =</span> <span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -16.5798</code></pre>
+</div>
+</div>
+<p>Often functions contain many more lines of code, but this function was still necessary to make because we ultimately want to optimize with the <code>optim</code> function that requires the parameter we’re optimizing over to be the first parameter.</p>
+<p>A note about this log likelihood function: we don’t need to sum up multiple log probabilities because the entire likelihood to captured by the binomial probability mass function. This is unique to the situation where our data are a collection of 0’s and 1’s as the response variable and we have no explanatory variables.</p>
+<p>When writing your own likelihood function you might choose to not include as many arguments, specifically ask yourself if, in your case, the <code>size</code> and <code>prob</code> arguments to <code>dbinom</code> need to be allowed to vary, or can they be fixed?</p>
+</section>
+<section id="optimizing-the-likelihood" class="level2" data-number="11.3">
+<h2 data-number="11.3" class="anchored" data-anchor-id="optimizing-the-likelihood"><span class="header-section-number">11.3</span> Optimizing the likelihood</h2>
+<p>When you use <code>optim</code> you will get a warning message:</p>
+<pre><code>Warning message:
+In optim(0.1, ll_binom, x = 1, N = 12, control = list(fnscale = -1)) :
+  one-dimensional optimization by Nelder-Mead is unreliable:
+use "Brent" or optimize() directly</code></pre>
+<p>Try out the suggestion of using the <code>"Brent"</code> method. To figure out how, have a look at the <code>optim</code> help documentation and pay close attention to the <code>method</code>, <code>lower</code>, and <code>upper</code> arguments.</p>
+</section>
+<section id="comparing-the-maximum-likelihood-estimate-to-the-proportion-of-successes" class="level2" data-number="11.4">
+<h2 data-number="11.4" class="anchored" data-anchor-id="comparing-the-maximum-likelihood-estimate-to-the-proportion-of-successes"><span class="header-section-number">11.4</span> Comparing the maximum likelihood estimate to the proportion of “successes”</h2>
+<p>We also know we can calculate probability by divided number of “successes” by total number of trials. Let’s confirm that the probability calculated as proportion of “successes” and the probability of “success” are the same if not very very close (within “machine precision”).</p>
+<p>First, what is the number of “successes”? I’ve been putting success in quotes because in our case it is whether a plot has at least one non-native tree. What is the total number of trials? With that you can calculate the proportion and compare to the output of <code>optim</code>.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

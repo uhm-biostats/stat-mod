@@ -39,7 +39,7 @@ With that intro out of the way we will work through specific distributions.
 
 ## Binomial
 
-Let's return to the example of the number of dispersal events over a fixed number of time steps from the simplified game version of the Unified Neutral Theory of Biodiversity that we [previously discussed](https://uhm-biostats.github.io/stat-mod/prob-intro.html). For simplicity, let's work with multiples of 10 for probabilities and numbers of time steps: $\mathbb{P}(\text{dispersal}) = $ `m = 0.1` and number of time steps = `N = 10`. What is the probability of observing exactly 1 dispersal event given these conditions?
+Let's return to the example of the number of dispersal events over a fixed number of time steps from the simplified game version of the Unified Neutral Theory of Biodiversity that we [previously discussed](https://uhm-biostats.github.io/stat-mod/prob-intro.html). For simplicity, let's work with multiples of 10 for probabilities and numbers of time steps: $\mathbb{P}(\text{dispersal}) =$ `m = 0.1` and number of time steps = `N = 10`. What is the probability of observing exactly 1 dispersal event given these conditions?
 
 That is a job for the binomial distribution which R refers to as `binom` with all the distributions functions: `dbinom`, `pbinom`, `qbinom`, `rbinom`. We want a probability of one discrete (think PMF) value, so we can use `dbinom`
 
@@ -64,12 +64,12 @@ With a binomial distribution we often refer to the random variable as the "numbe
 You'll notice the probability of 1 success in  `r N` trials is `r dbinom(1, N, m)` but we set the probability $\mathbb{P}(\text{dispersal}) = m = `r m`$. Why are they not the same? Or at least not an obvious multiplication or addition of one another? The reason is counting. The probability of exactly 1 success in `r N` trials consists of many ways to arrive at that outcome. If `0` is no success and `1` is success, here are just a few of the ways we can get exactly 1 success:
 
 $$
-\begin{align}
+\begin{aligned}
 &\text{1, `r rep(0, N - 1)`} \\
 &\text{0, 1, `r rep(0, N - 2)`} \\
 &\text{0, 0, 1, `r rep(0, N - 3)`} \\
 &\cdots
-\end{align}
+\end{aligned}
 $$
 
 The counting gets increasingly complex with higher numbers of successes and trials. Luckily, the `*binom` functions take care of that for us. Let's go over the family.
