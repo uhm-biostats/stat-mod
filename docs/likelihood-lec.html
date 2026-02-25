@@ -20,7 +20,62 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -71,6 +126,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -227,8 +311,23 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#estimating-the-probability-of-occurrences" id="toc-estimating-the-probability-of-occurrences" class="nav-link active" data-scroll-target="#estimating-the-probability-of-occurrences"><span class="header-section-number">10.1</span> Estimating the probability of occurrences</a></li>
+  <li><a href="#maximum-likelihood-estimation-of-presenceabsence-across-an-environmental-gradient" id="toc-maximum-likelihood-estimation-of-presenceabsence-across-an-environmental-gradient" class="nav-link" data-scroll-target="#maximum-likelihood-estimation-of-presenceabsence-across-an-environmental-gradient"><span class="header-section-number">10.2</span> Maximum likelihood estimation of presence/absence across an environmental gradient</a></li>
+  <li><a href="#finding-maximum-likelihood-estimates-algorithmically" id="toc-finding-maximum-likelihood-estimates-algorithmically" class="nav-link" data-scroll-target="#finding-maximum-likelihood-estimates-algorithmically"><span class="header-section-number">10.3</span> Finding maximum likelihood estimates algorithmically</a>
+  <ul>
+  <li><a href="#writing-a-custom-function" id="toc-writing-a-custom-function" class="nav-link" data-scroll-target="#writing-a-custom-function"><span class="header-section-number">10.3.1</span> Writing a custom function</a></li>
+  <li><a href="#more-details-of-optim" id="toc-more-details-of-optim" class="nav-link" data-scroll-target="#more-details-of-optim"><span class="header-section-number">10.3.2</span> More details of <code>optim</code></a></li>
+  </ul></li>
+  <li><a href="#finding-maximum-likelihood-estimates-analytically" id="toc-finding-maximum-likelihood-estimates-analytically" class="nav-link" data-scroll-target="#finding-maximum-likelihood-estimates-analytically"><span class="header-section-number">10.4</span> Finding maximum likelihood estimates analytically</a></li>
+  <li><a href="#interpreting-likelihood" id="toc-interpreting-likelihood" class="nav-link" data-scroll-target="#interpreting-likelihood"><span class="header-section-number">10.5</span> Interpreting likelihood</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">10.6</span> References</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -252,8 +351,349 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<section id="estimating-the-probability-of-occurrences" class="level2" data-number="10.1">
+<h2 data-number="10.1" class="anchored" data-anchor-id="estimating-the-probability-of-occurrences"><span class="header-section-number">10.1</span> Estimating the probability of occurrences</h2>
+<p>Kāhuli are the beautiful, diverse, and storied land snails of Hawaiʻi. Storied as in many moʻolelo and wahi pana refer to them, especially as signing in the forest <span class="citation" data-cites="sato2018 van2022">(<a href="#ref-sato2018" role="doc-biblioref">Sato et al. 2018</a>; <a href="#ref-van2022" role="doc-biblioref">Van Dooren 2022</a>)</span>. Sadly today they are increasingly rare and many have gone extinct due to introduced predators and ecosystem modification with the vast majority of extinctions following arrival of European and American settlers <span class="citation" data-cites="yeung2018">(<a href="#ref-yeung2018" role="doc-biblioref">Yeung &amp; Hayes 2018</a>)</span>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/intro-like/kahuli.jpg" class="img-fluid figure-img" style="width:25.0%"></p>
+<figcaption>A kāhuli representative; image credit: DOFAW</figcaption>
+</figure>
+</div>
+<p>Recognizing kāhuli have become rare, suppose we go out looking for them now. And suppose out of eight trips searching for them, we find them two times; something like this:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>kahuli <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>kahuli</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0 0 1 0 1 0 0 0</code></pre>
+</div>
+</div>
+<p>Here’s the question: what do these data suggest is the probability of finding a kāhuli? With some caveats (that we will ignore for now) we could call this type of probability the probability of occurrence.</p>
+<p>We know from reviewing the <a href="./prob-intro.html">rules of probability</a> that probability can be the same thing as proportion. So in this case the proportion of times we found a kāhuli is <span class="math inline">\(\frac{2}{8}\)</span> = 0.25. That is the correct answer, but there is another way to get that answer which will prove very helpful for the rest of this course.</p>
+<p>First, recognize that we are dealing with a binomial situation: we have eight <strong><em>trials</em></strong> and two <strong><em>successes</em></strong>. A binomial distribution can tell us the probability <span class="math inline">\(\mathbb{P}(x = 2 \mid N = 8, p)\)</span> where <span class="math inline">\(x\)</span> is number of successes, <span class="math inline">\(N\)</span> is number of trials, and <span class="math inline">\(p\)</span> is the probability of success. We know <span class="math inline">\(N = 8\)</span> we do not know for sure the value of <span class="math inline">\(p\)</span>. Here’s a proposal for figuring out <span class="math inline">\(p\)</span>: find the value of <span class="math inline">\(p\)</span> such that <span class="math inline">\(\mathbb{P}(x = 2 \mid N = 8, p)\)</span> is the highest it possibly can be (i.e.&nbsp;reaches its maximum). The idea that <span class="math inline">\(\mathbb{P}(x = 2 \mid N = 8, p)\)</span> is at its maximum means that we would have found the value of <span class="math inline">\(p\)</span> that makes our observed data <em>most likely</em>.</p>
+<p>For compare the probability of the data given <span class="math inline">\(p = 0.8\)</span> versus <span class="math inline">\(p = 0.4\)</span>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dbinom</span>(<span class="at">x =</span> <span class="dv">2</span>, <span class="at">size =</span> <span class="dv">8</span>, <span class="at">prob =</span> <span class="fl">0.8</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.00114688</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dbinom</span>(<span class="at">x =</span> <span class="dv">2</span>, <span class="at">size =</span> <span class="dv">8</span>, <span class="at">prob =</span> <span class="fl">0.2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.2936013</code></pre>
+</div>
+</div>
+<p>The data we observed (2 successes out of 8 trials) are more <em>likely</em> to have come from a binomial distribution with <span class="math inline">\(p = 0.2\)</span> compared to a binomial distribution with <span class="math inline">\(p = 0.8\)</span>.</p>
+<p>Now how to figure out the value of <span class="math inline">\(p\)</span> that maximizes <span class="math inline">\(\mathbb{P}(x = 2 \mid N = 8, p)\)</span>? Let’s start by making a plot</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># a vector to hold many possible values of p</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>pp <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.05</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># a vector of how likely the observed data are </span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># given each different value in `pp`</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>l <span class="ot">&lt;-</span> <span class="fu">dbinom</span>(<span class="at">x =</span> <span class="dv">2</span>, <span class="at">size =</span> <span class="dv">8</span>, <span class="at">p =</span> pp)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co"># put it all together in a data.frame</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>all_pl <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">p =</span> pp, <span class="at">l =</span> l)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co"># visualize it (make sure ggplot2 is loaded)</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>gp_lik <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(all_pl, <span class="fu">aes</span>(p, l)) <span class="sc">+</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">"p"</span>) <span class="sc">+</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">"P(n = 2 | N = 8, p)"</span>) <span class="sc">+</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>), </span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>          <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>, <span class="at">face =</span> <span class="st">"italic"</span>))</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>gp_lik</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="likelihood-lec_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="480"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We can clearly see that the maximum occurs right at <span class="math inline">\(p = 0.25\)</span>, the same as what we got with <span class="math inline">\(p = \frac{\text{num. success}}{\text{num. trials}}\)</span>. That’s reassuring!</p>
+<p>What we stumbled upon is another way to arrive at the same answer of <span class="math inline">\(p = 0.25\)</span>: find the value of <span class="math inline">\(p\)</span> that <em>maximizes</em> <span class="math inline">\(\mathbb{P}(x = 2 \mid N = 8, p)\)</span>. Or put more generally, find the parameter values that maximize the probability <span class="math inline">\(\mathbb{P}(\text{data} \mid \text{parameters})\)</span>. This thing we have stumbled upon has a special name: the likelihood function. If we maximize the likelihood function we will find the best estimate for our parameter(s) of interest. And while it might seem a lot more convoluted to maximize the likelihood function compared to calculating <span class="math inline">\(p = \frac{\text{num. success}}{\text{num. trials}}\)</span>, consider this: we will rarely be able to use simple tricks like counting up frequencies and dividing by number of trials. For more complex data, simple counting won’t work, but maximizing the likelihood function will.</p>
+</section>
+<section id="maximum-likelihood-estimation-of-presenceabsence-across-an-environmental-gradient" class="level2" data-number="10.2">
+<h2 data-number="10.2" class="anchored" data-anchor-id="maximum-likelihood-estimation-of-presenceabsence-across-an-environmental-gradient"><span class="header-section-number">10.2</span> Maximum likelihood estimation of presence/absence across an environmental gradient</h2>
+<p>An example of more complex data is the seemingly simple case of having a presence/absence response variable (did we find a certain kind of organism or not) and <em>any</em> explanatory variable. For example an explanatory variable representing an environmental gradient like elevation. Something like what we simulated in the <a href="./prob-sim-data.html">section on simulating data</a>! So let’s return to that example.</p>
+<p>We said that presence can be simulated as coming from a binomial distribution with size <span class="math inline">\(N = 1\)</span> and a probability of success <span class="math inline">\(p = f(\text{elevation})\)</span> that changes with elevation. Specifically:</p>
+<p><span class="math display">\[
+p = \frac{1}{1 + e^{-(-2 + 0.001 \times (\text{elevation}))}}
+\]</span> where we make use of the expit function to keep <span class="math inline">\(p\)</span> constrained between 0 and 1. Let’s highlight the two <em>coefficients</em> that determine how <span class="math inline">\(p\)</span> changes across elevation:</p>
+<p><span class="math display">\[
+p = \frac{1}{1 + e^{-(a_0 + a_1 \times (\text{elevation}))}}
+\]</span></p>
+<p>In our case <span class="math inline">\(a_0 = -2\)</span> and <span class="math inline">\(a_a = 0.001\)</span>. Now we can simulate some data</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># `set.seed` is a trick that lets us run this code over </span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># and over again while getting exactly the same result</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># despite using the "random" sampling functions `runif`</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># and `rbinom` (truthfull these functions are only </span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># "pseudo-random")</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co"># number of observations to simulate</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>nobs <span class="ot">&lt;-</span> <span class="dv">50</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>elev <span class="ot">&lt;-</span> <span class="fu">runif</span>(nobs, <span class="dv">0</span>, <span class="dv">5000</span>)</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co"># coefficients in the expit equation</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>a0 <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">2</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>a1 <span class="ot">&lt;-</span> <span class="fl">0.001</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="co"># plug in the coefficients to calculate p</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(<span class="sc">-</span>(a0 <span class="sc">+</span> a1 <span class="sc">*</span> elev)))</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(nobs, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">prob =</span> p)</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(elev, y)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>And now let’s set a challenge for ourselves: can we use the method of maximum likelihood to estimate the values of <span class="math inline">\(a_0\)</span> and <span class="math inline">\(a_1\)</span> from the simulated data? Can we do so such that the estimated values (call them <span class="math inline">\(\hat{a_0}\)</span> and <span class="math inline">\(\hat{a_1}\)</span>) will be close to the true values we used in the simulation <span class="math inline">\(a_0\)</span> and <span class="math inline">\(a_1\)</span>?</p>
+<p>To begin we need to figure out the likelihood function. The added challenge now is that <span class="math inline">\(p\)</span> changes for every data point (every row in <code>dat</code>) so we cannot simply use <code>dbinom(x = , size = , p = )</code>. But we can remember our rules of probability are realize that the probability of observing all our <span class="math inline">\(y\)</span> data is the same as the probability of observing <span class="math inline">\(y_1\)</span> <strong><em>and</em></strong> <span class="math inline">\(y_2\)</span> <strong><em>and</em></strong> … <strong><em>and</em></strong> <span class="math inline">\(y_n\)</span>:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\mathbb{P}(y \mid N = 1, ~p = f(x)) = ~&amp;\mathbb{P}(y_1 \mid N = 1, ~p_1 = f(x_1)) \times \\
+&amp;\mathbb{P}(y_2 \mid N = 1, ~p_2 = f(x_2)) \times \cdots \times \\
+&amp;\mathbb{P}(y_n \mid N = 1, ~p_n = f(x_n)) \\
+= ~&amp;\prod_{i = 1}^n \mathbb{P}(y_i \mid N = 1, ~p_i = f(x_i))
+\end{aligned}
+\]</span></p>
+<p>Note the <span class="math inline">\(\prod\)</span> symbol means take the product of everything. Breaking up the problem this way allows us to assign the proper probability of success <span class="math inline">\(p_i = f(x_i)\)</span> to each observation. Breaking it up this way also does force us to make two assumptions:</p>
+<ol type="1">
+<li>that the data are <strong><em>independent</em></strong> meaning a presence or absence in one place does not influence the value of <span class="math inline">\(y_i\)</span> at another place</li>
+<li>that the data are <strong><em>identically distributed</em></strong> meaning that all the <span class="math inline">\(y_i\)</span> come from the same distribution, the only difference being different values of <span class="math inline">\(p_i\)</span>, but even those <span class="math inline">\(p_i\)</span> values are assumed to come from the same equation</li>
+</ol>
+<p>These two assumptions are central to likelihood methods and often abbreviated <em>i.i.d.</em>. There are ways to deal with non-independent and non-identically-distributed data, but you would be correct if you imagine those are more complex methods (though often still utilizing likelihood).</p>
+<p>Now with an approach for our likelihood function let’s turn it into code</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># choose some coefficients that are close-ish to the </span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># true values we used to simulate data</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>try_a0 <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">1</span> </span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>try_a1 <span class="ot">&lt;-</span> <span class="fl">0.005</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate the likelihood</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>l <span class="ot">&lt;-</span> <span class="fu">dbinom</span>(y, <span class="at">size =</span> <span class="dv">1</span>, </span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">prob =</span> <span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(<span class="sc">-</span>(try_a0 <span class="sc">+</span> try_a1 <span class="sc">*</span> elev)))) <span class="sc">|&gt;</span> </span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">prod</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Great! Let’s have a look at what the likelihood is</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>l</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.986698e-38</code></pre>
+</div>
+</div>
+<p>That is very very small. So small it could be a problem. In fact computers cannot even reliably record numbers smaller than something between <span class="math inline">\(10^{-12}\)</span> and <span class="math inline">\(10^{-24}\)</span> depending on the hardware and software.</p>
+<p>How do we fix this small number problem? We use logarithms. Logarithms help because our small number issue derives from the fact that probabilities, by their nature, and less than one, and multiplying values less than one leads to even smaller values. Logs turn decimals into negative, larger (in magnitude) numbers, and turn multiplication into summation</p>
+<p><span class="math display">\[
+\begin{aligned}
+\log(\mathbb{P}(y \mid N = 1, ~p = f(x))) &amp;= \log \left(\prod_{i = 1}^n \mathbb{P}(y_i \mid N = 1, ~p_i = f(x_i)) \right) \\
+&amp;= \sum_{i = 1}^n\log \left(\mathbb{P}(y_i \mid N = 1, ~p_i = f(x_i)) \right)
+\end{aligned}
+\]</span></p>
+<p>This is the reason that all <code>d</code> and <code>p</code> distribution functions in R have a <code>log</code> argument. The creators of R knew we’d need to work with log probabilities. Let’s update our likelihood function code accordingly</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># using values of `try_a0` and `try_a1` from earlier</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate the log likelihood</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>ll <span class="ot">&lt;-</span> <span class="fu">dbinom</span>(y, <span class="at">size =</span> <span class="dv">1</span>, </span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">prob =</span> <span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(<span class="sc">-</span>(try_a0 <span class="sc">+</span> try_a1 <span class="sc">*</span> elev))), </span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">log =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>()</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>ll</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -86.81176</code></pre>
+</div>
+</div>
+<p>That is an easier number to work with! And working with the log likelihood versus the not-log-transformed likelihood has no impact whatsoever on the location of the maximum. Returning to the simpler example of estimating the probability of finding a kāhuli, we can see the location of the maximum is unchanged:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="likelihood-lec_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="480"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>For all these reasons we (almost) always work with the log likelihood function.</p>
+<p>Returning to our task of finding the maximum likelihood estimates for <span class="math inline">\(\hat{a_0}\)</span> and <span class="math inline">\(\hat{a_1}\)</span>, we can use the log likelihood function to look over a range of values for <span class="math inline">\(a_0\)</span> and <span class="math inline">\(a_1\)</span> to try to find a where a maximum occurs. Because there are two coefficients, we will need to view a 3D likelihood <em>surface</em> rather than a 2D curve as we did with the kāhuli example.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="likelihood-lec_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The contour lines can be read like a topo map. We can see a peak—the maximum—in this surface (marked by the <strong>x</strong>) and the coefficient values at that peak are roughly <span class="math inline">\(\hat{a_0}\)</span> = -2.46 and <span class="math inline">\(\hat{a_1}\)</span> = 0.0015, which are quite close to the true values of <span class="math inline">\(a_0 = -2\)</span> and <span class="math inline">\(a_1 = 0.001\)</span>!</p>
+<p>If we repeated this “experiment” many times of simulating data and finding the maximum likelihood estimates, we would find that the estimates are in fact always close to the true values—sometimes a little above, sometimes a little below. But you might imagine that finding the maximum likelihood estimates is not actually done by looking at a graph. In practice there are two options: to find the maximum algorithmically (i.e.&nbsp;with code) or analytically (i.e.&nbsp;with math).</p>
+</section>
+<section id="finding-maximum-likelihood-estimates-algorithmically" class="level2" data-number="10.3">
+<h2 data-number="10.3" class="anchored" data-anchor-id="finding-maximum-likelihood-estimates-algorithmically"><span class="header-section-number">10.3</span> Finding maximum likelihood estimates algorithmically</h2>
+<p>Optimization algorithms work by searching along a surface like the one in the above figure to find either a maximum or minimum. The searching process can take different forms based on the algorithm, but usually involves starting at some initial point in parameter space (e.g.&nbsp;<span class="math inline">\(a_0\)</span> on the horizontal axis, <span class="math inline">\(a_1\)</span> on the vertical axis), trying a new point, evaluating whether the new point is uphill or downhill and then proceeding from there until an optimum is found.</p>
+<p>The <code>optim</code> function in R allows us to conduct this kind of optimization. It works like this:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># find the maximum </span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>llmax <span class="ot">&lt;-</span> <span class="fu">optim</span>(</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># initial values</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">par =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="fl">0.005</span>), </span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># log likelihood fun</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">fn =</span> llfun,</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># data</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">response_var =</span> dat<span class="sc">$</span>y, <span class="at">explan_var =</span> dat<span class="sc">$</span>elev, </span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># `fnscale` = -1 means maximize</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">control =</span> <span class="fu">list</span>(<span class="at">fnscale =</span> <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Notice that we are using the data we had previously simulated, the <code>y</code> and <code>elev</code> columns of <code>dat</code>. Also notice that we have to specify <code>control = list(fnscale = -1)</code>, this option makes <code>optim</code> search for a maximum, while <code>control = list(fnscale = 1)</code> (i.e.&nbsp;a positive <code>fnscale</code>) makes <code>optim</code> search for a minimum.</p>
+<p>You will also notice that we pass a log likelihood function to <code>optim</code>. But where do we get that log likelihood function? We have to make it:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># define log likelihood function</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>llfun <span class="ot">&lt;-</span> <span class="cf">function</span>(a, response_var, explan_var) {</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">dbinom</span>(<span class="at">x =</span> response_var, <span class="at">size =</span> <span class="dv">1</span>, </span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">prob =</span> <span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(<span class="sc">-</span>(a[<span class="dv">1</span>] <span class="sc">+</span> a[<span class="dv">2</span>] <span class="sc">*</span> explan_var))), </span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">log =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">sum</span>()</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="co"># find the maximum </span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>llmax <span class="ot">&lt;-</span> <span class="fu">optim</span>(</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># initial values</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">par =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="fl">0.005</span>), </span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># log likelihood fun</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">fn =</span> llfun,</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># data</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">response_var =</span> dat<span class="sc">$</span>y, <span class="at">explan_var =</span> dat<span class="sc">$</span>elev, </span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># `fnscale` = -1 means maximize</span></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">control =</span> <span class="fu">list</span>(<span class="at">fnscale =</span> <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>This might be your first time seeing how a custom function is made so let’s go into that a little bit.</p>
+<section id="writing-a-custom-function" class="level3" data-number="10.3.1">
+<h3 data-number="10.3.1" class="anchored" data-anchor-id="writing-a-custom-function"><span class="header-section-number">10.3.1</span> Writing a custom function</h3>
+<p>All functions in R where created by somebody. Now we get to be that somebody too. A function is just some code that we bundle up for re-use. If, for some reason, I wanted to re-run this code with many different values:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>x1 <span class="sc">*</span> <span class="dv">2</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>x2 <span class="sc">*</span> <span class="dv">2</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>x3 <span class="ot">&lt;-</span> <span class="dv">15</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>x3 <span class="sc">*</span> <span class="dv">2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>We would be better served by writing a function instead of copy-pasting. To write a function we need to notice what about our code changes each time. In the slightly silly example above we are tyring to multiple different values (<code>x1</code>, <code>x2</code>, <code>x3</code>, maybe more to follow) by <code>2</code>. So the <code>x</code> values change. We therefore want to write a function that can take different values for <code>x</code> (<code>x</code> will be an <em>argument</em>) and multiply by <code>2</code>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># define the function</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>times2 <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    x <span class="sc">*</span> <span class="dv">2</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="co"># use the function rather than copy-paste code</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="fu">times2</span>(<span class="dv">10</span>)</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="fu">times2</span>(<span class="dv">3</span>)</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="fu">times2</span>(<span class="dv">15</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Inside the curly brackets <code>{}</code> is where the function does its calculations. Everywhere it sees <code>x</code> it will plug in the value we pass to <code>x</code> when we use the function. The last computation of a function will be what it returns (in this case there is only one computation so it’s the first and last).</p>
+<p>Let’s look back now at the log likelihood function:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>llfun <span class="ot">&lt;-</span> <span class="cf">function</span>(a, response_var, explan_var) {</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">dbinom</span>(<span class="at">x =</span> response_var, <span class="at">size =</span> <span class="dv">1</span>, </span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">prob =</span> <span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(<span class="sc">-</span>(a[<span class="dv">1</span>] <span class="sc">+</span> a[<span class="dv">2</span>] <span class="sc">*</span> explan_var))), </span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">log =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">sum</span>()</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>We see it takes an argument <code>a</code> which holds the values of <span class="math inline">\(a_0\)</span> in the first position <code>a[1]</code> and <span class="math inline">\(a_1\)</span> in the second position <code>a[1]</code>. The function also takes the response and explanatory variables (<code>response_var</code> and <code>explan_var</code>) as arguments. So if we had different data (simulated or otherwise) we could still use the same function by passing those new data as arguments. The <code>llfun</code> function will return to us the computed log likelihood.</p>
+</section>
+<section id="more-details-of-optim" class="level3" data-number="10.3.2">
+<h3 data-number="10.3.2" class="anchored" data-anchor-id="more-details-of-optim"><span class="header-section-number">10.3.2</span> More details of <code>optim</code></h3>
+<p>Now let’s get back to <code>optim</code>. We had to make our function <code>llfun</code> in a very specific way: the first argument (<code>a</code> in our case) <em>has</em> to a vector of the coefficients we want to find maximum likelihood estimates for. How we conceive of and order the other arguments is more flexible. But <code>optim</code> works by repeatedly calling <code>llfun</code> on different combination of values for the first argument <code>a</code> until a maximum is found. Right after we specify <code>fn = llfun</code> we were then able to list the additional arguments <code>llfun</code> needs, namely <code>response_var</code> and <code>explan_var</code>. Those arguments get passed to our custom function <code>llfun</code>, they are not standard arguments of <code>optim</code>.</p>
+<p><code>optim</code> returns a list of useful information:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>llmax</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$par
+[1] -2.471963670  0.001518592
+
+$value
+[1] -18.88511
+
+$counts
+function gradient 
+     141       NA 
+
+$convergence
+[1] 0
+
+$message
+NULL</code></pre>
+</div>
+</div>
+<p>Lists are very flexible types of objects in R, they can hold a collection of <em>anything</em>, compared, for example, to a <code>data.frame</code> which can only hold vectors (i.e.&nbsp;columns) of equal lengths (i.e.&nbsp;rows). But we can access the elements of a list with <code>$</code> similar to how we can access columns:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>llmax<span class="sc">$</span>par</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -2.471963670  0.001518592</code></pre>
+</div>
+</div>
+<p>The values held by <code>llmax$par</code> are the maximum likelihood estimates <span class="math inline">\(\hat{a_0}\)</span> and <span class="math inline">\(\had{a_1}\)</span>.</p>
+<p>The value held in <code>llmax$value</code> is the height of the peak of the likelihood surface. The other piece of information to focus on is <code>llmax$convergence</code> which tells us whether the algorithm was successful in finding the maximum. Any value other than <code>0</code> is cause for concern and we might have to try a different approach.</p>
+</section>
+</section>
+<section id="finding-maximum-likelihood-estimates-analytically" class="level2" data-number="10.4">
+<h2 data-number="10.4" class="anchored" data-anchor-id="finding-maximum-likelihood-estimates-analytically"><span class="header-section-number">10.4</span> Finding maximum likelihood estimates analytically</h2>
+<p>We will not focus on this approach for this class. The reasons are two-fold: 1) it only works for special cases like when data are assumed to come from a normal distribution; and 2) it requires knowledge of calculus, which is not presumed knowledge for this course.</p>
+<p>With that caveat, we can can use derivatives to find a maximum. The derivative is the slope of the line tangent to a curve at any given point. Three different tangent lines (different colors) to the curve in black are shown below</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="likelihood-lec_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="480"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>If we can find the tangent line with a slope of zero we will have found the maximum!<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+</section>
+<section id="interpreting-likelihood" class="level2" data-number="10.5">
+<h2 data-number="10.5" class="anchored" data-anchor-id="interpreting-likelihood"><span class="header-section-number">10.5</span> Interpreting likelihood</h2>
+<p>We have not yet formalized a mathematical notation for the likelihood function. Let’s call it <span class="math inline">\(\mathscr{L}(\text{parameters, data})\)</span>—the likelihood of a given set of parameters for a given data set. We have claimed that the log likelihood <span class="math inline">\(\log \mathscr{L}\)</span> can be written</p>
+<p><span class="math display">\[
+\log\mathscr{L} = \sum\log\mathbb{P}(\text{data} \mid \text{parameters})
+\]</span></p>
+<p>But it is worth reiterating: this is only true if the data are i.i.d, <em>independent</em> and <em>identically distributed</em>. It is also only technically true when dealing with discrete probability distributions. We will see that when working with continuous probability distributions we use exactly the same approach but substitute <span class="math inline">\(\log\mathbb{P}(\text{data} \mid \text{parameters})\)</span> for the log probability density function <span class="math inline">\(\log\text{PDF}(\text{data} \mid \text{parameters})\)</span>. But we often still slightly imprecisely refer to this as “probability of the data given the parameters.”</p>
+<p>That brings us to an important point about interpreting likelihoods: they are not formal probabilities. When using the PDF, a likelihood could potentially be greater than 1. And likelihoods need not sum to 1. In fact the values of the (log) likelihood function are <em>random variables</em> that end up having their own probability distribution.</p>
+<p>Another important point about the method of maximum likelihood estimation is that the estimates we get from maximizing the (log) likelihood function have good statistical properties: they are <em>consistent</em>, meaning they will converge on correct answer as sample size <span class="math inline">\(\rightarrow \infty\)</span>; and they have the <em>least variance</em> of all consistent estimators, meaning they will be, on average, the closest estimate to the true value out of all the possible methods we could use to make an estimate.</p>
+</section>
+<section id="references" class="level2" data-number="10.6">
+<h2 data-number="10.6" class="anchored" data-anchor-id="references"><span class="header-section-number">10.6</span> References</h2>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-sato2018" class="csl-entry" role="listitem">
+Sato AY, Price MR, Vaughan MB. 2018. K<span>ā</span>huli: Uncovering indigenous ecological knowledge to conserve endangered hawaiian land snails. Society &amp; Natural Resources <strong>31</strong>:320–334. Taylor &amp; Francis.
+</div>
+<div id="ref-van2022" class="csl-entry" role="listitem">
+Van Dooren T. 2022. A world in a shell: Snail stories for a time of extinctions. MIT Press.
+</div>
+<div id="ref-yeung2018" class="csl-entry" role="listitem">
+Yeung NW, Hayes KA. 2018. Biodiversity and extinction of hawaiian land snails: How many are left now and what must we do to conserve them—a reply to. Integrative and Comparative Biology <strong>58</strong>:1157–1169. Oxford University Press.
+</div>
+</div>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>Technically we will have found either a minimum or maximum. To know it is a maximum we need to know the <em>second</em> derivative; if the second derivative is negative at the point where the first derivative is zero, then we have found the maximum.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
