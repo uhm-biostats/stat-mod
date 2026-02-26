@@ -19,9 +19,14 @@ l <- readLines(f)
 iyaml <- grep("---|```", l) |> 
     (\(x) x[1]:x[4])()
 
+# the comments to delete
+idelt <- grep("delete this .* once complete", l, 
+              ignore.case = TRUE)
+
 # only the body
-b <- l[-iyaml] |> 
-    gsub("\\*Delete this .* once complete\\*", "", x = _)
+b <- l[-c(iyaml, idelt)] |> 
+    gsub("\\*delete this .* once complete", "", x = _, 
+         ignore.case = TRUE)
 
 # write only the body for use with `{{< include %s >}}`
 # fb <- gsub("\\.qmd", "_bonly.qmd", f)
