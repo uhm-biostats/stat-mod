@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>12&nbsp; Estimating parameters of a normal distribution – Intro to Statistical Modeling</title>
+<title>12&nbsp; Estimating the parameters of a normal distribution – Intro to Statistical Modeling</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,7 +20,62 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -42,6 +97,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-27c261d06b905028a18691de25d09dde.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/quarto-contrib/downloadthis-1.9.1/downloadthis.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -70,6 +126,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -83,7 +168,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./likelihood-intro.html">Introducing the method of maximum likelihood</a></li><li class="breadcrumb-item"><a href="./norm-lab.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Estimating parameters of a normal distribution</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./likelihood-intro.html">Introducing the method of maximum likelihood</a></li><li class="breadcrumb-item"><a href="./norm-lab.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Estimating the parameters of a normal distribution</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -216,7 +301,7 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./norm-lab.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Estimating parameters of a normal distribution</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Estimating the parameters of a normal distribution</span></span></a>
   </div>
 </li>
       </ul>
@@ -226,15 +311,24 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#central-tendency-and-variability-of-annual-evapotranspiration" id="toc-central-tendency-and-variability-of-annual-evapotranspiration" class="nav-link active" data-scroll-target="#central-tendency-and-variability-of-annual-evapotranspiration"><span class="header-section-number">12.1</span> Central tendency and variability of annual evapotranspiration</a></li>
+  <li><a href="#the-log-likelihood-function-for-a-normal-distribution" id="toc-the-log-likelihood-function-for-a-normal-distribution" class="nav-link" data-scroll-target="#the-log-likelihood-function-for-a-normal-distribution"><span class="header-section-number">12.2</span> The log likelihood function for a normal distribution</a></li>
+  <li><a href="#visualizing-a-surface" id="toc-visualizing-a-surface" class="nav-link" data-scroll-target="#visualizing-a-surface"><span class="header-section-number">12.3</span> Visualizing a surface</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">12.4</span> References</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./likelihood-intro.html">Introducing the method of maximum likelihood</a></li><li class="breadcrumb-item"><a href="./norm-lab.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Estimating parameters of a normal distribution</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./likelihood-intro.html">Introducing the method of maximum likelihood</a></li><li class="breadcrumb-item"><a href="./norm-lab.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Estimating the parameters of a normal distribution</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Estimating parameters of a normal distribution</span></h1>
+<h1 class="title"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Estimating the parameters of a normal distribution</span></h1>
 </div>
 
 
@@ -251,8 +345,183 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<p>This lab will introduce you to another log likelihood function, that of a normal distribution. For data we will investigate annual evapotranspiration (ET). ET is the process of water transferring from plants, soil, and surface water into the atmosphere and plays a central role in governing (or at least <em>predicting</em>) ecosystem productivity <span class="citation" data-cites="idol2007 brauman2012">(<a href="#ref-idol2007" role="doc-biblioref">Idol et al. 2007</a>; <a href="#ref-brauman2012" role="doc-biblioref">Brauman et al. 2012</a>)</span> and biodiversity <span class="citation" data-cites="fisher2011">(<a href="#ref-fisher2011" role="doc-biblioref">Fisher et al. 2011</a>)</span>.</p>
+<p>You can download the lab template <code>.qmd</code> file for this lab here:</p>
+<p><a href="#dnldts4588" onclick="fetch('data:text/plain;base64,LS0tCnRpdGxlOiAiRXN0aW1hdGluZyB0aGUgcGFyYW1ldGVycyBvZiBhIG5vcm1hbCBkaXN0cmlidXRpb24iCmZvcm1hdDogCiAgICBwZGY6IAogICAgICAgIGluY2x1ZGUtaW4taGVhZGVyOgogICAgICAgICAgICB0ZXh0OiB8CiAgICAgICAgICAgICAgICBcdXNlcGFja2FnZXtuZXd1bmljb2RlY2hhcn0KICAgICAgICAgICAgICAgIFxuZXd1bmljb2RlY2hhcnvKu317YH0gCmF1dGhvcjogCiAgICAtIHlvdXIgbmFtZSBoZXJlCi0tLQoKYGBge3J9CiN8IGxhYmVsOiBzZXR1cAoKIyBsb2FkIGFsbCBuZWNlc3NhcnkgcGFja2FnZXMKIyAuLi4geW91IG1heSBuZWVkIHRvIGFkZCB0byB0aGlzISBjYW4gZGVsZXRlIHRoaXMgY29tbWVudCBvbmNlIGRvbmUKbGlicmFyeShnZ3Bsb3QyKQpsaWJyYXJ5KGRwbHlyKQoKYGBgCgoKCiMjIENlbnRyYWwgdGVuZGVuY3kgYW5kIHZhcmlhYmlsaXR5IG9mIGFubnVhbCBldmFwb3RyYW5zcGlyYXRpb24KCldoYXQgaXMgdGhlIG1lYW4gYW5udWFsIGV2YXBvdHJhbnNwaXJhdGlvbiBhY3Jvc3MgdGhlIHBsb3RzIGluIHRoZSAqT3Blbk5haGVsZSogZGF0YSBhbmQganVzdCBob3cgdmFyaWFibGUgaXMgRVQ/IExldCdzIHJlYWQgaW4gdGhlIGNsaW1hdGUgZGF0YSBhbmQgZmluZCBvdXQuCgpgYGB7cn0KI3wgbGFiZWw6IHJlYWRpbi1kYXRhCgpjbGltIDwtIHJlYWQuY3N2KCJodHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20vdWhtLWJpb3N0YXRzL3N0YXQtbW9kL3JlZnMvaGVhZHMvbWFpbi9kYXRhL3Bsb3RfY2xpbWF0ZS5jc3YiKQpgYGAKCgpUbyBmaW5kIG91dCB0aGUgYXZlcmFnZSB3ZSBjYW4gc2ltcGx5IHVzZSB0aGUgYG1lYW5gIGZ1bmN0aW9uOgoKYGBge3J9CiN8IGxhYmVsOiBtZWFuLUVUCgptZWFuKGNsaW0kZXZhcG90cmFuc19hbm51YWxfbW0pCmBgYAoKRm9yIHZhcmlhYmlsaXR5LCBzdGFuZGFyZCBkZXZpYXRpb24gaXMgYSBjb21tb24gbWVhc3VyZToKCmBgYHtyfQojfCBsYWJlbDogc2QtRVQKCnNkKGNsaW0kZXZhcG90cmFuc19hbm51YWxfbW0pCmBgYAoKQnV0LCBhcyB3ZSBzZWVtIHRvIGxpa2UgdG8gZG8sIGxldCdzIHRyeSB0byB0YWtlIHRoZSBoYXJkIHdheSB0byBnZXR0aW5nIHRob3NlIGFuc3dlcnMuIExldCdzIHVzZSB0aGUgbWV0aG9kIG9mIG1heGltdW0gbGlrZWxpaG9vZCB0byBmaW5kIHRoZSBtZWFuIGFuZCBzdGFuZGFyZCBkZXZpYXRpb24uICBGaXJzdCBoYXZlIGEgbG9vayBhdCB0aGUgc2hhcGUgb2YgdGhlIGRpc3RyaWJ1dGlvbiBvZiB0aGUgZGF0YToKCmBgYHtyfQojfCBsYWJlbDogZmlnLUVULWhpc3QKI3wgZmlnLXdpZHRoOiA0CiN8IGZpZy1oZWlnaHQ6IDMKCmdncGxvdChjbGltLCBhZXMoZXZhcG90cmFuc19hbm51YWxfbW0pKSArCiAgICBnZW9tX2hpc3RvZ3JhbSgpCmBgYAoKTG9va3MgYSBsb3QgbGlrZSBhIGJlbGwtc2hhcGVkIGN1cnZlLS0tbGlrZSBhIG5vcm1hbCBkaXN0cmlidXRpb24uICBUaGlua2luZyBhYm91dCBhbm51YWwgRVQsIHRoaXMgbWFrZXMgc2Vuc2UgdG9vOiBkYXkgdG8gZGF5IHRoZXJlIGFyZSBhIGxvdCBvZiBsaXR0bGUgcHJvY2Vzc2VzIHRoYXQgYWRkIHVwIHRvIHByb2R1Y2UgRVQsIGFuZCBvbiB0b3Agb2YgdGhhdCAqYW5udWFsKiBFVCBsaXRlcmFsbHkgYWRkcyB1cCB0aGUgRVQgb2YgZWFjaCBkYXkuIFNvIHRoZSBDZW50cmFsIExpbWl0IFRoZW9yZW0gbGlrZWx5IGFwcGxpZXMsIGFuZCB3ZSBzaG91bGRuJ3QgYmUgdG9vIHN1cnByaXNlZCB0byBmaW5kIHRoYXQgYW5udWFsIEVUIGxvb2tzIHRvIGZvbGxvdyBhIG5vcm1hbCBkaXN0cmlidXRpb24uCgojIyBUaGUgbG9nIGxpa2VsaWhvb2QgZnVuY3Rpb24gZm9yIGEgbm9ybWFsIGRpc3RyaWJ1dGlvbgoKQXMgZGlzY3Vzc2VkIGluIHRoZSBpbnRyb2R1Y3RvcnkgbGlrZWxpaG9vZCBbbGVjdHVyZSBub3Rlc10obGlrZWxpaG9vZC1sZWMucW1kKSB0aGUgbG9nIGxpa2VsaWhvb2QgZnVuY3Rpb24gZm9yIGRhdGEgdGhhdCBjb21lIGZyb20gYSBjb250aW51b3VzIHByb2JhYmlsaXR5IGRpc3RyaWJ1dGlvbiB1c2VzIHRoZSBzYW1lIGFwcHJvYWNoIG9mIHN1bW1pbmcgbG9nICJwcm9iYWJpbGl0aWVzIiBidXQgbm93IHdlIGFyZSBhY3R1YWxseSBzdW1taW5nIGxvZyBwcm9iYWJpbGl0eSAqKipkZW5zaXRpZXMqKioKCiQkClxsb2dcbWF0aHNjcntMfShcdGV4dHtwYXJhbWV0ZXJzLCBkYXRhfSkgPSBcc3VtXGxvZyBQREYoXHRleHR7ZGF0YX0gXG1pZCBcdGV4dHtwYXJhbWV0ZXJzfSkKJCQKClNvIG91ciBsb2cgbGlrZWxpaG9vZCBmdW5jdGlvbiBmb3IgdGhlIGFubnVhbCBFVCBkYXRhIHdpbGwgaW52b2x2ZSBzdW1taW5nIHVwIHRoZSBvdXRwdXQgb2YgYGRub3JtKC4uLiwgbG9nID0gVFJVRSlgLiBPbmUgYXNwZWN0IHRoYXQgd2lsbCBiZSBuZXcgYW5kIGRpZmZlcmVudCBmcm9tIHRoZSBsb2cgbGlrZWxpaG9vZCBmdW5jdGlvbiBiYXNlZCBpbiB0aGUgW2Jpbm9taWFsIGRpc3RyaWJ1dGlvbiBsYWJdKGJpbm9tLWxhYi5xbWQpIGlzIHRoYXQgd2UgbmVlZCB0byBlc3RpbWF0ZSAqdHdvKiBwYXJhbWV0ZXJzIGZvciB0aGUgbm9ybWFsIGRpc3RyaWJ1dGlvbjogbWVhbiAkXGhhdHtcbXV9JCBhbmQgc3RhbmRhcmQgZGV2aWF0aW9uICRcaGF0e1xzaWdtYX0kLiAKCipZb3UgY2FuIGRlbGV0ZSB0aGlzIGxpc3Qgb25jZSBjb21wbGV0ZSwgb3IgcGVyaGFwcyBtYWtlIHNvbWUgYnVsbGV0cyBpbnRvIHN1YmhlYWRlcnMsIHVwIHRvIHlvdSEqCgpZb3VyIHRhc2tzIGFyZSB0bwoKLSB3cml0ZSBhbiBSIGZ1bmN0aW9uIHRvIGNhbGN1bGF0ZSB0aGUgbG9nIGxpa2VsaWhvb2QgZnVuY3Rpb24sIGl0IHNob3VsZCBiZSBhYmxlIHRvIHRha2UgYXJndW1lbnRzIGZvciB0aGUgbWVhbiBhbmQgc2QgKHJlbWVtYmVyLCB0aGVzZSBwYXJhbWV0ZXJzIG5lZWQgdG8gYmUgcGFzc2VkIGFzIHRvZ2V0aGVyIGluIGEgc2luZ2xlIHZlY3RvcikgYW5kIHRoZSBkYXRhCi0gdmlzdWFsaXplIHRoZSBsb2cgbGlrZWxpaG9vZCAqc3VyZmFjZSogKHNlZSBiZWxvdywgdGhpcyB3aWxsIHJlcXVpcmUgc29tZSBuZXcgc2tpbGxzKQotIHVzZSBgb3B0aW1gIHRvIGZpbmQgdGhlIG1heGltdW0gbGlrZWxpaG9vZCBlc3RpbWF0ZXMgZm9yICRcaGF0e1xtdX0kIGFuZCAkXGhhdHtcc2lnbWF9JAotIGNvbXBhcmUgdGhlIGVzdGltYXRlcyAkXGhhdHtcbXV9JCBhbmQgJFxoYXR7XHNpZ21hfSQgdG8gdGhlIHZhbHVlcyB3ZSBjYWxjdWxhdGVkIHdpdGggYG1lYW5gIGFuZCBgc2RgCgoKIyMgVmlzdWFsaXppbmcgYSBzdXJmYWNlCgpQYXJ0IG9mIG91ciB0YXNrIGlzIHRvIHZpc3VhbGl6ZSBhIHN1cmZhY2UuIFRoZXJlIGFyZSBtdWx0aXBsZSB3YXlzIHRvIGRvIHRoYXQsIGJ1dCB3ZSB1c2UgYGdlb21fdGlsZWAuIENoZWNrIG91dCBob3cgdGhhdCB3b3JrcwoKYGBge3J9CiN8IGxhYmVsOiBmaWctZ2VvbV90aWxlLWRlbW8KCiMgbWFrZSBzb21lIHNpbXBsZSBkYXRhCnN1cmYgPC0gZGF0YS5mcmFtZSh4ID0gYygxLCAyLCAxLCAyKSwgCiAgICAgICAgICAgICAgICAgICB5ID0gYygxLCAxLCAyLCAyKSwgCiAgICAgICAgICAgICAgICAgICB6ID0gYyg4LCAyLCA2LCAxKSkKCiMgdmlzdWFsaXplIHRoZSBgemAgYXhpcyBhcyBhIHRoaXJkIGRpbWVuc2lvbiBjb2RlZCBieSBjb2xvcgpnZ3Bsb3Qoc3VyZiwgYWVzKHgsIHksIGZpbGwgPSB6KSkgKwogICAgZ2VvbV90aWxlKCkgKwogICAgc2NhbGVfZmlsbF92aXJpZGlzX2MoKQpgYGAKCgpMb29rIGF0IHRoZSBkYXRhIHVuZGVybHlpbmcgdGhhdCBncmFwaAoKYGBge3J9CnN1cmYKCmBgYAoKVGhlIGB4YCBhbmQgYHlgIGNvbHVtbnMgbGF5IG91dCBhIGdyaWQgd2hpbGUgdGhlIGB6YCBjb2x1bW4gcHJvdmlkZXMgdGhlICJoZWlnaHRzIiBvZiB0aGUgc3VyZmFjZSBhdCBlYWNoIG9uZSBvZiB0aG9zZSBncmlkcG9pbnRzLiBUaGUgYGdlb21fdGlsZWAgZ2VvbSBqdXN0IGZpbGxzIHRoZSBzcGFjZSB3aXRoIHNxdWFyZXMgY29sb3JlZCBhY2NvcmRpbmcgdG8gdGhlIHZhbHVlcyBvZiBgemAuCgpZb3UgY2FuIHVzZSB0aGlzIGZvciB5b3VyIHZpc3VhbGl6YXRpb24hCgpCdXQgeW91IHdpbGwgbm90IHdhbnQgdG8gbWFrZSB0aGUgeHkgZ3JpZCBieSBoYW5kLiBUbyBtYWtlIGEgZ3JpZCBvdmVyIGEgcmFuZ2Ugb2YgcGFyYW1ldGVyICgkXG11JCBhbmQgJFxzaWdtYSQgdmFsdWVzKSB1c2UgdGhlIGBleHBhbmQuZ3JpZGAgZnVuY3Rpb24sIGZvciBleGFtcGxlCgpgYGB7cn0KI3wgbGFiZWw6IGV4cGFuZAoKcGFyYW1zIDwtIGV4cGFuZC5ncmlkKG11ID0gc2VxKDY1MCwgODUwLCBsZW5ndGgub3V0ID0gMjApLCAKICAgICAgICAgICAgICAgICAgICAgIHNpZyA9IHNlcSgxMDAsIDIwMCwgbGVuZ3RoLm91dCA9IDIwKSkKCmhlYWQocGFyYW1zKQpgYGAKCk5vdyB3ZSBoYXZlIGEgZ3JpZCBvZiB2YWx1ZXMgaW4gdGhlIG5laWdoYm9yaG9vZCBvZiB0aGUgcmVzdWx0cyB3ZSBnb3QgZnJvbSBgbWVhbihjbGltJGV2YXBvdHJhbnNfYW5udWFsX21tKWAgYW5kIGBzZChjbGltJGV2YXBvdHJhbnNfYW5udWFsX21tKWAuIEluIGVhY2ggY29sdW1uIG9mIHRoZSBvdXRwdXQgb2YgYGV4cGFuZC5ncmlkYCB0aGVyZSB3aWxsIGJlIDIwIHVuaXF1ZSB2YWx1ZXMgYmVjYXVzZSBpbiBvdXIgY2FsbCB0byBgc2VxYCB3ZSBzcGVjaWZpZWQgYGxlbmd0aC5vdXQgPSAyMGAuIFlvdSBjb3VsZCBtYWtlIHRoYXQgbGFyZ2VyIG9yIHNtYWxsZXItLS1sYXJnZXIgaWYgeW91IGZlZWwgbGlrZSB5b3UgZG9uJ3QgaGF2ZSBlbm91Z2ggdGlsZXMgZm9yIGEgcHJldHR5IGZpZ3VyZSwgc21hbGxlciBpZiAoaHlwb3RoZXRpY2FsbHkpIGl0cyB0b28gYmlnIG9mIGEgY29tcHV0YXRpb25hbCB0YXNrIGZvciB5b3VyIGNvbXB1dGVyLiBPdXIgdGFzayBpbiB0aGlzIGxhYiBpcyBub3RoaW5nIHRvIHdvcnJ5IGFib3V0IGNvbXB1dGF0aW9uYWxseS4KClRoZSBuZXh0IHRoaW5nIHlvdSBuZWVkIHRvIGZpZ3VyZSBvdXQgaXMgaG93IHRvIGFwcGx5IHlvdXIgbGlrZWxpaG9vZCBmdW5jdGlvbiB0byBlYWNoIHBhcmFtZXRlciBjb21iaW5hdGlvbiBpbiBlYWNoIG9mIHRoZSByb3dzIG9mIGBwYXJhbXNgLiBVbmZvcnR1bmF0ZWx5IHlvdSBjYW5ub3QganVzdCBwbHVnIHRoZSBjb2x1bW5zIGludG8geW91ciBsb2cgbGlrZWxpaG9vZCBmdW5jdGlvbi4gVGhlIHJlYXNvbiBpcyB0aGF0IHlvdSBhcmUgKGhvcGVmdWxseSkgcGFzc2luZyB0aGUgZW50aXJlIGNvbHVtbiBvZiBFVCBkYXRhIGludG8gYGRub3JtYCBzb21ld2hlcmUgaW4geW91ciBmdW5jdGlvbi4gSWYgeW91IGFsc28gcGFzcyBpbiBjb2x1bW4gdmVjdG9ycyBmb3IgdGhlIGBtZWFuYCBhbmQgYHNkYCBhcmd1bWVudHMgb2YgYGRub3JtYCBpdCB3aWxsIGdldCBjb25mdXNlZCBhYm91dCB3aGF0IHlvdSdyZSBhc2tpbmcgZm9yLiAKClRoYXQgbWVhbnMgd2UgbmVlZCB0byBwbHVnIGluIHRoZSB2YWx1ZXMgZm9yIGBtZWFuYCBhbmQgYHNkYCBvbmUgY29tYmluYXRpb24gYXQgYSB0aW1lLiBUaGUgd2F5IHRvIGRvIHRoYXQgYmFzZWQgb24gd2hhdCB3ZSd2ZSBsZWFybmVkIHNvIGZhciBpcyBhIGZvciBsb29wISAgSWYgeW91IGFyZSBjdXJpb3VzIGFib3V0IG90aGVyIHdheXMgeW91J2xsIHdhbnQgdG8gZGlnIGRlZXAgaW50byBmdW5jdGlvbnMgbGlrZSBgbGFwcGx5YCBhbmQgYHZhcHBseWAgZnJvbSBiYXNlIFIgb3IgYHJvd3dpc2VgIGZvciBhICpkcGx5ciotZmxhdm9yZWQgYXBwcm9hY2guCgpUbyB0aGUgZm9yIGxvb3AhIEhlcmUgaXMgaG93IGl0IHdpbGwgd29yazoKCmBgYHtyfQojfCBsYWJlbDogbG9vcC1kZW1vCgojIHRoaXMgaXMgYSBwcmV0ZW5kIHZlcnNpb24gb2YgYSBsaWtlbGlob29kIGZ1bmN0aW9uCnlvdXJfbGlrX2Z1biA8LSBmdW5jdGlvbihwYXJzLCBkYXRhKSB7CiAgICBwYXJzWzFdICsgcGFyc1syXSArIHN1bShkYXRhKQp9IAoKIyBwcmV0ZW5kIGRhdGEKeW91cl9kYXRhIDwtIDE6NAoKIyBtYWtlIGFuIGVtcHR5IHZlY3RvciB0aGF0IHdpbGwgaG9sZCB0aGUgbG9nIGxpa2VsaWhvb2QgdmFsdWVzCmxsX25vcm0gPC0gbnVtZXJpYyhucm93KHBhcmFtcykpIAoKZm9yKGkgaW4gMTpucm93KHBhcmFtcykpIHsKICAgIHBhcnNfaSA8LSBjKHBhcmFtcyRtdVtpXSwgcGFyYW1zJHNpZ1tpXSkKICAgIGxsX25vcm1baV0gPC0geW91cl9saWtfZnVuKHBhcnNfaSwgeW91cl9kYXRhKQp9CgojIGNvbWJpbmUgcGFyYW1zIGFuZCBsbF9ub3JtIGZvciBwbG90dGluZwpwYXJtc19sbCA8LSBkYXRhLmZyYW1lKHBhcmFtcywgbG9nbGlrID0gbGxfbm9ybSkKCmhlYWQocGFybXNfbGwpCmBgYAoKCg==').then(res => res.blob()).then(blob => {
+      const downloadURL = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      document.body.appendChild(a);
+      a.href = downloadURL;
+      a.download = 'lab03-norm-likelihood.qmd'; a.click();
+      window.URL.revokeObjectURL(downloadURL);
+      document.body.removeChild(a);
+        });"><button class="btn btn-default downloadthis  " id="dnldts4588"><i class="bi bi-download"></i> Download lab template </button></a></p>
+<p>The template will prompt you to work through the following sections.</p>
+<section id="central-tendency-and-variability-of-annual-evapotranspiration" class="level2" data-number="12.1">
+<h2 data-number="12.1" class="anchored" data-anchor-id="central-tendency-and-variability-of-annual-evapotranspiration"><span class="header-section-number">12.1</span> Central tendency and variability of annual evapotranspiration</h2>
+<p>What is the mean annual evapotranspiration across the plots in the <em>OpenNahele</em> data and just how variable is ET? Let’s read in the climate data and find out.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>clim <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"https://raw.githubusercontent.com/uhm-biostats/stat-mod/refs/heads/main/data/plot_climate.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>To find out the average we can simply use the <code>mean</code> function:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(clim<span class="sc">$</span>evapotrans_annual_mm)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 764.6954</code></pre>
+</div>
+</div>
+<p>For variability, standard deviation is a common measure:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(clim<span class="sc">$</span>evapotrans_annual_mm)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 194.9598</code></pre>
+</div>
+</div>
+<p>But, as we seem to like to do, let’s try to take the hard way to getting those answers. Let’s use the method of maximum likelihood to find the mean and standard deviation. First have a look at the shape of the distribution of the data:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(clim, <span class="fu">aes</span>(evapotrans_annual_mm)) <span class="sc">+</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value `binwidth`.</code></pre>
+</div>
+<div class="cell-output-display">
+<div id="fig-ET-hist" class="quarto-float quarto-figure quarto-figure-center anchored" width="384">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ET-hist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="norm-lab_files/figure-html/fig-ET-hist-1.png" id="fig-ET-hist" class="img-fluid figure-img" width="384">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-ET-hist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;12.1
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Looks a lot like a bell-shaped curve—like a normal distribution. Thinking about annual ET, this makes sense too: day to day there are a lot of little processes that add up to produce ET, and on top of that <em>annual</em> ET literally adds up the ET of each day. So the Central Limit Theorem likely applies, and we shouldn’t be too surprised to find that annual ET looks to follow a normal distribution.</p>
+</section>
+<section id="the-log-likelihood-function-for-a-normal-distribution" class="level2" data-number="12.2">
+<h2 data-number="12.2" class="anchored" data-anchor-id="the-log-likelihood-function-for-a-normal-distribution"><span class="header-section-number">12.2</span> The log likelihood function for a normal distribution</h2>
+<p>As discussed in the introductory likelihood <a href="./likelihood-lec.html">lecture notes</a> the log likelihood function for data that come from a continuous probability distribution uses the same approach of summing log “probabilities” but now we are actually summing log probability <strong><em>densities</em></strong></p>
+<p><span class="math display">\[
+\log\mathscr{L}(\text{parameters, data}) = \sum\log PDF(\text{data} \mid \text{parameters})
+\]</span></p>
+<p>So our log likelihood function for the annual ET data will involve summing up the output of <code>dnorm(..., log = TRUE)</code>. One aspect that will be new and different from the log likelihood function based in the <a href="./binom-lab.html">binomial distribution lab</a> is that we need to estimate <em>two</em> parameters for the normal distribution: mean <span class="math inline">\(\hat{\mu}\)</span> and standard deviation <span class="math inline">\(\hat{\sigma}\)</span>.</p>
+<p>Your tasks are to</p>
+<ul>
+<li>write an R function to calculate the log likelihood function, it should be able to take arguments for the mean and sd (remember, these parameters need to be passed as together in a single vector) and the data</li>
+<li>visualize the log likelihood <em>surface</em> (see below, this will require some new skills)</li>
+<li>use <code>optim</code> to find the maximum likelihood estimates for <span class="math inline">\(\hat{\mu}\)</span> and <span class="math inline">\(\hat{\sigma}\)</span></li>
+<li>compare the estimates <span class="math inline">\(\hat{\mu}\)</span> and <span class="math inline">\(\hat{\sigma}\)</span> to the values we calculated with <code>mean</code> and <code>sd</code></li>
+</ul>
+</section>
+<section id="visualizing-a-surface" class="level2" data-number="12.3">
+<h2 data-number="12.3" class="anchored" data-anchor-id="visualizing-a-surface"><span class="header-section-number">12.3</span> Visualizing a surface</h2>
+<p>Part of our task is to visualize a surface. There are multiple ways to do that, but we use <code>geom_tile</code>. Check out how that works</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># make some simple data</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>surf <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>), </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">y =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>), </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">z =</span> <span class="fu">c</span>(<span class="dv">8</span>, <span class="dv">2</span>, <span class="dv">6</span>, <span class="dv">1</span>))</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co"># visualize the `z` axis as a third dimension coded by color</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(surf, <span class="fu">aes</span>(x, y, <span class="at">fill =</span> z)) <span class="sc">+</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_tile</span>() <span class="sc">+</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_viridis_c</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-geom_tile-demo" class="quarto-float quarto-figure quarto-figure-center anchored" width="672">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-geom_tile-demo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="norm-lab_files/figure-html/fig-geom_tile-demo-1.png" id="fig-geom_tile-demo" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-geom_tile-demo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;12.2
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Look at the data underlying that graph</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>surf</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  x y z
+1 1 1 8
+2 2 1 2
+3 1 2 6
+4 2 2 1</code></pre>
+</div>
+</div>
+<p>The <code>x</code> and <code>y</code> columns lay out a grid while the <code>z</code> column provides the “heights” of the surface at each one of those gridpoints. The <code>geom_tile</code> geom just fills the space with squares colored according to the values of <code>z</code>.</p>
+<p>You can use this for your visualization!</p>
+<p>But you will not want to make the xy grid by hand. To make a grid over a range of parameter (<span class="math inline">\(\mu\)</span> and <span class="math inline">\(\sigma\)</span> values) use the <code>expand.grid</code> function, for example</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>params <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">mu =</span> <span class="fu">seq</span>(<span class="dv">650</span>, <span class="dv">850</span>, <span class="at">length.out =</span> <span class="dv">20</span>), </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">sig =</span> <span class="fu">seq</span>(<span class="dv">100</span>, <span class="dv">200</span>, <span class="at">length.out =</span> <span class="dv">20</span>))</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(params)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        mu sig
+1 650.0000 100
+2 660.5263 100
+3 671.0526 100
+4 681.5789 100
+5 692.1053 100
+6 702.6316 100</code></pre>
+</div>
+</div>
+<p>Now we have a grid of values in the neighborhood of the results we got from <code>mean(clim$evapotrans_annual_mm)</code> and <code>sd(clim$evapotrans_annual_mm)</code>. In each column of the output of <code>expand.grid</code> there will be 20 unique values because in our call to <code>seq</code> we specified <code>length.out = 20</code>. You could make that larger or smaller—larger if you feel like you don’t have enough tiles for a pretty figure, smaller if (hypothetically) its too big of a computational task for your computer. Our task in this lab is nothing to worry about computationally.</p>
+<p>The next thing you need to figure out is how to apply your likelihood function to each parameter combination in each of the rows of <code>params</code>. Unfortunately you cannot just plug the columns into your log likelihood function. The reason is that you are (hopefully) passing the entire column of ET data into <code>dnorm</code> somewhere in your function. If you also pass in column vectors for the <code>mean</code> and <code>sd</code> arguments of <code>dnorm</code> it will get confused about what you’re asking for.</p>
+<p>That means we need to plug in the values for <code>mean</code> and <code>sd</code> one combination at a time. The way to do that based on what we’ve learned so far is a for loop! If you are curious about other ways you’ll want to dig deep into functions like <code>lapply</code> and <code>vapply</code> from base R or <code>rowwise</code> for a <em>dplyr</em>-flavored approach.</p>
+<p>To the for loop! Here is how it will work:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># this is a pretend version of a likelihood function</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>your_lik_fun <span class="ot">&lt;-</span> <span class="cf">function</span>(pars, data) {</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    pars[<span class="dv">1</span>] <span class="sc">+</span> pars[<span class="dv">2</span>] <span class="sc">+</span> <span class="fu">sum</span>(data)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>} </span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co"># pretend data</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>your_data <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="co"># make an empty vector that will hold the log likelihood values</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>ll_norm <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="fu">nrow</span>(params)) </span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(params)) {</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    pars_i <span class="ot">&lt;-</span> <span class="fu">c</span>(params<span class="sc">$</span>mu[i], params<span class="sc">$</span>sig[i])</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>    ll_norm[i] <span class="ot">&lt;-</span> <span class="fu">your_lik_fun</span>(pars_i, your_data)</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a><span class="co"># combine params and ll_norm for plotting</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>parms_ll <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(params, <span class="at">loglik =</span> ll_norm)</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(parms_ll)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        mu sig   loglik
+1 650.0000 100 760.0000
+2 660.5263 100 770.5263
+3 671.0526 100 781.0526
+4 681.5789 100 791.5789
+5 692.1053 100 802.1053
+6 702.6316 100 812.6316</code></pre>
+</div>
+</div>
+<p>This same approach will work for calculating the real log likelihood surface.</p>
+</section>
+<section id="references" class="level2" data-number="12.4">
+<h2 data-number="12.4" class="anchored" data-anchor-id="references"><span class="header-section-number">12.4</span> References</h2>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-brauman2012" class="csl-entry" role="listitem">
+Brauman KA, Freyberg DL, Daily GC. 2012. Potential evapotranspiration from forest and pasture in the tropics: A case study in kona, hawai ‘i. Journal of Hydrology <strong>440</strong>:52–61. Elsevier.
+</div>
+<div id="ref-fisher2011" class="csl-entry" role="listitem">
+Fisher JB, Whittaker RJ, Malhi Y. 2011. ET come home: Potential evapotranspiration in geographical ecology. Global Ecology and Biogeography <strong>20</strong>:1–18. Wiley Online Library.
+</div>
+<div id="ref-idol2007" class="csl-entry" role="listitem">
+Idol T, Baker PJ, Meason D. 2007. Indicators of forest ecosystem productivity and nutrient status across precipitation and temperature gradients in hawaii. Journal of Tropical Ecology <strong>23</strong>:693–704. Cambridge University Press.
+</div>
+</div>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
