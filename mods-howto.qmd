@@ -1,1 +1,34 @@
-# Translating hypotheses to models
+# Translating question and hypotheses into models
+
+What is a model? That's a harder question to answer than you might think. Could an oli be a model? Could a computer simulation be a model?
+what questions do we ask, how, and why?
+
+- who's knowledge is valued?
+- oiwi methods
+- mookuauhau
+
+
+
+
+what predictions would you expect from the question/hypothesis?
+
+- prediction is the go-between from question to model
+- predictions are
+    - if this goes up, other goes down
+    - if its this treatment, outcome changes how
+- making a graph can help
+
+
+what kind of variability do you expect?
+
+- what are the biological sources of variation? (is it central limit, is it birth/death?)
+- what are the sample collection sources of variation? (random noise? or detection issues?...maybe add note that sampling error is a related but distinct thing)
+- how would you simulate the data?
+- we need to know so we can figure out what kind of prob distrib to use
+
+the issue of fishing
+
+- looking at the data and letting it determine your model is good and bad
+- good to understand what we're working with
+- bad to perhaps lead to inflating false positives
+- making a priori predictions is perhaps best therefore, with some room for modification based on data
