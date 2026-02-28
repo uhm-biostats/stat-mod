@@ -26,11 +26,11 @@ book:
             - likelihood-lec.qmd
             - binom-lab.qmd
             - norm-lab.qmd
-        # - part: lin-mod.qmd
-        #   chapters:
-        #     - mods-howto.qmd
-        #     - lin-norm.qmd
-        #     - lin-lstsqrs.qmd
+        - part: lin-mod.qmd
+          chapters:
+            # - mods-howto.qmd
+            - lin-norm.qmd
+            # - lin-lstsqrs.qmd
 
 
 bibliography: stat-mod.bib
