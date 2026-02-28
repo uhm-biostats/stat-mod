@@ -1,1 +1,8 @@
 # Linear models
+
+Starting with the simple linear model $y = ax + b + \text{error}$ we will see how we can expand from there, using likelihood methods, to cover many different kinds of ways we might like to model and make inference about biological processes. Models will include multiple linear regression, models where explanatory variables are categorical (i.e. where we might classically use ANOVA), generalized linear models, and mixed effects models.
+
+Jump straight to:
+
+- How to make a model [slides](mods-howto-slides.html){target="_blank"}
+- [Linear models with normal residuals](lin-norm.qmd)
