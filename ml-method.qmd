@@ -1,5 +1,0 @@
-# How likelihood maximization works
-
-- should bring up ward intervals here
-- maybe not about maximization at all
-- maybe about uncertainty 
