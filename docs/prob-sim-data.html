@@ -325,7 +325,7 @@ window.Quarto = {
   </ul></li>
   <li><a href="#simulating-binomial-data-presence-and-absence-across-an-environmental-gradient" id="toc-simulating-binomial-data-presence-and-absence-across-an-environmental-gradient" class="nav-link" data-scroll-target="#simulating-binomial-data-presence-and-absence-across-an-environmental-gradient"><span class="header-section-number">9.2</span> Simulating binomial data: presence and absence across an environmental gradient</a></li>
   </ul>
-</nav>
+<div class="quarto-code-links"><h2>Code Links</h2><ul><li><a href="https://github.com/uhm-biostats/stat-mod/blob/main/prob-sim-data.qmd"><i class="bi bi-github"></i>View source</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -468,7 +468,7 @@ Figure&nbsp;9.2
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="at">size =</span> <span class="dv">20</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1]  6  8  8  8  8  3  7  8  1  1  9  2 10  4  3  3  7  1  1  4</code></pre>
+<pre><code> [1]  2  1  1  7  5  6  5  3  4  9  3 10 10  4  9  8  5  3  7  5</code></pre>
 </div>
 </div>
 <p>The <code>replace = TRUE</code> bit is important: that tells R to allow itself to re-sample the same number rather than draw 20 different numbers between 1 and 10 (which is impossible).</p>
