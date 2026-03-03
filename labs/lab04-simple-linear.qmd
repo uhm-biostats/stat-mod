@@ -53,9 +53,11 @@ While we're on the topic of data, let's clean it up a little
 #| label: clean-data
 
 dat <- dat |> 
+    # remove missing DBH values
+    filter(!is.na(DBH_cm)) |> 
     # add a column for log-transformed DBH since this will be 
     # the variable we use as a response variable
-    mutate(log_dbh_cm = log(dat$DBH_cm)) |> 
+    mutate(log_dbh_cm = log(DBH_cm)) |> 
     # remove NAs for elevation
     filter(!is.na(hii)) |> 
     # remove "uncertain" for native status
@@ -117,6 +119,7 @@ So the mean of the normal distribution is a function of native-status and the st
 
 # let's let `x` be explanatory and `y` be response variables
 loglik_nat <- function(pars, explan_var, respon_var) {
+    # browser()
     # extract parameters
     mu_nat <- pars[1]
     mu_non <- pars[2]
