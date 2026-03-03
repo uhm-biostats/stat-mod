@@ -1,3 +1,12 @@
+---
+format:
+  html:
+    code-links:
+      - text: View source
+        icon: github
+        href: https://github.com/uhm-biostats/stat-mod/blob/main/binom-lab.qmd
+---
+
 # Estimating probability of occurrence 
 
 This lab will introduce you to creating a log likelihood function and finding its maximum. You can download the template `.qmd` file for this lab here:

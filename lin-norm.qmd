@@ -1,3 +1,12 @@
+---
+format:
+  html:
+    code-links:
+      - text: View source
+        icon: github
+        href: https://github.com/uhm-biostats/stat-mod/blob/main/lin-norm.qmd
+---
+
 # Simple linear models
 
 This lab will revisit simple linear models from a likelihood framework.

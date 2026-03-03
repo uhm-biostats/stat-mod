@@ -1,6 +1,14 @@
 ---
+format:
+  html:
+    code-links:
+      - text: View source
+        icon: github
+        href: https://github.com/uhm-biostats/stat-mod/blob/main/r-refresh.qmd
+
 callout-icon: false
 ---
+
 
 # R refresher 
 

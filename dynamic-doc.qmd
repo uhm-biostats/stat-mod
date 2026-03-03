@@ -1,4 +1,11 @@
 ---
+format:
+  html:
+    code-links:
+      - text: View source
+        icon: github
+        href: https://github.com/uhm-biostats/stat-mod/blob/main/dynamic-doc.qmd
+
 suppress-bibliography: true
 ---
 
