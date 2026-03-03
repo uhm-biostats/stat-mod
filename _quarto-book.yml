@@ -36,6 +36,8 @@ book:
 bibliography: stat-mod.bib
 csl: conservation-biology.csl
 
+execute:
+  freeze: auto
 
 comments:
     hypothesis: false

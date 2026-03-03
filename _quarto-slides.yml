@@ -10,3 +10,6 @@ format:
     auto-stretch: false
     embed-resources: false
     controls: true
+
+execute:
+  freeze: auto
