@@ -28,7 +28,7 @@ book:
             - norm-lab.qmd
         - part: lin-mod.qmd
           chapters:
-            # - mods-howto.qmd
+            - mods-howto.qmd
             - lin-norm.qmd
             # - lin-lstsqrs.qmd
 
