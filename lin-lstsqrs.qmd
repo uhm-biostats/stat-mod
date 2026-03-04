@@ -1,1 +1,61 @@
+---
+format:
+  html:
+    code-links:
+      - text: View source
+        icon: github
+        href: https://github.com/uhm-biostats/stat-mod/blob/main/lin-lstsqrs.qmd
+---
+
 # Linear models and least squares
+
+This lab will see use leveraging the built-in capabilities of R to make likelihood methods *easier*...finally. 
+
+You can download the lab template `.qmd` file for this lab here:
+
+{{< downloadthis labs/lab04-lstsqrs-linear.qmd dname=lab04-lstsqrs-linear label="Download lab template">}}
+
+The template will prompt you to work through the following sections.
+
+```{r}
+#| include: false
+
+library(ggplot2)
+library(dplyr)
+
+# the lab qmd file
+f <- "labs/lab04-lstsqrs-linear.qmd"
+l <- readLines(f)
+
+# the yaml
+iyaml <- grep("---|```", l) |> 
+    (\(x) x[1]:x[4])()
+
+# the comments to delete
+idelt <- grep("delete .* once complete", l, 
+              ignore.case = TRUE)
+
+# only the body
+b <- l[-c(iyaml, idelt)] |> 
+    gsub("\\*delete .* once complete", "", x = _, 
+         ignore.case = TRUE)
+
+# write only the body for use with `{{< include %s >}}`
+# fb <- gsub("\\.qmd", "_bonly.qmd", f)
+fb <- tempfile(fileext = ".qmd")
+
+writeLines(b, fb)
+
+m <- knitr::knit_child(fb, options = list(include = TRUE), 
+                       quiet = TRUE)
+```
+
+
+```{r}
+#| echo: false
+#| results: asis
+
+cat(m, sep = "\n")
+```
+
+

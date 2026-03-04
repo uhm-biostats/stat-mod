@@ -30,7 +30,7 @@ book:
           chapters:
             - mods-howto.qmd
             - lin-norm.qmd
-            # - lin-lstsqrs.qmd
+            - lin-lstsqrs.qmd
 
 
 bibliography: stat-mod.bib
