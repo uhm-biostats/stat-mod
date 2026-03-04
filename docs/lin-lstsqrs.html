@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>15&nbsp; Linear models and least squares – Intro to Statistical Modeling</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./lin-norm.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-27c261d06b905028a18691de25d09dde.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/quarto-contrib/downloadthis-1.9.1/downloadthis.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./lin-mod.html">Linear models</a></li><li class="breadcrumb-item"><a href="./lin-lstsqrs.html"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Linear models and least squares</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="./index.html" class="sidebar-logo-link">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Intro to Statistical Modeling</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welina mai!</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introductory material</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./datasets-intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Data we will work with</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./care-fair.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">CARE and FAIR principles</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./r-refresh.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">R refresher</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./dynamic-doc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Dynamic documents with <em>quarto</em></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./github.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Managing code with git and GitHub</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./bring-it-together.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">CARE and FAIR in presenting data with dynamic documents</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./prob.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Probability</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./prob-intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Introduction to probability</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./prob-dist.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Probability distributions in R</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./prob-sim-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Simulating probabilistic data</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./likelihood-intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introducing the method of maximum likelihood</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./likelihood-lec.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Introducing likelihood</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./binom-lab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Estimating probability of occurrence</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./norm-lab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Estimating the parameters of a normal distribution</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./lin-mod.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Linear models</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./mods-howto.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">How to make a model</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./lin-norm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Simple linear models</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./lin-lstsqrs.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Linear models and least squares</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#turns-out-theres-an-easier-way" id="toc-turns-out-theres-an-easier-way" class="nav-link active" data-scroll-target="#turns-out-theres-an-easier-way"><span class="header-section-number">15.1</span> Turns out there’s an easier way</a>
+  <ul>
+  <li><a href="#predicting-log-dbh-from-native-status" id="toc-predicting-log-dbh-from-native-status" class="nav-link" data-scroll-target="#predicting-log-dbh-from-native-status"><span class="header-section-number">15.1.1</span> Predicting log DBH from native status</a></li>
+  <li><a href="#predicting-log-dbh-from-human-impact" id="toc-predicting-log-dbh-from-human-impact" class="nav-link" data-scroll-target="#predicting-log-dbh-from-human-impact"><span class="header-section-number">15.1.2</span> Predicting log DBH from human impact</a></li>
+  </ul></li>
+  <li><a href="#more-complex-models-thanks-to-lm" id="toc-more-complex-models-thanks-to-lm" class="nav-link" data-scroll-target="#more-complex-models-thanks-to-lm"><span class="header-section-number">15.2</span> More complex models thanks to <code>lm</code></a>
+  <ul>
+  <li><a href="#visualizing-interactions" id="toc-visualizing-interactions" class="nav-link" data-scroll-target="#visualizing-interactions"><span class="header-section-number">15.2.1</span> Visualizing interactions</a></li>
+  </ul></li>
+  </ul>
+<div class="quarto-code-links"><h2>Code Links</h2><ul><li><a href="https://github.com/uhm-biostats/stat-mod/blob/main/lin-lstsqrs.qmd"><i class="bi bi-github"></i>View source</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./lin-mod.html">Linear models</a></li><li class="breadcrumb-item"><a href="./lin-lstsqrs.html"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Linear models and least squares</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Linear models and least squares</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>This lab will see use leveraging the built-in capabilities of R to make likelihood methods <em>easier</em>…finally.</p>
+<p>You can download the lab template <code>.qmd</code> file for this lab here:</p>
+<p><a href="#dnldts35194" onclick="fetch('data:text/plain;base64,LS0tCnRpdGxlOiAiRXN0aW1hdGluZyB0aGUgcGFyYW1ldGVycyBvZiBhIHNpbXBsZSBsaW5lYXIgbW9kZWwiCmZvcm1hdDogCiAgICBwZGY6IAogICAgICAgIGluY2x1ZGUtaW4taGVhZGVyOgogICAgICAgICAgICB0ZXh0OiB8CiAgICAgICAgICAgICAgICBcdXNlcGFja2FnZXtuZXd1bmljb2RlY2hhcn0KICAgICAgICAgICAgICAgIFxuZXd1bmljb2RlY2hhcnvKu317YH0gCmF1dGhvcjogCiAgICAtIHlvdXIgbmFtZSBoZXJlCi0tLQoKYGBge3J9CiN8IGxhYmVsOiBzZXR1cAoKIyBsb2FkIGFsbCBuZWNlc3NhcnkgcGFja2FnZXMKIyAuLi4geW91IG1heSBuZWVkIHRvIGFkZCB0byB0aGlzISBjYW4gZGVsZXRlIHRoaXMgY29tbWVudCBvbmNlIGRvbmUKbGlicmFyeShnZ3Bsb3QyKQpsaWJyYXJ5KGRwbHlyKQoKYGBgCgpUaGlzIGxhYiBwaWNrcyB1cCB3aGVyZSB3ZSBsZWZ0IG9mZiB3aXRoIHRoZSBsYWIgaW4gW2BsYWIwNC1zaW1wbGUtbGluZWFyLnFtZGBdKGxhYjA0LXNpbXBsZS1saW5lYXIucW1kKS4gQWdhaW4sIGxldCdzIHN0YXJ0IGJ5IHJlYWRpbmcgaW4gdGhlIGRhdGEgYW5kIHdyYW5nbGluZyBpdCBpbnRvIGEgd29ya2FibGUgZm9ybWF0CgpgYGB7cn0KI3wgbGFiZWw6IHJlYWRpbi1kYXRhCgojIHJlYWQtaW4gZnJvbSBnaXRodWIKdHJlZSA8LSByZWFkLmNzdigiaHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL3VobS1iaW9zdGF0cy9zdGF0LW1vZC9yZWZzL2hlYWRzL21haW4vZGF0YS9PcGVuTmFoZWxlX1RyZWVfRGF0YS5jc3YiKQoKaGlpX2dlbyA8LSByZWFkLmNzdigiaHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL3VobS1iaW9zdGF0cy9zdGF0LW1vZC9yZWZzL2hlYWRzL21haW4vZGF0YS9oaWlfZ2VvLmNzdiIpCgojIG1lcmdlIHRoZSBkYXRhIGludG8gb25lIGRhdGEuZnJhbWUgYW5kIGNsZWFuCmRhdCA8LSBsZWZ0X2pvaW4odHJlZSwgaGlpX2dlbykgfD4gCiAgICAjIHJlbW92ZSBtaXNzaW5nIERCSCB2YWx1ZXMKICAgIGZpbHRlcighaXMubmEoREJIX2NtKSkgfD4gCiAgICAjIGFkZCBhIGNvbHVtbiBmb3IgbG9nLXRyYW5zZm9ybWVkIERCSCBzaW5jZSB0aGlzIHdpbGwgYmUgCiAgICAjIHRoZSB2YXJpYWJsZSB3ZSB1c2UgYXMgYSByZXNwb25zZSB2YXJpYWJsZQogICAgbXV0YXRlKGxvZ19kYmhfY20gPSBsb2coREJIX2NtKSkgfD4gCiAgICAjIHJlbW92ZSBOQXMgZm9yIGVsZXZhdGlvbgogICAgZmlsdGVyKCFpcy5uYShoaWkpKSB8PiAKICAgICMgcmVtb3ZlICJ1bmNlcnRhaW4iIGZvciBuYXRpdmUgc3RhdHVzCiAgICBmaWx0ZXIoTmF0aXZlX1N0YXR1cyAhPSAidW5jZXJ0YWluIikKCmBgYAoKIyMgVHVybnMgb3V0IHRoZXJlJ3MgYW4gZWFzaWVyIHdheQoKUHJldmlvdXNseSB3ZSBmb3VuZCB0aGUgcGFyYW1ldGVycyBvZiBvdXIgbW9kZWxzIGJ5IGNyZWF0aW5nIGEgbGlrZWxpaG9vZCBmdW5jdGlvbnMgImJ5IGhhbmQiIGFuZCBtYXhpbWl6aW5nIHRob3NlIGZ1bmN0aW9ucyAiYnkgaGFuZCIgdXNpbmcgYG9wdGltYC4gSXQncyBwcm9iYWJseSBub3Qgc3VycHJpc2luZyB0aGF0IHRoZXJlIGlzIGFuIGVhc2llciB3YXkuCgpCZWNhdXNlIGFsbCBvdXIgbW9kZWxzIGhhdmUgYmVlbiAqbGluZWFyKiAobWVhbmluZyB0aGUgdmFyaWFibGVzIGFyZSBsaW5lYXIgY29tYmluYXRpb25zIG9mIGVhY2ggb3RoZXIpIHdlIGNhbiBmaW5kIHRoZSBwYXJhbWV0ZXJzIG9mIG91ciBtb2RlbCB3aXRoIHRoZSBidWlsdC1pbiBSIGZ1bmN0aW9uIGBsbWAsIHdoaWNoIHN0YW5kcyBmb3IgImxpbmVhciBtb2RlbC4iCgojIyMgUHJlZGljdGluZyBsb2cgREJIIGZyb20gbmF0aXZlIHN0YXR1cwoKTGV0J3MgdXNlIHRoZSBtb2RlbCB3aGVyZSB3ZSBwcmVkaWN0IGBsb2dfZGJoX2NtYCBiYXNlZCBvbiBgTmF0aXZlX1N0YXR1c2AgdG8gZGVtb25zdHJhdGUgYGxtYAoKYGBge3J9Cm5hdF9zdGF0X21vZCA8LSBsbShsb2dfZGJoX2NtIH4gTmF0aXZlX1N0YXR1cywgZGF0YSA9IGRhdCkKYGBgCgpCZWZvcmUgZXZlbiBsb29raW5nIGF0IHRoZSByZXN1bHRzLCBsZXQncyBsb29rIGF0IHRoZSBzeW50YXguIFdlIGFyZSB0ZWxsaW5nIGBsbWAgdGhhdCB3ZSB3YW50IHRvIG1ha2UgYSBtb2RlbCB3aGVyZSBgbG9nX2RiaF9jbWAgY2FuIGNoYW5nZSBiYXNlZCBvbiB0aGUgZ3JvdXBzIGluIGBOYXRpdmVfU3RhdHVzYC4gVGhlIHRpbGRlIHN5bWJvbCBgfmAgY29tbXVuaWNhdGVzIHRvIFIgdGhhdCBgbG9nX2RiaF9jbWAgImlzIGEgZnVuY3Rpb24gb2YiIGBOYXRpdmVfU3RhdHVzYCwgb3IgImlzIHByZWRpY3RlZCBieSIgYE5hdGl2ZV9TdGF0dXNgLiBOb3RlIGFsc28gdGhhdCB3ZSB0ZWxsIGBsbWAgd2hlcmUgdG8gZmluZCB0aG9zZSBjb2x1bW5zIGJ5IHNwZWNpZnlpbmcgYGRhdGEgPSBkYXRgLgoKTm93IGhhdmUgYSBsb29rIGF0IHRoZSByZXN1bHRzCgpgYGB7cn0KbmF0X3N0YXRfbW9kCmBgYAoKVGhlICJjb2VmZmljaWVudHMiIGFyZSB0aGUgcGFyYW1ldGVycyBvZiBvdXIgbW9kZWwuIEJ1dCB0aGV5IGRvbid0IGxvb2sgbGlrZSB0aGUgcGFyYW1ldGVycyB3ZSB1c2VkIHdoZW4gbWF4aW1pemluZyBvdXIgYm91dGlxdWUgbGlrZWxpaG9vZCBmdW5jdGlvbiAiYnkgaGFuZC4iIFdoYXQncyBnb2luZyBvbj8gVGhlIHJlYXNvbiBpcyB0aGUgd2F5IHdlIHNwZWNpZmllZCBvdXIgbW9kZWwgYW5kIHRoZSB3YXkgYGxtYCBzcGVjaWZpZXMgdGhlIG1vZGVsIGFyZSBkaWZmZXJlbnQuIFdlIGNyZWF0ZWQgYSBwYXJhbWV0ZXIgZm9yIHRoZSBtZWFuIG9mIG5hdGl2ZSB0cmVlcyBgbXVfbmF0YCBhbmQgdGhlIG1lYW4gb2Ygbm9uLW5hdGl2ZSB0cmVlcyBgbXVfbm9uYC4gCgpSIGRvZXMgaXQgZGlmZmVyZW50LiBUaGUgYChJbnRlcmNlcHQpYCByZWZlcnMgdG8gdGhlIG1lYW4gb2YgYCJhbGllbiJgIHRyZWVzIChyZWNhbGwgYE5hdGl2ZV9TdGF0dXNgIGNvbnRhaW5zIHZhbHVlcyBvZiBgImFsaWVuImAgYW5kIGAibmF0aXZlImApLiBUaGUgY29lZmZpY2llbnQgYE5hdGl2ZV9TdGF0dXNuYXRpdmVgIGhhcyBpbmZvcm1hdGlvbiBhYm91dCB0aGUgbWVhbiBvZiBuYXRpdmUgdHJlZXMsIGJ1dCBpbiBhIGtpbmQgb2Ygd2VpcmQgd2F5OiB0aGUgdmFsdWUgYHIgbmF0X3N0YXRfbW9kJGNvZWZmaWNpZW50c1siTmF0aXZlX1N0YXR1c25hdGl2ZSJdYCBpcyB0aGUgKmRpZmZlcmVuY2UqIGJldHdlZW4gdGhlIG1lYW4gZm9yIGAiYWxpZW4iYCBhbmQgdGhlIG1lYW4gZm9yIGAibmF0aXZlImAuIAoKU28gaWYgeW91IGNvbXBhcmUgdGhlc2UgcmVzdWx0cyB0byB3aGF0IHlvdSBmb3VuZCB3aGVuIG1heGltaXppbmcgeW91ciBib3V0aXF1ZSBsaWtlbGlob29kIGJ5IGhhbmQgeW91IHNob3VsZCBoYXZlIHJvdWdobHkgdGhlIHNhbWUgbnVtYmVyIGZvciBgbXVfbm9uYCBhcyBgKEludGVyY2VwdClgLiBBbmQgYG11X25hdCAtIG11X25vbmAgc2hvdWxkIGJlIHJvdWdobHkgdGhlIHNhbWUgYXMgYE5hdGl2ZV9TdGF0dXNuYXRpdmVgIGZyb20gYGxtYC4gVGhlIG51bWJlcnMgd2lsbCBvbmx5IGJlIHJvdWdobHkgdGhlIHNhbWUgYmVjYXVzZSB0aGVyZSBpcyBhbHdheXMgYSBzbWFsbCBhbW91bnQgb2YgZXJyb3Igd2l0aCBgb3B0aW1gIHdoZXJlYXMgYGxtYCB1c2VzIGV4YWN0IGVxdWF0aW9ucyB0byBmaW5kIGl0cyBhbnN3ZXJzLgoKVGhvc2UgZXhhY3QgZXF1YXRpb25zIGFyZSBiYXNlZCBvbiBtaW5pbWl6aW5nIHRoZSBzdW0gb2Ygc3F1YXJlIGVycm9yLCB3aGljaCBpcyBob3cgcmVncmVzc2lvbiB3YXMgZG9uZSBmb3IgZGVjYWRlcyBiZWNhdXNlIHRoZSBtYXRoIChmb3IgbWF0aCBuZXJkcykgaXMgInNpbXBsZS4iIFRoZSBzdXJwcmlzaW5nIHJlc3VsdCBpcyB0aGF0IG1pbmltaXppbmcgc3VtIG9mIHNxdWFyZSBlcnJvciBpcyBtYXRoZW1hdGljYWxseSB0aGUgc2FtZSBhcyBtYXhpbWl6aW5nIHRoZSBsaWtlbGlob29kIGZ1bmN0aW9uLiBUaGF0J3MgYSBwb2ludCB3b3J0aCByZW1lbWJlcmluZyB3aGVuIHdlIG1vdmUgb250byBvdGhlciBwcm9iYWJpbGl0eSBkaXN0cmlidXRpb25zIGJlc2lkZXMgdGhlIG5vcm1hbC4KClRoZSBgbG1gIGZ1bmN0aW9uIGlzIGEgaHVnZSBoZWxwLCBidXQgd2Ugc3RpbGwgbmVlZCB0byBrbm93IGFib3V0IHRoZSBsaWtlbGlob29kLiBMdWNraWx5IHRoZXJlIGFyZSBidWlsdC1pbiBmdW5jdGlvbnMgdG8gaGVscC4gYGxvZ0xpa2AgdGVsbHMgdXMgdGhlIGxvZyBsaWtlbGlob29kIHZhbHVlIGF0IGl0cyBtYXhpbXVtCgpgYGB7cn0KbG9nTGlrKG5hdF9zdGF0X21vZCkKYGBgCgpDb21wYXJlIHRoYXQgcmVzdWx0IHRvIHlvdXIgcmVzdWx0cyBmcm9tIGBvcHRpbWAsIHNwZWNpZmljYWxseSB0aGUgYHZhbHVlYCBlbGVtZW50IG9mIHRoZSBvdXRwdXQgZnJvbSBgb3B0aW1gLiBUaGUgbnVtYmVycyBzaG91bGQgYmUgKnJvdWdobHkqIHRoZSBzYW1lLgoKCgojIyMgUHJlZGljdGluZyBsb2cgREJIIGZyb20gaHVtYW4gaW1wYWN0CgpOb3cgd29yayB0aHJvdWdoIHRob3NlIHNhbWUgc3RlcHMgYnV0IGZvciB0aGUgbW9kZWwgcHJlZGljdGluZyBgbG9nX2RiaF9jbWAgZnJvbSBgaGlpYC4gVGhlIHN0ZXBzIGFyZToKCjEuIHVzZSBgbG1gIHRvIG1ha2UgYSBtb2RlbCBvYmplY3QKMi4gY29tcGFyZSB0aGUgY29lZmZpY2llbnRzIHdpdGggeW91ciByZXN1bHRzIGZyb20gbWF4aW1pemluZyB5b3VyIGJvdXRpcXVlIGxpa2VsaWhvb2QgZnVuY3Rpb247IGV4cGxhaW4gZm9yIHlvdXJzZWxmIHdoeSBhbmQgaG93IHRoZSByZXN1bHRzIGFyZSBzaW1pbGFyIG9yIGRpZmZlcmVudAozLiBjb21wdXRlIHRoZSBtYXhpbXVtIGxvZyBsaWtlbGlob29kIHdpdGggYGxvZ0xpa2AKCiMjIE1vcmUgY29tcGxleCBtb2RlbHMgdGhhbmtzIHRvIGBsbWAKCk5vdyBiZWNhdXNlIHdlIGRvbid0IGhhdmUgdG8gZG8gZXZlcnl0aGluZyBieSBoYW5kIHdlIGNhbiBidWlsZCBtb3JlIGNvbXBsZXggbW9kZWxzLiBJbiB0aGUgZXhhbXBsZSB3ZSd2ZSBiZWVuIHdvcmtpbmcgd2l0aCB0aGVyZSBpcyBhbiBpbnRlcmVzdGluZyBzdG9yeSBoYXZpbmcgdG8gZG8gd2l0aCBob3cgbG9nIERCSCBjaGFuZ2VzIGJhc2VkIG9uIG5hdGl2ZSBzdGF0dXMgYW5kIGh1bWFuIGltcGFjdCBhY3RpbmcgdG9nZXRoZXIuIFRvIHNlZSB0aGF0IHdlIG5lZWQgdG8gaW50cm9kdWNlIGFuICppbnRlcmFjdGlvbiogZWZmZWN0IGluIG91ciBtb2RlbC4gVGhpcyBpcyBob3c6CgpgYGB7cn0KI3wgbGFiZWw6IG5hdC1oaWktbW9kCgojIGFuIGV4YW1wbGUgb2YgYSBtb2RlbCB3aXRoIGFuIGludGVyYWN0aW9uIGVmZmVjdApuYXRfaGlpX21vZCA8LSBsbShsb2dfZGJoX2NtIH4gTmF0aXZlX1N0YXR1cyAqIGhpaSwgZGF0YSA9IGRhdCkKCiMgaGF2ZSBhIGxvb2sKbmF0X2hpaV9tb2QKYGBgCgpUaGVyZSBhcmUgbm93IGZvdXIgY29lZmZpY2llbnRzOiBgKEludGVyY2VwdClgLCBgTmF0aXZlX1N0YXR1c25hdGl2ZWAsIGBoaWlgLCBhbmQgYE5hdGl2ZV9TdGF0dXNuYXRpdmU6aGlpYC4gVGhhdCBsYXN0IGNvZWZmaWNpZW50IGBOYXRpdmVfU3RhdHVzbmF0aXZlOmhpaWAgcmVwcmVzZW50cyB0aGUgaW50ZXJhY3Rpb24gYW5kIGhlcmUncyB3aGF0IGl0IG1lYW5zOgoKRmlyc3Qgd2UgbmVlZCB0byBiZSBjbGVhciBvbiB0aGUgaW50ZXJwcmV0YXRpb24gb2YgYGhpaWAtLS10aGlzIGlzIHRoZSBzbG9wZSBvZiBgbG9nX2RiaF9jbWAgY2hhbmdpbmcgYWNyb3NzIGBoaWlgLCBidXQgKioqb25seSoqKiBmb3IgdGhlIGdyb3VwIG9mIHRyZWVzIGZhbGxpbmcgaW50byB0aGUgYCJhbGllbiJgIGNhdGVnb3J5LiBUaGF0IG1lYW5zIHRoZSBzbG9wZSBvZiBgbG9nX2RiaF9jbWAgY2hhbmdpbmcgYWNyb3NzIGBoaWlgIGlzIGdpdmVuIGJ5IGFkZGluZyB0aGUgYGhpaWAgc2xvcGUgdG8gdGhlIGNvZWZmaWNpZW50IGBOYXRpdmVfU3RhdHVzbmF0aXZlOmhpaWAuIFNvIHRoZSBzbG9wZSBmb3IgbmF0aXZlIHRyZWVzIGlzCgpgYGB7cn0KbmF0X2hpaV9tb2QkY29lZmZpY2llbnRzWyJoaWkiXSArIG5hdF9oaWlfbW9kJGNvZWZmaWNpZW50c1siTmF0aXZlX1N0YXR1c25hdGl2ZTpoaWkiXQpgYGAKClRoZSBzbG9wZSBmb3IgbmF0aXZlcyBpcyBtb3JlIHN0ZWVwLCBtZWFuaW5nIHRoZSBkYmggb2YgbmF0aXZlIHRyZWVzIGlzIG1vcmUgc2V2ZXJlbHkgZGVjcmVhc2VkIGJ5IGh1bWFuIGltcGFjdCBjb21wYXJlZCB0byBub24tbmF0aXZlIHRyZWVzLiBOb24tbmF0aXZlIHRyZWVzIGFyZSBtb3JlIHJlc2lsaWVudCB0byBodW1hbiBpbXBhY3QuCgpBbiBpbnRlcmVzdGluZyBmaW5kaW5nIGluZGVlZCEKCiMjIyBWaXN1YWxpemluZyBpbnRlcmFjdGlvbnMKClRvIHVuZGVyc3RhbmQgd2hhdCBhbiBpbnRlcmFjdGlvbiBpcywgbGV0J3MgdmlzdWFsaXplIGhvdyB0aGUgKm1lYW4qIG9yIGBsb2dfZGJoX2NtYCBjaGFuZ2VzIGFjcm9zcyBuYXRpdmUgc3RhdHVzZXMgYW5kIGh1bWFuIGltcGFjdC4gSGVyZSdzIGhvdy4KClVzZSBgZ2dwbG90YCB0byB2aXN1YWxpemUgYSBmdW5jdGlvbgoKYGBge3J9CiN8IGxhYmVsOiBmaWctZ2VvbV9mdW5jdGlvbgoKIyBhIGZ1bmN0aW9uIHJlcHJlc2VudGluZyBhbiBlcXVhdGlvbgpteV9mdW4gPC0gZnVuY3Rpb24oeCkgewogICAgeSA8LSAzMCArIDAuNSAqIHgKICAgIAogICAgcmV0dXJuKHkpCn0KCiMgc2V0IHVwIGEgZ2dwbG90IHdpdGggb3VyIGRhdGEuLi4KZ2dwbG90KGRhdCwgYWVzKGhpaSwgbG9nX2RiaF9jbSkpICsKICAgICMgLi4uIGJ1dCB0aGVuIHBsb3QgdGhlIGZ1bmN0aW9uLCBub3QgdGhlIGRhdGEgaXRzZWxmCiAgICBnZW9tX2Z1bmN0aW9uKGZ1biA9IG15X2Z1bikKYGBgCgpZb3UgYXJlIG5vdCBsaW1pdGVkIHRvIHBsb3R0aW5nIGp1c3Qgb25lIGZ1bmN0aW9uOgoKYGBge3J9CiN8IGxhYmVsOiBmaWctbWFueS1mdW4KCiMgYSBmdW5jdGlvbiByZXByZXNlbnRpbmcgYW4gZXF1YXRpb24KbXlfbmV4dF9mdW4gPC0gZnVuY3Rpb24oeCkgewogICAgeSA8LSAxICsgMi41ICogeAogICAgCiAgICByZXR1cm4oeSkKfQoKIyBwbG90IG11bHRpcGxlIGZ1bmN0aW9ucwpnZ3Bsb3QoZGF0LCBhZXMoaGlpLCBsb2dfZGJoX2NtKSkgKwogICAgZ2VvbV9mdW5jdGlvbihmdW4gPSBteV9mdW4sIGNvbG9yID0gImJsYWNrIikgKwogICAgZ2VvbV9mdW5jdGlvbihmdW4gPSBteV9uZXh0X2Z1biwgY29sb3IgPSAicmVkIikKYGBgCgoKTm93IHlvdXIgdHVybjogdXNlIHRoZSBmcmFtZXdvcmsgdG8gcGxvdCB0d28gbGluZXM6IG9uZSBmb3IgbmF0aXZlIHRyZWVzLCBvbmUgZm9yIG5vbi1uYXRpdmUgdHJlZXMuICBBbGwgdGhlIGNvZWZmaWNpZW50cyB5b3UgbmVlZCBjYW4gYmUgZm91bmQgaW4gCgpgYGB7cn0KbmF0X2hpaV9tb2QkY29lZmZpY2llbnRzCmBgYAoKTGFzdGx5LCBpbnRlcnByZXQgeW91ciByZXN1bHRzLCB3aGF0IGRvIHRoZXkgbWVhbiB0byB5b3U/Cg==').then(res => res.blob()).then(blob => {
+      const downloadURL = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      document.body.appendChild(a);
+      a.href = downloadURL;
+      a.download = 'lab04-lstsqrs-linear.qmd'; a.click();
+      window.URL.revokeObjectURL(downloadURL);
+      document.body.removeChild(a);
+        });"><button class="btn btn-default downloadthis  " id="dnldts35194"><i class="bi bi-download"></i> Download lab template </button></a></p>
+<p>The template will prompt you to work through the following sections.</p>
+<p>This lab picks up where we left off with the lab in <a href="lab04-simple-linear.qmd"><code>lab04-simple-linear.qmd</code></a>. Again, let’s start by reading in the data and wrangling it into a workable format</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># read-in from github</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>tree <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"https://raw.githubusercontent.com/uhm-biostats/stat-mod/refs/heads/main/data/OpenNahele_Tree_Data.csv"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>hii_geo <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"https://raw.githubusercontent.com/uhm-biostats/stat-mod/refs/heads/main/data/hii_geo.csv"</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># merge the data into one data.frame and clean</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">left_join</span>(tree, hii_geo) <span class="sc">|&gt;</span> </span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># remove missing DBH values</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(DBH_cm)) <span class="sc">|&gt;</span> </span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># add a column for log-transformed DBH since this will be </span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># the variable we use as a response variable</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">log_dbh_cm =</span> <span class="fu">log</span>(DBH_cm)) <span class="sc">|&gt;</span> </span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># remove NAs for elevation</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(hii)) <span class="sc">|&gt;</span> </span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># remove "uncertain" for native status</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(Native_Status <span class="sc">!=</span> <span class="st">"uncertain"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Joining with `by = join_by(PlotID)`</code></pre>
+</div>
+</div>
+<section id="turns-out-theres-an-easier-way" class="level2" data-number="15.1">
+<h2 data-number="15.1" class="anchored" data-anchor-id="turns-out-theres-an-easier-way"><span class="header-section-number">15.1</span> Turns out there’s an easier way</h2>
+<p>Previously we found the parameters of our models by creating a likelihood functions “by hand” and maximizing those functions “by hand” using <code>optim</code>. It’s probably not surprising that there is an easier way.</p>
+<p>Because all our models have been <em>linear</em> (meaning the variables are linear combinations of each other) we can find the parameters of our model with the built-in R function <code>lm</code>, which stands for “linear model.”</p>
+<section id="predicting-log-dbh-from-native-status" class="level3" data-number="15.1.1">
+<h3 data-number="15.1.1" class="anchored" data-anchor-id="predicting-log-dbh-from-native-status"><span class="header-section-number">15.1.1</span> Predicting log DBH from native status</h3>
+<p>Let’s use the model where we predict <code>log_dbh_cm</code> based on <code>Native_Status</code> to demonstrate <code>lm</code></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>nat_stat_mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(log_dbh_cm <span class="sc">~</span> Native_Status, <span class="at">data =</span> dat)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Before even looking at the results, let’s look at the syntax. We are telling <code>lm</code> that we want to make a model where <code>log_dbh_cm</code> can change based on the groups in <code>Native_Status</code>. The tilde symbol <code>~</code> communicates to R that <code>log_dbh_cm</code> “is a function of” <code>Native_Status</code>, or “is predicted by” <code>Native_Status</code>. Note also that we tell <code>lm</code> where to find those columns by specifying <code>data = dat</code>.</p>
+<p>Now have a look at the results</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>nat_stat_mod</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = log_dbh_cm ~ Native_Status, data = dat)
+
+Coefficients:
+        (Intercept)  Native_Statusnative  
+             2.4264               0.3199  </code></pre>
+</div>
+</div>
+<p>The “coefficients” are the parameters of our model. But they don’t look like the parameters we used when maximizing our boutique likelihood function “by hand.” What’s going on? The reason is the way we specified our model and the way <code>lm</code> specifies the model are different. We created a parameter for the mean of native trees <code>mu_nat</code> and the mean of non-native trees <code>mu_non</code>.</p>
+<p>R does it different. The <code>(Intercept)</code> refers to the mean of <code>"alien"</code> trees (recall <code>Native_Status</code> contains values of <code>"alien"</code> and <code>"native"</code>). The coefficient <code>Native_Statusnative</code> has information about the mean of native trees, but in a kind of weird way: the value 0.3199303 is the <em>difference</em> between the mean for <code>"alien"</code> and the mean for <code>"native"</code>.</p>
+<p>So if you compare these results to what you found when maximizing your boutique likelihood by hand you should have roughly the same number for <code>mu_non</code> as <code>(Intercept)</code>. And <code>mu_nat - mu_non</code> should be roughly the same as <code>Native_Statusnative</code> from <code>lm</code>. The numbers will only be roughly the same because there is always a small amount of error with <code>optim</code> whereas <code>lm</code> uses exact equations to find its answers.</p>
+<p>Those exact equations are based on minimizing the sum of square error, which is how regression was done for decades because the math (for math nerds) is “simple.” The surprising result is that minimizing sum of square error is mathematically the same as maximizing the likelihood function. That’s a point worth remembering when we move onto other probability distributions besides the normal.</p>
+<p>The <code>lm</code> function is a huge help, but we still need to know about the likelihood. Luckily there are built-in functions to help. <code>logLik</code> tells us the log likelihood value at its maximum</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">logLik</span>(nat_stat_mod)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'log Lik.' -37576.37 (df=3)</code></pre>
+</div>
+</div>
+<p>Compare that result to your results from <code>optim</code>, specifically the <code>value</code> element of the output from <code>optim</code>. The numbers should be <em>roughly</em> the same.</p>
+</section>
+<section id="predicting-log-dbh-from-human-impact" class="level3" data-number="15.1.2">
+<h3 data-number="15.1.2" class="anchored" data-anchor-id="predicting-log-dbh-from-human-impact"><span class="header-section-number">15.1.2</span> Predicting log DBH from human impact</h3>
+<p>Now work through those same steps but for the model predicting <code>log_dbh_cm</code> from <code>hii</code>. The steps are:</p>
+<ol type="1">
+<li>use <code>lm</code> to make a model object</li>
+<li>compare the coefficients with your results from maximizing your boutique likelihood function; explain for yourself why and how the results are similar or different</li>
+<li>compute the maximum log likelihood with <code>logLik</code></li>
+</ol>
+</section>
+</section>
+<section id="more-complex-models-thanks-to-lm" class="level2" data-number="15.2">
+<h2 data-number="15.2" class="anchored" data-anchor-id="more-complex-models-thanks-to-lm"><span class="header-section-number">15.2</span> More complex models thanks to <code>lm</code></h2>
+<p>Now because we don’t have to do everything by hand we can build more complex models. In the example we’ve been working with there is an interesting story having to do with how log DBH changes based on native status and human impact acting together. To see that we need to introduce an <em>interaction</em> effect in our model. This is how:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># an example of a model with an interaction effect</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>nat_hii_mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(log_dbh_cm <span class="sc">~</span> Native_Status <span class="sc">*</span> hii, <span class="at">data =</span> dat)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># have a look</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>nat_hii_mod</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = log_dbh_cm ~ Native_Status * hii, data = dat)
+
+Coefficients:
+            (Intercept)      Native_Statusnative                      hii  
+               2.461799                 0.487728                -0.001513  
+Native_Statusnative:hii  
+              -0.010481  </code></pre>
+</div>
+</div>
+<p>There are now four coefficients: <code>(Intercept)</code>, <code>Native_Statusnative</code>, <code>hii</code>, and <code>Native_Statusnative:hii</code>. That last coefficient <code>Native_Statusnative:hii</code> represents the interaction and here’s what it means:</p>
+<p>First we need to be clear on the interpretation of <code>hii</code>—this is the slope of <code>log_dbh_cm</code> changing across <code>hii</code>, but <strong><em>only</em></strong> for the group of trees falling into the <code>"alien"</code> category. That means the slope of <code>log_dbh_cm</code> changing across <code>hii</code> is given by adding the <code>hii</code> slope to the coefficient <code>Native_Statusnative:hii</code>. So the slope for native trees is</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>nat_hii_mod<span class="sc">$</span>coefficients[<span class="st">"hii"</span>] <span class="sc">+</span> nat_hii_mod<span class="sc">$</span>coefficients[<span class="st">"Native_Statusnative:hii"</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       hii 
+-0.0119939 </code></pre>
+</div>
+</div>
+<p>The slope for natives is more steep, meaning the dbh of native trees is more severely decreased by human impact compared to non-native trees. Non-native trees are more resilient to human impact.</p>
+<p>An interesting finding indeed!</p>
+<section id="visualizing-interactions" class="level3" data-number="15.2.1">
+<h3 data-number="15.2.1" class="anchored" data-anchor-id="visualizing-interactions"><span class="header-section-number">15.2.1</span> Visualizing interactions</h3>
+<p>To understand what an interaction is, let’s visualize how the <em>mean</em> or <code>log_dbh_cm</code> changes across native statuses and human impact. Here’s how.</p>
+<p>Use <code>ggplot</code> to visualize a function</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># a function representing an equation</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>my_fun <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    y <span class="ot">&lt;-</span> <span class="dv">30</span> <span class="sc">+</span> <span class="fl">0.5</span> <span class="sc">*</span> x</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(y)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co"># set up a ggplot with our data...</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(dat, <span class="fu">aes</span>(hii, log_dbh_cm)) <span class="sc">+</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ... but then plot the function, not the data itself</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_function</span>(<span class="at">fun =</span> my_fun)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-geom_function" class="quarto-float quarto-figure quarto-figure-center anchored" width="672">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-geom_function-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="lin-lstsqrs_files/figure-html/fig-geom_function-1.png" id="fig-geom_function" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-geom_function-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;15.1
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>You are not limited to plotting just one function:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># a function representing an equation</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>my_next_fun <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    y <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">+</span> <span class="fl">2.5</span> <span class="sc">*</span> x</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(y)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co"># plot multiple functions</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(dat, <span class="fu">aes</span>(hii, log_dbh_cm)) <span class="sc">+</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_function</span>(<span class="at">fun =</span> my_fun, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_function</span>(<span class="at">fun =</span> my_next_fun, <span class="at">color =</span> <span class="st">"red"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-many-fun" class="quarto-float quarto-figure quarto-figure-center anchored" width="672">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-many-fun-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="lin-lstsqrs_files/figure-html/fig-many-fun-1.png" id="fig-many-fun" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-many-fun-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;15.2
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Now your turn: use the framework to plot two lines: one for native trees, one for non-native trees. All the coefficients you need can be found in</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>nat_hii_mod<span class="sc">$</span>coefficients</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            (Intercept)     Native_Statusnative                     hii 
+            2.461799195             0.487727513            -0.001512589 
+Native_Statusnative:hii 
+           -0.010481310 </code></pre>
+</div>
+</div>
+<p>Lastly, interpret your results, what do they mean to you?</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./lin-norm.html" class="pagination-link" aria-label="Simple linear models">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Simple linear models</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
