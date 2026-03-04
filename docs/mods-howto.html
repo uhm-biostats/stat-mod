@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>4&nbsp; Dynamic documents with quarto – Intro to Statistical Modeling</title>
+<title>13&nbsp; How to make a model – Intro to Statistical Modeling</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,42 +20,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
 }
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
 }
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
 }
-</style>
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -65,8 +50,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./github.html" rel="next">
-<link href="./r-refresh.html" rel="prev">
+<link href="./lin-norm.html" rel="next">
+<link href="./lin-mod.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -106,6 +91,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -119,7 +133,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./intro.html">Introductory material</a></li><li class="breadcrumb-item"><a href="./dynamic-doc.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Dynamic documents with <em>quarto</em></span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./lin-mod.html">Linear models</a></li><li class="breadcrumb-item"><a href="./mods-howto.html"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">How to make a model</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -181,7 +195,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./dynamic-doc.html" class="sidebar-item-text sidebar-link active">
+  <a href="./dynamic-doc.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Dynamic documents with <em>quarto</em></span></span></a>
   </div>
 </li>
@@ -268,7 +282,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./mods-howto.html" class="sidebar-item-text sidebar-link">
+  <a href="./mods-howto.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">How to make a model</span></span></a>
   </div>
 </li>
@@ -290,37 +304,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#what-is-a-dynamic-document-and-how-does-quarto-make-it-work" id="toc-what-is-a-dynamic-document-and-how-does-quarto-make-it-work" class="nav-link active" data-scroll-target="#what-is-a-dynamic-document-and-how-does-quarto-make-it-work"><span class="header-section-number">4.1</span> What is a dynamic document and how does quarto make it work?</a></li>
-  <li><a href="#quick-start" id="toc-quick-start" class="nav-link" data-scroll-target="#quick-start"><span class="header-section-number">4.2</span> Quick-start</a>
+  <li><a href="#what-is-a-model" id="toc-what-is-a-model" class="nav-link active" data-scroll-target="#what-is-a-model"><span class="header-section-number">13.1</span> What is a model?</a></li>
+  <li><a href="#what-questions-do-we-ask-why-and-how" id="toc-what-questions-do-we-ask-why-and-how" class="nav-link" data-scroll-target="#what-questions-do-we-ask-why-and-how"><span class="header-section-number">13.2</span> What questions do we ask, why, and how?</a></li>
+  <li><a href="#moʻokūʻauhau-of-likelihood" id="toc-moʻokūʻauhau-of-likelihood" class="nav-link" data-scroll-target="#moʻokūʻauhau-of-likelihood"><span class="header-section-number">13.3</span> Moʻokūʻauhau of likelihood</a></li>
+  <li><a href="#from-question-to-model" id="toc-from-question-to-model" class="nav-link" data-scroll-target="#from-question-to-model"><span class="header-section-number">13.4</span> From question to model</a>
   <ul>
-  <li><a href="#rendering" id="toc-rendering" class="nav-link" data-scroll-target="#rendering"><span class="header-section-number">4.2.1</span> Rendering</a></li>
-  <li><a href="#yaml-header" id="toc-yaml-header" class="nav-link" data-scroll-target="#yaml-header"><span class="header-section-number">4.2.2</span> YAML header</a></li>
-  <li><a href="#markdown-syntax" id="toc-markdown-syntax" class="nav-link" data-scroll-target="#markdown-syntax"><span class="header-section-number">4.2.3</span> Markdown syntax</a>
+  <li><a href="#question-to-prediction" id="toc-question-to-prediction" class="nav-link" data-scroll-target="#question-to-prediction"><span class="header-section-number">13.4.1</span> Question to prediction</a></li>
+  <li><a href="#prediction-to-model" id="toc-prediction-to-model" class="nav-link" data-scroll-target="#prediction-to-model"><span class="header-section-number">13.4.2</span> Prediction to model</a>
   <ul class="collapse">
-  <li><a href="#general-formatting" id="toc-general-formatting" class="nav-link" data-scroll-target="#general-formatting"><span class="header-section-number">4.2.3.1</span> General formatting</a></li>
-  <li><a href="#headers" id="toc-headers" class="nav-link" data-scroll-target="#headers"><span class="header-section-number">4.2.3.2</span> Headers</a></li>
-  <li><a href="#lists" id="toc-lists" class="nav-link" data-scroll-target="#lists"><span class="header-section-number">4.2.3.3</span> Lists</a></li>
-  <li><a href="#hyperlinks-and-images" id="toc-hyperlinks-and-images" class="nav-link" data-scroll-target="#hyperlinks-and-images"><span class="header-section-number">4.2.3.4</span> Hyperlinks and images</a></li>
-  <li><a href="#bibliographic-references" id="toc-bibliographic-references" class="nav-link" data-scroll-target="#bibliographic-references"><span class="header-section-number">4.2.3.5</span> Bibliographic references</a></li>
-  <li><a href="#tables" id="toc-tables" class="nav-link" data-scroll-target="#tables"><span class="header-section-number">4.2.3.6</span> Tables</a></li>
-  </ul></li>
-  <li><a href="#code" id="toc-code" class="nav-link" data-scroll-target="#code"><span class="header-section-number">4.2.4</span> Code</a>
-  <ul class="collapse">
-  <li><a href="#figures-and-tables-from-code" id="toc-figures-and-tables-from-code" class="nav-link" data-scroll-target="#figures-and-tables-from-code"><span class="header-section-number">4.2.4.1</span> Figures and tables from code</a></li>
-  <li><a href="#cross-referencing" id="toc-cross-referencing" class="nav-link" data-scroll-target="#cross-referencing"><span class="header-section-number">4.2.4.2</span> Cross referencing</a></li>
+  <li><a href="#biological-sources-of-randomness" id="toc-biological-sources-of-randomness" class="nav-link" data-scroll-target="#biological-sources-of-randomness"><span class="header-section-number">13.4.2.1</span> Biological sources of randomness</a></li>
+  <li><a href="#sampling-and-measurement-sources-of-randomness" id="toc-sampling-and-measurement-sources-of-randomness" class="nav-link" data-scroll-target="#sampling-and-measurement-sources-of-randomness"><span class="header-section-number">13.4.2.2</span> Sampling and measurement sources of randomness</a></li>
   </ul></li>
   </ul></li>
-  <li><a href="#now-its-your-turn" id="toc-now-its-your-turn" class="nav-link" data-scroll-target="#now-its-your-turn"><span class="header-section-number">4.3</span> Now it’s your turn</a></li>
-  <li><a href="#resources" id="toc-resources" class="nav-link" data-scroll-target="#resources"><span class="header-section-number">4.4</span> Resources</a></li>
+  <li><a href="#finally-how-to-make-a-model" id="toc-finally-how-to-make-a-model" class="nav-link" data-scroll-target="#finally-how-to-make-a-model"><span class="header-section-number">13.5</span> Finally, how to make a model</a></li>
   </ul>
-<div class="quarto-code-links"><h2>Code Links</h2><ul><li><a href="https://github.com/uhm-biostats/stat-mod/blob/main/dynamic-doc.qmd"><i class="bi bi-github"></i>View source</a></li></ul></div></nav>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./intro.html">Introductory material</a></li><li class="breadcrumb-item"><a href="./dynamic-doc.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Dynamic documents with <em>quarto</em></span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./lin-mod.html">Linear models</a></li><li class="breadcrumb-item"><a href="./mods-howto.html"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">How to make a model</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Dynamic documents with <em>quarto</em></span></h1>
+<h1 class="title"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">How to make a model</span></h1>
 </div>
 
 
@@ -337,371 +342,128 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="what-is-a-dynamic-document-and-how-does-quarto-make-it-work" class="level2" data-number="4.1">
-<h2 data-number="4.1" class="anchored" data-anchor-id="what-is-a-dynamic-document-and-how-does-quarto-make-it-work"><span class="header-section-number">4.1</span> What is a dynamic document and how does quarto make it work?</h2>
-<p>Dynamic documents are those that respond to changes in our data or code by automatically updating to reflect those changes. With dynamic documents you no longer need to have code in one file, graphics in multiple files elsewhere, and then copy and paste everything into another document when actually writing a paper, a report, or notes. Everything lives in one file and the nicely formatted finished product is generated from that one file.</p>
-<p><em>Quarto</em> is the powerhouse that enables us to make these dynamic documents. Under the hood, <em>quarto</em> uses markdown, pandoc, and <em>knitr</em> to make all this possible. <em>Quarto</em> itself is not (just) an R package, so to seek help your best bet is the extensive <a href="https://quarto.org">documentation online</a>. <em>knitr</em> is an R package, but the best way to learn about it is also its extensive <a href="https://yihui.org/knitr/">documentation online</a>. We will cover much of the markdown you need to know in the next section. Only if you go deep into customizing the appearance of your documents do you need to dive into pandoc. For now, rest assured that what these incredible tools allow you to do is convert your code, figures, and simply-formatted text into beautiful pdf, html, or (beautiful? maybe not) word documents.</p>
-<p>It should be noted that <em>quarto</em> is the inheritor of <em>Rmarkdown</em> and pretty much everything on the web (or already in your head) about using <em>Rmarkdown</em> will apply to <em>quarto</em> as well.</p>
+<section id="what-is-a-model" class="level2" data-number="13.1">
+<h2 data-number="13.1" class="anchored" data-anchor-id="what-is-a-model"><span class="header-section-number">13.1</span> What is a model?</h2>
+<p>In order to use likelihood to study ecology, we have to be able to make models, but first we need to establish just what is a model? That’s a harder question to answer than you might think. Could an oli be a model? Could a computer simulation be a model? Could an equation relating the tendencies of random variables to one another be a model. The answer to all is likely “yes.” Models can take on many forms and have many valid meanings across different epistemologies. For the purposes of using likelihood to make inference about models, and within the context of this course, we will think of models as “statistical models.” Statistical models are ones that represent mathematical relationships between variables in a data set while also accounting for the randomness and uncertainty in the world around us.</p>
+<p>This contrasts with “mechanistic models” which seek to mathematically represent the processes that might be responsible for generating the patterns we see in the world. Mechanistic models contain detailed information about the biology, ecology, and evolution of the systems we study. Statistical models do not contain such detail. Instead, they acknowledge that detail exists, but only try to represent how different random variables might relate to each other. But most often, hopefully at least, statistical models are inspired by our knowledge and hypotheses about processes that could generate those patterns.</p>
+<p>With that concept of a model stated, now we have to wonder how do we go from our scientific questions and hypotheses about the world to a model that we can make inference about using the method of maximum likelihood? The process of going from question to model also gives us opportunity to investigate the ways of knowing, world views, and epistemologies that motivate our questions.</p>
 </section>
-<section id="quick-start" class="level2" data-number="4.2">
-<h2 data-number="4.2" class="anchored" data-anchor-id="quick-start"><span class="header-section-number">4.2</span> Quick-start</h2>
-<p>Here is an example of a quarto document:</p>
-<div class="cell s-output">
-<div class="cell-output cell-output-stdout">
-<pre><code>---
-title: "The title"
-author: A research group
-format: pdf
----
-
-```{r}
-#| label: setup
-#| include: false
-
-library(dplyr)
-library(tibble)
-library(ggplot2)
-```
-
-# Introduction
-
-Some background
-
-## More specific background
-
-@fig-concept explains our approach.
-
-```{r}
-#| label: fig-concept
-#| echo: false
-#| fig-width: 2
-#| fig-height: 2
-#| fig-cap: "Our conceptual workflow, nani me he pua lā"
-
-dat_concept &lt;- tibble(
-    rad = seq(0, 2 * pi, length.out = 200), 
-    x = cos(rad) * cos(4 * rad), 
-    y = sin(rad) * cos(4 * rad)
-)
-
-ggplot(dat_concept, aes(x, y)) +
-    geom_polygon(fill = "coral")
-```
-
-# Methods
-
-Our analysis uses this kind of code
-
-```{r}
-#| label: step-01
-
-x &lt;- 1:10
-sum(x)
-```</code></pre>
-</div>
-</div>
-<p>We can <em>render</em> that document into a pdf file that looks like this:</p>
-<div class="cell">
-<div class="cell-output-display">
-<div>
+<section id="what-questions-do-we-ask-why-and-how" class="level2" data-number="13.2">
+<h2 data-number="13.2" class="anchored" data-anchor-id="what-questions-do-we-ask-why-and-how"><span class="header-section-number">13.2</span> What questions do we ask, why, and how?</h2>
+<p>The lens through which we view the world is based on our experiences, our cultures, our personal histories. And that lens—that way of knowing—shapes what we perceive to be interesting and relevant questions <span class="citation" data-cites="trisos2021">(<a href="#ref-trisos2021" role="doc-biblioref">Trisos et al. 2021</a>)</span>. Historically and into the present, ways of knowing based in western epistemologies have been given preferential treatment compared to other ways of knowing. This is especially clear when we consider the many indigenous ways of knowing that have enabled the flourishing of communities and societies around the world <span class="citation" data-cites="trisos2021">(<a href="#ref-trisos2021" role="doc-biblioref">Trisos et al. 2021</a>)</span>. Hawaiʻi is a prime example where ʻŌiwi epistemologies have supported sustainable socio-ecological systems for generations up until recently <span class="citation" data-cites="gon2018 wilson2019">(<a href="#ref-gon2018" role="doc-biblioref">Gon III et al. 2018</a>; <a href="#ref-wilson2019" role="doc-biblioref">Wilson-Hokowhitu 2019</a>)</span>. Indeed, the settler colonial violence against kānaka ʻŌiwi and ʻŌiwi epistemologies is likely responsible for not only immense human injustice <span class="citation" data-cites="liliuokalani1898 kelly1992 trask1993 kauanui2008 greywolf2023">(<a href="#ref-liliuokalani1898" role="doc-biblioref">Liliuokalani 1898</a>; <a href="#ref-kelly1992" role="doc-biblioref">Kelly 1992</a>; <a href="#ref-trask1993" role="doc-biblioref">Trask 1993</a>; <a href="#ref-kauanui2008" role="doc-biblioref">Kauanui 2008</a>; <a href="#ref-greywolf2023" role="doc-biblioref">Greywolf et al. 2023</a>)</span> but also ecological collapse <span class="citation" data-cites="gon2018">(<a href="#ref-gon2018" role="doc-biblioref">Gon III et al. 2018</a>)</span>.</p>
+<p>This course and me, your instructor (hi, Andy here) cannot teach methods outside of the western tradition because I simply do not have that training nor knowledge. To attempt to do so would be a disservice to any way of knowing outside of western epistemologies where my training lies. We will, however, recognize that a multitude of ways of knowing exist and are valid, and we will recognize how racism and colonialism have motivated the attempted erasure of those ways of knowing and the people who practice them. To understand the connection of racism and colonialism to the contents of our course we might borrow from or be inspired by ʻŌiwi methodologies to consider the moʻokūʻauhau <span class="citation" data-cites="mooku">(<a href="#ref-mooku" role="doc-biblioref"><strong>mooku?</strong></a>)</span> of likelihood methods. Moʻokūʻauhau is an element of ʻŌiwi methods and among its meanings communicates the idea of genealogical relationships and learning about a study subject through its relationships across history.</p>
+</section>
+<section id="moʻokūʻauhau-of-likelihood" class="level2" data-number="13.3">
+<h2 data-number="13.3" class="anchored" data-anchor-id="moʻokūʻauhau-of-likelihood"><span class="header-section-number">13.3</span> Moʻokūʻauhau of likelihood</h2>
+<p>As we will see in the coming labs, many conventions we still maintain about statistical models come to us from the genealogy of those methods: the notation, the ways parameters are conceptualized, and default settings of core functions in R. It is reasonable then to ask, what other ideas may have carried through the genealogy to the present to impact how we use statistical models?</p>
+<p>The method of maximum likelihood as we use it can be traced back to the work of R. A. Fisher starting in 1912 <span class="citation" data-cites="bodmer2021">(<a href="#ref-bodmer2021" role="doc-biblioref">Bodmer et al. 2021</a>)</span>. While Fisher made many contributions to ecology, evolution, and statistics, he was also very much convinced by and a promoter of eugenics and so called race science. These pseudo-scientific ideas were, and continue to be, the tools of genocide, colonialism, racism, and extractive relationships. Several quotes from Fisher can be used to surmise his opinions</p>
+<div class="columns">
+<div class="column" style="width:30%;">
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="dynamic-doc_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<p><img src="img/lin-mod/fisher.jpeg" class="img-fluid figure-img"></p>
+<figcaption>R. A. Fisher: racist, eugenicist</figcaption>
 </figure>
 </div>
+</div><div class="column" style="width:70%;">
+<blockquote class="blockquote">
+<p>Available scientific knowledge provides a firm basis for believing that the groups of mankind differ in their innate capacity for intellectual and emotional development <span class="citation" data-cites="unesco-race">(<a href="#ref-unesco-race" role="doc-biblioref">UNESCO 1952</a>)</span>.</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>I am sorry that there should be propaganda in favour of miscegenation [bigoted term for marriage between perceived racial groups] in North America as I am sure it can do nothing but harm <span class="citation" data-cites="bodmer2021">(quoted in <a href="#ref-bodmer2021" role="doc-biblioref">Bodmer et al. 2021</a>)</span>.</p>
+</blockquote>
 </div>
 </div>
-<p>Pretty cool! But how does it all work. First, let’s open a quarto document and copy paste the above code into it. For a new quarto document go File &gt; New File &gt; Quarto Document…</p>
-<p><img src="img/dyn-doc/new-qmd.png" class="img-fluid" style="width:75.0%"></p>
-<p>You will see the above options. You can mostly ignore everything, but do make sure that “Use visual markdown editor” is <strong>unselected</strong> (you can select to use the visual editor later after you learn markdown basics). Delete any text RStudio pre-populates in the .qmd file and copy the example from this website.</p>
-<section id="rendering" class="level3" data-number="4.2.1">
-<h3 data-number="4.2.1" class="anchored" data-anchor-id="rendering"><span class="header-section-number">4.2.1</span> Rendering</h3>
-<p>Rendering is made simple by RStudio. When you have a quarto document open, you will see a “Render” button. Hit that button and the rendering magic happens for you! RStudio comes pre-loaded with the quarto software and its dependencies needed for rendering. Rendering will produce an actual pdf file, and a preview of that file will show up in the “Viewer” tab.</p>
-<p><img src="img/dyn-doc/render.png" class="img-fluid"></p>
-<p>If you want more control over rendering you can also use the R function <code>quarto_render</code> from the package <em>quarto</em>. For example in the console you could run</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(quarto)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">quarto_render</span>(<span class="st">"example_quarto.qmd"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Have a look at <code>?quarto_render</code> for all the arguments that let you control the specifics of how your document is rendered.</p>
-<p>That’s rendering, but how does the actual quarto document work</p>
-</section>
-<section id="yaml-header" class="level3" data-number="4.2.2">
-<h3 data-number="4.2.2" class="anchored" data-anchor-id="yaml-header"><span class="header-section-number">4.2.2</span> YAML header</h3>
-<p>The first bit of the quarto document looked like this:</p>
-<div class="cell s-output">
-<div class="cell-output cell-output-stdout">
-<pre><code>---
-title: "The title"
-author: A research group
-format: pdf
----</code></pre>
-</div>
-</div>
-<p>In between the <code>---</code> is what’s called the YAML header. This specifies metadata about the document. For example, we want to make a <code>pdf</code> document with <code>title</code> “The title.” If we wanted to instead render an html document, all we need to do is change <code>format: pdf</code> to <code>format: html</code>.</p>
-<p>YAML lets you provide a <em>lot</em> of information that customizes or even adds content (like a bibliography) to your document. <a href="https://quarto-tdg.org/yaml">Here</a> is a non-exhaustive accounting of some YAML options.</p>
-</section>
-<section id="markdown-syntax" class="level3" data-number="4.2.3">
-<h3 data-number="4.2.3" class="anchored" data-anchor-id="markdown-syntax"><span class="header-section-number">4.2.3</span> Markdown syntax</h3>
-<p>Markdown is a markup language that lets you format text with simple <em>plain text</em>, meaning you can produce something fancy looking like different headers, lists, tables, with simple plain text characters like <code>#</code> and <code>-</code>. Alternative markup languages (like html or latex) require more laborious “markup” tags to achieve similar results to markdown, thus the attempt at a humors name for markdown. <a href="https://quarto.org/docs/authoring/markdown-basics.html">Here</a> is an overview on markdown syntax.</p>
-<section id="general-formatting" class="level4" data-number="4.2.3.1">
-<h4 data-number="4.2.3.1" class="anchored" data-anchor-id="general-formatting"><span class="header-section-number">4.2.3.1</span> General formatting</h4>
-<p>For <em>italics</em>, wrap text in a single asterisks <code>*like this*</code>; for <strong>bold</strong>, wrap text in double asterisks <code>**like this**</code>; and for <strong><em>italic bold</em></strong>, wrap text in triple asterisks <code>***like this***</code>.</p>
-</section>
-<section id="headers" class="level4" data-number="4.2.3.2">
-<h4 data-number="4.2.3.2" class="anchored" data-anchor-id="headers"><span class="header-section-number">4.2.3.2</span> Headers</h4>
-<p>Markdown creates section headers with the hashtag: <code>#</code> is an H1 header, <code>##</code> is an H2 header (sub-header), <code>###</code> is an H3 header (sub-sub-header) and so on. You saw examples of these in the above example quarto document.</p>
-</section>
-<section id="lists" class="level4" data-number="4.2.3.3">
-<h4 data-number="4.2.3.3" class="anchored" data-anchor-id="lists"><span class="header-section-number">4.2.3.3</span> Lists</h4>
-<p>Bullet lists are generated with hyphens <code>-</code> like this:</p>
-<div class="gb">
-<pre><code>- one item
-- another item</code></pre>
-</div>
-<p>Which will be rendered as:</p>
-<div class="gb">
-<ul>
-<li>one item</li>
-<li>another item</li>
-</ul>
-</div>
-<p>Numbered lists are generated with numbers:</p>
-<div class="gb">
-<pre><code>1. first
-1. second</code></pre>
-</div>
-<p>gets rendered to</p>
-<div class="gb">
+<p>It should be noted the first quote was part of Fisher’s <em>dissenting</em> opinion against the UNESCO report finding no scientific basis for racial differences in intellectual and emotional abilities. The report was created in response to the horrors of the Holocaust, disavowing the pseudo-science used to support Nazi atrocities. Again, Fisher dissented against this report.</p>
+<p>Fisher was also convinced that smoking tobacco was not detrimental to human health, and his work was sure enough funded by the tobacco industry. No judgement to anyone who smokes tobacco, but we definitively know it is linked to adverse health outcomes; trying to use statistics, as Fisher did, to argue otherwise is disingenuous at best.</p>
+<p>From the enthusiastic embrace of the genocidal pseudo-science of eugenics to the willful conflict-of-interest use of his own statistical methods to support the lies of the tobacco industry, we can see Fisher had flawed abilities to reason clearly. <span class="citation" data-cites="clayton2021">Clayton (<a href="#ref-clayton2021" role="doc-biblioref">2021</a>)</span> draws a direct line of decent from Fisher’s obsession with using statistics to “prove” incorrect propositions to the current replication crisis in statistics and science where statistically “significant” results are published but cannot be reproduced. Indeed, the moʻokūʻauhau can predict our current situtation and illuminate how we got here.</p>
+<p>What does all this mean for our use of methods like likelihood? My approach, speaking as me Andy, is threefold</p>
 <ol type="1">
-<li>first</li>
-<li>second</li>
+<li>Being aware that we (and Fisher and everyone) are responsible for the harm we cause with our hateful ideas, but we also do not own the positive outcomes that other people might produce with our useful ideas; likelihood has been used and adopted by many thousands (10s, 100s of thousands perhaps) for constructive work and the contributions of those people are not owned by Fisher</li>
+<li>Being self-reflective about what questions we ask, how we ask them, and why can help us make use of tools like likelihood while pushing back against their original uses and not repeating extractive, discriminatory, or violent pseudo-science</li>
+<li>Being able to use these tools, and be ethical about it, will help you get a job, and in your position you have a chance to make positive change</li>
 </ol>
-</div>
-<p>Note: you don’t need to use correct numbering, markdown figures it out for you.</p>
-<p>You can make hierarchical lists by tab indenting. This:</p>
-<div class="gb">
-<pre><code>- one item
-    - one smaller thought
-    - and another
-- another item</code></pre>
-</div>
-<p>produces this:</p>
-<div class="gb">
+</section>
+<section id="from-question-to-model" class="level2" data-number="13.4">
+<h2 data-number="13.4" class="anchored" data-anchor-id="from-question-to-model"><span class="header-section-number">13.4</span> From question to model</h2>
+<p>With all that said, it’s time to return to the topic of moving from question to model. The trick is to go from question to prediction to model.</p>
+<section id="question-to-prediction" class="level3" data-number="13.4.1">
+<h3 data-number="13.4.1" class="anchored" data-anchor-id="question-to-prediction"><span class="header-section-number">13.4.1</span> Question to prediction</h3>
+<p>We tend to ask questions in the form of “what is the effect of <span class="math inline">\(x\)</span> on <span class="math inline">\(y\)</span>” where <span class="math inline">\(x\)</span> is some explanatory variable and <span class="math inline">\(y\)</span> is the response. We likely have a deeper idea about how ecology and evolution, or other aspect of biology, determine the impact of <span class="math inline">\(x\)</span> on <span class="math inline">\(y\)</span>, but for a statistical model we only need to ask how they are related.</p>
+<p>Here are two example predictions:</p>
 <ul>
-<li>one item
-<ul>
-<li>one smaller thought</li>
-<li>and another</li>
-</ul></li>
-<li>another item</li>
+<li>if <span class="math inline">\(x\)</span> goes up, <span class="math inline">\(y\)</span> goes down (they are implied to be numerical variables and have a negative relationship)</li>
+<li><span class="math inline">\(y\)</span> is greater for group <span class="math inline">\(x = g_1\)</span> than for group <span class="math inline">\(x = g_2\)</span> (<span class="math inline">\(x\)</span> is implied to be a discrete variable)</li>
 </ul>
-</div>
-<p>And this:</p>
-<div class="gb">
-<pre><code>1. first
-    i. additionally 
-    iii. and more
-2. second</code></pre>
-</div>
-<p>produces this</p>
-<div class="gb">
-<ol type="1">
-<li>first
-<ol type="i">
-<li>additionally</li>
-<li>and more</li>
-</ol></li>
-<li>second</li>
-</ol>
-</div>
-</section>
-<section id="hyperlinks-and-images" class="level4" data-number="4.2.3.4">
-<h4 data-number="4.2.3.4" class="anchored" data-anchor-id="hyperlinks-and-images"><span class="header-section-number">4.2.3.4</span> Hyperlinks and images</h4>
-<p>Those items seem unrelated, but their markdown syntax is similar.</p>
-<p>You can link to a URL like this: <code>[Our website](https://uhm-biostats.github.io/stat-mod/)</code> which will produce formatted text like this:</p>
-<div class="gb">
-<p><a href="https://uhm-biostats.github.io/stat-mod/">Our website</a></p>
-</div>
-<p>Including an image looks almost the same. This:</p>
-<div class="gb">
-<pre><code>![An image from Winter et al. 2018](img/data-intro/wao.png)</code></pre>
-</div>
-<p>will be rendered as this:</p>
-<div class="gb">
-<div class="cell" data-layout-align="left">
+<p>Predictions can sometimes more easily be expressed as a conceptual figure or graph:</p>
+<div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-left">
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="dynamic-doc_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" style="width:50.0%"></p>
-<figcaption>An image from Winter et al.&nbsp;2018</figcaption>
+<p><img src="mods-howto_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
 </figure>
 </div>
 </div>
 </div>
-</div>
-<p>if you were to have that image file <code>wao.png</code> saved at the location <code>img/data-intro</code>.</p>
-<p>You can also include an image from a URL:</p>
-<div class="gb">
-<pre><code>![Remember this old map?](https://uhm-biostats.github.io/stat-mod/datasets-intro_files/figure-html/fig-map-1.png)</code></pre>
-</div>
-<div class="gb">
-<div class="cell" data-layout-align="left">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-left">
-<figure class="figure">
-<p><img src="dynamic-doc_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" style="width:75.0%"></p>
-<figcaption>Remember this old map?</figcaption>
-</figure>
-</div>
-</div>
-</div>
-</div>
+<p>Stating, and perhaps visualizing, our prediction helps us identify the variables of interest, which is the response variable and which are explanatory, and also helps us understand what kind of relationship we are trying to represent in our model. Of course we should note: predictions can be wrong (i.e.&nbsp;the data look different) and that’s part of doing science.</p>
 </section>
-<section id="bibliographic-references" class="level4" data-number="4.2.3.5">
-<h4 data-number="4.2.3.5" class="anchored" data-anchor-id="bibliographic-references"><span class="header-section-number">4.2.3.5</span> Bibliographic references</h4>
-<p>You can cite a reference like this <code>[@hutchins2023]</code> which will get formatted in the text like this:</p>
-<div class="gb">
-<p>…cite a reference like this <span class="citation" data-cites="hutchins2023">(Hutchins et al. 2023)</span>…</p>
-</div>
-<p>and then get rendered in the <em>References</em> section like</p>
-<div class="gb">
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="dynamic-doc_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="635"></p>
-</figure>
-</div>
-</div>
-</div>
-</div>
-<p>Three things to note about citing references:</p>
-<ul>
-<li>Include at the very end of your .qmd file a section <code>## References</code>, the works cited will print after this</li>
-<li>You need to store your references in a .bib file, more on that <a href="https://quarto.org/docs/authoring/citations.html">here</a></li>
-<li>That link will also tell you more about how you can customize the bibliography style with a csl file, you can browse many options <a href="https://www.zotero.org/styles">here</a>. This website uses the <a href="https://www.zotero.org/styles/conservation-biology?source=1"><em>Conservation Biology</em> style</a></li>
-</ul>
+<section id="prediction-to-model" class="level3" data-number="13.4.2">
+<h3 data-number="13.4.2" class="anchored" data-anchor-id="prediction-to-model"><span class="header-section-number">13.4.2</span> Prediction to model</h3>
+<p>But, we are not yet to a model. In statistics we always deal with randomness. To articulate a statistical model we have to account for how randomness enters into our data set. Sometimes it can be useful to think about distinct sources of randomness: those deriving from biology, and those entering our data as accidents or artifacts.</p>
+<section id="biological-sources-of-randomness" class="level4" data-number="13.4.2.1">
+<h4 data-number="13.4.2.1" class="anchored" data-anchor-id="biological-sources-of-randomness"><span class="header-section-number">13.4.2.1</span> Biological sources of randomness</h4>
+<p>If the processes that produce the data we are studying all contribute to those data in additive or multiplicative ways, we have reason to believe the randomness in the data might follow a <strong><em>normal distribution</em></strong>. Additive and multiplicative processes might include the combined effect of gene expression networks on development, or the impact of many environmental variables acting together to determine a phenotype.</p>
+<p>Another type of randomness could result from the many factors that determine birth and death in a population, or speciation and extinction at the species level. These kinds of general “birth” and “death” processes lead to randomness that has a <strong><em>negative binomial distribution</em></strong>, though we often approximate or simply that randomness into a <strong><em>Poisson distribution</em></strong>. If we are looking at the presence or absence of an entire population then these birth death processes produce randomness according to a <strong><em>binomial distribution</em></strong>.</p>
 </section>
-<section id="tables" class="level4" data-number="4.2.3.6">
-<h4 data-number="4.2.3.6" class="anchored" data-anchor-id="tables"><span class="header-section-number">4.2.3.6</span> Tables</h4>
-<p>Tables can be simply created with markdown like this:</p>
-<div class="gb">
-<div class="cell s-output">
-<pre><code>|group | value|
-|:-----|-----:|
-|A     |     1|
-|A     |     2|
-|B     |     3|</code></pre>
-</div>
-</div>
-<p>which is in turn rendered as</p>
-<div class="gb">
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="dynamic-doc_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="185"></p>
-</figure>
-</div>
-</div>
-</div>
-</div>
-</section>
-</section>
-<section id="code" class="level3" data-number="4.2.4">
-<h3 data-number="4.2.4" class="anchored" data-anchor-id="code"><span class="header-section-number">4.2.4</span> Code</h3>
-<p>One of the most awesome things about <em>quarto</em> and <em>Rmarkdown</em> is that you can write code directly into the document and run it during the rendering process. We saw that in the example <em>quarto</em> document.</p>
-<p>Code lives in “chunks” and chunks have many options that you can specify to determine how and if the code is run and presented. Those options were first defined by <a href="https://yihui.org/knitr/"><em>knitr</em></a> and are not incorporated into <em>quarto</em>. See <a href="https://quarto.org/docs/computations/execution-options.html">documentation here</a>.</p>
-<p>Code chunks get indicated with triple back tick marks: <code>```</code> and the language of the code in curly brackets (<code>{r}</code>, we will only be using R) like this from the example document:</p>
-<div class="cell s-output">
-<div class="cell-output cell-output-stdout">
-<pre><code>```{r}
-#| label: step-01
-
-x &lt;- 1:10
-sum(x)
-```</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 55</code></pre>
-</div>
-</div>
-<p>We see the result of the computation gets printed out below the code. But what is this all about:</p>
-<div class="cell s-output">
-<div class="cell-output cell-output-stdout">
-<pre><code>#| label: step-01</code></pre>
-</div>
-</div>
-<p>The <code>#|</code> is called a “hash pipe” (either the people who developed <em>quarto</em> are huge nerds who don’t know better, or they know exactly what they’re doing). The hash pipe is how we indicate code chunk options. A good habit to be in is always providing a <code>label:</code> to each code chunk. Some other options we’ve seen are <code>include:</code> which tells <em>quarto</em> if we want the code itself and its output to be printed in the rendered output; The default is <code>true</code> so <code>include: false</code> means run the code, but don’t print it. We also say <code>echo: false</code> which means don’t print the code, but <em>do</em> print the output. Other options we saw like <code>fig-width:</code> are for specifying details about how figures generated by code are displayed.</p>
-<section id="figures-and-tables-from-code" class="level4" data-number="4.2.4.1">
-<h4 data-number="4.2.4.1" class="anchored" data-anchor-id="figures-and-tables-from-code"><span class="header-section-number">4.2.4.1</span> Figures and tables from code</h4>
-<p>That’s right! We can make figures with code and have them displayed in our rendered documents. One</p>
-<p>We can also make markdown-formatted tables with help from the <em>knitr</em> package. Here’s an example</p>
-<div class="gb">
-<div class="cell s-output">
-<div class="cell-output cell-output-stdout">
-<pre><code>```{r}
-#| label: table-example
-
-library(knitr)
-
-# make a simple data.frame
-d &lt;- data.frame(group = c("A", "A", "B"), 
-                value = 1:3)
-
-kable(d)
-```</code></pre>
-</div>
-</div>
-</div>
-<p>which produces the markdown table that previously we made by hand:</p>
-<div class="gb">
-<pre><code>|group | value|
-|:-----|-----:|
-|A     |     1|
-|A     |     2|
-|B     |     3|</code></pre>
-</div>
-<p>and is in turn rendered as</p>
-<div class="gb">
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="dynamic-doc_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="185"></p>
-</figure>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section id="cross-referencing" class="level4" data-number="4.2.4.2">
-<h4 data-number="4.2.4.2" class="anchored" data-anchor-id="cross-referencing"><span class="header-section-number">4.2.4.2</span> Cross referencing</h4>
-<p>We often want to refer to an figure of table like “Figure 1 shows such and such. Table 3 shows the other thing.” To make the figure and table output of our code cross-referencable we need to use special labels inside the code chunks.</p>
-<p>In the example quarto file we made a figure and then referenced it. To allow that, we used this special code chunk label:</p>
-<div class="cell s-output">
-<div class="cell-output cell-output-stdout">
-<pre><code>#| label: fig-concept</code></pre>
-</div>
-</div>
-<p>The special part is that the label name starts with <code>fig-</code>. Then in our text we could cross reference the figure with the markdown code <code>@fig-concept</code>.</p>
-<p>Tables are similar, but we use the special label tag <code>tbl-</code>. For example if we made a table in a code chunk with <code>#| label: tbl-one_tab</code>, we could then cross reference the table with <code>@tbl-one_tab</code>.</p>
-<p>There is a lot more to learn about cross referencing (including in cases where we don’t make figures or tables with code) and you can read more <a href="https://quarto.org/docs/authoring/cross-references.html">here</a>.</p>
+<section id="sampling-and-measurement-sources-of-randomness" class="level4" data-number="13.4.2.2">
+<h4 data-number="13.4.2.2" class="anchored" data-anchor-id="sampling-and-measurement-sources-of-randomness"><span class="header-section-number">13.4.2.2</span> Sampling and measurement sources of randomness</h4>
+<p>It is well known that we can only be so precise in our numerical measurements. Imprecision and human error is often assumed to be governed by many tiny accidents working together in an additive way, thus the Central Limit Theorem applies and such imprecision might indeed be <strong><em>normally distributed</em></strong>.</p>
+<p>We are also only human and cannot possibly create infinite sample sizes. The fact that samples sizes are finite introduces an element of randomness sometimes called “sampling error”—the fact that finite data sets will miss some things. A common example in ecology is that we fail to detect a species or population we are looking for, even if that species or population is present in our study area. Such imperfect detection results in randomness following a <strong><em>binomial distribution</em></strong>.</p>
 </section>
 </section>
 </section>
-<section id="now-its-your-turn" class="level2" data-number="4.3">
-<h2 data-number="4.3" class="anchored" data-anchor-id="now-its-your-turn"><span class="header-section-number">4.3</span> Now it’s your turn</h2>
-<p>In the previous chapter you produced an extensive R script with notes and code. Copy-paste and modify that big unruly R script into a nice qmd file and render it as a pdf. This pdf will be your own personal definitive R study guide and reference manual.</p>
-</section>
-<section id="resources" class="level2" data-number="4.4">
-<h2 data-number="4.4" class="anchored" data-anchor-id="resources"><span class="header-section-number">4.4</span> Resources</h2>
-<p>As already mentioned, quarto has <a href="https://quarto.org/docs/guide/">extensive documentation online</a>.</p>
+<section id="finally-how-to-make-a-model" class="level2" data-number="13.5">
+<h2 data-number="13.5" class="anchored" data-anchor-id="finally-how-to-make-a-model"><span class="header-section-number">13.5</span> Finally, how to make a model</h2>
+<p>To incorporate these sources of randomness with our predictions to form a complete model, it can be useful to think of how we would simulate a data set similar to our own. For example, “if x goes up, y goes down” could be simulated by letting the mean of <span class="math inline">\(y\)</span> (call it <span class="math inline">\(\bar{y}\)</span>) change with <span class="math inline">\(x\)</span>: <span class="math inline">\(\bar{y} = b - a \times x\)</span> where <span class="math inline">\(b\)</span> is an intercept and <span class="math inline">\(a\)</span> is a slope. Such an equation will indeed produce the conceptual graph we showed earlier.</p>
+<p>Then perhaps the randomness in <span class="math inline">\(y\)</span> comes from a normal distribution, so we <em>model</em> <span class="math inline">\(y\)</span> as distributed <span class="math inline">\(y \sim \mathcal{N}(b - a \times x,~\sigma)\)</span> where <span class="math inline">\(\sigma\)</span> is the standard deviation and tells us just how random <span class="math inline">\(y\)</span> is (larger <span class="math inline">\(\sigma\)</span>, more random).</p>
+<p>For purposes of using maximum likelihood, making a model comes down to connecting a question to predictions and imagining how those predictions could vary according to one or more sources of randomness.</p>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-bodmer2021" class="csl-entry" role="listitem">
+Bodmer W, Bailey R, Charlesworth B, Eyre-Walker A, Farewell V, Mead A, Senn S. 2021. The outstanding scientist, RA fisher: His views on eugenics and race. Heredity <strong>126</strong>:565–576. Springer International Publishing Cham.
+</div>
+<div id="ref-clayton2021" class="csl-entry" role="listitem">
+Clayton A. 2021. Bernoulli’s fallacy: Statistical illogic and the crisis of modern science. Columbia University Press.
+</div>
+<div id="ref-gon2018" class="csl-entry" role="listitem">
+Gon III SM, Tom SL, Woodside U. 2018. ʻ<span>Ā</span>ina momona, honua au loli—productive lands, changing world: Using the hawaiian footprint to inform biocultural restoration and future sustainability in hawai ‘i. Sustainability <strong>10</strong>:3420. MDPI.
+</div>
+<div id="ref-greywolf2023" class="csl-entry" role="listitem">
+Greywolf C, Lowe J, Casken J, Kataoka-Yahiro M, Millender E. 2023. Discrimination, racism, social inequality, and injustice experienced among native hawaiians through the lens of historical trauma. IJSBAR <strong>69</strong>:36–46.
+</div>
+<div id="ref-kauanui2008" class="csl-entry" role="listitem">
+Kauanui JK. 2008. Colonialism in equality: Hawaiian sovereignty and the question of US civil rights. South Atlantic Quarterly <strong>107</strong>:635–650. Duke University Press.
+</div>
+<div id="ref-kelly1992" class="csl-entry" role="listitem">
+Kelly M. 1992. The great mahele and other acts of cultural genocide. Ethnic Studies Program.
+</div>
+<div id="ref-liliuokalani1898" class="csl-entry" role="listitem">
+Liliuokalani Q. 1898. Hawaii’s story by hawaii’s queen. Tuttle Publishing.
+</div>
+<div id="ref-trask1993" class="csl-entry" role="listitem">
+Trask H-K. 1993. From a native daughter: Colonialism and sovereignty in hawaii (revised edition). University of Hawaii Press.
+</div>
+<div id="ref-trisos2021" class="csl-entry" role="listitem">
+Trisos CH, Auerbach J, Katti M. 2021. Decoloniality and anti-oppressive practices for a more ethical ecology. Nature Ecology &amp; Evolution <strong>5</strong>:1205–1212. Nature Publishing Group UK London.
+</div>
+<div id="ref-unesco-race" class="csl-entry" role="listitem">
+UNESCO. 1952. The concept of race: Results of an inquiry. United Nations Educational, Scientific,; Cultural Organization. Available from <a href="https://unesdoc.unesco.org/ark:/48223/pf0000073351">https://unesdoc.unesco.org/ark:/48223/pf0000073351</a>.
+</div>
+<div id="ref-wilson2019" class="csl-entry" role="listitem">
+Wilson-Hokowhitu N. 2019. The past before us: Moʻok<span>ū</span>ʻauhau as methodology. University of Hawaii Press.
+</div>
+</div>
 </section>
 
 </main> <!-- /main -->
@@ -1107,13 +869,13 @@ kable(d)
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./r-refresh.html" class="pagination-link" aria-label="R refresher">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">R refresher</span></span>
+      <a href="./lin-mod.html" class="pagination-link" aria-label="Linear models">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Linear models</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./github.html" class="pagination-link" aria-label="Managing code with git and GitHub">
-        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Managing code with git and GitHub</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./lin-norm.html" class="pagination-link" aria-label="Simple linear models">
+        <span class="nav-page-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Simple linear models</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
