@@ -1,0 +1,30 @@
+---
+format:
+  html:
+    code-links:
+      - text: View source
+        icon: github
+        href: https://github.com/uhm-biostats/stat-mod/blob/main/rand-effects-lab.qmd
+---
+
+# Working with mixed effects models in R
+
+```{r}
+#| eval: false
+#| echo: false
+
+library(lme4)
+
+dat$PlotID <- as.character(dat$PlotID)
+
+mod2 <- lmer(log_dbh_cm ~ Native_Status * hii + (1 | PlotID), data = dat)
+
+mod1
+```
+
+
+
+
+
+
+
