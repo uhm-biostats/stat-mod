@@ -4,5 +4,16 @@ Starting with the simple linear model $y = ax + b + \text{error}$ we will see ho
 
 Jump straight to:
 
-- How to make a model [slides](mods-howto-slides.html){target="_blank"}
+*Simple linear models*
+
+- How to make a model [lecture notes](mods-howto.qmd), [slides](mods-howto-slides.html){target="_blank"}
 - [Linear models with normal residuals](lin-norm.qmd)
+- [Linear models using R's built-in functions](lin-lstsqrs.qmd)
+
+*Mixed effects models*
+
+- What are random effects? [lecture notes](rand-effects.qmd)
+- [Building mixed effects models with *lme4*](rand-effects-lab.qmd)
+
+*Generalized linear models*
+

@@ -31,6 +31,8 @@ book:
             - mods-howto.qmd
             - lin-norm.qmd
             - lin-lstsqrs.qmd
+            - rand-effects.qmd
+            - rand-effects-lab.qmd
 
 
 bibliography: stat-mod.bib
