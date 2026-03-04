@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Probability – Intro to Statistical Modeling</title>
+<title>17&nbsp; Working with mixed effects models in R – Intro to Statistical Modeling</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -30,8 +30,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./prob-intro.html" rel="next">
-<link href="./bring-it-together.html" rel="prev">
+<link href="./rand-effects.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -84,7 +83,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./prob.html">Probability</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./lin-mod.html">Linear models</a></li><li class="breadcrumb-item"><a href="./rand-effects-lab.html"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Working with mixed effects models in R</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -166,7 +165,7 @@ ul.task-list li input[type="checkbox"] {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="./prob.html" class="sidebar-item-text sidebar-link active">
+            <a href="./prob.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Probability</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -257,7 +256,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./rand-effects-lab.html" class="sidebar-item-text sidebar-link">
+  <a href="./rand-effects-lab.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Working with mixed effects models in R</span></span></a>
   </div>
 </li>
@@ -268,15 +267,15 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         
-    </div>
+    <div class="quarto-code-links"><h2>Code Links</h2><ul><li><a href="https://github.com/uhm-biostats/stat-mod/blob/main/rand-effects-lab.qmd"><i class="bi bi-github"></i>View source</a></li></ul></div></div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./lin-mod.html">Linear models</a></li><li class="breadcrumb-item"><a href="./rand-effects-lab.html"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Working with mixed effects models in R</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Probability</h1>
+<h1 class="title"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Working with mixed effects models in R</span></h1>
 </div>
 
 
@@ -293,13 +292,6 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>We will cover concepts from probability theory that are necessary for this course without diving too far into the weeds. Most importantly we will cover random variables, core rules of probability including conditional probability, common probability distributions, and the Central Limit Theorem.</p>
-<p>Jump straight to:</p>
-<ul>
-<li>Introducing probability <a href="./prob-intro.html">lecture notes</a>, <a href="prob-slides.html" target="_blank">slides</a></li>
-<li><a href="./prob-dist.html">Probability distributions</a></li>
-<li><a href="./prob-sim-data.html">Simulating probabilistic data</a></li>
-</ul>
 
 
 
@@ -706,14 +698,11 @@ ul.task-list li input[type="checkbox"] {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./bring-it-together.html" class="pagination-link" aria-label="CARE and FAIR in presenting data with dynamic documents">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">CARE and FAIR in presenting data with dynamic documents</span></span>
+      <a href="./rand-effects.html" class="pagination-link" aria-label="What are random effects?">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">What are random effects?</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./prob-intro.html" class="pagination-link" aria-label="Introduction to probability">
-        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Introduction to probability</span></span> <i class="bi bi-arrow-right-short"></i>
-      </a>
   </div>
 </nav>
 </div> <!-- /content -->

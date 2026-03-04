@@ -1,0 +1,15 @@
+{
+  "hash": "53d6497b9598a901ade0eff05a9c3d86",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\nformat:\n  html:\n    code-links:\n      - text: View source\n        icon: github\n        href: https://github.com/uhm-biostats/stat-mod/blob/main/rand-effects-lab.qmd\n---\n\n# Working with mixed effects models in R\n\n\n::: {.cell}\n\n:::\n\n\n\n\n\n\n\n\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
