@@ -20,6 +20,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -42,6 +77,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-27c261d06b905028a18691de25d09dde.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/quarto-contrib/downloadthis-1.9.1/downloadthis.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -268,8 +304,18 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
-    <div class="quarto-code-links"><h2>Code Links</h2><ul><li><a href="https://github.com/uhm-biostats/stat-mod/blob/main/rand-effects-lab.qmd"><i class="bi bi-github"></i>View source</a></li></ul></div></div>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#using-simulated-data-to-understand-fitting-mixed-effects-models" id="toc-using-simulated-data-to-understand-fitting-mixed-effects-models" class="nav-link active" data-scroll-target="#using-simulated-data-to-understand-fitting-mixed-effects-models"><span class="header-section-number">17.1</span> Using simulated data to understand fitting mixed effects models</a>
+  <ul>
+  <li><a href="#introducing-lme4-and-the-lmer-function" id="toc-introducing-lme4-and-the-lmer-function" class="nav-link" data-scroll-target="#introducing-lme4-and-the-lmer-function"><span class="header-section-number">17.1.1</span> Introducing <em>lme4</em> and the <code>lmer</code> function</a></li>
+  </ul></li>
+  <li><a href="#fitting-a-mixed-effects-model-to-real-data" id="toc-fitting-a-mixed-effects-model-to-real-data" class="nav-link" data-scroll-target="#fitting-a-mixed-effects-model-to-real-data"><span class="header-section-number">17.2</span> Fitting a mixed effects model to real data</a></li>
+  </ul>
+<div class="quarto-code-links"><h2>Code Links</h2><ul><li><a href="https://github.com/uhm-biostats/stat-mod/blob/main/rand-effects-lab.qmd"><i class="bi bi-github"></i>View source</a></li></ul></div></nav>
+    </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
@@ -292,8 +338,188 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<p>This lab will walk us through how to use the <em>lme4</em> package to fit a mixed effects model.</p>
+<p>You can download the lab template <code>.qmd</code> file for this lab here:</p>
+<p><a href="#dnldts884" onclick="fetch('data:text/plain;base64,LS0tCnRpdGxlOiAiV29ya2luZyB3aXRoIG1peGVkIGVmZmVjdHMgbW9kZWxzIGluIFIiCmZvcm1hdDogCiAgICBwZGY6IAogICAgICAgIGluY2x1ZGUtaW4taGVhZGVyOgogICAgICAgICAgICB0ZXh0OiB8CiAgICAgICAgICAgICAgICBcdXNlcGFja2FnZXtuZXd1bmljb2RlY2hhcn0KICAgICAgICAgICAgICAgIFxuZXd1bmljb2RlY2hhcnvKu317YH0gCmF1dGhvcjogCiAgICAtIHlvdXIgbmFtZSBoZXJlCi0tLQoKYGBge3J9CiN8IGxhYmVsOiBzZXR1cAoKIyBsb2FkIGFsbCBuZWNlc3NhcnkgcGFja2FnZXMKIyAuLi4geW91IG1heSBuZWVkIHRvIGFkZCB0byB0aGlzISBjYW4gZGVsZXRlIHRoaXMgY29tbWVudCBvbmNlIGRvbmUKbGlicmFyeShnZ3Bsb3QyKQpsaWJyYXJ5KGRwbHlyKQpsaWJyYXJ5KGxtZTQpICMgeW91IG1pZ2h0IG5lZWQgdG8gYGluc3RhbGwucGFja2FnZXNgIHRoaXMgb25lCgpgYGAKCgoKIyMgVXNpbmcgc2ltdWxhdGVkIGRhdGEgdG8gdW5kZXJzdGFuZCBmaXR0aW5nIG1peGVkIGVmZmVjdHMgbW9kZWxzIAoKTGV0J3Mgc3RhcnQgd2l0aCBzb21lIHNpbXVsYXRlZCBkYXRhIHRvIGJvdGggbWFrZSBzdXJlIHdlIHVuZGVyc3RhbmQgaG93IG1peGVkIGVmZmVjdHMgbW9kZWwgd29yayAoYW5kIHRoZWlyIGFzc3VtcHRpb25zKSBhbmQgaG93IHRoZSAqbG1lNCogcGFja2FnZSBpbXBsZW1lbnRzIGZpdHRpbmcgbWl4ZWQgZWZmZWN0cyBtb2RlbHMuCgpGaXJzdCB3ZSBzaW11bGF0ZSB0aGUgZGF0YS4gSW1hZ2luZSB3ZSBoYXZlIHNvbWUgcmVzcG9uc2UgdmFyaWFibGUgYHlgIGFuZCBzb21lIG51bWVyaWMgZXhwbGFuYXRvcnkgdmFyaWFibGUgYHhgIGFuZCB3ZSBoYXZlIGNvbGxlY3RlZCBkYXRhIG9uIHRoZXNlIHZhcmlhYmxlcyBmcm9tIDggc2l0ZXMgKHRoaW5rIHNhbXBsaW5nIGxvY2F0aW9ucyBhY3Jvc3Mgc3BhY2UpIHdpdGggMjAgb2JzZXJ2YXRpb25zIGNvbWluZyBmcm9tIGVhY2ggc2l0ZS4KCmBgYHtyfQojfCBsYWJlbDogc2ltLWRhdGEKCiMgc2V0LXVwIHRoZSBzaW11bGF0aW9uCgojIG51bWJlciBvZiBzaXRlcyAod2lsbCBiZSByYW5kIGVmZmVjdCkKbnNpdGUgPC0gOAoKIyBudW1iZXIgb2YgKHBzZXVkbykgcmVwcyBwZXIgc2l0ZQpucmVwIDwtIDIwCgojIHNkIG9mIHRoZSByYW5kb20gZWZmZWN0IG9mIHNpdGUKc2lnX3JhbmQgPC0gMQoKIyBzZCBvZiB0aGUgInJlc2lkdWFscyIKc2lnX3Jlc2lkIDwtIDAuMjUKCiMgb3ZlcmFsbCBpbnRlcmNlcHQKYTAgPC0gOAoKIyBzbG9wZQphMSA8LSAyCgpzaW1fZGF0IDwtIGRhdGEuZnJhbWUoc2l0ZSA9IHJlcChwYXN0ZTAoInNpdGVfIiwgMTpuc2l0ZSksIGVhY2ggPSBucmVwKSwgCiAgICAgICAgICAgICAgICAgICAgICAjIHNpbXVsYXRlIHJhbmRvbSBlZmZlY3Qgb2Ygc2l0ZSwgd2Ugd291bGQgbmV2ZXIKICAgICAgICAgICAgICAgICAgICAgICMgYWN0dWFsbHkgaGF2ZSB0aGlzIGluIHJlYWwgZGF0YQogICAgICAgICAgICAgICAgICAgICAgc2l0ZV9yYW5kID0gcmVwKHJub3JtKG5zaXRlLCBtZWFuID0gMCwgc2QgPSBzaWdfcmFuZCksIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGVhY2ggPSBucmVwKSwKICAgICAgICAgICAgICAgICAgICAgIHggPSBydW5pZihuc2l0ZSAqIG5yZXApKSB8PiAKICAgICMgYWRkIHRoZSByZXNwb25zZSB2YXJpYWJsZQogICAgbXV0YXRlKHkgPSBybm9ybShuc2l0ZSAqIG5yZXAsIAogICAgICAgICAgICAgICAgICAgICBtZWFuID0gYTAgKyBzaXRlX3JhbmQgKyBhMSAqIHgsIAogICAgICAgICAgICAgICAgICAgICBzZCA9IHNpZ19yZXNpZCkpCgpoZWFkKHNpbV9kYXQpCmBgYAoKCkxldCdzIGhhdmUgYSBsb29rIGF0IHRoZXNlIGRhdGEKCmBgYHtyfQojfCBsYWJlbDogZmlnLXNpbS12aXoKI3wgZmlnLXdpZHRoOiA0CiN8IGZpZy1oZWlnaHQ6IDMKCmdncGxvdChzaW1fZGF0LCBhZXMoeCwgeSwgY29sb3IgPSBzaXRlKSkgKwogICAgZ2VvbV9wb2ludCgpICsKICAgIHNjYWxlX2NvbG9yX3ZpcmlkaXNfZCgpCmBgYAoKV2UgY2FuIHNlZSB0aGF0IHRoZSByYW5kb20gZWZmZWN0IG9mIHNpdGUgYnVtcHMgdGhlIG9ic2VydmF0aW9ucyB1cCBvciBkb3duIGJ1dCBkb2VzIG5vdCBjaGFuZ2UgdGhlIHNsb3BlIG9mIGB5YCB2ZXJzdXMgYHhgLiBTbyB0aGUgcmFuZCBlZmZlY3Qgb2Ygc2l0ZSBvbmx5IGltcGFjdHMgdGhlIGludGVyY2VwdCAobW9yZSBvbiB0aGF0IHNob3J0bHkpLgoKVGhpcyBpcyBpbmRlZWQgd2hhdCB3ZSBzaG91bGQgZXhwZWN0IGJlY2F1c2UgdGhpcyBpcyBob3cgd2Ugc2ltdWxhdGVkIHRoZSBkYXRhLCB3ZSBzYWlkIHRoZSBtZWFuIG9mIGB5YCBpcyAKCmBgYAphMCArIHNpdGVfcmFuZCArIGExICogeApgYGAKClRoZSBgc2l0ZV9yYW5kYCBlbnRlcnMgdGhpcyBleHByZXNzaW9uIGFzIGFuIGFkZGl0aW9uYWwgaW50ZXJjZXB0IHRlcm0gYWxvbmcgd2l0aCBgYTBgLgoKCiMjIyBJbnRyb2R1Y2luZyAqbG1lNCogYW5kIHRoZSBgbG1lcmAgZnVuY3Rpb24KCk5vdyB3ZSBhcmUgZ29pbmcgdG8gdHJ5IHRvIHVzZSBtYXhpbXVtIGxpa2VsaWhvb2QgdG8gZXN0aW1hdGUgdGhlIHZhbHVlcyBvZiB0aGUgcGFyYW1ldGVycyBgYTBgLCBgYTFgLCBgc2lnX3JhbmRgLCBhbmQgYHNpZ19yZXNpZGAgZnJvbSB0aGUgc2ltdWxhdGVkIGRhdGEuIFdlIGtub3cgdGhlICJ0cnVlIiB2YWx1ZXMgb2YgdGhvc2UgcGFyYW1ldGVycywgc28gd2UgY2FuIGV2YWx1YXRlIHdoZXRoZXIgdGhlIG1heGltdW0gbGlrZWxpaG9vZCBtZXRob2QgaW1wbGVtZW50ZWQgaW4gYGxtZXJgIHdvcmtlZC4KCkhlcmUgaXMgaG93IHRvIHVzZSB0aGUgYGxtZXJgIGZ1bmN0aW9uOgoKYGBge3J9CiN8IGxhYmVsOiBmaXQtbW9kCgpzaW1fbW9kIDwtIGxtZXIoeSB+IHggKyAoMSB8IHNpdGUpLCBkYXRhID0gc2ltX2RhdCwgUkVNTCA9IEZBTFNFKQpgYGAKCk5vdGljZSBhIGZldyB0aGluZ3M6IAoKLSBUaGUgZml4ZWQgZWZmZWN0cyBwYXJ0IG9mIHRoZSBtb2RlbCBpcyBsaWtlIHdoYXQgd2UndmUgc2VlbiBiZWZvcmU6IGB5IH4geGAKLSBUaGUgd2F5IGEgcmFuZG9tIGVmZmVjdCBpcyBpbXBsZW1lbnRlZCBpcyB0aHJvdWdoIHRoZSBub3RhdGlvbiBgKDEgfCBzaXRlKWAgd2hpY2ggbWVhbnMgImxldCB0aGVyZSBiZSBhbiBhZGRpdGlvbmFsIGludGVyY2VwdCB0ZXJtIGNvbmRpdGlvbmFsIG9uIHNpdGUiCi0gV2UgYWxzbyBoYWQgdG8gc3BlY2lmeSBgUkVNTCA9IEZBTFNFYCwgdGhpcyBpcyBiZWNhdXNlIHRoZSBkZWZhdWx0IGlzIGBSRU1MID0gVFJVRWAgYW5kIHRoYXQgZGVmYXVsdCBhY3R1YWxseSBkb2VzIG5vdCBtYXhpbWl6ZSB0aGUgbGlrZWxpaG9vZCBmdW5jdGlvbiAod2hhdCB3ZSB3YW50KSBidXQgcmF0aGVyIG1heGltaXplcyB0aGUgInJlbGF0aXZlIiBvciAicmVzaWR1YWwiIGxpa2VsaWhvb2QgKHdoYXQgd2UgZG9uJ3Qgd2FudCkKCk5vdyB3ZSBjYW4gbG9vayBhdCB0aGUgcmVzdWx0cwoKYGBge3J9CgpzaW1fbW9kCgpgYGAKClRoZSBwcmludC1vdXQgc2hvdWxkIHNob3cgdXMgYSBzdGFuZGFyZCBkZXZpYXRpb24gZm9yIHJhbmRvbSBlZmZlY3QgYHNpdGVgIHRoYXQgaXMgY2xvc2UgdG8gYHIgc2lnX3JhbmRgIGFuZCBhIHN0YW5kYXJkIGRldmlhdGlvbiBmb3IgdGhlIHJlc2lkdWFscyB0aGF0IGlzIGNsb3NlIHRvIGByIHNpZ19yZXNpZGAuIElmIHdlIHdhbnQgdG8gZGlyZWN0bHkgYWNjZXNzIHRob3NlIHZhbHVlcyB3ZSBjYW4gbGlrZSB0aGlzOgoKYGBge3J9CiMgZXh0cmFjdCB0aGUgZml4ZWQgZWZmZWN0cwpmaXhlZihzaW1fbW9kKQoKIyBleHRyYWN0IHRoZSBzdGFuZGFyZCBkZXZpYXRpb25zIG9mIHJhbmRvbSBlZmZlY3RzClZhckNvcnIoc2ltX21vZCkKYGBgCgoKU29tZXRoaW5nIGludGVyZXN0aW5nIGFib3V0IHRoZSB3YXkgbWl4ZWQgZWZmZWN0cyBtb2RlbHMgYXJlIGZpdCBpcyB0aGF0IHRoZSBhbGdvcml0aG0gYWN0dWFsbHkgaW5mZXJzIHRoZSBvcHRpbWFsIHZhbHVlcyB0aGF0IHNob3VsZCBiZSBzYW1wbGVkIGZyb20gdGhlIHJhbmRvbSBlZmZlY3QgdG8gbWF4aW1pemUgdGhlIGxpa2VsaWhvb2QuIFdlIGNhbiBzZWUgZXZpZGVuY2Ugb2YgdGhhdCBieSBhc2tpbmcgZm9yIHRoZSAiY29lZmZpY2llbnRzIiBvZiB0aGUgbW9kZWwKCmBgYHtyfQpjb2VmKHNpbV9tb2QpCgpgYGAKCldlIHNlZSBhbiBpbnRlcmNlcHQgZm9yIGVhY2ggc2l0ZS4gVGhlIGZhY3QgdGhhdCBlYWNoIHNpdGUgZ2V0cyBpdHMgb3duIChyYW5kb21seSBzYW1wbGVkKSBpbnRlcmNlcHQgaXMgd2h5IHRoaXMga2luZCBtaXhlZCBlZmZlY3RzIG1vZGVsIGlzIGNhbGwgYSAicmFuZG9tIGludGVyY2VwdHMiIG1vZGVsLiAKCiMjIEZpdHRpbmcgYSBtaXhlZCBlZmZlY3RzIG1vZGVsIHRvIHJlYWwgZGF0YQoKTm93IGl0cyB5b3VyIHR1cm4gdG8gdGFrZSB3aGF0IHdlIGxlYXJuZWQgd2l0aCBzaW11bGF0ZWQgZGF0YSBhbmQgZml0IGEgcmFuZG9tIGludGVyY2VwdHMgbW9kZWwgdG8gdGhlIHJlYWwgZGF0YS4gTGV0J3MgcmV0dXJuIHRvIHRoZSBtb2RlbCBvZiB0cnlpbmcgdG8gcHJlZGljdCBsb2cgREJIIGJhc2VkIG9uIGh1bWFuIGltcGFjdCBhbmQgaW52YXNpdmUgc3RhdHVzICh3aXRoIGFuIGludGVyYWN0aW9uKSBidXQgbm93IHdlJ2xsIGluY2x1ZGUgYSByYW5kb20gZWZmZWN0IG9mIHN1cnZleSBwbG90LiBUaGUgZml4ZWQgZWZmZWN0cyBwYXJ0IG9mIHRoZSBtb2RlbCBzaG91bGQgYmUgdGhlIHNhbWUgYXMgYmVmb3JlIGFuZCBsb29rIGxpa2UgdGhpczoKCmBgYApsb2dfZGJoX2NtIH4gTmF0aXZlX1N0YXR1cyAqIGhpaQpgYGAKCgpGaXJzdCBsb2FkIGFuZCBjbGVhbiB0aGUgZGF0YSBhcyB3ZSBoYXZlIGJlZm9yZToKCmBgYHtyfQojfCBsYWJlbDogcmVhZGluLWRhdGEKCnRyZWUgPC0gcmVhZC5jc3YoImh0dHBzOi8vcmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbS91aG0tYmlvc3RhdHMvc3RhdC1tb2QvcmVmcy9oZWFkcy9tYWluL2RhdGEvT3Blbk5haGVsZV9UcmVlX0RhdGEuY3N2IikKCmhpaV9nZW8gPC0gcmVhZC5jc3YoImh0dHBzOi8vcmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbS91aG0tYmlvc3RhdHMvc3RhdC1tb2QvcmVmcy9oZWFkcy9tYWluL2RhdGEvaGlpX2dlby5jc3YiKQoKIyBtZXJnZSB0aGUgZGF0YSBpbnRvIG9uZSBkYXRhLmZyYW1lLCBjbGVhbiwgYWRkIG5lZWRlZCBjb2x1bW5zCmRhdCA8LSBsZWZ0X2pvaW4odHJlZSwgaGlpX2dlbykgfD4gCiAgICAjIHJlbW92ZSBtaXNzaW5nIERCSCB2YWx1ZXMKICAgIGZpbHRlcighaXMubmEoREJIX2NtKSkgfD4gCiAgICAjIGFkZCBhIGNvbHVtbiBmb3IgbG9nLXRyYW5zZm9ybWVkIERCSCBzaW5jZSB0aGlzIHdpbGwgYmUgCiAgICAjIHRoZSB2YXJpYWJsZSB3ZSB1c2UgYXMgYSByZXNwb25zZSB2YXJpYWJsZQogICAgbXV0YXRlKGxvZ19kYmhfY20gPSBsb2coREJIX2NtKSkgfD4gCiAgICAjIHJlbW92ZSBOQXMgZm9yIGVsZXZhdGlvbgogICAgZmlsdGVyKCFpcy5uYShoaWkpKSB8PiAKICAgICMgcmVtb3ZlICJ1bmNlcnRhaW4iIGZvciBuYXRpdmUgc3RhdHVzCiAgICBmaWx0ZXIoTmF0aXZlX1N0YXR1cyAhPSAidW5jZXJ0YWluIikKCmBgYAoKCk5vdyB0YWtlIGl0IGZyb20gdGhlcmUhCgo=').then(res => res.blob()).then(blob => {
+      const downloadURL = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      document.body.appendChild(a);
+      a.href = downloadURL;
+      a.download = 'lab05-mixed-effects.qmd'; a.click();
+      window.URL.revokeObjectURL(downloadURL);
+      document.body.removeChild(a);
+        });"><button class="btn btn-default downloadthis  " id="dnldts884"><i class="bi bi-download"></i> Download lab template </button></a></p>
+<p>The template will prompt you to work through the following sections.</p>
+<section id="using-simulated-data-to-understand-fitting-mixed-effects-models" class="level2" data-number="17.1">
+<h2 data-number="17.1" class="anchored" data-anchor-id="using-simulated-data-to-understand-fitting-mixed-effects-models"><span class="header-section-number">17.1</span> Using simulated data to understand fitting mixed effects models</h2>
+<p>Let’s start with some simulated data to both make sure we understand how mixed effects model work (and their assumptions) and how the <em>lme4</em> package implements fitting mixed effects models.</p>
+<p>First we simulate the data. Imagine we have some response variable <code>y</code> and some numeric explanatory variable <code>x</code> and we have collected data on these variables from 8 sites (think sampling locations across space) with 20 observations coming from each site.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set-up the simulation</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># number of sites (will be rand effect)</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>nsite <span class="ot">&lt;-</span> <span class="dv">8</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># number of (pseudo) reps per site</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>nrep <span class="ot">&lt;-</span> <span class="dv">20</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># sd of the random effect of site</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>sig_rand <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># sd of the "residuals"</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>sig_resid <span class="ot">&lt;-</span> <span class="fl">0.25</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># overall intercept</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>a0 <span class="ot">&lt;-</span> <span class="dv">8</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># slope</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>a1 <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>sim_dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">site =</span> <span class="fu">rep</span>(<span class="fu">paste0</span>(<span class="st">"site_"</span>, <span class="dv">1</span><span class="sc">:</span>nsite), <span class="at">each =</span> nrep), </span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>                      <span class="co"># simulate random effect of site, we would never</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>                      <span class="co"># actually have this in real data</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>                      <span class="at">site_rand =</span> <span class="fu">rep</span>(<span class="fu">rnorm</span>(nsite, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> sig_rand), </span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">each =</span> nrep),</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>                      <span class="at">x =</span> <span class="fu">runif</span>(nsite <span class="sc">*</span> nrep)) <span class="sc">|&gt;</span> </span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># add the response variable</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">y =</span> <span class="fu">rnorm</span>(nsite <span class="sc">*</span> nrep, </span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>                     <span class="at">mean =</span> a0 <span class="sc">+</span> site_rand <span class="sc">+</span> a1 <span class="sc">*</span> x, </span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>                     <span class="at">sd =</span> sig_resid))</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sim_dat)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    site site_rand          x        y
+1 site_1 -0.652066 0.88232886 8.982502
+2 site_1 -0.652066 0.62881545 8.338896
+3 site_1 -0.652066 0.04772945 7.408728
+4 site_1 -0.652066 0.74576461 8.699420
+5 site_1 -0.652066 0.84435693 8.987621
+6 site_1 -0.652066 0.29729844 7.909985</code></pre>
+</div>
+</div>
+<p>Let’s have a look at these data</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(sim_dat, <span class="fu">aes</span>(x, y, <span class="at">color =</span> site)) <span class="sc">+</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_viridis_d</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-sim-viz" class="quarto-float quarto-figure quarto-figure-center anchored" width="384">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-sim-viz-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="rand-effects-lab_files/figure-html/fig-sim-viz-1.png" id="fig-sim-viz" class="img-fluid figure-img" width="384">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-sim-viz-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;17.1
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>We can see that the random effect of site bumps the observations up or down but does not change the slope of <code>y</code> versus <code>x</code>. So the rand effect of site only impacts the intercept (more on that shortly).</p>
+<p>This is indeed what we should expect because this is how we simulated the data, we said the mean of <code>y</code> is</p>
+<pre><code>a0 + site_rand + a1 * x</code></pre>
+<p>The <code>site_rand</code> enters this expression as an additional intercept term along with <code>a0</code>.</p>
+<section id="introducing-lme4-and-the-lmer-function" class="level3" data-number="17.1.1">
+<h3 data-number="17.1.1" class="anchored" data-anchor-id="introducing-lme4-and-the-lmer-function"><span class="header-section-number">17.1.1</span> Introducing <em>lme4</em> and the <code>lmer</code> function</h3>
+<p>Now we are going to try to use maximum likelihood to estimate the values of the parameters <code>a0</code>, <code>a1</code>, <code>sig_rand</code>, and <code>sig_resid</code> from the simulated data. We know the “true” values of those parameters, so we can evaluate whether the maximum likelihood method implemented in <code>lmer</code> worked.</p>
+<p>Here is how to use the <code>lmer</code> function:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>sim_mod <span class="ot">&lt;-</span> <span class="fu">lmer</span>(y <span class="sc">~</span> x <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> site), <span class="at">data =</span> sim_dat, <span class="at">REML =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Notice a few things:</p>
+<ul>
+<li>The fixed effects part of the model is like what we’ve seen before: <code>y ~ x</code></li>
+<li>The way a random effect is implemented is through the notation <code>(1 | site)</code> which means “let there be an additional intercept term conditional on site”</li>
+<li>We also had to specify <code>REML = FALSE</code>, this is because the default is <code>REML = TRUE</code> and that default actually does not maximize the likelihood function (what we want) but rather maximizes the “relative” or “residual” likelihood (what we don’t want)</li>
+</ul>
+<p>Now we can look at the results</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>sim_mod</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Linear mixed model fit by maximum likelihood  ['lmerMod']
+Formula: y ~ x + (1 | site)
+   Data: sim_dat
+      AIC       BIC    logLik -2*log(L)  df.resid 
+  46.0995   58.4002  -19.0498   38.0995       156 
+Random effects:
+ Groups   Name        Std.Dev.
+ site     (Intercept) 0.7954  
+ Residual             0.2381  
+Number of obs: 160, groups:  site, 8
+Fixed Effects:
+(Intercept)            x  
+      8.302        2.159  </code></pre>
+</div>
+</div>
+<p>The print-out should show us a standard deviation for random effect <code>site</code> that is close to 1 and a standard deviation for the residuals that is close to 0.25. If we want to directly access those values we can like this:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># extract the fixed effects</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">fixef</span>(sim_mod)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(Intercept)           x 
+   8.301693    2.158829 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># extract the standard deviations of random effects</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">VarCorr</span>(sim_mod)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> Groups   Name        Std.Dev.
+ site     (Intercept) 0.79537 
+ Residual             0.23807 </code></pre>
+</div>
+</div>
+<p>Something interesting about the way mixed effects models are fit is that the algorithm actually infers the optimal values that should be sampled from the random effect to maximize the likelihood. We can see evidence of that by asking for the “coefficients” of the model</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(sim_mod)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$site
+       (Intercept)        x
+site_1    7.336477 2.158829
+site_2    7.847663 2.158829
+site_3    8.521560 2.158829
+site_4   10.149815 2.158829
+site_5    8.502909 2.158829
+site_6    8.340087 2.158829
+site_7    7.864515 2.158829
+site_8    7.850518 2.158829
+
+attr(,"class")
+[1] "coef.mer"</code></pre>
+</div>
+</div>
+<p>We see an intercept for each site. The fact that each site gets its own (randomly sampled) intercept is why this kind mixed effects model is call a “random intercepts” model. Random slopes models also exist but we won’t cover them.</p>
+</section>
+</section>
+<section id="fitting-a-mixed-effects-model-to-real-data" class="level2" data-number="17.2">
+<h2 data-number="17.2" class="anchored" data-anchor-id="fitting-a-mixed-effects-model-to-real-data"><span class="header-section-number">17.2</span> Fitting a mixed effects model to real data</h2>
+<p>Now its your turn to take what we learned with simulated data and fit a random intercepts model to the real data. Let’s return to the model of trying to predict log DBH based on human impact and invasive status (with an interaction) but now we’ll include a random effect of survey plot. The fixed effects part of the model should be the same as before and look like this:</p>
+<pre><code>log_dbh_cm ~ Native_Status * hii</code></pre>
+<p>First load and clean the data as we have before:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># tree &lt;- read.csv("https://raw.githubusercontent.com/uhm-biostats/stat-mod/refs/heads/main/data/OpenNahele_Tree_Data.csv")</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>tree <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/OpenNahele_Tree_Data.csv"</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># hii_geo &lt;- read.csv("https://raw.githubusercontent.com/uhm-biostats/stat-mod/refs/heads/main/data/hii_geo.csv")</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>hii_geo <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/hii_geo.csv"</span>)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="co"># merge the data into one data.frame, clean, add needed columns</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">left_join</span>(tree, hii_geo) <span class="sc">|&gt;</span> </span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># remove missing DBH values</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(DBH_cm)) <span class="sc">|&gt;</span> </span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># add a column for log-transformed DBH since this will be </span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># the variable we use as a response variable</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">log_dbh_cm =</span> <span class="fu">log</span>(DBH_cm)) <span class="sc">|&gt;</span> </span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># remove NAs for elevation</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(hii)) <span class="sc">|&gt;</span> </span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># remove "uncertain" for native status</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(Native_Status <span class="sc">!=</span> <span class="st">"uncertain"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Joining with `by = join_by(PlotID)`</code></pre>
+</div>
+</div>
+<p>Now take it from there!</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
