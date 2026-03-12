@@ -1113,5 +1113,27 @@
       "Linear models",
       "<span class='chapter-number'>17</span>  <span class='chapter-title'>Working with mixed effects models in R</span>"
     ]
+  },
+  {
+    "objectID": "mixed-models-lab.html",
+    "href": "mixed-models-lab.html",
+    "title": "18  More mixed effects models in R",
+    "section": "",
+    "text": "18.1 Random slopes-and-intercepts model\nThis lab will continue our journey through mixed effects models with the lme4 package, specifically engaging with random slopes.\nYou can download the lab template .qmd file for this lab here:\nDownload lab template\nThe template will prompt you to work through the following sections.\nIn the previous lab we saw how to fit a random intercepts model, now we will see how to fit a model with both random intercepts and slopes. First, let’s figure out what random slopes means.\nIf we have some numerical explanatory variable \\(x\\) and numerical response variable \\(y\\), then there will be a slope \\(m\\) describing how \\(y\\) changes across \\(x\\) as in the equation \\(y = mx + b\\). But what if there are multiple observations coming from the same sampling units that may not be fully independent (i.e. we have pseudo replicates)? This is the classic case for needing a random effect, but what if not only the intercept changes randomly, but the slope also changes randomly? Meaning that within groups of pseudo replicates, the relationship between \\(y\\) and \\(x\\) might be a little different at random.\nThis connects to the tree data we are working with because each tree species is observed across multiple, potentially many, plots. While we previously recognized trees within plots as pseudo replicates, we now also face the possibility that trees belonging to the same species also represent pseudo replicates.",
+    "crumbs": [
+      "Linear models",
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>More mixed effects models in R</span>"
+    ]
+  },
+  {
+    "objectID": "mixed-models-lab.html#random-slopes-with-lmer",
+    "href": "mixed-models-lab.html#random-slopes-with-lmer",
+    "title": "18  More mixed effects models in R",
+    "section": "18.2 Random slopes with lmer",
+    "text": "18.2 Random slopes with lmer\nHow do we implement a random slopes model? We use lmer and syntax that is not too different from what we have already seen. If we want to allow for a random slope of log DBH versus human impact index for each species we use the syntax\n(1 + hii | Scientific_name)\nThat syntax means that given scientific name (i.e. given the identity of any one species), the effect of hii might be different. It should be noted that the difference could take the forms of both a different slope and a different intercept. So with random slopes, we typically simultaneously fit a random slope and intercept for the factor—tree species in this case.\nNow work through the following:\n\nload and prep the tree and geo-human impact data\nfit a mixed effects model with random a random intercept effect for PlotID and random slope and intercept effects for Scientific_name\ncompare your new model with the previous model that did not include random slopes and intercepts for species\nyou will notice a big change in the effect of being \"native\", what is your interpretation of that change?\n\nThat last task will take some thinking! To help guide you, have a look at the random effects of the model. If your model object is called mod you can access those random effects like\n\n# note: this chunk is not being evaluated because we have not\n# yet actually made `mod`\n\nranef(mod)\n\nThat will return a list with elements PlotID and Scientific_name. We want to look at the random effects for Scientific_name, so we ask specifically for that:\n\n# it can be helpful to use `View` to see all the random effects,\n# but don't keep `View` in your final qmd file because rendering\n# the qmd with `View` in it is not ideal\nranef(mod)$Scientific_name |&gt; View()\n\nOnce you have figured out a reason for the change in fixed effects relative to the random-intercepts-only model, you can remove View from your qmd file and use other code or words to illustrate why the model estimates are different.",
+    "crumbs": [
+      "Linear models",
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>More mixed effects models in R</span>"
+    ]
   }
 ]
