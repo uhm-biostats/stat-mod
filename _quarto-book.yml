@@ -33,6 +33,7 @@ book:
             - lin-lstsqrs.qmd
             - rand-effects.qmd
             - rand-effects-lab.qmd
+            - mixed-models-lab.qmd
 
 
 bibliography: stat-mod.bib

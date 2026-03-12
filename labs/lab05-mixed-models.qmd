@@ -1,0 +1,75 @@
+---
+title: "Working with mixed effects models in R: continued"
+format: 
+    pdf: 
+        include-in-header:
+            text: |
+                \usepackage{newunicodechar}
+                \newunicodechar{ʻ}{`} 
+author: 
+    - your name here
+---
+
+```{r}
+#| label: setup
+
+# load all necessary packages
+# ... you may need to add to this! can delete this comment once done
+library(ggplot2)
+library(dplyr)
+library(lme4) # you might need to `install.packages` this one
+
+```
+
+
+
+## Random slopes-and-intercepts model
+
+In the previous lab we saw how to fit a random intercepts model, now we will see how to fit a model with both random intercepts and slopes. First, let's figure out what random slopes means.
+
+If we have some numerical explanatory variable $x$ and numerical response variable $y$, then there will be a slope $m$ describing how $y$ changes across $x$ as in the equation $y = mx + b$. But what if there are multiple observations coming from the same sampling units that may not be fully independent (i.e. we have pseudo replicates)? This is the classic case for needing a random effect, but what if not only the intercept changes randomly, but the slope also changes randomly? Meaning that within groups of pseudo replicates, the relationship between $y$ and $x$ might be a little different at random.
+
+This connects to the tree data we are working with because each tree species is observed across multiple, potentially many, plots. While we previously recognized trees within plots as pseudo replicates, we now also face the possibility that trees belonging to the same species may represent pseudo replicates.
+
+## Random slopes with `lmer`
+
+How do we implement a random slopes model? We use `lmer` and syntax that is not too different from what we have already seen. If we want to allow for a random slope of log DBH versus human impact index for each species we use the syntax 
+
+
+```
+(1 + hii | Scientific_name)
+```
+
+That syntax means that *given* scientific name (i.e. given the identity of any one species), the effect of `hii` might be different. It should be noted that the difference could take the forms of both a different slope and a different intercept. So with random slopes, we typically simultaneously fit a random slope and intercept for the factor---tree species in this case.
+
+Now work through the following:
+
+- load and prep the tree and geo-human impact data
+- fit a mixed effects model with random a random intercept effect for `PlotID` and random slope and intercept effects for `Scientific_name`
+- compare your new model with the previous model that did not include random slopes and intercepts for species
+- you will notice a big change in the effect of being `"native"`, what is your interpretation of that change?
+
+
+That last task will take some thinking! To help guide you, have a look at the random effects of the model. If your model object is called `mod` you can access those random effects like
+
+```{r}
+#| eval: false
+
+# note: this chunk is not being evaluated because we have not
+# yet actually made `mod`
+
+ranef(mod)
+```
+
+That will return a list with elements `PlotID` and `Scientific_name`. We want to look at the random effects for `Scientific_name`, so we ask specifically for that:
+
+```{r}
+#| eval: false
+
+# it can be helpful to use `View` to see all the random effects,
+# but don't keep `View` in your final qmd file because rendering
+# the qmd with `View` in it is not ideal
+ranef(mod)$Scientific_name |> View()
+```
+
+Once you have figured out a reason for the change in fixed effects relative to the random-intercepts-only model, you can remove `View` from your qmd file and use other code or words to illustrate why the model estimates are different.
