@@ -1,0 +1,81 @@
+---
+title: "Binomial Generalize Linear Model"
+
+format:
+  revealjs:
+    slide-number: true
+    preview-links: auto
+    auto-stretch: false
+    embed-resources: false
+    controls: true
+
+bibliography: stat-mod.bib
+csl: conservation-biology.csl
+---
+
+```{r}
+#| label: setup
+#| echo: false
+#| message: false
+#| warning: false
+
+
+library(ggplot2)
+library(knitr)
+library(cowplot)
+
+opts_chunk$set(echo = FALSE)
+```
+
+
+## Recap of normal linear models
+
+three panels: fixed, random intercept, random slope
+
+## Recap of normal linear models
+
+model equation
+
+
+## Recap of normal linear models
+
+what's so special about normal?...nothing
+
+
+## Introducing: generalized linear models
+
+binomial as an example (can't fit straight line through it)
+
+
+## Binomial generalized linear models
+
+recap from previous material, including the one regression style use case
+
+## Understanding the link function
+
+## Interpreting coefficients
+
+## Visualizing the model and data
+
+## Binomial generalized linear models: Use cases
+
+- presence/absence in space
+- presence/absence of some characteristic
+- number of successes
+
+demonstrate with 
+
+- plot level: distribution of some non-native
+- characteristic: is there a non-native tree in plot by elevation?
+- characteristic: do that at level of individual tree
+- random effect? no just look at number of "successes" = non-native
+
+
+
+
+## References
+
+
+
+
+
