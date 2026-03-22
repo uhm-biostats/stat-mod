@@ -1,0 +1,143 @@
+---
+title: "Ideas on how to use large language models"
+---
+
+```{r}
+#| label: setup
+#| echo: false
+#| message: false
+#| warning: false
+
+library(knitr)
+opts_chunk$set(echo = FALSE)
+```
+
+
+
+## Never copy data into an LLM
+
+- Ethical considerations: are the data yours to share?
+- Practical considerations: uses up unnecessary LLM memory and context (taking away from a better answer)
+- Learning considerations: you'll learn better if you think more critically about what your data are and what questions you really need an LLM's help with
+
+::: {.fragment}
+On that note...
+:::
+
+## Use hypotheticals
+
+For example, your prompt could be
+
+> I have a \`data.frame\` with columns \`x\` and \`y\`, <br> how do I....
+
+::: {.fragment}
+Most LLMs will easily work with that prompt to first generate a toy data object like
+
+```{r}
+#| eval: false
+#| echo: true
+
+my_data <- data.frame(x = rnorm(10), y = rnorm(10))
+
+```
+
+And then address your question
+:::
+
+## Use hypotheticals {auto-animate="true"}
+
+This is useful because
+
+- it makes you think about your data and what you need to figure out
+- it keeps the real data private
+- having the LLM make up toy data gives you a chance to evaluate the LLM to see if it's really understanding your context and question
+
+
+## Break your problem into smaller parts
+
+Rather than prompting
+
+> I want to model how \`y\` changes with \`x\` based on group \`g\`, how?
+
+::: {.fragment}
+Try breaking it up with your human brain first and figure out what steps you actually want to ask about
+
+1. Prep data for modeling (suppose you already know how)
+2. Identify the model formula: `y ~ x * g` (suppose you already know how)
+3. Use an R function to fit the model (perhaps this is where you are unsure)
+:::
+
+## Break your problem into smaller parts {auto-animate="true"}
+
+Rather than prompting
+
+> I want to model how \`y\` changes with \`x\` based on group \`g\`, how?
+
+
+Ask specifically about what you don't know!
+
+::: {.fragment}
+> I have data with columns \`y\`, \`x\`, and \`g\`. In R I want to model \`y ~ x * g\` but not sure which function to use, how could I figure that out?
+:::
+
+## Push back on the LLM
+
+- if the answer is too broad, further refine your prompt to focus the LLM, think back to breaking up the problem into smaller steps and identifying which you need help with
+
+::: {.fragment}
+> I have data with columns \`y\`, \`x\`, and \`g\` where \`x\` and \`y\` are numerical and \`g\` represents different groups. In R I want to model \`y ~ x * g\` but not sure which function to use, how could I figure that out?
+:::
+
+## Push back on the LLM {auto-animate="true"}
+
+
+- if the answer seems unnecessarily complex, ask it, "is there a simpler way to do this?"
+- LLMs can really over think things using the tidyverse so ask about non-tidyverse solutions
+- ask the LLM to explain steps that seem opaque or that you simply don't understand
+
+
+## Check the LLM's answers
+
+- run the code yourself, if there are errors, tell the LLM (paste the error message in) and make it fix the mistake
+- try asking questions about steps you are fairly sure you already know, if the LLM agrees this will help you know it is headed in the right direction
+
+
+
+## Never copy paste code from the LLM and call it done
+
+- make sure you understand every line
+- re-write the comments in your own words
+- you should have used hypotheticals and not the real data, so at a minimum you will need to change variable names
+
+## Ask for explanations
+
+- show the LLM code or ideas you don't understand and ask it to explain
+- topics in this course have a lot of material written about them, so LLMs should be well trained
+- try questions like these
+
+## Ask for explanations {auto-animate="true"}
+
+> what is this code doing
+>
+> \`\`\` <br>
+> # insert code here <br>
+> \`\`\`
+
+## Ask for explanations {auto-animate="true"}
+
+> why would I need a random effect for data like `_blank_` and a model like `_blank_`?
+
+## Ask for explanations {auto-animate="true"}
+
+> what is different about the `lm` function versus the `glm` function?
+
+
+
+## The "what if..."
+
+What if you don't follow these guides?
+
+- First off, we're all learning LLMs together, so you might have your own guides that work just fine
+- But second, if you don't follow these guides nothing will blow up...not right away anyway
+- The concern is that without understanding the code and concepts you could introduce errors into your analyses
+- Sometimes such errors could have serious consequences
