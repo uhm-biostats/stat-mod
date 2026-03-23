@@ -900,7 +900,7 @@
     "href": "lin-mod.html",
     "title": "Linear models",
     "section": "",
-    "text": "Starting with the simple linear model \\(y = ax + b + \\text{error}\\) we will see how we can expand from there, using likelihood methods, to cover many different kinds of ways we might like to model and make inference about biological processes. Models will include multiple linear regression, models where explanatory variables are categorical (i.e. where we might classically use ANOVA), generalized linear models, and mixed effects models.\nJump straight to:\nSimple linear models\n\nHow to make a model lecture notes, slides\nLinear models with normal residuals\nLinear models using R’s built-in functions\n\nMixed effects models\n\nWhat are random effects? lecture notes\nBuilding mixed effects models with lme4\n\nGeneralized linear models",
+    "text": "Starting with the simple linear model \\(y = ax + b + \\text{error}\\) we will see how we can expand from there, using likelihood methods, to cover many different kinds of ways we might like to model and make inference about biological processes. Models will include multiple linear regression, models where explanatory variables are categorical (i.e. where we might classically use ANOVA), generalized linear models, and mixed effects models.\nJump straight to:\nSimple linear models\n\nHow to make a model lecture notes, slides\nLinear models with normal residuals\nLinear models using R’s built-in functions\n\nMixed effects models\n\nWhat are random effects? lecture notes\nBuilding mixed effects models with lme4\n\nGeneralized linear models (GLM)\n\nThe binomial GLM lecture notes, slides",
     "crumbs": [
       "Linear models"
     ]
@@ -1134,6 +1134,17 @@
     "crumbs": [
       "Linear models",
       "<span class='chapter-number'>18</span>  <span class='chapter-title'>More mixed effects models in R</span>"
+    ]
+  },
+  {
+    "objectID": "binom-glm.html",
+    "href": "binom-glm.html",
+    "title": "19  The Binomial Generalized Linear Model",
+    "section": "",
+    "text": "19.1 Slides",
+    "crumbs": [
+      "Linear models",
+      "<span class='chapter-number'>19</span>  <span class='chapter-title'>The Binomial Generalized Linear Model</span>"
     ]
   }
 ]
