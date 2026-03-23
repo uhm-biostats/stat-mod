@@ -94,7 +94,7 @@ No random effects
 lmfig(3, TRUE, FALSE)
 ```
 
-Groups (usually more than 3) affect intercepts
+Groups (usually > 3) affect intercepts
 
 ::::
 
@@ -109,7 +109,7 @@ Groups (usually more than 3) affect intercepts
 lmfig(3, TRUE, TRUE)
 ```
 
-Groups (usually more than 3) affect intercepts and slopes
+Groups (usually > 3) affect intercepts and slopes
 
 ::::
 
@@ -237,7 +237,12 @@ We've been here before: modeling presence/absence across a gradient using "expit
 $$
 p = \frac{1}{1 + e^{-(b_0 + b_1 x)}}
 $$
+
+::: {.fragment}
+
 In GLM this kind of equation is called the ***link function***
+
+:::
 
 ::: {.fragment}
 And we can use $p$ in a binomial distribution
@@ -297,7 +302,7 @@ ggplot(data.frame(x = 0:1, p = 0:1), aes(x, p)) +
 :::: {.column}
 
 
-Its often easier to think in terms of the *logit* function
+It's often easier to think in terms of the *logit* function
 
 $$
 \text{logit}(p) = b_0 + b_1 x
@@ -453,6 +458,8 @@ Coefficients make sense on link function scale
 
 ## Visualizing the model and data
 
+::: {.fragment}
+
 *ggplot2* is ready to help
 
 
@@ -467,13 +474,16 @@ ggplot(dat, aes(x, y)) +
 
 ```
 
+:::
+
 ::: {.fragment}
 
 *(with some extra modification)*
 
 ```{r}
-#| fig-width: 6
-#| fig-height: 4
+#| fig-width: 5
+#| fig-height: 3.5
+#| fig-align: center
 
 ggplot(dat, aes(x, y)) +
     geom_point(size = 4) +
@@ -771,12 +781,13 @@ head(stra_gua) |> kable()
 
 ```{r}
 #| echo: true
+#| eval: false
 
-mg <- glm(any_gua ~ elev_m, 
-          data = stra_gua, 
-          family = binomial)
+glm(any_gua ~ elev_m, 
+    data = stra_gua, 
+    family = binomial)
 
-coefficients(mg)
+
 ```
 
 ```{r}
@@ -841,10 +852,11 @@ head(tree_plot) |> kable()
 
 ```{r}
 #| echo: true
+#| eval: false
 
-mn <- glm(any_non ~ elev_m, 
-          data = tree_plot, 
-          family = binomial)
+glm(any_non ~ elev_m, 
+    data = tree_plot, 
+    family = binomial)
 
 coefficients(mn)
 ```
@@ -910,12 +922,12 @@ head(tree_stem) |> kable()
 
 ```{r}
 #| echo: true
+#| eval: false
 
-ms <- glm(non_nat ~ elev_m, 
-          data = tree_stem, 
-          family = binomial)
+glm(non_nat ~ elev_m, 
+    data = tree_stem, 
+    family = binomial)
 
-coefficients(ms)
 ```
 
 ```{r}
@@ -1009,13 +1021,13 @@ head(tree_stem) |> kable()
 
 ```{r}
 #| echo: true
+#| eval: false
 
 # wants a matrix (from cbind) of num success and num failure
-mns <- glm(cbind(num_non, num_tre - num_non) ~ elev_m, 
-          data = tree_plot, 
-          family = binomial)
+glm(cbind(num_non, num_tre - num_non) ~ elev_m, 
+    data = tree_plot, 
+    family = binomial)
 
-coefficients(mns)
 ```
 
 :::::
@@ -1062,8 +1074,8 @@ ggplot(tree_plot, aes(elev_m, num_non / num_tre,
 *(with some extra beautifying)*
 
 ```{r}
-#| fig-width: 8
-#| fig-height: 6
+#| fig-width: 5
+#| fig-height: 4
 #| fig-align: center
 
 ggplot(tree_plot, aes(elev_m, num_non / num_tre, 
