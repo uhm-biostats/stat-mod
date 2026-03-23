@@ -15,5 +15,6 @@ Jump straight to:
 - What are random effects? [lecture notes](rand-effects.qmd)
 - [Building mixed effects models with *lme4*](rand-effects-lab.qmd)
 
-*Generalized linear models*
+*Generalized linear models (GLM)*
 
+- The binomial GLM [lecture notes](binom-glm.qmd), [slides](binom-glm-slides.html){target="_blank"}
