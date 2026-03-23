@@ -1,16 +1,5 @@
 ---
-title: "Binomial Generalize Linear Model"
-
-format:
-  revealjs:
-    slide-number: true
-    preview-links: auto
-    auto-stretch: false
-    embed-resources: false
-    controls: true
-
-bibliography: stat-mod.bib
-csl: conservation-biology.csl
+title: "The Binomial Generalized Linear Model"
 ---
 
 ```{r}
@@ -19,10 +8,11 @@ csl: conservation-biology.csl
 #| message: false
 #| warning: false
 
-
-library(ggplot2)
 library(knitr)
+library(dplyr)
+library(ggplot2)
 library(cowplot)
+library(ggpointdensity)
 
 opts_chunk$set(echo = FALSE)
 ```
@@ -30,50 +20,1071 @@ opts_chunk$set(echo = FALSE)
 
 ## Recap of normal linear models
 
-three panels: fixed, random intercept, random slope
+```{r}
+lmfig <- function(ngrp, ri, rs) {
+    ntot <- 60
+    n <- ntot / ngrp + 2
+    
+    x <- replicate(
+        ngrp, {
+            x0 <- runif(n - 2)
+            c(0, x0, 1)
+        }, 
+        simplify = FALSE
+    ) |> 
+        unlist()
+    
+    yhat <- 1 + 1.5 * x
+    
+    if(ri | rs) {
+        g <- (seq(0, ngrp, length.out = ngrp) / ngrp * 1.5) |> 
+            rep(each = n)
+        yhat <- yhat + g
+    } else {
+        g <- rep(0, length(yhat))
+    }
+    
+    if(rs) {
+        yhat <- yhat + x * (rev(0.75 * g) - 1)
+    }
+
+    y <- yhat + rnorm(length(yhat), sd = 0.25)
+    
+    dat <- data.frame(x, y, yhat, g = as.factor(g))
+    
+    ggplot(dat, aes(x, y, color = g)) +
+        geom_point() +
+        scale_color_viridis_d() +
+        geom_line(mapping = aes(x, yhat)) +
+        theme_cowplot() +
+        theme(legend.position = "none", 
+              axis.text = element_blank(), 
+              axis.title = element_text(size = 20)) 
+}
+
+```
+
+
+
+::: {.columns}
+
+:::: {.column width=33%}
+
+**Simple linear model**
+
+```{r}
+#| fig-width: 3
+#| fig-height: 3
+
+lmfig(1, FALSE, FALSE)
+```
+
+No random effects
+
+::::
+
+:::: {.column width=33%}
+
+**Linear model with random intercepts**
+
+```{r}
+#| fig-width: 3
+#| fig-height: 3
+
+lmfig(3, TRUE, FALSE)
+```
+
+Groups (usually more than 3) affect intercepts
+
+::::
+
+:::: {.column width=33%}
+
+**Linear model with random slopes**
+
+```{r}
+#| fig-width: 3
+#| fig-height: 3
+
+lmfig(3, TRUE, TRUE)
+```
+
+Groups (usually more than 3) affect intercepts and slopes
+
+::::
+
+:::
 
 ## Recap of normal linear models
 
-model equation
+
+
+**Simple linear model**
+
+$$
+\begin{aligned}
+\bar{y} &= b_0 + b_1 x \\
+y_i &\sim \mathcal{N}(\bar{y},~\sigma)
+\end{aligned}
+$$
+
+## Recap of normal linear models
+
+**Linear model with random intercepts**
+
+$$
+\begin{aligned}
+r_{0}^{(group~k)} &\sim \mathcal{N}(0,~\sigma_{r_0}) \\
+\bar{y} &= b_0 + r_0^{(group~k)} + b_1 x \\
+y &\sim \mathcal{N}(\bar{y},~\sigma)
+\end{aligned}
+$$
 
 
 ## Recap of normal linear models
 
-what's so special about normal?...nothing
+**Linear model with random slopes**
+
+$$
+\begin{aligned}
+r_0^{(group~k)} &\sim \mathcal{N}(0,~\sigma_{r_0}) \\
+r_1^{(group~k)} &\sim \mathcal{N}(0,~\sigma_{r_1}) \\
+\bar{y} &= b_0 + r_0^{(group~k)} + (b_1 + r_1^{(group~k)}) x \\
+y &\sim \mathcal{N}(\bar{y},~\sigma)
+\end{aligned}
+$$
+
+(technically we usually model a correlation term between $r_0$ and $r_1$)
+
+
+
+
+## Recap of normal linear models 
+
+<br><br>
+
+But what's so special about normal distribution?
+
+::: {.fragment}
+
+...nothing, we can use other distributions
+
+:::
 
 
 ## Introducing: generalized linear models
 
-binomial as an example (can't fit straight line through it)
+<br><br>
+
+When we use a distribution other than a normal we call our model a ***generalized linear model***
+
+::: {.fragment}
+
+We'll start with the binomial as an example 
+
+:::
 
 
 ## Binomial generalized linear models
 
-recap from previous material, including the one regression style use case
+These data are not normal, and fitting a straight line doesn't make sense
+
+```{r}
+#| fig-width: 6
+#| fig-height: 5
+#| fig-align: center
+
+set.seed(123)
+x <- runif(40)
+y <- rbinom(length(x), size = 1, prob = plogis(10 * (x - 0.5)))
+
+dat <- data.frame(x, y)
+
+ggplot(dat, aes(x, y)) +
+    geom_point(size = 4) +
+    geom_smooth(method = "lm", se = FALSE) +
+    theme_cowplot() +
+    theme(axis.text = element_blank(), 
+          axis.title = element_text(size = 30))
+```
+
+
+## Binomial generalized linear models
+
+Recognizing a binomial distribution and a model bounded between [0, 1] makes more sense
+
+```{r}
+#| fig-width: 6
+#| fig-height: 5
+#| fig-align: center
+
+gpbiom <- ggplot(dat, aes(x, y)) +
+    geom_point(size = 4) +
+    geom_smooth(method = "glm", se = FALSE, 
+                method.args = list(family = binomial)) +
+    theme_cowplot() +
+    theme(axis.text = element_blank(), 
+          axis.title = element_text(size = 30))
+
+gpbiom
+```
+
+## Binomial generalized linear models
+
+
+We've been here before: modeling presence/absence across a gradient using "expit" and "logit" functions
+
+$$
+p = \frac{1}{1 + e^{-(b_0 + b_1 x)}}
+$$
+In GLM this kind of equation is called the ***link function***
+
+::: {.fragment}
+And we can use $p$ in a binomial distribution
+
+$$
+y \sim \text{Binom}(p,~N = 1)
+$$
+
+:::
+
+
+
 
 ## Understanding the link function
 
+::: {.columns}
+
+:::: {.column}
+
+<br>
+
+This is called the *expit* function
+
+$$
+p = \frac{1}{1 + e^{-(b_0 + b_1 x)}}
+$$
+
+and produces the curve we just saw
+
+::::
+
+:::: {.column}
+
+<br>
+
+```{r}
+#| fig-width: 6
+#| fig-height: 5
+#| fig-align: center
+
+ggplot(data.frame(x = 0:1, p = 0:1), aes(x, p)) +
+    geom_function(fun = function(x) plogis(10 * (x - 0.5)), 
+                  linewidth = 2) +
+    theme_cowplot() +
+    theme(axis.text = element_blank(), 
+          axis.title = element_text(size = 30))
+```
+
+::::
+
+:::
+
+## Understanding the link function
+
+::: {.columns}
+
+:::: {.column}
+
+
+Its often easier to think in terms of the *logit* function
+
+$$
+\text{logit}(p) = b_0 + b_1 x
+$$
+
+which is the inverse of the *expit* function
+
+::::
+
+:::: {.column}
+
+
+```{r}
+#| fig-width: 6
+#| fig-height: 5
+#| fig-align: center
+
+ggplot(data.frame(x = 0:1, p = 0:1), aes(x, p)) +
+    geom_function(fun = function(x) (1 * (x - 0.5)), 
+                  linewidth = 2) +
+    theme_cowplot() +
+    ylab("logit(p)") +
+    theme(axis.text = element_blank(), 
+          axis.title = element_text(size = 30))
+```
+
+::::
+
+:::
+
+Now we just have a straight line! The link function gives us the linear in a generalized ***linear*** model
+
+## Generalized linear models in R: `glm`
+
+<br>
+
+How do we fit GLMs in R, why with the `glm` function!
+
+```{r}
+#| echo: true
+
+mod <- glm(y ~ x, data = dat, family = binomial)
+
+```
+
+::: {.fragment}
+
+Compared to `lm` there is one new thing: `family = binomial`
+
+:::
+
+::: {.fragment}
+
+The argument `family = binomial` tells `glm` two things:
+
+1. we're assuming a binomial distribution
+2. we want to use a *logit* link function (though other link functions are available)
+
+:::
+
+
+
 ## Interpreting coefficients
+
+<br>
+
+::: {.columns}
+
+:::: {.column}
+
+We can see the coefficients like this
+
+```{r}
+#| echo: true
+
+coefficients(mod)
+
+```
+
+But what do they mean?
+
+
+::::
+
+:::: {.column}
+
+::: {.fragment}
+
+```{r}
+#| fig-width: 5
+#| fig-height: 4
+
+gpbiom +
+    theme(axis.text = element_text(size = 24))
+```
+
+How could intercept be `r round(coefficients(mod)[1], 3)`?
+
+:::
+
+::::
+
+:::
+
+
+## Interpreting coefficients
+
+<br>
+
+::: {.columns}
+
+:::: {.column}
+
+We can see the coefficients like this
+
+```{r}
+#| echo: true
+
+coefficients(mod)
+
+```
+
+But what do they mean?
+
+
+::::
+
+:::: {.column}
+
+
+```{r}
+#| fig-width: 5
+#| fig-height: 4
+
+gplink <- ggplot(cbind(dat, p = predict(mod)), aes(x, p)) +
+    geom_line(linewidth = 2) +
+    ylab("logit(p)") +
+    theme_cowplot() +
+    theme(axis.title = element_text(size = 30), 
+          axis.text = element_text(size = 24))
+
+gplink
+```
+
+Coefficients make sense on link function scale
+
+
+::::
+
+:::
+
+
 
 ## Visualizing the model and data
 
-## Binomial generalized linear models: Use cases
-
-- presence/absence in space
-- presence/absence of some characteristic
-- number of successes
-
-demonstrate with 
-
-- plot level: distribution of some non-native
-- characteristic: is there a non-native tree in plot by elevation?
-- characteristic: do that at level of individual tree
-- random effect? no just look at number of "successes" = non-native
+*ggplot2* is ready to help
 
 
+```{r}
+#| echo: true
+#| eval: false
+
+ggplot(dat, aes(x, y)) +
+    geom_point() +
+    geom_smooth(method = "glm",
+                method.args = list(family = binomial))
+
+```
+
+::: {.fragment}
+
+*(with some extra modification)*
+
+```{r}
+#| fig-width: 6
+#| fig-height: 4
+
+ggplot(dat, aes(x, y)) +
+    geom_point(size = 4) +
+    geom_smooth(method = "glm", 
+                method.args = list(family = binomial)) + 
+    theme_cowplot() +
+    theme(axis.title = element_text(size = 30), 
+          point = element_point(size = 8))
+
+```
+
+:::
 
 
-## References
+## Visualizing the model and data
+
+
+::: {.columns}
+
+:::: {.column width=40%}
+
+Common issue: points can be hard to see
+
+- Jitter can help
+
+
+::::
+
+:::: {.column width=60%}
+
+
+
+```{r}
+#| echo: true
+#| eval: false
+
+# only in vertical direction
+ggplot(dat, aes(x, y)) +
+    geom_jitter(width = 0, height = 0.05) 
+
+```
+
+<br>
+
+```{r}
+#| fig-width: 6
+#| fig-height: 4
+
+ggplot(dat, aes(x, y)) +
+    geom_jitter(width = 0, height = 0.05, size = 4) +
+    theme_cowplot() +
+    theme(axis.title = element_text(size = 30), 
+          point = element_point(size = 8))
+
+```
+
+
+
+::::
+
+:::
+
+
+
+## Visualizing the model and data
+
+
+::: {.columns}
+
+:::: {.column width=40%}
+
+Common issue: points can be hard to see
+
+- Jitter can help
+- Transparency is an option
+
+
+
+::::
+
+:::: {.column width=60%}
+
+
+
+```{r}
+#| echo: true
+#| eval: false
+
+ggplot(dat, aes(x, y)) +
+    geom_point(alpha = 0.5) 
+
+```
+
+<br>
+
+```{r}
+#| fig-width: 6
+#| fig-height: 4
+
+ggplot(dat, aes(x, y)) +
+    geom_point(alpha = 0.5, size = 4) +
+    theme_cowplot() +
+    theme(axis.title = element_text(size = 30), 
+          point = element_point(size = 8))
+
+```
+
+
+
+::::
+
+:::
+
+
+## Visualizing the model and data
+
+
+::: {.columns}
+
+:::: {.column width=40%}
+
+Common issue: points can be hard to see
+
+- Jitter can help
+- Transparency is an option
+- Visualizing local density is pretty
+
+
+::::
+
+:::: {.column width=60%}
+
+
+
+```{r}
+#| echo: true
+#| eval: false
+
+library(ggpointdensity)
+ggplot(dat, aes(x, y)) +
+    geom_pointdensity(method = "kde2d") +
+    scale_color_viridis_c()
+
+```
+
+<br>
+
+```{r}
+#| fig-width: 6
+#| fig-height: 4
+
+
+ggplot(dat, aes(x, y)) +
+    geom_pointdensity(method = "kde2d", size = 4) +
+    theme_cowplot() +
+    scale_color_viridis_c() + 
+    theme(axis.title = element_text(size = 30), 
+          point = element_point(size = 8))
+
+```
+
+
+
+::::
+
+:::
+
+
+## Visualizing the model and data
+
+Let's look at the link function in two ways
+
+1. With the expit equation 
+
+```{r}
+#| echo: true
+#| eval: false
+
+# get link function intercept and slope
+bb <- coefficients(mod)
+bb
+
+# write a function for the equation
+my_expit <- function(x, intercept, slope) {
+    intercept + slope * x
+}
+
+# use `geom_function`
+ggplot(data.frame(x = 0:1, y = 0:1), aes(x, y)) +
+    geom_function(fun = my_expit, 
+                  args = list(intercept = bb[1], 
+                              slope = bb[2])) +
+    ylab("logit(p)")
+```
+
+## Visualizing the model and data
+
+Let's look at the link function in two ways
+
+2. With the predicted values for *logit(p)*
+
+```{r}
+#| echo: true
+#| eval: false
+
+# function `predict` gives us model predictions
+# `type = link` says, give us predictions on link function scale
+logitp_hat <- predict(mod, type = "link")
+head(logitp_hat)
+
+# add a column for logit(p) and you're ready to plot!
+ggplot(mutate(dat, logitp = logitp_hat), 
+       aes(x, logitp)) +
+    geom_line(linewidth = 2) +
+    ylab("logit(p)")
+
+
+
+```
+
+## Visualizing the model and data
+
+Either way gives you this graph
+
+```{r}
+#| fig-width: 8
+#| fig-height: 6
+#| fig-align: center
+
+gplink
+
+```
+
+## Binomial GLM: Use cases
+
+```{r}
+#| label: data-prep
+
+tree <- read.csv("data/OpenNahele_Tree_Data.csv")
+geo_hii <- read.csv("data/hii_geo.csv")
+
+tree_dat <- left_join(tree, geo_hii)
+
+tree_stem <- select(tree_dat, PlotID, elev_m, Native_Status) |> 
+    mutate(non_nat = 1 * (Native_Status == "alien")) |> 
+    select(!Native_Status)
+
+tree_plot <- group_by(tree_dat, PlotID) |> 
+    summarize(elev_m = first(elev_m), 
+              any_non = any(Native_Status == "alien") * 1, 
+              num_non = sum(Native_Status == "alien"), 
+              num_tre = n()) |> 
+    ungroup() |> 
+    as.data.frame()
+
+stra_gua <- group_by(tree_dat, PlotID) |> 
+    summarize(elev_m = first(elev_m), 
+              any_gua = any(Scientific_name == "Psidium cattleianum") * 1, 
+              num_gua = sum(Scientific_name == "Psidium cattleianum"), 
+              num_tre = n()) |> 
+    ungroup() |> 
+    as.data.frame()
+```
+
+
+::: {.fragment}
+
+**presence/absence**, e.g., where is the strawberry guava?
+
+:::
+
+
+::: {.columns}
+
+:::: {.column}
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+# i did some data prep already
+head(stra_gua) |> kable()
+
+
+```
+
+:::::
+
+::::
+
+:::: {.column}
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+mg <- glm(any_gua ~ elev_m, 
+          data = stra_gua, 
+          family = binomial)
+
+coefficients(mg)
+```
+
+```{r}
+#| fig-width: 8
+#| fig-height: 6
+
+ggplot(stra_gua, aes(elev_m, any_gua)) +
+    geom_pointdensity(size = 4, 
+                      position = position_jitter(width = 0, height = 0.05)) +
+    scale_color_viridis_c() +
+    geom_smooth(method = "glm", color = "black",
+                method.args = list(family = binomial)) +
+    xlab("Elevation (m)") +
+    ylab("Presence = 1") +
+    theme_cowplot() +
+    theme(axis.text = element_text(size = 24), 
+          axis.title = element_text(size = 30), 
+          legend.text = element_text(size = 24),
+          legend.title = element_text(size = 24),
+          legend.key.height = unit(3, "lines"), 
+          legend.key.width = unit(2, "lines"))
+```
+
+:::::
+
+::::
+
+:::
+
+
+
+## Binomial GLM: Use cases
+
+
+
+**binary property**, e.g., non-native or native?
+
+
+
+::: {.columns}
+
+:::: {.column}
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+# i did some data prep already
+head(tree_plot) |> kable()
+
+
+```
+
+:::::
+
+::::
+
+:::: {.column}
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+mn <- glm(any_non ~ elev_m, 
+          data = tree_plot, 
+          family = binomial)
+
+coefficients(mn)
+```
+
+```{r}
+#| fig-width: 8
+#| fig-height: 6
+
+ggplot(tree_plot, aes(elev_m, any_non)) +
+    geom_pointdensity(size = 4, 
+                      position = position_jitter(width = 0, height = 0.05)) +
+    scale_color_viridis_c() +
+    geom_smooth(method = "glm", color = "black",
+                method.args = list(family = binomial)) +
+    xlab("Elevation (m)") +
+    ylab("Presence of non-native") +
+    theme_cowplot() +
+    theme(axis.text = element_text(size = 24), 
+          axis.title = element_text(size = 30), 
+          legend.text = element_text(size = 24),
+          legend.title = element_text(size = 24),
+          legend.key.height = unit(3, "lines"), 
+          legend.key.width = unit(2, "lines"))
+```
+
+:::::
+
+::::
+
+:::
+
+
+## Binomial GLM: Use cases
+
+
+
+**binary property**, wait, aren't we wasting tree-level data?
+
+
+
+::: {.columns}
+
+:::: {.column}
+
+
+
+```{r}
+#| echo: true
+
+# i did some data prep already
+head(tree_stem) |> kable()
+
+
+```
+
+
+
+::::
+
+:::: {.column}
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+ms <- glm(non_nat ~ elev_m, 
+          data = tree_stem, 
+          family = binomial)
+
+coefficients(ms)
+```
+
+```{r}
+#| fig-width: 8
+#| fig-height: 6
+
+ggplot(tree_stem, aes(elev_m, non_nat)) +
+    geom_pointdensity(size = 4, 
+                      position = position_jitter(width = 0, height = 0.05)) +
+    scale_color_viridis_c() +
+    geom_smooth(method = "glm", color = "black",
+                method.args = list(family = binomial)) +
+    xlab("Elevation (m)") +
+    ylab("Presence of non-native") +
+    theme_cowplot() +
+    theme(axis.text = element_text(size = 24), 
+          axis.title = element_text(size = 30), 
+          legend.text = element_text(size = 24),
+          legend.title = element_text(size = 24),
+          legend.key.height = unit(3, "lines"), 
+          legend.key.width = unit(2, "lines"))
+```
+
+:::::
+
+::::
+
+:::
+
+
+## Binomial GLM: Use cases
+
+**binary property**, e.g., non-native or native?
+
+<br>
+
+No that wasn't a good idea---pseudo replication in plots
+
+<br>
+
+::: {.fragment}
+But before you go thinking of random effects
+
+:::
+
+<br>
+
+::: {.fragment}
+Remember, within each plot is like a binomial sample:
+
+- "successes": number of non-native trees
+- total size: number of all trees
+
+:::
+
+
+## Binomial GLM: Use cases
+
+
+
+**number of successes vs. failures**, back to plot-level data
+
+
+
+::: {.columns}
+
+:::: {.column}
+
+
+
+```{r}
+#| echo: true
+#| eval: false
+
+head(tree_plot) |> kable()
+# hint: scroll right
+
+```
+
+```{r}
+head(tree_stem) |> kable()
+```
+
+
+
+::::
+
+:::: {.column}
+
+::::: {.fragment}
+
+```{r}
+#| echo: true
+
+# wants a matrix (from cbind) of num success and num failure
+mns <- glm(cbind(num_non, num_tre - num_non) ~ elev_m, 
+          data = tree_plot, 
+          family = binomial)
+
+coefficients(mns)
+```
+
+:::::
+
+::::: {.fragment}
+
+Plotting is more convoluted so let's go into it more
+
+:::::
+
+
+
+::::
+
+:::
+
+
+## Binomial GLM: Use cases
+
+**number of successes vs. failures**, back to plot-level data
+
+```{r}
+#| echo: true
+#| eval: false
+
+ggplot(tree_plot, aes(elev_m, num_non / num_tre, 
+                      # include `success` and `failure`
+                      # for use in `geom_smooth`
+                      success = num_non, 
+                      failure = num_tre - num_non)) +
+    geom_pointdensity() +
+    scale_color_viridis_c() +
+    geom_smooth(method = "glm", color = "black",
+                # need to add a specific formula
+                formula = cbind(success, failure) ~ x,
+                method.args = list(family = binomial))
+```
+
+
+## Binomial GLM: Use cases
+
+**number of successes vs. failures**, back to plot-level data
+
+*(with some extra beautifying)*
+
+```{r}
+#| fig-width: 8
+#| fig-height: 6
+#| fig-align: center
+
+ggplot(tree_plot, aes(elev_m, num_non / num_tre, 
+                      success = num_non, 
+                      failure = num_tre - num_non)) +
+    geom_pointdensity(size = 4) +
+    scale_color_viridis_c() +
+    geom_smooth(method = "glm", color = "black",
+                formula = cbind(success, failure) ~ x,
+                method.args = list(family = binomial)) +
+    xlab("Elevation (m)") +
+    ylab("Proportion non-native") +
+    theme_cowplot() +
+    theme(axis.text = element_text(size = 24), 
+          axis.title = element_text(size = 30), 
+          legend.text = element_text(size = 24),
+          legend.title = element_text(size = 24),
+          legend.key.size = unit(3, "lines"))
+```
+
+
 
 
 
