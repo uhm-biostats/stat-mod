@@ -667,13 +667,13 @@ bb <- coefficients(mod)
 bb
 
 # write a function for the equation
-my_expit <- function(x, intercept, slope) {
+my_probit <- function(x, intercept, slope) {
     intercept + slope * x
 }
 
 # use `geom_function`
 ggplot(data.frame(x = 0:1, y = 0:1), aes(x, y)) +
-    geom_function(fun = my_expit, 
+    geom_function(fun = my_probit, 
                   args = list(intercept = bb[1], 
                               slope = bb[2])) +
     ylab("logit(p)")
@@ -1008,7 +1008,7 @@ head(tree_plot) |> kable()
 ```
 
 ```{r}
-head(tree_stem) |> kable()
+head(tree_plot) |> kable()
 ```
 
 
