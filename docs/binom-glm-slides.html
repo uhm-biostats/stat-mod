@@ -567,13 +567,13 @@ p = \frac{1}{1 + e^{-(b_0 + b_1 x)}}
 <span id="cb10-3"><a href=""></a>bb</span>
 <span id="cb10-4"><a href=""></a></span>
 <span id="cb10-5"><a href=""></a><span class="co"># write a function for the equation</span></span>
-<span id="cb10-6"><a href=""></a>my_expit <span class="ot">&lt;-</span> <span class="cf">function</span>(x, intercept, slope) {</span>
+<span id="cb10-6"><a href=""></a>my_probit <span class="ot">&lt;-</span> <span class="cf">function</span>(x, intercept, slope) {</span>
 <span id="cb10-7"><a href=""></a>    intercept <span class="sc">+</span> slope <span class="sc">*</span> x</span>
 <span id="cb10-8"><a href=""></a>}</span>
 <span id="cb10-9"><a href=""></a></span>
 <span id="cb10-10"><a href=""></a><span class="co"># use `geom_function`</span></span>
 <span id="cb10-11"><a href=""></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">x =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="at">y =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>), <span class="fu">aes</span>(x, y)) <span class="sc">+</span></span>
-<span id="cb10-12"><a href=""></a>    <span class="fu">geom_function</span>(<span class="at">fun =</span> my_expit, </span>
+<span id="cb10-12"><a href=""></a>    <span class="fu">geom_function</span>(<span class="at">fun =</span> my_probit, </span>
 <span id="cb10-13"><a href=""></a>                  <span class="at">args =</span> <span class="fu">list</span>(<span class="at">intercept =</span> bb[<span class="dv">1</span>], </span>
 <span id="cb10-14"><a href=""></a>                              <span class="at">slope =</span> bb[<span class="dv">2</span>])) <span class="sc">+</span></span>
 <span id="cb10-15"><a href=""></a>    <span class="fu">ylab</span>(<span class="st">"logit(p)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -894,39 +894,53 @@ p = \frac{1}{1 + e^{-(b_0 + b_1 x)}}
 <tr class="header">
 <th style="text-align: right;">PlotID</th>
 <th style="text-align: right;">elev_m</th>
-<th style="text-align: right;">non_nat</th>
+<th style="text-align: right;">any_non</th>
+<th style="text-align: right;">num_non</th>
+<th style="text-align: right;">num_tre</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">129.6578</td>
-<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">395.1798</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">75</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">129.6578</td>
-<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">80</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">2</td>
+<td style="text-align: right;">3</td>
 <td style="text-align: right;">129.6578</td>
-<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">37</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">2</td>
+<td style="text-align: right;">4</td>
 <td style="text-align: right;">129.6578</td>
-<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">56</td>
+<td style="text-align: right;">100</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">2</td>
+<td style="text-align: right;">5</td>
 <td style="text-align: right;">129.6578</td>
-<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">49</td>
+<td style="text-align: right;">99</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">2</td>
+<td style="text-align: right;">6</td>
 <td style="text-align: right;">129.6578</td>
-<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">23</td>
+<td style="text-align: right;">64</td>
 </tr>
 </tbody>
 </table>
