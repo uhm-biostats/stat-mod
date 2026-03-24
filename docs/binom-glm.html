@@ -20,6 +20,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -30,6 +65,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
+<link href="./binom-glm-lab.html" rel="next">
 <link href="./mixed-models-lab.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -70,6 +106,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -272,6 +337,12 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">The Binomial Generalized Linear Model</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./binom-glm-lab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Building Binomial Generalized Linear Models</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
     </ul>
@@ -284,7 +355,20 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#sec-slides" id="toc-sec-slides" class="nav-link active" data-scroll-target="#sec-slides"><span class="header-section-number">19.1</span> Slides</a></li>
+  <li><a href="#introducing-the-binomial-generalized-linear-model" id="toc-introducing-the-binomial-generalized-linear-model" class="nav-link active" data-scroll-target="#introducing-the-binomial-generalized-linear-model"><span class="header-section-number">19.1</span> Introducing the binomial generalized linear model</a>
+  <ul>
+  <li><a href="#the-link-function" id="toc-the-link-function" class="nav-link" data-scroll-target="#the-link-function"><span class="header-section-number">19.1.1</span> The link function</a></li>
+  <li><a href="#fitting-a-binomial-glm-in-r" id="toc-fitting-a-binomial-glm-in-r" class="nav-link" data-scroll-target="#fitting-a-binomial-glm-in-r"><span class="header-section-number">19.1.2</span> Fitting a binomial GLM in R</a></li>
+  <li><a href="#interpreting-the-coefficients" id="toc-interpreting-the-coefficients" class="nav-link" data-scroll-target="#interpreting-the-coefficients"><span class="header-section-number">19.1.3</span> Interpreting the coefficients</a></li>
+  </ul></li>
+  <li><a href="#visualizing-the-model-and-data" id="toc-visualizing-the-model-and-data" class="nav-link" data-scroll-target="#visualizing-the-model-and-data"><span class="header-section-number">19.2</span> Visualizing the model and data</a></li>
+  <li><a href="#use-cases-for-the-binomial-glm" id="toc-use-cases-for-the-binomial-glm" class="nav-link" data-scroll-target="#use-cases-for-the-binomial-glm"><span class="header-section-number">19.3</span> Use cases for the binomial GLM</a>
+  <ul>
+  <li><a href="#presenceabsence" id="toc-presenceabsence" class="nav-link" data-scroll-target="#presenceabsence"><span class="header-section-number">19.3.1</span> Presence/absence</a></li>
+  <li><a href="#binary-properties-of-sampling-units" id="toc-binary-properties-of-sampling-units" class="nav-link" data-scroll-target="#binary-properties-of-sampling-units"><span class="header-section-number">19.3.2</span> Binary properties of sampling units</a></li>
+  <li><a href="#number-of-successes-versus-failures" id="toc-number-of-successes-versus-failures" class="nav-link" data-scroll-target="#number-of-successes-versus-failures"><span class="header-section-number">19.3.3</span> Number of successes versus failures</a></li>
+  </ul></li>
+  <li><a href="#sec-slides" id="toc-sec-slides" class="nav-link" data-scroll-target="#sec-slides"><span class="header-section-number">19.4</span> Slides</a></li>
   </ul>
 <div class="quarto-code-links"><h2>Code Links</h2><ul><li><a href="https://github.com/uhm-biostats/stat-mod/blob/main/binom-glm.qmd"><i class="bi bi-github"></i>View source</a></li></ul></div></nav>
     </div>
@@ -310,8 +394,412 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="sec-slides" class="level2" data-number="19.1">
-<h2 data-number="19.1" class="anchored" data-anchor-id="sec-slides"><span class="header-section-number">19.1</span> Slides</h2>
+<p>So far we have worked with linear models that assume a normal distribution. Whether or not we consider random effects, the model is built off the idea that the mean of a normal distribution changes across values of the explanatory variables and from that normal distribution we get our response data. In the simple linear model case that approach looks like this:</p>
+<p>In graphical form</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="binom-glm_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>And in equation form</p>
+<p><span class="math display">\[
+\begin{aligned}
+\bar{y} &amp;= b_0 + b_1 x \\
+y_i &amp;\sim \mathcal{N}(\bar{y},~\sigma)
+\end{aligned}
+\]</span></p>
+<p><span class="math inline">\(\bar{y}\)</span> is the blue line in the figure, and each data point is presumed to come from a normal distribution with mean <span class="math inline">\(\bar{y}\)</span>. But you may wonder, does the distribution always have to be a normal? The answer is no! Many other distributions can be used for these kinds of linear models. When we use a distribution other than normal, we call the model a <em>generalized</em> linear model (GLM). To introduce how GLMs work we’ll start with the binomial GLM, also known as logistic regression.</p>
+<section id="introducing-the-binomial-generalized-linear-model" class="level2" data-number="19.1">
+<h2 data-number="19.1" class="anchored" data-anchor-id="introducing-the-binomial-generalized-linear-model"><span class="header-section-number">19.1</span> Introducing the binomial generalized linear model</h2>
+<p>When the response variable takes on only the values 0 and 1—for example, whether a species is present or absent—a normal distribution is simply not the right tool. This becomes obvious when we try to fit a standard linear model to presence/absence data:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># first simulate some data with rbinom</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">40</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(<span class="fu">length</span>(x), <span class="at">size =</span> <span class="dv">1</span>, <span class="at">prob =</span> <span class="fu">plogis</span>(<span class="dv">10</span> <span class="sc">*</span> (x <span class="sc">-</span> <span class="fl">0.5</span>)))</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(x, y)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># plot it with a straight line prediction</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(dat, <span class="fu">aes</span>(x, y)) <span class="sc">+</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_cowplot</span>() <span class="sc">+</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>          <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">20</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="binom-glm_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The straight blue line extends beyond 0 and 1, which is not allowed for probabilities. The appropriate model instead recognizes the structure of the data: each observation comes from a binomial distribution with some probability <span class="math inline">\(p\)</span>, and that probability <span class="math inline">\(p\)</span> changes with <span class="math inline">\(x\)</span>. This type of model is called a <strong><em>binomial generalized linear model</em></strong> (binomial GLM), sometimes also called <em>logistic regression</em>. A binomial GLM gives us a prediction that looks like this:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="binom-glm_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="the-link-function" class="level3" data-number="19.1.1">
+<h3 data-number="19.1.1" class="anchored" data-anchor-id="the-link-function"><span class="header-section-number">19.1.1</span> The link function</h3>
+<p>We’ve been here before (in our <a href="./likelihood-intro.html">first intro to likelihood</a>) when simulating presence/absence data across a gradient using the <em>expit</em> function</p>
+<p><span class="math display">\[
+p = \frac{1}{1 + e^{-(b_0 + b_1 x)}}
+\]</span> This is the equation that produces the S-shaped curve we saw in the previous figure</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">x =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="at">p =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>), <span class="fu">aes</span>(x, p)) <span class="sc">+</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_function</span>(<span class="at">fun =</span> <span class="cf">function</span>(x) <span class="fu">plogis</span>(<span class="dv">10</span> <span class="sc">*</span> (x <span class="sc">-</span> <span class="fl">0.5</span>)), </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">linewidth =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_cowplot</span>() <span class="sc">+</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_blank</span>(), </span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>          <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">30</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="binom-glm_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>In GLM this kind of equation is called the <strong><em>link function</em></strong> and it allows <em>p</em> to change as a function of <span class="math inline">\(x\)</span> while still staying within the necessary bounds of [0, 1]. Thus we can use <em>p</em> in a binomial distribution:</p>
+<p><span class="math display">\[
+y \sim \text{Binom}(p,~N = 1)
+\]</span></p>
+<p>Often, but not always, in binomial GLM we work with data where <span class="math inline">\(N = 1\)</span> is the natural choice—situations where there can only be one of two outcomes: yes/no, present/absent, etc.</p>
+<p>It is often easier to think about the link function from the other direction. The <em>logit</em> function is the inverse of the <em>expit</em> function:</p>
+<p><span class="math display">\[
+logit(p) = \log\left(\frac{p}{1-p}\right) = b_0 + b_1 x
+\]</span></p>
+<p>Expressed this way, we simply have a straight line. This is the sense in which a GLM is still a <em>linear</em> model, the link function allows us to work with linear equations while still working within the contraints of the probability distribution of our choosing—binomial in this case with <span class="math inline">\(p\)</span> constrained to be between [0, 1].</p>
+</section>
+<section id="fitting-a-binomial-glm-in-r" class="level3" data-number="19.1.2">
+<h3 data-number="19.1.2" class="anchored" data-anchor-id="fitting-a-binomial-glm-in-r"><span class="header-section-number">19.1.2</span> Fitting a binomial GLM in R</h3>
+<p>To fit a binomial GLM in R we, conveniently, use the <code>glm</code> function. The syntax is nearly identical to <code>lm</code> with one new argument: <code>family</code>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">glm</span>(y <span class="sc">~</span> x, <span class="at">data =</span> dat, <span class="at">family =</span> binomial)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The argument <code>family = binomial</code> tells <code>glm</code> two things:</p>
+<ol type="1">
+<li>We are assuming the response follows a binomial distribution</li>
+<li>We want to use the logit link function (the default link for the binomial family, though other link functions can be specified)</li>
+</ol>
+</section>
+<section id="interpreting-the-coefficients" class="level3" data-number="19.1.3">
+<h3 data-number="19.1.3" class="anchored" data-anchor-id="interpreting-the-coefficients"><span class="header-section-number">19.1.3</span> Interpreting the coefficients</h3>
+<p>We can inspect the coefficients just as we would for a linear model:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coefficients</span>(mod)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(Intercept)           x 
+  -6.477281   13.293045 </code></pre>
+</div>
+</div>
+<p>What do these parameters mean? How could the intercept be -6.48 when the data can’t be less than 0? The key is that the coefficients are on the <em>logit scale</em>, not the probability scale.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>gplink <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="fu">cbind</span>(dat, <span class="at">logitp =</span> <span class="fu">predict</span>(mod, <span class="at">type =</span> <span class="st">"link"</span>)),</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">aes</span>(x, logitp)) <span class="sc">+</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">"logit(p)"</span>) <span class="sc">+</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_cowplot</span>() <span class="sc">+</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">20</span>))</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>gplink</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="binom-glm_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>A positive slope <span class="math inline">\(b_1 &gt; 0\)</span> means that as <span class="math inline">\(x\)</span> increases, <span class="math inline">\(\text{logit}(p)\)</span> increases, which in turn means <span class="math inline">\(p\)</span> increases. The expit function then curves that linear relationship into the S-shape on the probability scale.</p>
+</section>
+</section>
+<section id="visualizing-the-model-and-data" class="level2" data-number="19.2">
+<h2 data-number="19.2" class="anchored" data-anchor-id="visualizing-the-model-and-data"><span class="header-section-number">19.2</span> Visualizing the model and data</h2>
+<p>Using <code>ggplot</code> we can add a binomial GLM prediction to our visualizations using <code>geom_smooth</code> with <code>method = "glm"</code>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(dat, <span class="fu">aes</span>(x, y)) <span class="sc">+</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"glm"</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">method.args =</span> <span class="fu">list</span>(<span class="at">family =</span> binomial))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>We also have to specify <code>family = binomial</code>.</p>
+<p>Extra care is often needed when plotting these kinds of data because points tend to overlap significantly across <span class="math inline">\(y = 0\)</span> and <span class="math inline">\(y = 1\)</span>. One approach is to use a small amount of vertical jitter. We use <code>width = 0</code> to avoid horizontal jitter, which would distort the explanatory variable:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(dat, <span class="fu">aes</span>(x, y)) <span class="sc">+</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="dv">0</span>, <span class="at">height =</span> <span class="fl">0.05</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="binom-glm_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Another option is using transparency (<code>alpha</code>) to help show overlapping points</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(dat, <span class="fu">aes</span>(x, y)) <span class="sc">+</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="binom-glm_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Yet another option, and perhaps the prettiest, is to use color to show the local density of points. The <em>ggpointdensity</em> package makes this possible:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggpointdensity)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(dat, <span class="fu">aes</span>(x, y)) <span class="sc">+</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_pointdensity</span>(<span class="at">method =</span> <span class="st">"kde2d"</span>) <span class="sc">+</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_viridis_c</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="binom-glm_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>To plot the model on the link function scale (the straight-line logit scale), there are two equivalent approaches. The first uses the estimated coefficients directly in a custom function we can pass to <code>geom_function</code>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># store the coefficients</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>bb <span class="ot">&lt;-</span> <span class="fu">coefficients</span>(mod)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>bb</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co"># make a function for logit(p)</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>my_logit <span class="ot">&lt;-</span> <span class="cf">function</span>(x, intercept, slope) {</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    intercept <span class="sc">+</span> slope <span class="sc">*</span> x</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(dat, <span class="fu">aes</span>(x)) <span class="sc">+</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_function</span>(<span class="at">fun =</span> my_logit,</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>                  <span class="at">args =</span> <span class="fu">list</span>(<span class="at">intercept =</span> bb[<span class="dv">1</span>], <span class="at">slope =</span> bb[<span class="dv">2</span>])) <span class="sc">+</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">"logit(p)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The second uses <code>predict</code> with <code>type = "link"</code> to extract the fitted <span class="math inline">\(logit(p)\)</span> values directly from the model object:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># "hat" usually indicates these are predicted values</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>logitp_hat <span class="ot">&lt;-</span> <span class="fu">predict</span>(mod, <span class="at">type =</span> <span class="st">"link"</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># add the predicted values as a column to the data and plot</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">mutate</span>(dat, <span class="at">logitp =</span> logitp_hat), <span class="fu">aes</span>(x, logitp)) <span class="sc">+</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">"logit(p)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="binom-glm_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Both approaches produce the same straight line on the logit scale.</p>
+</section>
+<section id="use-cases-for-the-binomial-glm" class="level2" data-number="19.3">
+<h2 data-number="19.3" class="anchored" data-anchor-id="use-cases-for-the-binomial-glm"><span class="header-section-number">19.3</span> Use cases for the binomial GLM</h2>
+<p>We use the binomial GLM when the response variable is binary or a proportion. Using the tree data, let’s look at some real examples.</p>
+<section id="presenceabsence" class="level3" data-number="19.3.1">
+<h3 data-number="19.3.1" class="anchored" data-anchor-id="presenceabsence"><span class="header-section-number">19.3.1</span> Presence/absence</h3>
+<p>One of the most common uses of binomial GLM in ecology is to model presence/absence of a species across sites. As an example we can look at the nuisance invasive species strawberry guava (<em>Psidium cattleianum</em>) and ask: how does the probability of finding strawberry guava change with elevation?</p>
+<p>I have done some data prep behind the scenes to give us a <code>data.frame</code> called <code>stra_gua</code> that looks like</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(stra_gua)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  PlotID   elev_m any_gua num_gua num_tre
+1      1 395.1798       1       6      75
+2      2 129.6578       1       6      80
+3      3 129.6578       0       0      37
+4      4 129.6578       1      50     100
+5      5 129.6578       1      49      99
+6      6 129.6578       1       1      64</code></pre>
+</div>
+</div>
+<p>These data are aggregated at the survey plot level, so each row is one plot and the <code>any_gua</code> column is <code>1</code> if at least a single strawberry guava was found in the plot, and <code>0</code> if none where.</p>
+<p>We can use that to build a binomial GLM</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>mod_gua <span class="ot">&lt;-</span> <span class="fu">glm</span>(any_gua <span class="sc">~</span> elev_m, <span class="at">data =</span> stra_gua, <span class="at">family =</span> binomial)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coefficients</span>(mod_gua)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(Intercept)      elev_m 
+ 0.35003142 -0.00234146 </code></pre>
+</div>
+</div>
+<p>The effect of elevation (the slope of <span class="math inline">\(logit(p)\)</span> across elevation) is negative, meaning the higher you go, the less likely to find strawberry guava.</p>
+<p>We can see that in the visualization of the data along with the model</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(stra_gua, <span class="fu">aes</span>(elev_m, any_gua)) <span class="sc">+</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_pointdensity</span>(<span class="at">size =</span> <span class="dv">3</span>,</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">position =</span> <span class="fu">position_jitter</span>(<span class="at">width =</span> <span class="dv">0</span>, <span class="at">height =</span> <span class="fl">0.05</span>)) <span class="sc">+</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_viridis_c</span>() <span class="sc">+</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"glm"</span>, <span class="at">color =</span> <span class="st">"black"</span>,</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">method.args =</span> <span class="fu">list</span>(<span class="at">family =</span> binomial)) <span class="sc">+</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">"Elevation (m)"</span>) <span class="sc">+</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">"Presence = 1"</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 13 rows containing missing values or values outside the scale range
+(`stat_pointdensity()`).</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 13 rows containing non-finite outside the scale range
+(`stat_smooth()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="binom-glm_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Note that here we used both color-coding of the point density and a small about of verticle jitter because there is just so much data.</p>
+</section>
+<section id="binary-properties-of-sampling-units" class="level3" data-number="19.3.2">
+<h3 data-number="19.3.2" class="anchored" data-anchor-id="binary-properties-of-sampling-units"><span class="header-section-number">19.3.2</span> Binary properties of sampling units</h3>
+<p>We can ask a similar question where we treat aggregate non-native status as a property of a survey plot. That is, if a plot has at least one non-native tree, we label the plot as having non-natives. There are only two options: a plot has non-natives or it does not.</p>
+<p>Again, I have done some data prep behind the scenes to make <code>tree_plot</code> which is, again, aggregated at the plot level so each row is one plot</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(tree_plot)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  PlotID   elev_m any_non num_non num_tre
+1      1 395.1798       1       9      75
+2      2 129.6578       1       7      80
+3      3 129.6578       1       1      37
+4      4 129.6578       1      56     100
+5      5 129.6578       1      49      99
+6      6 129.6578       1      23      64</code></pre>
+</div>
+</div>
+<p>The column <code>any_non</code> is <code>1</code> if there was at least one non-native tree and <code>0</code> if all trees were native (ignore the other columns for now). We can again build a binomial GLM</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>mod_non <span class="ot">&lt;-</span> <span class="fu">glm</span>(any_non <span class="sc">~</span> elev_m, <span class="at">data =</span> tree_plot, <span class="at">family =</span> binomial)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coefficients</span>(mod_non)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> (Intercept)       elev_m 
+ 1.974957526 -0.002905418 </code></pre>
+</div>
+</div>
+<p>The elevation effect is again negative, meaning the probability of a plot having non-native trees decreases with elevation. Here is the visualization:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(tree_plot, <span class="fu">aes</span>(elev_m, any_non)) <span class="sc">+</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_pointdensity</span>(<span class="at">size =</span> <span class="dv">3</span>,</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">position =</span> <span class="fu">position_jitter</span>(<span class="at">width =</span> <span class="dv">0</span>, <span class="at">height =</span> <span class="fl">0.05</span>)) <span class="sc">+</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_viridis_c</span>() <span class="sc">+</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"glm"</span>, <span class="at">color =</span> <span class="st">"black"</span>,</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">method.args =</span> <span class="fu">list</span>(<span class="at">family =</span> binomial)) <span class="sc">+</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">"Elevation (m)"</span>) <span class="sc">+</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">"Presence of non-native"</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 13 rows containing missing values or values outside the scale range
+(`stat_pointdensity()`).</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 13 rows containing non-finite outside the scale range
+(`stat_smooth()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="binom-glm_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="number-of-successes-versus-failures" class="level3" data-number="19.3.3">
+<h3 data-number="19.3.3" class="anchored" data-anchor-id="number-of-successes-versus-failures"><span class="header-section-number">19.3.3</span> Number of successes versus failures</h3>
+<p>One might ask: we collapsed all the tree-level data to a single <code>0</code> or <code>1</code> per plot—are we throwing away information? Yes. Should we therefore model and visualize these data at the level of individual trees? Let’s try.</p>
+<p>The <code>data.frame</code> called <code>tree_stem</code> (again one I made behind the scenes) is resolved at the level of individual tree (one per row)</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(tree_stem)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  PlotID   elev_m non_nat
+1      2 129.6578       0
+2      2 129.6578       0
+3      2 129.6578       0
+4      2 129.6578       0
+5      2 129.6578       0
+6      2 129.6578       0</code></pre>
+</div>
+</div>
+<p>Let’s just jump to the visualization because the point we’re trying to make is that this is not the right approach:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(tree_stem, <span class="fu">aes</span>(elev_m, non_nat)) <span class="sc">+</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_pointdensity</span>(<span class="at">size =</span> <span class="dv">4</span>, </span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">position =</span> <span class="fu">position_jitter</span>(<span class="at">width =</span> <span class="dv">0</span>, <span class="at">height =</span> <span class="fl">0.05</span>)) <span class="sc">+</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_viridis_c</span>() <span class="sc">+</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"glm"</span>, <span class="at">color =</span> <span class="st">"black"</span>,</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">method.args =</span> <span class="fu">list</span>(<span class="at">family =</span> binomial)) <span class="sc">+</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">"Elevation (m)"</span>) <span class="sc">+</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">"Presence of non-native"</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>geom_pointdensity() using method='kde2d' due to large number of points (&gt;20k). You may override this by setting method='neighbors'.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 14656 rows containing missing values or values outside the scale range
+(`stat_pointdensity()`).</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 14656 rows containing non-finite outside the scale range
+(`stat_smooth()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="binom-glm_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The issue is we cannot simply treat each individual tree as an independent observation, because trees within the same plot are not independent of each other. They share the same climate, soil, disturbance history, ecological interactions, etc. etc.. Using individual trees naively would introduce pseudo-replication.</p>
+<p>But we actually don’t need a mixed effects model here. We can leverage the fact that a binomial distribution works for number of sucesses in any size trial, <span class="math inline">\(N\)</span> does not have to equal 1. Within each plot we have a genuine binomial sample: <span class="math inline">\(N\)</span> trees total, of which some number are non-native. We can model the number of “successes” (non-native trees) out of <span class="math inline">\(N\)</span> trials directly. This is why <code>tree_plot</code> had columns for <code>num_non</code> (number of “successes”) and <code>num_tre</code> (total number of trees = <span class="math inline">\(N\)</span>).</p>
+<p>The <code>glm</code> function accepts this by supplying a two-column matrix as the response: the first column is the count of “successes,” the second is the count of “failures.”</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># cbind(successes, failures) as response</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>mod_prop <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(num_non, num_tre <span class="sc">-</span> num_non) <span class="sc">~</span> elev_m,</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> tree_plot,</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">family =</span> binomial)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>To visualize this model we plot the observed proportion of non-native trees at each survey plot. Because <code>geom_smooth</code> needs to know the underlying counts to fit the weighted binomial, we also pass <code>success</code> and <code>failure</code> as extra aesthetics:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(tree_plot, <span class="fu">aes</span>(elev_m, num_non <span class="sc">/</span> num_tre,</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">success =</span> num_non,</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">failure =</span> num_tre <span class="sc">-</span> num_non)) <span class="sc">+</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_pointdensity</span>() <span class="sc">+</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_viridis_c</span>() <span class="sc">+</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"glm"</span>, <span class="at">color =</span> <span class="st">"black"</span>,</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">formula =</span> <span class="fu">cbind</span>(success, failure) <span class="sc">~</span> x,</span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">method.args =</span> <span class="fu">list</span>(<span class="at">family =</span> binomial)) <span class="sc">+</span></span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">"Elevation (m)"</span>) <span class="sc">+</span></span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">"Proportion non-native"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Now we can rest assured we have utilized all the information in the data while not introducing pseudo replicates.</p>
+</section>
+</section>
+<section id="sec-slides" class="level2" data-number="19.4">
+<h2 data-number="19.4" class="anchored" data-anchor-id="sec-slides"><span class="header-section-number">19.4</span> Slides</h2>
 <iframe class="slide-deck" src="binom-glm-slides.html"></iframe>
 
 
@@ -725,6 +1213,9 @@ ul.task-list li input[type="checkbox"] {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="./binom-glm-lab.html" class="pagination-link" aria-label="Building Binomial Generalized Linear Models">
+        <span class="nav-page-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Building Binomial Generalized Linear Models</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav>
 </div> <!-- /content -->
