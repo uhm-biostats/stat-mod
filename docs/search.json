@@ -34,7 +34,7 @@
     "href": "intro.html",
     "title": "Introductory material",
     "section": "",
-    "text": "Here we will introduce the data we will work with throughout this course. In the context of data we will discuss ethical issues of Indigenous data sovereignty and reproducible science. We will also review the necessary R and version control knowledge for succeeding in this course. Such knowledge will include data structures in R, data input and output, data manipulation, visualization, quarto dynamic documents, and using GitHub.\nJump straight to:\n\nData we will work with: lecture notes, slides\nCARE and FAIR principles: lecture notes, slides\nR refresher\nManaging code with git and GitHub\nDynamic documents with quarto\nBrining it all together",
+    "text": "Here we will introduce the data we will work with throughout this course. In the context of data we will discuss ethical issues of Indigenous data sovereignty and reproducible science. We will also review the necessary R and version control knowledge for succeeding in this course. Such knowledge will include data structures in R, data input and output, data manipulation, visualization, quarto dynamic documents, and using GitHub.\nJump straight to:\n\nData we will work with: lecture notes, slides\nCARE and FAIR principles: lecture notes, slides\nR refresher\nManaging code with git and GitHub\nDynamic documents with quarto\nBrining it all together\nGuidelines for using large language models to learn, slides",
     "crumbs": [
       "Introductory material"
     ]
