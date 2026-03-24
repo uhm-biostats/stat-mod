@@ -48,7 +48,12 @@ y_i &\sim \mathcal{N}(\bar{y},~\sigma)
 \end{aligned}
 $$
 
-$\bar{y}$ is the blue line in the figure, and each data point is presumed to come from a normal distribution with mean $\bar{y}$.
+$\bar{y}$ is the blue line in the figure, and each data point is presumed to come from a normal distribution with mean $\bar{y}$. But you may wonder, does the distribution always have to be a normal? The answer is no! Many other distributions can be used for these kinds of linear models. When we use a distribution other than normal, we call the model a *generalized* linear model (GLM). To introduce how GLMs work we'll start with the binomial GLM, also known as logistic regression.
+
+## Binomial generalized linear models
+
+
+
 
 ## Slides {#sec-slides}
 
