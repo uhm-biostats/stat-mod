@@ -35,6 +35,7 @@ book:
             - rand-effects-lab.qmd
             - mixed-models-lab.qmd
             - binom-glm.qmd
+            - binom-glm-lab.qmd
 
 
 bibliography: stat-mod.bib
