@@ -11,6 +11,7 @@ Jump straight to:
 - [Managing code with git and GitHub](github.qmd)
 - [Dynamic documents with quarto](dynamic-doc.qmd)
 - [Brining it all together](bring-it-together.qmd)
+- Guidelines for using large language models to *learn*, [slides](llm-howto-slides.html){target="_blank"}
 
 
 
