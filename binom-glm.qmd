@@ -7,7 +7,48 @@ format:
         href: https://github.com/uhm-biostats/stat-mod/blob/main/binom-glm.qmd
 ---
 
+
 # The Binomial Generalized Linear Model
+
+
+```{r}
+#| label: setup
+#| include: false
+
+library(knitr)
+library(dplyr)
+library(ggplot2)
+library(cowplot)
+library(ggpointdensity)
+```
+
+So far we have worked with linear models that assume a normal distribution. Whether or not we consider random effects, the model is built off the idea that the mean of a normal distribution changes across values of the explanatory variables and from that normal distribution we get our response data. In the simple linear model case that approach looks like this:
+
+In graphical form
+
+```{r}
+set.seed(123)
+x <- runif(40)
+y <- rnorm(length(x), x, sd = 0.25)
+
+ggplot(data.frame(x, y), aes(x, y)) +
+    geom_point() +
+    geom_smooth(method = "lm", se = FALSE) +
+    theme_cowplot() +
+    theme(axis.text = element_blank(), 
+          axis.title = element_text(size = 20)) 
+```
+
+And in equation form
+
+$$
+\begin{aligned}
+\bar{y} &= b_0 + b_1 x \\
+y_i &\sim \mathcal{N}(\bar{y},~\sigma)
+\end{aligned}
+$$
+
+$\bar{y}$ is the blue line in the figure, and each data point is presumed to come from a normal distribution with mean $\bar{y}$.
 
 ## Slides {#sec-slides}
 
