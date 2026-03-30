@@ -20,38 +20,15 @@ The template will prompt you to work through the following sections.
 
 library(ggplot2)
 
-# the lab qmd file
-f <- "labs/lab03-binom-likelihood.qmd"
-l <- readLines(f)
-
-# the yaml
-iyaml <- grep("---|```", l) |> 
-    (\(x) x[1]:x[4])()
-
-# the comments to delete
-idelt <- grep("delete this .* once complete", l, 
-              ignore.case = TRUE)
-
-# only the body
-b <- l[-c(iyaml, idelt)] |> 
-    gsub("\\*delete this .* once complete", "", x = _, 
-         ignore.case = TRUE)
-
-# write only the body for use with `{{< include %s >}}`
-# fb <- gsub("\\.qmd", "_bonly.qmd", f)
-fb <- tempfile(fileext = ".qmd")
-
-writeLines(b, fb)
-
-m <- knitr::knit_child(fb, options = list(include = TRUE), 
-                       quiet = TRUE)
+source("R/utils.R")
+out <- render_lab("labs/lab03-binom-likelihood.qmd")
 ```
 
 ```{r}
 #| echo: false
 #| results: asis
 
-cat(m, sep = "\n")
+cat(out$m, sep = "\n")
 ```
 
 
