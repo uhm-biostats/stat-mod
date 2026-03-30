@@ -18,3 +18,4 @@ Jump straight to:
 *Generalized linear models (GLM)*
 
 - The binomial GLM [lecture notes](binom-glm.qmd), [slides](binom-glm-slides.html){target="_blank"}
+- The Poisson GLM [slides](pois-glm-slides.html){target="_blank"}

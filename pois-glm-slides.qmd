@@ -1,0 +1,697 @@
+---
+title: "The Poisson Generalized Linear Model"
+
+bibliography: stat-mod.bib
+csl: conservation-biology.csl
+---
+
+```{r}
+#| label: setup
+#| echo: false
+#| message: false
+#| warning: false
+
+library(knitr)
+library(dplyr)
+library(ggplot2)
+library(cowplot)
+library(ggpointdensity)
+
+opts_chunk$set(echo = FALSE)
+```
+
+
+## Consider the Poisson distribution... 
+
+$$
+y \sim \text{Pois}(\lambda)
+$$
+
+```{r}
+#| fig-width: 7
+#| fig-height: 4
+#| fig-align: center
+
+nn <- 0:12
+pois_pmf <- ggplot(data.frame(x = nn, y = dpois(nn, 4)), aes(x, y)) +
+    geom_bar(stat = "identity") +
+    xlab(expression(italic(y))) +
+    ylab("Probability") +
+    theme_cowplot() +
+    theme(axis.title = element_text(size = 30), 
+          axis.text = element_text(size = 24)) +
+    geom_vline(xintercept = 4, color = "orange", linewidth = 2)
+
+pois_pmf
+```
+
+
+::: {.absolute top=550 left=0}
+
+::: {.r-stack}
+
+:::: {.fragment .fade-in-then-out}
+
+Often used to model ***counts*** of things (number of trees, number of species, etc.)
+
+::::
+
+:::: {.fragment}
+
+$\lambda$ is both the *mean* and the *variance* of the distribution
+
+::::
+
+:::
+
+:::
+
+## Consider the Poisson distribution... 
+
+$\lambda$ is both the *mean* and the *variance* of the distribution. <br> ***What must be true about*** $\mathbf{\lambda}$?
+
+```{r}
+#| fig-width: 7
+#| fig-height: 4
+#| fig-align: center
+
+pois_pmf
+```
+
+::: {.absolute top=600 left=0}
+
+::: {.fragment}
+
+**must be true**: $\lambda \geq 0$
+
+:::
+
+:::
+
+## Consider the Poisson GLM... 
+
+If we wanted to use a Poisson distribution in a GLM, we have to make sure $\lambda \geq 0$
+
+::: {.columns}
+
+:::: {.column width=60%}
+
+```{r}
+#| fig-width: 5
+#| fig-height: 4
+#| fig-align: center
+
+ggplot(data.frame(x = 0:4, y = 0), aes(x, y)) +
+    geom_function(fun = \(x) -2 + x, linewidth = 2) +
+    ylab(expression(italic(lambda))) +
+    theme_cowplot() +
+    theme(axis.title = element_text(size = 30), 
+          axis.text = element_text(size = 24)) 
+
+```
+
+::::
+
+:::: {.column width=40%}
+
+Can't have this
+
+$$
+\lambda = b_0 + b_1 x
+$$
+
+Need some kind of link function
+
+::::
+
+:::
+
+
+
+## Consider the Poisson GLM... 
+
+If we wanted to use a Poisson distribution in a GLM, we have to make sure $\lambda \geq 0$
+
+::: {.columns}
+
+:::: {.column width=60%}
+
+```{r}
+#| warning: false
+#| message: false
+#| fig-width: 5
+#| fig-height: 4
+#| fig-align: center
+
+ggplot(data.frame(x = 0:4, y = 0), aes(x, y)) +
+    geom_function(fun = \(x) -2 + x, linewidth = 2) +
+    ylab(expression(log(italic(lambda)))) +
+    theme_cowplot() +
+    theme(axis.title = element_text(size = 30), 
+          axis.text = element_text(size = 24)) 
+
+```
+
+::::
+
+:::: {.column width=40%}
+
+$e^\text{anything} \geq 0$, always
+
+$$
+\lambda = e^{b_0 + b_1 x}
+$$
+
+And the inverse gives us back the straight line
+
+$$
+\log(\lambda) = b_0 + b_1 x
+$$
+
+::::
+
+:::
+
+::: {.fragment}
+
+So with Poisson GLM, a log link function is the default
+
+:::
+
+
+## Poisson GLM with `glm` function in R
+
+Back to species area
+
+$$
+\begin{aligned}
+S &= cA^z \\
+\log(S) &= \log(c) + z\log(A)
+\end{aligned}
+$$
+
+
+```{r}
+#| label: data-prep
+
+clim <- read.csv("data/plot_climate.csv")
+geo_hii <- read.csv("data/hii_geo.csv")
+tree <- read.csv("data/OpenNahele_Tree_Data.csv")
+
+all_dat <- left_join(tree, clim, by = "PlotID") |> 
+    left_join(dplyr::select(geo_hii, !(lon:lat)), 
+              by = "PlotID")
+
+dat_plt <- group_by(all_dat, PlotID) |> 
+    summarize(across(c(Island, Plot_Area, lon:elev_m), first), 
+              nspp = n_distinct(Scientific_name)) |> 
+    ungroup() |> 
+    filter(Plot_Area < 10000)
+```
+
+::: {.r-stack}
+
+:::: {.fragment .fade-in-then-out}
+
+```{r}
+#| label: sar
+#| fig-width: 7
+#| fig-height: 4
+#| fig-align: center
+
+ggplot(dat_plt, aes(Plot_Area, nspp)) +
+    geom_pointdensity(size = 3) +
+    scale_color_viridis_c() +
+    scale_x_log10(guide = guide_axis_logticks(mid = 1.5, long = 2.5)) +
+    scale_y_log10(guide = guide_axis_logticks(mid = 1.5, long = 2.5)) +
+    xlab("Plot area") +
+    ylab("Number of species") +
+    theme_cowplot() +
+    theme(axis.title = element_text(size = 20), 
+          axis.text = element_text(size = 20))
+```
+
+::: {.absolute top=550 left=800}
+*(note: 2 super large plots excluded)*
+
+:::
+
+::::
+
+
+:::: {.fragment}
+
+lends itself to a log link function
+
+$$
+\begin{aligned}
+\bar{S} &= \lambda \\
+\log(A) &= x \\
+\Rightarrow \log(\bar{S}) &= b_0 + b_1 \log(A)
+\end{aligned}
+$$
+
+::::
+
+:::
+
+## Poisson GLM with `glm` function in R
+
+::: {.columns}
+
+:::: {.column width=40%}
+
+with data like these
+
+```{r}
+select(dat_plt, Plot_Area, nspp) |> 
+    head() |> 
+    kable()
+
+```
+
+::::
+
+:::: {.column width=60%}
+
+can fit a Poisson model like this
+
+```{r}
+#| echo: true
+
+sar <- glm(nspp ~ log(Plot_Area), 
+           data = dat_plt, 
+           family = poisson)
+
+```
+
+recall: the link function already takes care of logging the mean species richness, no need to log again
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+coefficients(sar)
+```
+
+:::
+
+::::
+
+:::
+
+## What besides area? 
+
+::: {.incremental}
+
+- We are probably interested in more than area
+- Area might even be a *"nuisance variable"*
+    - one that we have to account for
+    - but we're more interested in other variables
+- How about `hii` (human impact) and `avg_temp_annual_c` (temperature)?
+- Can!
+
+:::
+
+
+## Adding more explanatory variables
+
+```{r}
+#| echo: true
+mod <- glm(nspp ~ log(Plot_Area) + hii + avg_temp_annual_c, 
+           data = dat_plt, 
+           family = poisson)
+
+coefficients(mod)
+
+```
+
+::: {.fragment}
+After accounting for area, species richness *increases* (weakly) with both human impact and temperature
+
+:::
+
+::: {.fragment}
+
+Perhaps non-native plants augment species richness [@sax2003]
+
+:::
+
+::: {.fragment}
+
+Or perhaps lowland (i.e. hot) forests were incredibly diverse [@rock1913] and are now lost to heavy human modification
+
+:::
+
+## Adding more explanatory variables
+
+Beyond biological interpretation, adding more variables requires care
+
+```{r}
+poi_ll <- function(formula, data) {
+    m <- model.frame(formula, data = data)
+    X <- model.matrix(m, data = data)
+    y <- model.response(m)
+    
+    ll <- function(pars, X, y) {
+        mu <- exp(X %*% pars)
+        mu[!is.finite(mu)] <- .Machine$double.xmax
+        dpois(y, mu, log = TRUE) |> 
+            sum()
+    }
+    
+    mle <- glm(formula, data = data, family = poisson) |> 
+        coefficients()
+    
+    pars_combo <- expand.grid(
+        seq(mle[3] - 2 * mle[3], mle[3] + 2 * mle[3], length.out = 80),
+        seq(mle[4] - 2 * mle[4], mle[4] + 2 * mle[4], length.out = 80)
+    ) |> 
+        as.matrix()
+    
+    all_ll <- sapply(1:nrow(pars_combo), function(i) {
+        ll(c(mle[1:2], pars_combo[i, ]), X, y)
+    })
+    
+    d <- data.frame(pars_combo, all_ll)
+    names(d) <- c("x", "y", "loglik") #c(colnames(X), "loglik")
+    
+    ggplot(d, aes(x, y, z = loglik)) +
+        geom_tile(mapping = aes(fill = loglik)) +
+        scale_fill_viridis_c() +
+        geom_contour(color = "white") +
+        scale_x_continuous(expand = FALSE) +
+        scale_y_continuous(expand = FALSE)
+}
+```
+
+::: {.fragment}
+
+This is the likelihood surface for our model, visualizing just the coefficients for human impact and temperature
+
+::: {.columns}
+
+:::: {.column}
+
+```{r}
+#| fig-width: 5
+#| fig-height: 3.5
+#| fig-align: center
+
+ll_ridge <- poi_ll(nspp ~ log(Plot_Area) + hii + avg_temp_annual_c, dat_plt) +
+    xlab("slope of human impact") +
+    ylab("slope of temperature") +
+    theme(axis.title = element_text(size = 20), 
+          axis.text = element_text(size = 20), 
+          legend.title = element_text(size = 20), 
+          legend.text = element_text(size = 15))
+
+ll_ridge
+```
+
+::::
+
+:::: {.column}
+
+::: {.r-stack}
+
+:::: {.fragment .fade-in-then-out}
+
+There is a long, flat ridge across the likelihood surface
+
+That's a problem because it is difficult and unreliable to figure out the optimal parameter combination
+
+::::
+
+:::: {.fragment}
+
+why?
+
+::::
+
+:::
+
+::::
+
+:::
+
+:::
+
+
+## Adding more explanatory variables
+
+
+
+::: {.columns}
+
+:::: {.column}
+
+***Collinearity*** creates these kinds of ridges
+
+```{r}
+#| fig-width: 5
+#| fig-height: 3.5
+#| fig-align: center
+
+
+ll_ridge
+```
+
+::::
+
+:::: {.column}
+
+
+::: {.fragment}
+
+Human impact and temperature are ***correlated***
+
+```{r}
+#| fig-width: 5
+#| fig-height: 3.5
+#| fig-align: center
+
+ggplot(dat_plt, aes(hii, avg_temp_annual_c)) +
+    geom_point() +
+    xlab("human impact") +
+    ylab("temperature") +
+    theme_cowplot() +
+    theme(axis.title = element_text(size = 20), 
+          axis.text = element_text(size = 20))
+
+```
+
+:::
+
+::::
+
+:::
+
+::: {.fragment}
+
+Check for collinearity, a common cut off is $-0.6 < r < 0.6$
+
+:::
+
+
+```{r}
+#| eval: false
+plot(dat_plt$hii, dat_plt$avg_temp_annual_c)
+
+explc_var <- group_by(all_dat, PlotID) |> 
+    summarize(across(evapotrans_annual_mm:elev_m, first)) |> 
+    ungroup()
+
+foo <- filter(tree, Native_Status != "uncertain") |> 
+    group_by(Scientific_name) |> 
+    summarize(tot_abund = n(), 
+              n_plot = n_distinct(PlotID), 
+              nat_stat = first(Native_Status)) |> 
+    ungroup() |> 
+    arrange(desc(n_plot))
+
+ggplot(foo, aes(n_plot, tot_abund)) +
+    geom_density2d_filled(data = select(foo, !nat_stat), mapping = aes(n_plot, tot_abund),
+                          show.legend = FALSE) +
+    # stat_density_2d(aes(fill = after_stat(level)), geom = "raster")  
+    # scale_fill_gradient(low = "gray20", high = "gray90") +
+    scale_fill_discrete(palette = gray.colors) +
+    coord_fixed() +
+    scale_x_log10() +
+    scale_y_log10() +
+    geom_pointdensity() +
+    scale_color_viridis_c() +
+    facet_wrap(vars(nat_stat)) +
+    theme_cowplot()
+
+
+spp_per_plot <- group_by(tree, PlotID) |> 
+    summarize(area = first(Plot_Area),
+              nspp = n_distinct(Scientific_name)) |> 
+    ungroup()
+
+ggplot(spp_per_plot, aes(area, nspp)) +
+    geom_pointdensity() +
+    scale_color_viridis_c() +
+    scale_x_log10(guide = guide_axis_logticks(mid = 0.75, long = 1.75)) +
+    scale_y_log10(guide = guide_axis_logticks(mid = 0.75, long = 1.75)) +
+    theme_cowplot()
+
+
+
+
+# 1 Metrosideros polymorpha     14058    434 native  
+#  2 Cibotium glaucum             8096    178 native  
+#  3 Cheirodendron trigynum       3404    151 native  
+#  4 Cibotium menziesii           3436    132 native  
+#  5 Psidium cattleianum          1969    124 alien   
+#  6 Ilex anomala                  504     85 native  
+#  7 Acacia koa                    778     65 native  
+#  8 Myrsine lessertiana           217     64 native 
+
+
+
+wtf <- group_by(tree, PlotID) |> 
+    summarize(area = first(Plot_Area), 
+              no_ohia = !any(Scientific_name == sp))
+
+unique(wtf$area[wtf$no_ohia])
+
+spp <- foo$Scientific_name[1:8][-5]
+
+spp_by_plot <- mutate(tree, 
+                      PlotID = factor(PlotID), 
+                      Scientific_name = factor(Scientific_name)) |> 
+    group_by(PlotID, Scientific_name, .drop = FALSE) |> 
+    summarize(abund = n()) |> 
+    ungroup() |> 
+    left_join(
+        y = mutate(tree, PlotID = factor(PlotID)) |> 
+            group_by(PlotID) |> 
+            summarize(area = first(Plot_Area))
+    )
+
+pval <- rep(NA, length(spp))
+gpp <- vector("list", length(spp))
+names(pval) <- names(gpp) <- spp
+
+
+
+
+
+
+for(sp in spp) {
+    d <- filter(spp_by_plot, Scientific_name == sp & area < 10000)
+    gp <- ggplot(d, aes(area, abund)) +
+        geom_pointdensity() +
+        scale_color_viridis_c() +
+        scale_x_log10() +
+        coord_transform(y = "sqrt") +
+        geom_smooth(method = "glm", method.args = list(family = poisson)) +
+        ggtitle(sp)
+    
+    mp <- glm(abund ~ area, data = d, family = poisson)
+    mn <- MASS::glm.nb(abund ~ area, data = d)
+    mn1 <- glm(abund ~ area, data = d, family = negative.binomial(1000))
+    
+    pval[sp] <- pchisq(2 * (logLik(mn) - logLik(mp)), df = 1, lower.tail = FALSE)
+    gpp[[sp]] <- gp
+}
+
+gpp[[7]]
+
+library(MASS)
+
+```
+
+
+
+```{r}
+#| eval: false
+#| echo: false
+
+library(ggcorrplot)
+library(GGally)
+
+too_skew <- function(x) {
+    avg <- mean(x, na.rm = TRUE)
+    med <- median(x, na.rm = TRUE)
+    std <- sd(x, na.rm = TRUE)
+    
+    if(((med - avg) / std) < -0.1) {
+        return(TRUE)
+    } else {
+        return(FALSE)
+    }
+}
+
+happy_scat <- function(data, mapping, ...) {
+    x <- eval_data_col(data, mapping$x)
+    y <- eval_data_col(data, mapping$y)
+    xskew <- too_skew(x)
+    yskew <- too_skew(y)
+    
+    # browser()
+    
+    ggplot(data, mapping) +
+        geom_pointdensity() +
+        scale_x_continuous(transform= ifelse(xskew, "log10", "identity")) +
+        scale_y_continuous(transform= ifelse(yskew, "log10", "identity")) +
+        scale_color_viridis_c() +
+        theme(legend.position = "none")
+}
+
+happy_den <- function(data, mapping, ...) {
+    x <- eval_data_col(data, mapping$x)
+    xskew <- too_skew(x)
+    
+    ggplot(data, mapping) +
+        geom_density() +
+        scale_x_continuous(transform= ifelse(xskew, "log10", "identity"))
+}
+
+happy_cor <- function(data, mapping, ...) {
+    x <- eval_data_col(data, mapping$x)
+    y <- eval_data_col(data, mapping$y)
+    
+    xskew <- too_skew(x)
+    yskew <- too_skew(y)
+    
+    coord_poss <- function(x) {
+        x <- x[!is.na(x)]
+        
+        min(x) + diff(range(x)) / 2
+    }
+    
+    x_poss <- coord_poss(x)
+    y_poss <- coord_poss(y)
+    
+    corr <- cor(x, y, method = "spearman", use = "complete.obs") |> 
+                          round(3)
+    
+    corr_scale <- scales::col_numeric(c("red", "white", "blue"), domain = -1:1)
+    
+    # browser()
+    ggplot(data, mapping) +
+        scale_x_continuous(transform= ifelse(xskew, "log10", "identity")) +
+        scale_y_continuous(transform= ifelse(yskew, "log10", "identity")) +
+        annotate("text", 
+                 x = x_poss, 
+                 y = y_poss, 
+                 label = corr) +
+        theme_minimal() +
+        theme(axis.text = element_blank(), panel.grid = element_blank(), 
+              panel.background = element_rect(fill = corr_scale(corr)))
+}
+
+
+
+
+ggpairs(dplyr::select(explc_var, !PlotID), 
+        lower = list(continuous = happy_scat),
+        diag = list(continuous = happy_den),
+        upper = list(continuous = happy_cor))
+```
+
+## References
