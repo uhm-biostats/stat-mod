@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>22&nbsp; Building Poisson Generalized Linear Models – Intro to Statistical Modeling</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./pois-glm.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-27c261d06b905028a18691de25d09dde.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/quarto-contrib/downloadthis-1.9.1/downloadthis.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./lin-mod.html">Linear models</a></li><li class="breadcrumb-item"><a href="./pois-glm-lab.html"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Building Poisson Generalized Linear Models</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="./index.html" class="sidebar-logo-link">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Intro to Statistical Modeling</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welina mai!</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introductory material</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./datasets-intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Data we will work with</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./care-fair.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">CARE and FAIR principles</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./r-refresh.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">R refresher</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./dynamic-doc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Dynamic documents with <em>quarto</em></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./github.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Managing code with git and GitHub</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./bring-it-together.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">CARE and FAIR in presenting data with dynamic documents</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./prob.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Probability</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./prob-intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Introduction to probability</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./prob-dist.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Probability distributions in R</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./prob-sim-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Simulating probabilistic data</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./likelihood-intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introducing the method of maximum likelihood</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./likelihood-lec.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Introducing likelihood</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./binom-lab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Estimating probability of occurrence</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./norm-lab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Estimating the parameters of a normal distribution</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./lin-mod.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Linear models</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./mods-howto.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">How to make a model</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./lin-norm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Simple linear models</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./lin-lstsqrs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Linear models and least squares</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./rand-effects.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">What are random effects?</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./rand-effects-lab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Working with mixed effects models in R</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./mixed-models-lab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">More mixed effects models in R</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./binom-glm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">The Binomial Generalized Linear Model</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./binom-glm-lab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Building Binomial Generalized Linear Models</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./pois-glm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">The Poisson Generalized Linear Model</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./pois-glm-lab.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Building Poisson Generalized Linear Models</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#fitting-the-speciesarea-model-and-adding-explanatory-variables" id="toc-fitting-the-speciesarea-model-and-adding-explanatory-variables" class="nav-link active" data-scroll-target="#fitting-the-speciesarea-model-and-adding-explanatory-variables"><span class="header-section-number">22.1</span> Fitting the species–area model and adding explanatory variables</a>
+  <ul>
+  <li><a href="#data-preparation" id="toc-data-preparation" class="nav-link" data-scroll-target="#data-preparation"><span class="header-section-number">22.1.1</span> Data preparation</a></li>
+  <li><a href="#fitting-the-model" id="toc-fitting-the-model" class="nav-link" data-scroll-target="#fitting-the-model"><span class="header-section-number">22.1.2</span> Fitting the model</a></li>
+  </ul></li>
+  <li><a href="#bootstrapping-to-diagnose-collinearity" id="toc-bootstrapping-to-diagnose-collinearity" class="nav-link" data-scroll-target="#bootstrapping-to-diagnose-collinearity"><span class="header-section-number">22.2</span> Bootstrapping to diagnose collinearity</a></li>
+  <li><a href="#building-your-own-model" id="toc-building-your-own-model" class="nav-link" data-scroll-target="#building-your-own-model"><span class="header-section-number">22.3</span> Building your own model</a>
+  <ul>
+  <li><a href="#checking-for-collinearity" id="toc-checking-for-collinearity" class="nav-link" data-scroll-target="#checking-for-collinearity"><span class="header-section-number">22.3.1</span> Checking for collinearity</a></li>
+  <li><a href="#fitting-your-model" id="toc-fitting-your-model" class="nav-link" data-scroll-target="#fitting-your-model"><span class="header-section-number">22.3.2</span> Fitting your model</a></li>
+  <li><a href="#visualizing-the-data" id="toc-visualizing-the-data" class="nav-link" data-scroll-target="#visualizing-the-data"><span class="header-section-number">22.3.3</span> Visualizing the data</a></li>
+  </ul></li>
+  </ul>
+<div class="quarto-code-links"><h2>Code Links</h2><ul><li><a href="https://github.com/uhm-biostats/stat-mod/blob/main/pois-glm-lab.qmd"><i class="bi bi-github"></i>View source</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./lin-mod.html">Linear models</a></li><li class="breadcrumb-item"><a href="./pois-glm-lab.html"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Building Poisson Generalized Linear Models</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Building Poisson Generalized Linear Models</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>This lab will guide you through fitting Poisson GLMs, diagnosing collinearity with a bootstrap, and building your own models with carefully chosen predictors. You can download the template <code>.qmd</code> file for this lab here:</p>
+<p><a href="#dnldts63674" onclick="fetch('data:text/plain;base64,LS0tCnRpdGxlOiAiQnVpbGRpbmcgUG9pc3NvbiBHTE1zIgpmb3JtYXQ6CiAgICBwZGY6CiAgICAgICAgaW5jbHVkZS1pbi1oZWFkZXI6CiAgICAgICAgICAgIHRleHQ6IHwKICAgICAgICAgICAgICAgIFx1c2VwYWNrYWdle25ld3VuaWNvZGVjaGFyfQogICAgICAgICAgICAgICAgXG5ld3VuaWNvZGVjaGFye8q7fXtgfQphdXRob3I6CiAgICAtIHlvdXIgbmFtZSBoZXJlCi0tLQoKYGBge3J9CiN8IGxhYmVsOiBzZXR1cAoKIyBsb2FkIGFsbCBuZWNlc3NhcnkgcGFja2FnZXMKbGlicmFyeShnZ3Bsb3QyKQpsaWJyYXJ5KGdncG9pbnRkZW5zaXR5KQpsaWJyYXJ5KGRwbHlyKQoKYGBgCgoKIyMgRml0dGluZyB0aGUgc3BlY2llc+KAk2FyZWEgbW9kZWwgYW5kIGFkZGluZyBleHBsYW5hdG9yeSB2YXJpYWJsZXMKCkluIHRoZSBsZWN0dXJlIHdlIHVzZWQgYSBQb2lzc29uIEdMTSB0byBtb2RlbCBzcGVjaWVzIHJpY2huZXNzIGFzIGEgZnVuY3Rpb24gb2YgcGxvdCBhcmVhLCBodW1hbiBpbXBhY3QsIGFuZCB0ZW1wZXJhdHVyZS4gV2UnbGwgc3RhcnQgdGhlcmUuCgojIyMgRGF0YSBwcmVwYXJhdGlvbgoKQXMgYWx3YXlzLCB3ZSBsb2FkIHRoZSB0aHJlZSBkYXRhIGZpbGVzIGFuZCBwcmVwIHRoZSBkYXRhIGZvciBhbmFseXNpcyBieSBqb2luaW5nIGFuZCB1c2luZyB0aGUgc3BsaXQtYXBwbHktY29tYmluZSB3b3JrZmxvdy4gVGhpcyB0aW1lIHdlIHdpbGwgZXhwbGljaXRseSB3YWxrIHRocm91Z2ggdGhvc2Ugc3RlcHMuCgpgYGB7cn0KI3wgbGFiZWw6IGRhdGEtcmVhZGluCgojIHJlYWQtaW4gZGF0YQp0cmVlIDwtIHJlYWQuY3N2KCJodHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20vdWhtLWJpb3N0YXRzL3N0YXQtbW9kL3JlZnMvaGVhZHMvbWFpbi9kYXRhL09wZW5OYWhlbGVfVHJlZV9EYXRhLmNzdiIpCmNsaW0gPC0gcmVhZC5jc3YoImh0dHBzOi8vcmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbS91aG0tYmlvc3RhdHMvc3RhdC1tb2QvcmVmcy9oZWFkcy9tYWluL2RhdGEvcGxvdF9jbGltYXRlLmNzdiIpCmhpaV9nZW8gPC0gcmVhZC5jc3YoImh0dHBzOi8vcmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbS91aG0tYmlvc3RhdHMvc3RhdC1tb2QvcmVmcy9oZWFkcy9tYWluL2RhdGEvaGlpX2dlby5jc3YiKQoKCmBgYAoKT3VyIGdvYWwgd2l0aCBqb2luaW5nIGFuZCBzcGxpdC1hcHBseS1jb21iaW5lIGlzIHRvIG1ha2UgZGF0YSBvYmplY3QgY2FsbGVkIGBkYXRfcGx0YCB3aGVyZSBlYWNoIHJvdyBpcyBvbmUgc3VydmV5IHBsb3QgYW5kIHRoZSBjb2x1bW5zIGhhdmUgYWxsIHRoZSB2YXJpYWJsZXMgd2UgbmVlZDogYFBsb3RfQXJlYWAsIGBuc3BwYCAobnVtYmVyIG9mIHVuaXF1ZSBzcGVjaWVzIHBlciBwbG90KSwgYGhpaWAsIGFuZCBgYXZnX3RlbXBfYW5udWFsX2NgLiBXZSBhbHNvIHdhbnQgdG8gZXhjbHVkZSB0aGUgdHdvIHZlcnkgbGFyZ2Ugb3V0bGllciBwbG90cyBiZWNhdXNlIHRoZXkgYXJlIG11bHRpcGxlIG9kZXJzIG9mIG1hZ25pdHVkZSBsYXJnZXIgdGhhbiBhbnl0aGluZyBlbHNlLCBhbmQgZXZlbiBvbiBhIGxvZyBzY2FsZSB0aGV5IHdpbGwgYmlhcyBvdXIgbW9kZWxzLgoKYGBge3J9CiN8IGxhYmVsOiBkYXRhLXByZXAKCiMgam9pbiBhbGwgZGF0YSAqKiphdCB0cmVlIGxldmVsKioqIChpLmUuIHJvd3MgPSB0cmVlcyksIAojIHJlZmVyIGJhY2sgdG8gciByZWZyZXNoZXIgZm9yIHdoeSB3ZSBkbyBgIShsb246bGF0KWAKYWxsX2RhdCA8LSBsZWZ0X2pvaW4odHJlZSwgY2xpbSwgYnkgPSAiUGxvdElEIikgfD4KICAgIGxlZnRfam9pbihkcGx5cjo6c2VsZWN0KGhpaV9nZW8sICEobG9uOmxhdCkpLAogICAgICAgICAgICAgIGJ5ID0gIlBsb3RJRCIpCgojIHNwbGl0LWFwcGx5LWNvbWJpbmUKZGF0X3BsdCA8LSBncm91cF9ieShhbGxfZGF0LCBQbG90SUQpIHw+CiAgICAjIGBhY3Jvc3NgIGdpdmVzIHVzIGFsbCB0aGUgdmFyaWFibGVzLCB3aGlsZSBgZmlyc3RgIGdpdmVzIHVzCiAgICAjIGp1c3QgdGhlIGZpcnN0IHZhbHVlIGZvciBlYWNoIGJlY2F1c2UgdmFsdWVzIHJlcGVhdCBhY3Jvc3MKICAgICMgcm93cyB3aXRoaW4gcGxvdHMKICAgIHN1bW1hcml6ZShhY3Jvc3MoYyhJc2xhbmQsIFBsb3RfQXJlYSwgbG9uOmVsZXZfbSksIGZpcnN0KSwKICAgICAgICAgICAgICAjIGNhY3VsYXRlIG51bWJlciBvZiBzcGVjaWVzIHBlciBwbG90CiAgICAgICAgICAgICAgbnNwcCA9IG5fZGlzdGluY3QoU2NpZW50aWZpY19uYW1lKSkgfD4KICAgIHVuZ3JvdXAoKSB8PgogICAgIyByZW1vdmUgc3VwZXIgbGFyZ2UgcGxvdHMKICAgIGZpbHRlcihQbG90X0FyZWEgPCAxMDAwMCkgCgojIGhhdmUgYSBsb29rICh0ZWNobmljYWxseSBhIHRpYmJsZSkKaGVhZChkYXRfcGx0KQpgYGAKCk5vdGU6IHdoZW4gbWFraW5nIHRoaXMgZmluYWwgZGF0YSBvYmplY3QsIHdlIGtlcHQgKmFsbCogdGhlIGNvbHVtbnMuIFRoYXQncyBiZWNhdXNlIGl0IGRvZXNuJ3QgaHVydCBhbnl0aGluZyB0byBrZWVwIHRoZW0gYWxsIChldmVuIGlmIHlvdSBkb24ndCB1c2UgdGhlbSBhbGwpIGFuZCBhdCB0aGUgZW5kIG9mIHRoaXMgbGFiIHlvdSB3aWxsIHRyeSBvdXQgc2V2ZXJhbCBkaWZmZXJlbnQgcG9zc2libGUgZXhwbGFuYXRvcnkgdmFyaWFibGVzLgoKIyMjIEZpdHRpbmcgdGhlIG1vZGVsCgpVc2UgYGdsbWAgdG8gZml0IHRoZSBtb2RlbCBgbnNwcCB+IGxvZyhQbG90X0FyZWEpICsgaGlpICsgYXZnX3RlbXBfYW5udWFsX2NgCgpCdXQgd2Uga25vdyB0aGlzIG1vZGVsIGlzIHByb2JsZW1hdGljIGJlY2F1c2Ugb2YgY29sbGluZWFyaXR5ISBXZSB3ZW50IGFoZWFkIGFuZCBtYWRlIHRoaXMgbW9kZWwgc28gd2UgY2FuIGJldHRlciB1bmRlcnN0YW5kIHRoZSBpbXBhY3Qgb2YgY29sbGluZWFyaXR5LCB3aGljaCB3ZSBkbyBzdGFydGluZyByaWdodCBub3cgaW4gdGhlIG5leHQgc2VjdGlvbi4gCgoKIyMgQm9vdHN0cmFwcGluZyB0byBkaWFnbm9zZSBjb2xsaW5lYXJpdHkKCkNvbGluZWFyaXR5IHByb2R1Y2VzIGxpa2VsaWhvb2Qgc3VyZmFjZSBmb3IgdGhlIHNsb3BlcyBvZiBgaGlpYCBhbmQgYGF2Z190ZW1wX2FubnVhbF9jYCB0aGF0IGhhcyBsb25nIGZsYXQgcmlkZ2UuIFRoZSByaWRnZSB0ZWxscyB1cyB0aGVyZSBhcmUgbWFueSBjb21iaW5hdGlvbnMgb2YgdGhvc2UgdHdvIHNsb3BlcyB0aGF0IGZpdCB0aGUgZGF0YSBhbG1vc3QgZXF1YWxseSB3ZWxsLCB3aGljaCBtZWFucyB0aGUgZXN0aW1hdGVkIHNsb3BlcyBhcmUgKnVuc3RhYmxlKjogc21hbGwgY2hhbmdlcyBpbiB0aGUgZGF0YSBsZWFkIHRvIHZlcnkgZGlmZmVyZW50IGVzdGltYXRlcy4KClRoZSAqKipib290c3RyYXAqKiogaXMgYSB0ZWNobmlxdWUgZm9yIGRlbW9uc3RyYXRpbmcgZXhhY3RseSB0aGlzIGtpbmQgb2YgaW5zdGFiaWxpdHkuIFRoZSBpZGVhIGlzIHNpbXBsZTogd2UgdHJlYXQgb3VyIG9ic2VydmVkIGRhdGEgc2V0IGFzIGEgc3RhbmQtaW4gZm9yIHRoZSBlbnRpcmUsIGh5cG90aGV0aWNhbGx5IGluZmluaXRlIHBvcHVsYXRpb24gdGhhdCBpbiByZWFsaXR5IHdlIHdvdWxkIG5ldmVyIGJlIGFibGUgdG8gY29sbGVjdCBkYXRhIG9uIGluIGl0cyBlbnRpcmV0eS4gV2UgdGhlbiBzaW11bGF0ZSAibmV3IiBkYXRhIHNldHMgYnkgc2FtcGxpbmcgcm93cyBmcm9tIG91ciBkYXRhICp3aXRoIHJlcGxhY2VtZW50Ki4gQmVjYXVzZSBzYW1wbGluZyB3aXRoIHJlcGxhY2VtZW50IGFsbG93cyBzb21lIHJvd3MgdG8gYXBwZWFyIG1vcmUgdGhhbiBvbmNlIGFuZCBvdGhlcnMgbm90IGF0IGFsbCwgZWFjaCByZXNhbXBsZWQgZGF0YSBzZXQgaXMgc2xpZ2h0bHkgZGlmZmVyZW50IGZyb20gdGhlIG9yaWdpbmFsIGFuZCBmcm9tIGFsbCBvdGhlciByZXNhbXBsZWQgZGF0YSBzZXRzICh0ZWNobmljYWxseSB0aGVyZSBpcyBhIGZpbml0ZSBsaW1pdCB0byB0aGUgbnVtYmVyIG9mIHVuaXF1ZSBib290c3RyYXBwZWQgZGF0YSBzZXRzLCBidXQgcHJhY3RpY2FsbHkgd2Ugd2lsbCBuZXZlciByZWFjaCBpdCkuIFdlIHRoZW4gcmUtZml0IHRoZSBtb2RlbCB0byBlYWNoIHJlc2FtcGxlZCBkYXRhIHNldCBhbmQgcmVjb3JkIHRoZSByZXN1bHRpbmcgcGFyYW1ldGVyIGVzdGltYXRlcy4gSWYgdGhlIHBhcmFtZXRlciBlc3RpbWF0ZXMgYXJlIHN0YWJsZSBhY3Jvc3MgdGhlc2UgcmVzYW1wbGVkIGZpdHMsIHdlIGNhbiB0cnVzdCB0aGVtLiBJZiB0aGV5IGJvdW5jZSBhcm91bmQgd2lsZGx5LCB0aGF0IHRlbGxzIHVzIHRoZSBlc3RpbWF0ZXMgYXJlIHVucmVsaWFibGUtLS1leGFjdGx5IHdoYXQgd2UgZXhwZWN0IGZyb20gY29sbGluZWFyaXR5LgoKQm9vdHN0cmFwcGluZyBjYW4gYmUgaW1wbGVtZW50ZWQgd2l0aCBhIGZvciBsb29wISBXZSd2ZSBjb3ZlcmVkIGZvciBsb29wcyBpbiB0aGUgW2xhYiBvbiBzaW11bGF0aW5nIGRhdGFdKHByb2Itc2ltLWRhdGEucW1kKSBhbmQgdGhlIFtsYWIgb24gdGhlIG5vcm1hbCBsaWtlbGlob29kXShub3JtLWxhYi5xbWQpLiAKClJlZmVyIGJhY2sgdG8gdGhvc2UgbGFicyBhbmQgdGhlbiByZXR1cm4gaGVyZSB3aGVyZSB3ZSdsbCBidWlsZCB1cCBvdXIgYm9vdHN0cmFwLiAKCldlIGNhbiBzYW1wbGUgcm93ICppbmRpY2VzKiB3aXRoIHJlcGxhY2VtZW50IGFuZCB1c2UgdGhlbSB0byBidWlsZCByZXNhbXBsZWQgZGF0YSBmcmFtZXM6CgpgYGB7cn0KI3wgbGFiZWw6IGJvb3RzdHJhcC1kZW1vCgojIHNhbXBsZSBhbGwgcm93IGluZGljZXMgd2l0aCByZXBsYWNlbWVudApyb3dfaWR4IDwtIHNhbXBsZShucm93KGRhdF9wbHQpLCByZXBsYWNlID0gVFJVRSkKCiMgcmVzYW1wbCBkYXRhIGFuZCBzdG9yZSBhcyBuZXcgZGF0YSBvYmplY3QKZGF0X2Jvb3QgPC0gZGF0X3BsdFtyb3dfaWR4LCBdCmBgYAoKV2UgY2FuIHdyYXAgdGhhdCBpbnNpZGUgYSBmb3IgbG9vcCB0byByZXBlYXQgdGhlIHByb2Nlc3MgbWFueSB0aW1lcyBhbmQgY29sbGVjdCB0aGUgY29lZmZpY2llbnRzIGZyb20gZWFjaCByZXNhbXBsZWQgZml0LiBXZSB3aWxsIHdhbnQgdG8gc2F2ZSB0aGUgc2xvcGUgZm9yIGBoaWlgIGFuZCB0aGUgc2xvcGUgZm9yIGBhdmdfdGVtcF9hbm51YWxfY2AgZnJvbSBlYWNoIGl0ZXJhdGlvbi0tLXNvIHdlIG5lZWQgdHdvIHZlY3RvcnMgdG8gc3RvcmUgdGhlIGJvb3RzdHJhcCBlc3RpbWF0ZXMsIG9uZSBmb3IgZWFjaCBzbG9wZS4KCmBgYHtyfQojfCBsYWJlbDogYm9vdHN0cmFwCiN8IGV2YWw6IGZhbHNlCgojIG5vdGU6IHRoaXMgY29kZSBjaHVuayBpcyBub3QgZ2V0dGluZyBldmFsdWF0ZSBiZWNhdXNlIGl0IGhhcwojICJwc2V1ZG8gY29kZSIuIHVwZGF0ZSBpdCB3aXRoIHlvdXIgb3duIGNvZGUgYW5kIHRoZW4gY2hhbmdlCiMgYCN8IGV2YWw6IGZhbHNlYCB0byBgI3wgZXZhbDogdHJ1ZWAKCiMgbnVtYmVyIG9mIGJvb3RzdHJhcCByZXBsaWNhdGVzCm5fYm9vdCA8LSA1MDAKCiMgdmVjdG9ycyB0byBob2xkIGJvb3N0cmFwcGVkIGVzdGltYXRlcyBvZiBzbG9wcwpib290X2hpaSAgPC0gbnVtZXJpYyhuX2Jvb3QpCmJvb3RfdGVtcCA8LSBudW1lcmljKG5fYm9vdCkKCiMgcnVuIHRoZSBib290c3RyYXAgaXRzZWxmCmZvcihpIGluIDE6bl9ib290KSB7CiAgICAjIHJlc2FtcGxlIHJvd3Mgd2l0aCByZXBsYWNlbWVudAogICAgIyAuLi4geW91ciBjb2RlIGhlcmUgLi4uCgogICAgIyByZWZpdCB0aGUgbW9kZWwKICAgICMgLi4uIHlvdXIgY29kZSBoZXJlIC4uLgogICAgIyBpdCB3aWxsIGxvb2sgc29tZXRoaW5nIGxpa2UKICAgIG1vZF9ib290IDwtIGdsbShuc3BwIH4gbG9nKFBsb3RfQXJlYSkgKyBoaWkgKyBhdmdfdGVtcF9hbm51YWxfYywKICAgICAgICAgICAgICAgICAgICBkYXRhID0gPHJlc2FtYXBsZWQgZGF0YT4sICMgPC0tLSByZXNhbXBsZWQgZGF0YSBoZXJlCiAgICAgICAgICAgICAgICAgICAgZmFtaWx5ID0gcG9pc3NvbikKCiAgICAjIHNhdmUgdGhlIHNsb3BlcwogICAgIyAuLi4geW91ciBjb2RlIGhlcmUgLi4uCiAgICAjIHVzZSB0aGUgYGNvZWZmaWNpZW50c2AgZnVuY3Rpb24gdG8gZ2V0IHNsb3BlIGVzdGltYXRlcyBmb3IKICAgICMgYGhpaWAgYW5kIGBhdmdfdGVtcF9hbm51YWxfY2AKICAgIGJvb3RfaGlpW2ldICA8LSA8c2xvcGUgZm9yIGhpaT4KICAgIGJvb3RfdGVtcFtpXSA8LSA8c2xvcGUgZm9yIGF2Z190ZW1wX2FubnVhbF9jPgp9CgpgYGAKCk5vdyB3ZSBjYW4gdmlzdWFsaXplIHRoZSBqb2ludCBkaXN0cmlidXRpb24gb2YgdGhlIHR3byBib290c3RyYXBwZWQgc2xvcGVzLiBUaGUgam9pbnQgZGlzdHJpYnV0aW9uIHNob3VsZCBzaG93IHVzIGEgc2ltaWxhciBwaWN0dXJlIHRvIHRoZSBsaWtlbGlob29kIHN1cmZhY2U6IGEgdHJhZGUtb2ZmIGluIHRoZSBkaWZmZXJlbnQgY29tYmluYXRpb25zIG9mIHZhbHVlcyBmb3IgdGhlIHR3byBzbG9wZXMuCgpUbyB2aXN1YWxpemUgYSBqb2ludCBkaXN0cmlidXRpb24gd2UgY2FuIHVzZSBgZ2VvbV9kZW5zaXR5XzJkX2ZpbGxlZGAuIEhlcmUncyBob3cgdGhhdCB3b3JrcwoKYGBge3J9CiN8IGxhYmVsOiBkZW5zaXR5XzJkLWRlbW8KCiMgaW5kZXBlbmRlbnQgbm9ybWFsIHJhbmRvbSB2YXJpYWJsZXMKZGVtbyA8LSBkYXRhLmZyYW1lKGEgPSBybm9ybSgxMDApLCAKICAgICAgICAgICAgICAgICAgIGIgPSBybm9ybSgxMDApKQoKZ2dwbG90KGRlbW8sIGFlcyhhLCBiKSkgKwogICAgZ2VvbV9kZW5zaXR5XzJkX2ZpbGxlZCgpCmBgYAoKVGFrZSB0aGF0IHNhbWUgYXBwcm9hY2ggdXNpbmcgYGdlb21fZGVuc2l0eV8yZF9maWxsZWRgIGJ1dCBhcHBseSBpdCB0byB0aGUgcmVzdWx0cyBvZiB5b3VyIGJvb3RzdHJhcC4gWW91J2xsIG5lZWQgdG8gbWFrZSBhIGRhdGEgb2JqZWN0IGZvciB5b3VyIGJvb3RzdHJhcCByZXN1bHRzLCBzb21ldGhpbmcgbGlrZSBgYm9vdCA8LSBkYXRhLmZyYW1lKGhpaSA9IGJvb3RfaGlpLCB0ZW1wID0gYm9vdF90ZW1wKWAuIFlvdXIgdmlzdWFsaXplIHdpbGwgbm90IGxvb2sgbGlrZSB0aGUgb25lIGFib3ZlIGZvciBpbmRlcGVuZGVudCByYW5kb20gdmFyaWFibGVzLiBUaGUgdHJhZGUtb2ZmIHdlIGV4cGVjdCBpbiB0aGUgc2xvcGVzIGZvciBodW1hbiBpbXBhY3QgYW5kIHRlbXBlcmF0dXJlIGxlYWRzIHRvIG5vbi1pbmRlcGVuZGVuY2Ugb2YgdGhlaXIgZXN0aW1hdGVzLgoKT25jZSB5b3UndmUgbWFkZSB5b3VyIHBsb3QsIGluIHlvdXIgb3duIHdvcmRzLCBkZXNjcmliZSB3aGF0IHlvdSBvYnNlcnZlIGFib3V0IHRoZXNlIGJvb3RzdHJhcHBlZCBwYXJhbWV0ZXIgZXN0aW1hdGVzIGFuZCBob3cgdGhleSBtaWdodCBiZSB1bnN0YWJsZS4KCiMjIEJ1aWxkaW5nIHlvdXIgb3duIG1vZGVsCgpOb3cgd2Ugd2lsbCB1c2Ugd2hhdCB3ZSBsZWFybmVkIGFib3V0IGNvbGxpbmVhcml0eSB0byBidWlsZCBhIGJldHRlciBQb2lzc29uIEdMTS4gVGhlIGdvYWwgaXMgdG8gZmluZCBhIHNldCBvZiBleHBsYW5hdG9yeSB2YXJpYWJsZXMgdGhhdCBhcmUgaW50ZXJlc3RpbmctLS10aGF0IHlvdSBjYW4gZm9ybSBhIG1lYW5pbmdmdWwgaHlwb3RoZXNpcyBhYm91dC0tLWJ1dCB0aGF0IGFyZW4ndCB0b28gaGlnaGx5IGNvcnJlbGF0ZWQgd2l0aCBlYWNoIG90aGVyICgkLTAuNiA8IHIgPCAwLjYkKSwgdGhlbiBidWlsZCBhIG5ldyBtb2RlbCB3aXRoIHRoZW0uCgojIyMgQ2hlY2tpbmcgZm9yIGNvbGxpbmVhcml0eQoKSGF2ZSBhIGxvb2sgYXQgYWxsIHRoZSBjb2x1bW5zIGluIHlvdXIgYGRhdF9wbHRgIG9iamVjdDoKCmBgYHtyfQpuYW1lcyhkYXRfcGx0KQoKYGBgCgpQaWNrIHR3byB2YXJpYWJsZXMgdGhhdCB5b3UgYXJlIGludGVyZXN0ZWQgaW4gYXMgcG90ZW50aWFsIGV4cGxhbmF0b3J5IHZhcmlhYmxlcyBvZiBzcGVjaWVzIHJpY2huZXNzLiBDb21wdXRlIHBhaXJ3aXNlIFNwZWFybWFuIGNvcnJlbGF0aW9ucyBhbW9uZyB0aGVtIHVzaW5nIGBjb3JgLCBzcGVjaWZ5aW5nIGBtZXRob2QgPSAic3BlYXJtYW4iYC4gQSBTcGVhcm1hbiBjb3JyZWxhdGlvbiBpcyByb2J1c3QgdG8gc2tld2VkIGRpc3RyaWJ1dGlvbnMgKHRoZSBraW5kIHlvdSBvZnRlbiBnZXQgd2l0aCBlY29sb2dpY2FsIGRhdGEpLgoKSWYgeW91ciBjYW5kaWRhdGUgdmFyaWFibGVzIGFyZSB0b28gY29ycmVsYXRlZCwgY2hvb3NlIG9uZSB0byBrZWVwIGFuZCBmaW5kIGFub3RoZXIgcG9zc2libGUgZXhwbGFuYXRvcnkgdmFyaWFibGUuIFJlcGVhdCB0aGUgY29ycmVsYXRpb24gY2hlY2sgYW5kIGtlZXAgZ29pbmcgdW50aWwgeW91IGhhdmUgdHdvIGV4cGxhbmF0b3J5IHZhcmlhYmxlcyB0aGF0IGFyZSBzdWZmaWNpZW50bHkgdW5jb3JyZWxhdGVkLiBLZWVwIHRyYWNrIG9mIGFsbCB5b3VyIGNvZGUgdGVzdGluZyBmb3IgY29sbGluZWFyaXR5LgoKCiMjIyBGaXR0aW5nIHlvdXIgbW9kZWwKCk5vdyBmaXQgdGhlIG1vZGVsIGBuc3BwIH4gbG9nKFBsb3RfQXJlYSkgKyA8eW91ci12YXItMT4gKyA8eW91ci12YXItMj5gIHdpdGggYGdsbWAgYW5kIGhhdmUgYSBsb29rIGF0IHRoZSBjb2VmZmljaWVudHMgd2l0aCBgY29lZmZpY2llbnRzYC4gRG8gdGhlIHNpZ25zIG9mIHRoZSBzbG9wZXMgbWF0Y2ggeW91ciBwcmVkaWN0aW9ucyBmb3IgdGhlIGVmZmVjdHMgb2YgdGhvc2UgdmFyaWFibGVzIG9uIHNwZWNpZXMgcmljaG5lc3M/CgojIyMgVmlzdWFsaXppbmcgdGhlIGRhdGEKCkZvciBlYWNoIHByZWRpY3RvciBpbiB5b3VyIG5ldyBtb2RlbCAob3RoZXIgdGhhbiBgbG9nKFBsb3RfQXJlYSlgKSwgbWFrZSBhIHNjYXR0ZXIgcGxvdCBvZiBgbnNwcGAgYWdhaW5zdCB0aGF0IHByZWRpY3Rvci4gCg==').then(res => res.blob()).then(blob => {
+      const downloadURL = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      document.body.appendChild(a);
+      a.href = downloadURL;
+      a.download = 'lab07-pois-glm.qmd'; a.click();
+      window.URL.revokeObjectURL(downloadURL);
+      document.body.removeChild(a);
+        });"><button class="btn btn-default downloadthis  " id="dnldts63674"><i class="bi bi-download"></i> Download lab template </button></a></p>
+<p>The template will prompt you to work through the following sections.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load all necessary packages</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggpointdensity)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="fitting-the-speciesarea-model-and-adding-explanatory-variables" class="level2" data-number="22.1">
+<h2 data-number="22.1" class="anchored" data-anchor-id="fitting-the-speciesarea-model-and-adding-explanatory-variables"><span class="header-section-number">22.1</span> Fitting the species–area model and adding explanatory variables</h2>
+<p>In the lecture we used a Poisson GLM to model species richness as a function of plot area, human impact, and temperature. We’ll start there.</p>
+<section id="data-preparation" class="level3" data-number="22.1.1">
+<h3 data-number="22.1.1" class="anchored" data-anchor-id="data-preparation"><span class="header-section-number">22.1.1</span> Data preparation</h3>
+<p>As always, we load the three data files and prep the data for analysis by joining and using the split-apply-combine workflow. This time we will explicitly walk through those steps.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># read-in data</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>tree <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"https://raw.githubusercontent.com/uhm-biostats/stat-mod/refs/heads/main/data/OpenNahele_Tree_Data.csv"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>clim <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"https://raw.githubusercontent.com/uhm-biostats/stat-mod/refs/heads/main/data/plot_climate.csv"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>hii_geo <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"https://raw.githubusercontent.com/uhm-biostats/stat-mod/refs/heads/main/data/hii_geo.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Our goal with joining and split-apply-combine is to make data object called <code>dat_plt</code> where each row is one survey plot and the columns have all the variables we need: <code>Plot_Area</code>, <code>nspp</code> (number of unique species per plot), <code>hii</code>, and <code>avg_temp_annual_c</code>. We also want to exclude the two very large outlier plots because they are multiple oders of magnitude larger than anything else, and even on a log scale they will bias our models.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># join all data ***at tree level*** (i.e. rows = trees), </span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># refer back to r refresher for why we do `!(lon:lat)`</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>all_dat <span class="ot">&lt;-</span> <span class="fu">left_join</span>(tree, clim, <span class="at">by =</span> <span class="st">"PlotID"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">left_join</span>(dplyr<span class="sc">::</span><span class="fu">select</span>(hii_geo, <span class="sc">!</span>(lon<span class="sc">:</span>lat)),</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">by =</span> <span class="st">"PlotID"</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># split-apply-combine</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>dat_plt <span class="ot">&lt;-</span> <span class="fu">group_by</span>(all_dat, PlotID) <span class="sc">|&gt;</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># `across` gives us all the variables, while `first` gives us</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># just the first value for each because values repeat across</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># rows within plots</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="fu">across</span>(<span class="fu">c</span>(Island, Plot_Area, lon<span class="sc">:</span>elev_m), first),</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>              <span class="co"># caculate number of species per plot</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>              <span class="at">nspp =</span> <span class="fu">n_distinct</span>(Scientific_name)) <span class="sc">|&gt;</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># remove super large plots</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(Plot_Area <span class="sc">&lt;</span> <span class="dv">10000</span>) </span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co"># have a look (technically a tibble)</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dat_plt)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 15
+  PlotID Island                       Plot_Area   lon   lat evapotrans_annual_mm
+   &lt;int&gt; &lt;chr&gt;                            &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;                &lt;dbl&gt;
+1      1 O'ahu Island (incl. Mokoli'…     1000  -158.  21.4                 818.
+2      2 Hawai'i Island                   1018. -155.  19.4                 934.
+3      3 Hawai'i Island                   1018. -155.  19.4                 934.
+4      4 Hawai'i Island                   1018. -155.  19.4                 934.
+5      5 Hawai'i Island                   1018. -155.  19.4                 934.
+6      6 Hawai'i Island                   1018. -155.  19.4                 934.
+# ℹ 9 more variables: avbl_energy_annual_wm2 &lt;dbl&gt;, cloud_freq_annual &lt;dbl&gt;,
+#   ndvi_annual &lt;dbl&gt;, rain_annual_mm &lt;dbl&gt;, avg_temp_annual_c &lt;dbl&gt;,
+#   hii &lt;dbl&gt;, age_yr &lt;dbl&gt;, elev_m &lt;dbl&gt;, nspp &lt;int&gt;</code></pre>
+</div>
+</div>
+<p>Note: when making this final data object, we kept <em>all</em> the columns. That’s because it doesn’t hurt anything to keep them all (even if you don’t use them all) and at the end of this lab you will try out several different possible explanatory variables.</p>
+</section>
+<section id="fitting-the-model" class="level3" data-number="22.1.2">
+<h3 data-number="22.1.2" class="anchored" data-anchor-id="fitting-the-model"><span class="header-section-number">22.1.2</span> Fitting the model</h3>
+<p>Use <code>glm</code> to fit the model <code>nspp ~ log(Plot_Area) + hii + avg_temp_annual_c</code></p>
+<p>But we know this model is problematic because of collinearity! We went ahead and made this model so we can better understand the impact of collinearity, which we do starting right now in the next section.</p>
+</section>
+</section>
+<section id="bootstrapping-to-diagnose-collinearity" class="level2" data-number="22.2">
+<h2 data-number="22.2" class="anchored" data-anchor-id="bootstrapping-to-diagnose-collinearity"><span class="header-section-number">22.2</span> Bootstrapping to diagnose collinearity</h2>
+<p>Colinearity produces likelihood surface for the slopes of <code>hii</code> and <code>avg_temp_annual_c</code> that has long flat ridge. The ridge tells us there are many combinations of those two slopes that fit the data almost equally well, which means the estimated slopes are <em>unstable</em>: small changes in the data lead to very different estimates.</p>
+<p>The <strong><em>bootstrap</em></strong> is a technique for demonstrating exactly this kind of instability. The idea is simple: we treat our observed data set as a stand-in for the entire, hypothetically infinite population that in reality we would never be able to collect data on in its entirety. We then simulate “new” data sets by sampling rows from our data <em>with replacement</em>. Because sampling with replacement allows some rows to appear more than once and others not at all, each resampled data set is slightly different from the original and from all other resampled data sets (technically there is a finite limit to the number of unique bootstrapped data sets, but practically we will never reach it). We then re-fit the model to each resampled data set and record the resulting parameter estimates. If the parameter estimates are stable across these resampled fits, we can trust them. If they bounce around wildly, that tells us the estimates are unreliable—exactly what we expect from collinearity.</p>
+<p>Bootstrapping can be implemented with a for loop! We’ve covered for loops in the <a href="./prob-sim-data.html">lab on simulating data</a> and the <a href="./norm-lab.html">lab on the normal likelihood</a>.</p>
+<p>Refer back to those labs and then return here where we’ll build up our bootstrap.</p>
+<p>We can sample row <em>indices</em> with replacement and use them to build resampled data frames:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># sample all row indices with replacement</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>row_idx <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">nrow</span>(dat_plt), <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># resampl data and store as new data object</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>dat_boot <span class="ot">&lt;-</span> dat_plt[row_idx, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>We can wrap that inside a for loop to repeat the process many times and collect the coefficients from each resampled fit. We will want to save the slope for <code>hii</code> and the slope for <code>avg_temp_annual_c</code> from each iteration—so we need two vectors to store the bootstrap estimates, one for each slope.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># note: this code chunk is not getting evaluate because it has</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># "pseudo code". update it with your own code and then change</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># `#| eval: false` to `#| eval: true`</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># number of bootstrap replicates</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>n_boot <span class="ot">&lt;-</span> <span class="dv">500</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># vectors to hold boostrapped estimates of slops</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>boot_hii  <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_boot)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>boot_temp <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_boot)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co"># run the bootstrap itself</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_boot) {</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># resample rows with replacement</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ... your code here ...</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># refit the model</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ... your code here ...</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># it will look something like</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    mod_boot <span class="ot">&lt;-</span> <span class="fu">glm</span>(nspp <span class="sc">~</span> <span class="fu">log</span>(Plot_Area) <span class="sc">+</span> hii <span class="sc">+</span> avg_temp_annual_c,</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data =</span> <span class="sc">&lt;</span>resamapled data<span class="sc">&gt;</span>, <span class="co"># &lt;--- resampled data here</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>                    <span class="at">family =</span> poisson)</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># save the slopes</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ... your code here ...</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    <span class="co"># use the `coefficients` function to get slope estimates for</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># `hii` and `avg_temp_annual_c`</span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>    boot_hii[i]  <span class="ot">&lt;-</span> <span class="er">&lt;</span>slope <span class="cf">for</span> hii<span class="sc">&gt;</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>    boot_temp[i] <span class="ot">&lt;-</span> <span class="er">&lt;</span>slope <span class="cf">for</span> avg_temp_annual_c<span class="sc">&gt;</span></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Now we can visualize the joint distribution of the two bootstrapped slopes. The joint distribution should show us a similar picture to the likelihood surface: a trade-off in the different combinations of values for the two slopes.</p>
+<p>To visualize a joint distribution we can use <code>geom_density_2d_filled</code>. Here’s how that works</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># independent normal random variables</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>demo <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">a =</span> <span class="fu">rnorm</span>(<span class="dv">100</span>), </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">b =</span> <span class="fu">rnorm</span>(<span class="dv">100</span>))</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(demo, <span class="fu">aes</span>(a, b)) <span class="sc">+</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_density_2d_filled</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="pois-glm-lab_files/figure-html/density_2d-demo-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Take that same approach using <code>geom_density_2d_filled</code> but apply it to the results of your bootstrap. You’ll need to make a data object for your bootstrap results, something like <code>boot &lt;- data.frame(hii = boot_hii, temp = boot_temp)</code>. Your visualize will not look like the one above for independent random variables. The trade-off we expect in the slopes for human impact and temperature leads to non-independence of their estimates.</p>
+<p>Once you’ve made your plot, in your own words, describe what you observe about these bootstrapped parameter estimates and how they might be unstable.</p>
+</section>
+<section id="building-your-own-model" class="level2" data-number="22.3">
+<h2 data-number="22.3" class="anchored" data-anchor-id="building-your-own-model"><span class="header-section-number">22.3</span> Building your own model</h2>
+<p>Now we will use what we learned about collinearity to build a better Poisson GLM. The goal is to find a set of explanatory variables that are interesting—that you can form a meaningful hypothesis about—but that aren’t too highly correlated with each other (<span class="math inline">\(-0.6 &lt; r &lt; 0.6\)</span>), then build a new model with them.</p>
+<section id="checking-for-collinearity" class="level3" data-number="22.3.1">
+<h3 data-number="22.3.1" class="anchored" data-anchor-id="checking-for-collinearity"><span class="header-section-number">22.3.1</span> Checking for collinearity</h3>
+<p>Have a look at all the columns in your <code>dat_plt</code> object:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(dat_plt)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "PlotID"                 "Island"                 "Plot_Area"             
+ [4] "lon"                    "lat"                    "evapotrans_annual_mm"  
+ [7] "avbl_energy_annual_wm2" "cloud_freq_annual"      "ndvi_annual"           
+[10] "rain_annual_mm"         "avg_temp_annual_c"      "hii"                   
+[13] "age_yr"                 "elev_m"                 "nspp"                  </code></pre>
+</div>
+</div>
+<p>Pick two variables that you are interested in as potential explanatory variables of species richness. Compute pairwise Spearman correlations among them using <code>cor</code>, specifying <code>method = "spearman"</code>. A Spearman correlation is robust to skewed distributions (the kind you often get with ecological data).</p>
+<p>If your candidate variables are too correlated, choose one to keep and find another possible explanatory variable. Repeat the correlation check and keep going until you have two explanatory variables that are sufficiently uncorrelated. Keep track of all your code testing for collinearity.</p>
+</section>
+<section id="fitting-your-model" class="level3" data-number="22.3.2">
+<h3 data-number="22.3.2" class="anchored" data-anchor-id="fitting-your-model"><span class="header-section-number">22.3.2</span> Fitting your model</h3>
+<p>Now fit the model <code>nspp ~ log(Plot_Area) + &lt;your-var-1&gt; + &lt;your-var-2&gt;</code> with <code>glm</code> and have a look at the coefficients with <code>coefficients</code>. Do the signs of the slopes match your predictions for the effects of those variables on species richness?</p>
+</section>
+<section id="visualizing-the-data" class="level3" data-number="22.3.3">
+<h3 data-number="22.3.3" class="anchored" data-anchor-id="visualizing-the-data"><span class="header-section-number">22.3.3</span> Visualizing the data</h3>
+<p>For each predictor in your new model (other than <code>log(Plot_Area)</code>), make a scatter plot of <code>nspp</code> against that predictor.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./pois-glm.html" class="pagination-link" aria-label="The Poisson Generalized Linear Model">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">The Poisson Generalized Linear Model</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
