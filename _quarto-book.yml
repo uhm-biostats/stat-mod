@@ -36,6 +36,7 @@ book:
             - mixed-models-lab.qmd
             - binom-glm.qmd
             - binom-glm-lab.qmd
+            - pois-glm.qmd
 
 
 bibliography: stat-mod.bib
