@@ -24,37 +24,13 @@ library(ggplot2)
 library(dplyr)
 library(lme4)
 
-# the lab qmd file
-f <- "labs/lab05-mixed-models.qmd"
-l <- readLines(f)
-
-# the yaml
-iyaml <- grep("---|```", l) |> 
-    (\(x) x[1]:x[4])()
-
-# the comments to delete
-idelt <- grep("delete .* once complete", l, 
-              ignore.case = TRUE)
-
-# only the body
-b <- l[-c(iyaml, idelt)] |> 
-    gsub("\\*delete .* once complete", "", x = _, 
-         ignore.case = TRUE)
-
-# write only the body for use with `{{< include %s >}}`
-# fb <- gsub("\\.qmd", "_bonly.qmd", f)
-fb <- tempfile(fileext = ".qmd")
-
-writeLines(b, fb)
-
-m <- knitr::knit_child(fb, options = list(include = TRUE), 
-                       quiet = TRUE)
+source("R/utils.R")
+out <- render_lab("labs/lab05-mixed-models.qmd")
 ```
-
 
 ```{r}
 #| echo: false
 #| results: asis
 
-cat(m, sep = "\n")
+cat(out$m, sep = "\n")
 ```
