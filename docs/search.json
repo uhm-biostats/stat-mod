@@ -1119,7 +1119,7 @@
     "href": "mixed-models-lab.html",
     "title": "18  More mixed effects models in R",
     "section": "",
-    "text": "18.1 Random slopes-and-intercepts model\nThis lab will continue our journey through mixed effects models with the lme4 package, specifically engaging with random slopes.\nYou can download the lab template .qmd file for this lab here:\nDownload lab template\nThe template will prompt you to work through the following sections.\nIn the previous lab we saw how to fit a random intercepts model, now we will see how to fit a model with both random intercepts and slopes. First, let’s figure out what random slopes means.\nIf we have some numerical explanatory variable \\(x\\) and numerical response variable \\(y\\), then there will be a slope \\(m\\) describing how \\(y\\) changes across \\(x\\) as in the equation \\(y = mx + b\\). But what if there are multiple observations coming from the same sampling units that may not be fully independent (i.e. we have pseudo replicates)? This is the classic case for needing a random effect, but what if not only the intercept changes randomly, but the slope also changes randomly? Meaning that within groups of pseudo replicates, the relationship between \\(y\\) and \\(x\\) might be a little different at random.\nThis connects to the tree data we are working with because each tree species is observed across multiple, potentially many, plots. While we previously recognized trees within plots as pseudo replicates, we now also face the possibility that trees belonging to the same species also represent pseudo replicates.",
+    "text": "18.1 Random slopes-and-intercepts model\nThis lab will continue our journey through mixed effects models with the lme4 package, specifically engaging with random slopes.\nYou can download the lab template .qmd file for this lab here:\nDownload lab template\nThe template will prompt you to work through the following sections.\nIn the previous lab we saw how to fit a random intercepts model, now we will see how to fit a model with both random intercepts and slopes. First, let’s figure out what random slopes means.\nIf we have some numerical explanatory variable \\(x\\) and numerical response variable \\(y\\), then there will be a slope \\(m\\) describing how \\(y\\) changes across \\(x\\) as in the equation \\(y = mx + b\\). But what if there are multiple observations coming from the same sampling units that may not be fully independent (i.e. we have pseudo replicates)? This is the classic case for needing a random effect, but what if not only the intercept changes randomly, but the slope also changes randomly? Meaning that within groups of pseudo replicates, the relationship between \\(y\\) and \\(x\\) might be a little different at random.\nThis connects to the tree data we are working with because each tree species is observed across multiple, potentially many, plots. While we previously recognized trees within plots as pseudo replicates, we now also face the possibility that trees belonging to the same species may represent pseudo replicates.",
     "crumbs": [
       "Linear models",
       "<span class='chapter-number'>18</span>  <span class='chapter-title'>More mixed effects models in R</span>"
@@ -1222,6 +1222,94 @@
     "crumbs": [
       "Linear models",
       "<span class='chapter-number'>20</span>  <span class='chapter-title'>Building Binomial Generalized Linear Models</span>"
+    ]
+  },
+  {
+    "objectID": "pois-glm.html",
+    "href": "pois-glm.html",
+    "title": "21  The Poisson Generalized Linear Model",
+    "section": "",
+    "text": "21.1 The Poisson distribution\nIn the previous module we introduced GLMs using the binomial distribution as our example. Recall that the key insight is that different kinds of response variables call for different probability distributions. When data are binary (0/1) or represent proportions, the binomial distribution is appropriate. But what about data that are counts such as the number of trees in a plot or the number of species on an island? For these, the Poisson distribution is a natural choice.\nThe Poisson distribution describes the probability of observing a non-negative, integer count. We write\n\\[\ny \\sim \\text{Pois}(\\lambda)\n\\]\nThe parameter \\(\\lambda\\) represents the mean of the distribution, But with only one parameter, we do not have very much flexibility to modulate the variance of the distribution. It turns out the Poisson imposes the strong constraint that the variance is equal to the mean, are both equal to \\(\\lambda\\) (this will be a central point in an upcoming lab).\nHere is an example probability mass function for a Poisson distribution with \\(\\lambda = 4\\)\n# range of count values\nnn &lt;- 0:12\n\nggplot(data.frame(x = nn, y = dpois(nn, 4)), aes(x, y)) +\n    geom_bar(stat = \"identity\") +\n    xlab(expression(italic(y))) +\n    ylab(\"Probability\") +\n    theme_cowplot() +\n    geom_vline(xintercept = 4, color = \"orange\", linewidth = 1.5)\nBecause \\(\\lambda\\) is both the mean and variance of the distribution, and because counts can never be negative nor can a variance, a critical constraint is that \\(\\lambda \\geq 0\\). This constraint is what drives the need for a special link function in a Poisson GLM.",
+    "crumbs": [
+      "Linear models",
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>The Poisson Generalized Linear Model</span>"
+    ]
+  },
+  {
+    "objectID": "pois-glm.html#the-log-link-function",
+    "href": "pois-glm.html#the-log-link-function",
+    "title": "21  The Poisson Generalized Linear Model",
+    "section": "21.2 The log link function",
+    "text": "21.2 The log link function\nIn a standard linear model we write the mean response as a linear function of the explanatory variables:\n\\[\n\\lambda = b_0 + b_1 x\n\\]\nBut this is a problem for Poisson GLM: a linear combination of predictors can produce any value from \\(-\\infty\\) to \\(\\infty\\), yet \\(\\lambda\\) must be non-negative. The solution is to model the log of \\(\\lambda\\) as the linear function:\n\\[\n\\log(\\lambda) = b_0 + b_1 x\n\\]\nwhich is equivalent to\n\\[\n\\lambda = e^{b_0 + b_1 x}\n\\]\nBecause \\(e^\\text{anything} \\geq 0\\) always, this guarantees that \\(\\lambda\\) will never be negative no matter what values the predictors or coefficients take. The log function is therefore the natural link function for the Poisson GLM.",
+    "crumbs": [
+      "Linear models",
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>The Poisson Generalized Linear Model</span>"
+    ]
+  },
+  {
+    "objectID": "pois-glm.html#the-speciesarea-relationship",
+    "href": "pois-glm.html#the-speciesarea-relationship",
+    "title": "21  The Poisson Generalized Linear Model",
+    "section": "21.3 The species–area relationship",
+    "text": "21.3 The species–area relationship\nYou’ll recall that in our R refresher we used the classic species area relationship (SAR) as an example for making data visualizations. To make a model of the SAR, a Poisson GLM might be an appropriate choice, after all number of species (the response variable in the SAR) is a count. One classic form for the (SAR) is expressed as\n\\[\n\\begin{aligned}\nS &= cA^z \\\\\n\\log(S) &= \\log(c) + z\\log(A)\n\\end{aligned}\n\\]\nwhere \\(S\\) is the number of species, \\(A\\) is area, \\(c\\) is a constant, and \\(z\\) is the scaling exponent. Log-transforming both sides of the SAR reveals a linear equation…this should perhaps be sounding like a log link function situation. Indeed, if we recognize that we are modeling \\(\\bar{S}\\), the average species richness, then we make these substitutions in the log link funciton equation\n\\[\n\\begin{aligned}\n\\bar{S} &= \\lambda \\\\\n\\log(A) &= x \\\\\nb_0 &= \\log(c)  \\\\\nb_1 &= z\n\\end{aligned}\n\\]\nand we arrive at a log link function for \\(\\bar{S}\\):\n\\[\n\\log(\\bar{S}) = b_0 + b_1 \\log(A)\n\\]\nLet’s visualize the data (note: we are excluding the two very large survey plots because they are extreme outliers on the x-axis)\n\n\n\n\n\n\n\n\n\nOn the log–log scale we see a roughly linear relationship, consistent with the SAR and log link assumptions of Poisson GLM.",
+    "crumbs": [
+      "Linear models",
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>The Poisson Generalized Linear Model</span>"
+    ]
+  },
+  {
+    "objectID": "pois-glm.html#fitting-a-poisson-glm-in-r",
+    "href": "pois-glm.html#fitting-a-poisson-glm-in-r",
+    "title": "21  The Poisson Generalized Linear Model",
+    "section": "21.4 Fitting a Poisson GLM in R",
+    "text": "21.4 Fitting a Poisson GLM in R\nFitting a Poisson GLM in R again uses the glm function, just as with the binomial GLM. The key difference is specifying family = poisson:\n\n# note: i've done some data wrangling alread to make the\n# object `dat_plt`\nhead(dat_plt)\n\n  PlotID Plot_Area avg_temp_annual_c hii nspp\n1      1   1000.00          19.90869  38    9\n2      2   1017.88          22.25223  22    9\n3      3   1017.88          22.25223  22    2\n4      4   1017.88          22.25223  22    9\n5      5   1017.88          22.25223  22    4\n6      6   1017.88          22.25223  22    9\n\n# here is the model\nsar &lt;- glm(nspp ~ log(Plot_Area),\n           data = dat_plt,\n           family = poisson)\n\nNote that we only need to log-transform the explanatory variable (Plot_Area). The log link function automatically handles the log-transformation of the mean of the response. We do not need to log-transform nspp. We can inspect the coefficients as usual:\n\ncoefficients(sar)\n\n   (Intercept) log(Plot_Area) \n    -1.8086075      0.4893528 \n\n\nWe can plug these into the SAR equation:\n\\[\nS = e^{-1.809} A^{0.489}\n\\]",
+    "crumbs": [
+      "Linear models",
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>The Poisson Generalized Linear Model</span>"
+    ]
+  },
+  {
+    "objectID": "pois-glm.html#adding-more-explanatory-variables",
+    "href": "pois-glm.html#adding-more-explanatory-variables",
+    "title": "21  The Poisson Generalized Linear Model",
+    "section": "21.5 Adding more explanatory variables",
+    "text": "21.5 Adding more explanatory variables\nArea is a natural starting point for modeling species richness, but we are likely interested in additional predictors. In fact, area might even be a nuisance variable—one we need to account for statistically, but that is not our main scientific interest. We might be more interested in, say, human impact (hii) or temperature (avg_temp_annual_c).\nAdding more predictors to a Poisson GLM is no different from adding them to a linear model—just extend the formula:\n\nmod &lt;- glm(nspp ~ log(Plot_Area) + hii + avg_temp_annual_c,\n           data = dat_plt,\n           family = poisson)\n\ncoefficients(mod)\n\n      (Intercept)    log(Plot_Area)               hii avg_temp_annual_c \n     -2.320992411       0.516567381       0.011011301       0.007295895 \n\n\nAfter accounting for plot area, species richness appears to increase (weakly) with both human impact index and mean annual temperature. Given our conservation concern about human impact, this might not make sense at first. However, there is at least some scientific thought that non-native plants augment species richness (Sax & Gaines 2003) and thus heavily impacted sites have many introduced species that add to the total count. However, the other part of the story is temperature—hotter areas have more species. This could be because lowland areas are hotter and also more likely to be impacted by humans. But it is also worth noting that, historically, hot and dry lowland forests were once incredibly diverse with unique endemic species (Rock 1913) that are indeed now being lost by human impact. It is also worth taking a moment to contemplate the Rock (1913) publication. Rock was a botanist paid by the American government to survey plants in Hawaiʻi. 1913 is only 30 years after the 1893 illegal overthrow of the Hawaiian Kingdom. While Rock (1913) provides a convenient citation, his work also represents science as colonialism and colonialism as science.",
+    "crumbs": [
+      "Linear models",
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>The Poisson Generalized Linear Model</span>"
+    ]
+  },
+  {
+    "objectID": "pois-glm.html#collinearity",
+    "href": "pois-glm.html#collinearity",
+    "title": "21  The Poisson Generalized Linear Model",
+    "section": "21.6 Collinearity",
+    "text": "21.6 Collinearity\nAt a much more trivial level—in terms of ethics and biology—adding more explanatory variables requires care. When two or more predictors are correlated with each other, we run into collinearity, and that causes problems for estimation.\nTo see why, we can visualize the likelihood surface for the slopes of human impact and temperature from the model above:\n\n\n\n\n\n\n\n\n\nInstead of a well-defined peak, the likelihood surface has a long, flat ridge, meaning many—infinite—combinations of the two slope coefficients have nearly the same likelihood. That makes it difficult and unreliable to identify the unique best-fitting parameter values.\nWhen we visualize human impact and temperature we see they are indeed correlated with each other:\n\nggplot(dat_plt, aes(hii, avg_temp_annual_c)) +\n    geom_point() +\n    xlab(\"Human impact index\") +\n    ylab(\"Mean annual temperature (C)\") +\n    theme_cowplot()\n\n\n\n\n\n\n\n\nThe practical takeaway: before including multiple predictors in a model, check for pairwise correlations among them. A commonly used guideline is to only include predictors with pairwise correlation coefficients \\(-0.6 &lt; r &lt; 0.6\\). You can compute correlations with cor() in R:\n\ncor(dat_plt$hii, dat_plt$avg_temp_annual_c, use = \"complete.obs\")\n\n[1] 0.6397327\n\n\nIf two predictors are too highly correlated, you will typically need to choose one or the other, or find a way to combine them, such as through principal component analysis or other dimension reduction techniques, rather than including both in the same model.",
+    "crumbs": [
+      "Linear models",
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>The Poisson Generalized Linear Model</span>"
+    ]
+  },
+  {
+    "objectID": "pois-glm.html#sec-slides",
+    "href": "pois-glm.html#sec-slides",
+    "title": "21  The Poisson Generalized Linear Model",
+    "section": "21.7 Slides",
+    "text": "21.7 Slides",
+    "crumbs": [
+      "Linear models",
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>The Poisson Generalized Linear Model</span>"
+    ]
+  },
+  {
+    "objectID": "pois-glm.html#references",
+    "href": "pois-glm.html#references",
+    "title": "21  The Poisson Generalized Linear Model",
+    "section": "21.8 References",
+    "text": "21.8 References\n\n\n\n\nRock JF. 1913. The indigenous trees of the hawaiian islands. Patronage, Honoulu: Hawaii.\n\n\nSax DF, Gaines SD. 2003. Species diversity: From global decreases to local increases. Trends in Ecology & Evolution 18:561–566. Elsevier.",
+    "crumbs": [
+      "Linear models",
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>The Poisson Generalized Linear Model</span>"
     ]
   }
 ]
