@@ -1,0 +1,36 @@
+---
+format:
+  html:
+    code-links:
+      - text: View source
+        icon: github
+        href: https://github.com/uhm-biostats/stat-mod/blob/main/pois-glm-lab.qmd
+---
+
+
+# Building Poisson Generalized Linear Models
+
+
+This lab will guide you through fitting Poisson GLMs, diagnosing collinearity with a bootstrap, and building your own models with carefully chosen predictors. You can download the template `.qmd` file for this lab here:
+
+{{< downloadthis labs/lab07-pois-glm.qmd dname=lab07-pois-glm label="Download lab template">}}
+
+The template will prompt you to work through the following sections.
+
+```{r}
+#| include: false
+
+library(ggplot2)
+library(ggpointdensity)
+library(dplyr)
+
+source("R/utils.R")
+out <- render_lab("labs/lab07-pois-glm.qmd")
+```
+
+```{r}
+#| echo: false
+#| results: asis
+
+cat(out$m, sep = "\n")
+```
