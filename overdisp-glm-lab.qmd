@@ -1,0 +1,67 @@
+---
+format:
+  html:
+    code-links:
+      - text: View source
+        icon: github
+        href: https://github.com/uhm-biostats/stat-mod/blob/main/overdisp-glm-lab.qmd
+---
+
+
+# Overdispersion and the Negative Binomial GLM
+
+
+This lab will guide you through dealing with "overdispersion," a common challenge with ecological data. You can download the template `.qmd` file for this lab here:
+
+{{< downloadthis labs/lab07-overdisp-glm.qmd dname=lab07-overdisp-glm label="Download lab template">}}
+
+The template will prompt you to work through the following sections.
+
+
+
+```{r}
+#| include: false
+
+library(ggplot2)
+library(ggpointdensity)
+library(dplyr)
+library(MASS)
+
+
+
+tree <- read.csv("data/OpenNahele_Tree_Data.csv")
+clim <- read.csv("data/plot_climate.csv")
+hii_geo <- read.csv("data/hii_geo.csv")
+
+# join all data ***at tree level*** (i.e. rows = trees), 
+# refer back to r refresher for why we do `!(lon:lat)`
+all_dat <- left_join(tree, clim, by = "PlotID") |>
+    left_join(dplyr::select(hii_geo, !(lon:lat)),
+              by = "PlotID")
+
+# split-apply-combine
+dat_plt <- group_by(all_dat, PlotID) |>
+    # `across` gives us all the variables, while `first` gives us
+    # just the first value for each because values repeat across
+    # rows within plots
+    summarize(across(c(Island, Plot_Area, lon:elev_m), first),
+              # caculate number of species per plot
+              nspp = n_distinct(Scientific_name)) |>
+    ungroup() |>
+    # remove super large plots
+    filter(Plot_Area < 10000) 
+
+
+source("R/utils.R")
+out <- render_lab("labs/lab07-overdisp-glm.qmd")
+
+add_gb <- "\n```\nThe following object is masked from 'package:dplyr':\n\n    select\n```\n"
+out$m <- gsub(add_gb, paste0("\n::: {.gb}\n", add_gb, "\n:::\n"), out$m)
+```
+
+```{r}
+#| echo: false
+#| results: asis
+
+cat(out$m, sep = "\n")
+```

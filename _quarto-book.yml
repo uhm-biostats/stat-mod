@@ -38,6 +38,7 @@ book:
             - binom-glm-lab.qmd
             - pois-glm.qmd
             - pois-glm-lab.qmd
+            - overdisp-glm-lab.qmd
 
 
 bibliography: stat-mod.bib
