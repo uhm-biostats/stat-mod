@@ -1410,15 +1410,5 @@
       "Linear models",
       "<span class='chapter-number'>23</span>  <span class='chapter-title'>Overdispersion and the Negative Binomial GLM</span>"
     ]
-  },
-  {
-    "objectID": "hyp-mod-select.html",
-    "href": "hyp-mod-select.html",
-    "title": "Significance testing and model selection",
-    "section": "",
-    "text": "Jump straight to:\nNull hypothesis testing and confidence intervals\n\nLikelihood ratio test and confidence intervals slides",
-    "crumbs": [
-      "Significance testing and model selection"
-    ]
   }
 ]
