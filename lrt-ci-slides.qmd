@@ -1,0 +1,697 @@
+---
+title: "Likelihood Ratio Tests and Confidence Intervals"
+---
+
+```{r}
+#| label: setup
+#| echo: false
+#| message: false
+#| warning: false
+
+library(knitr)
+library(ggplot2)
+library(cowplot)
+library(dplyr)
+library(MASS)
+
+opts_chunk$set(echo = FALSE)
+
+# shared data setup used throughout
+clim <- read.csv("data/plot_climate.csv")
+geo_hii <- read.csv("data/hii_geo.csv")
+tree <- read.csv("data/OpenNahele_Tree_Data.csv")
+
+all_dat <- left_join(tree, clim, by = "PlotID") |>
+    left_join(dplyr::select(geo_hii, !(lon:lat)), by = "PlotID")
+
+dat_plt <- group_by(all_dat, PlotID) |>
+    summarize(across(c(Island, Plot_Area, lon:elev_m), first),
+              nspp = n_distinct(Scientific_name)) |>
+    ungroup() |>
+    filter(Plot_Area < 10000)
+```
+
+
+## Is overdispersion supported by my data?
+
+We saw that the Poisson GLM assumes variance = mean = $\lambda$
+
+::: {.fragment}
+
+A negative binomial GLM relaxes that: variance $= \lambda + \lambda^2 / k$, where $k$ is an extra dispersion parameter
+
+:::
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+mod_pois <- glm(nspp ~ log(Plot_Area),
+                data = dat_plt, family = poisson)
+
+mod_nb <- glm.nb(nspp ~ log(Plot_Area),
+                 data = dat_plt)
+```
+
+Both models fit. But is the negative binomial actually *better*?
+
+:::
+
+
+## Is overdispersion supported by my data?
+
+We can compare log likelihoods
+
+```{r}
+#| echo: true
+
+logLik(mod_pois)
+logLik(mod_nb)
+```
+
+::: {.fragment}
+
+The negative binomial has a higher log likelihood, but is that difference *significant*?
+
+:::
+
+
+## What to consider for significance
+
+::: {.incremental}
+
+1. **Quantify** the difference between models
+2. **Compare** that quantity to what we would expect if there were *no* real difference, i.e. the null
+
+:::
+
+
+
+
+## What is the null?
+
+If the two models were truly equivalent (no overdispersion, $k \rightarrow \infty$), what would the difference in log likelihoods look like?
+
+::: {.fragment}
+
+- Adding a parameter *always* increases log likelihood a little, even when fitting noise
+- If the null is true, the gain is just random luck
+
+:::
+
+::: {.fragment}
+
+We need a null distribution for accidental log likelihood gains
+
+:::
+
+
+## What is the null?
+
+Need to consider: more parameters let the model bend to match idiosyncrasies of the data, even pure noise (the case here)
+
+```{r}
+#| fig-width: 10
+#| fig-height: 4
+#| fig-align: center
+
+set.seed(7)
+n_toy <- 12
+x_toy <- seq(0, 1, length.out = n_toy)
+y_toy <- rnorm(n_toy, mean = 2, sd = 0.6)
+
+fit_line <- lm(y_toy ~ poly(x_toy, 1, raw = TRUE))
+fit_quad <- lm(y_toy ~ poly(x_toy, 3, raw = TRUE))
+fit_overfit <- lm(y_toy ~ poly(x_toy, 9, raw = TRUE))
+
+x_seq <- seq(0, 1, length.out = 300)
+pred_df <- data.frame(
+    x    = rep(x_seq, 3),
+    y    = c(predict(fit_line,    newdata = data.frame(x_toy = x_seq)),
+             predict(fit_quad,    newdata = data.frame(x_toy = x_seq)),
+             predict(fit_overfit, newdata = data.frame(x_toy = x_seq))),
+    model = rep(c("2 parameters",
+                  "4 parameters",
+                  "10 parameters"), each = 300)
+)
+pred_df$model <- factor(pred_df$model,
+                        levels = c("2 parameters",
+                                   "4 parameters",
+                                   "10 parameters"))
+
+dat_toy <- data.frame(x = x_toy, y = y_toy)
+
+ll_labels <- data.frame(
+    model = factor(c("2 parameters",
+                     "4 parameters",
+                     "10 parameters"),
+                   levels = c("2 parameters",
+                              "4 parameters",
+                              "10 parameters")),
+    label = sprintf("logLik = %.1f",
+                    c(logLik(fit_line),
+                      logLik(fit_quad),
+                      logLik(fit_overfit)))
+)
+
+ggplot(pred_df, aes(x, y)) +
+    geom_line(linewidth = 1.5, color = hsv(0.52, 1, 0.7)) +
+    geom_point(data = dat_toy, aes(x, y), size = 3, inherit.aes = FALSE) +
+    geom_label(data = ll_labels, aes(label = label),
+               x = 0.5, y = 0.5,
+               size = 4.5, inherit.aes = FALSE) +
+    facet_wrap(vars(model)) +
+    xlab("x") +
+    ylab("y") +
+    theme_cowplot() +
+    theme(axis.text = element_blank(),
+          axis.ticks = element_blank(),
+          axis.title = element_text(size = 20),
+          strip.text = element_text(size = 16))
+```
+
+
+
+## What is the null?
+
+How do more parameters increase likelihood? 
+
+Access to higher parameter dimensions.
+
+::: {.columns}
+
+:::: {.column width=60%}
+
+```{r}
+#| fig-width: 6
+#| fig-height: 6
+#| fig-align: center
+
+
+p0 <- 0.0   # peak location along b0 axis
+p1 <- 0.0   # peak location along b1 axis
+curv <- 1.0   # equal curvature in both directions -> circular rim
+depth <- 4.0   # how far the bowl drops: peak_ll - depth = floor
+peak_ll <- 0     # value at the peak
+
+ll_bowl <- function(b0, b1) -(curv * (b0 - p0)^2 + curv * (b1 - p1)^2) + peak_ll
+
+# rim radius: where ll_bowl == peak_ll - depth
+# curv * r^2 = depth  =>  r = sqrt(depth / curv)
+rim_r <- sqrt(depth / curv)
+
+# grid just wide enough to contain the circle
+b0_vec <- seq(p0 - rim_r, p0 + rim_r, length.out = 80)
+b1_vec <- seq(p1 - rim_r, p1 + rim_r, length.out = 80)
+ll_mat <- outer(b0_vec, b1_vec, ll_bowl)
+
+# clip to NA outside the circle so the rim sits exactly on the floor
+dist_mat <- outer(b0_vec - p0, b1_vec - p1, function(d0, d1) sqrt(d0^2 + d1^2))
+ll_mat[dist_mat > rim_r] <- NA
+
+# color each facet by height
+n_col <- 100
+col_ramp <- hcl.colors(n_col, palette = "viridis")
+facet_z <- (ll_mat[-1, -1] + ll_mat[-1, -ncol(ll_mat)] +
+                ll_mat[-nrow(ll_mat), -1] + 
+                ll_mat[-nrow(ll_mat), -ncol(ll_mat)]) / 4
+facet_col <- col_ramp[cut(facet_z, breaks = n_col)]
+
+
+# 1D parabolic slice: fix b0 = 1, vary b1
+# clip to NA where the slice falls outside the bowl (dist > rim_r)
+b1_curve <- seq(p1 - rim_r, p1 + rim_r, length.out = 300)
+b0_curve <- rep(1, 300)
+ll_curve <- ll_bowl(b0_curve, b1_curve)
+
+# any point where distance from bowl center > rim_r is outside — set to NA
+outside <- sqrt((b0_curve - p0)^2 + (b1_curve - p1)^2) > rim_r
+ll_curve[outside] <- NA
+
+
+# peak-to-peak connector
+b0_connect <- seq(1, p0, length.out = 100)
+b1_connect <- rep(0, 100)
+ll_connect <- ll_bowl(b0_connect, b1_connect)
+
+
+# plot
+par(mar = c(2, 1, 0, 1), cex = 2)
+pmat <- persp(
+    x = b0_vec, y = b1_vec, z = ll_mat,
+    col = facet_col,
+    border = "transparent",
+    theta = 60,
+    phi = 22,
+    expand = 0.6,
+    xlab = "b0", ylab = "b1", zlab = "log likelihood",
+    shade = 0.3
+)
+
+# 1D parabolic slice (clipped to bowl interior)
+curve_proj <- trans3d(b0_curve, b1_curve, ll_curve, pmat)
+lines(curve_proj, col = "gray", lwd = 4)
+
+# peak-to-peak connector along the bowl surface
+connect_proj <- trans3d(b0_connect, b1_connect, ll_connect, pmat)
+lines(connect_proj, col = "black", lwd = 4)
+
+# mark bowl peak
+peak_proj <- trans3d(p0, p1, peak_ll, pmat)
+points(peak_proj, col = "black", pch = 16, cex = 2)
+
+# mark parabola peak (b0=1, b1=0)
+par_peak_proj <- trans3d(1, 0, ll_bowl(1, 0), pmat)
+points(par_peak_proj, col = "gray", pch = 16, cex = 2)
+
+trans3d(cos(seq(-1.5, 1, length.out = 100)) * rim_r, 
+       sin(seq(-1.5, 1, length.out = 100)) * rim_r, 
+       rep(-3.8, 10), 
+       pmat) |> 
+    lines(col = "white", lwd = 10)
+
+```
+
+::::
+
+:::: {.column width=40%}
+
+Log likelihoods are approximately **quadratic**
+
+::: {.fragment}
+
+Thus vertical distances are **squared**
+
+:::
+
+::::
+
+:::
+
+
+## What is the null?
+
+If vertical distances are **squared**
+
+$2(\log\mathscr{L}(\text{data} \mid b_0,~b_1) - \log\mathscr{L}(\text{data} \mid b_0)) \sim \chi^2$
+
+::: {.columns}
+
+:::: {.column width=60%}
+
+```{r}
+#| fig-width: 6
+#| fig-height: 6
+#| fig-align: center
+
+
+p0 <- 0.0   # peak location along b0 axis
+p1 <- 0.0   # peak location along b1 axis
+curv <- 1.0   # equal curvature in both directions -> circular rim
+depth <- 4.0   # how far the bowl drops: peak_ll - depth = floor
+peak_ll <- 0     # value at the peak
+
+ll_bowl <- function(b0, b1) -(curv * (b0 - p0)^2 + curv * (b1 - p1)^2) + peak_ll
+
+# rim radius: where ll_bowl == peak_ll - depth
+# curv * r^2 = depth  =>  r = sqrt(depth / curv)
+rim_r <- sqrt(depth / curv)
+
+# grid just wide enough to contain the circle
+b0_vec <- seq(p0 - rim_r, p0 + rim_r, length.out = 80)
+b1_vec <- seq(p1 - rim_r, p1 + rim_r, length.out = 80)
+ll_mat <- outer(b0_vec, b1_vec, ll_bowl)
+
+# clip to NA outside the circle so the rim sits exactly on the floor
+dist_mat <- outer(b0_vec - p0, b1_vec - p1, function(d0, d1) sqrt(d0^2 + d1^2))
+ll_mat[dist_mat > rim_r] <- NA
+
+# color each facet by height
+n_col <- 100
+col_ramp <- hcl.colors(n_col, palette = "viridis")
+facet_z <- (ll_mat[-1, -1] + ll_mat[-1, -ncol(ll_mat)] +
+                ll_mat[-nrow(ll_mat), -1] + 
+                ll_mat[-nrow(ll_mat), -ncol(ll_mat)]) / 4
+facet_col <- col_ramp[cut(facet_z, breaks = n_col)]
+
+
+# 1D parabolic slice: fix b0 = 1, vary b1
+# clip to NA where the slice falls outside the bowl (dist > rim_r)
+b1_curve <- seq(p1 - rim_r, p1 + rim_r, length.out = 300)
+b0_curve <- rep(1, 300)
+ll_curve <- ll_bowl(b0_curve, b1_curve)
+
+# any point where distance from bowl center > rim_r is outside — set to NA
+outside <- sqrt((b0_curve - p0)^2 + (b1_curve - p1)^2) > rim_r
+ll_curve[outside] <- NA
+
+
+# peak-to-peak connector
+b0_connect <- seq(1, p0, length.out = 100)
+b1_connect <- rep(0, 100)
+ll_connect <- ll_bowl(b0_connect, b1_connect)
+
+
+# plot
+par(mar = c(2, 1, 0, 1), cex = 2)
+pmat <- persp(
+    x = b0_vec, y = b1_vec, z = ll_mat,
+    col = facet_col,
+    border = "transparent",
+    theta = 60,
+    phi = 22,
+    expand = 0.6,
+    xlab = "b0", ylab = "b1", zlab = "log likelihood",
+    shade = 0.3
+)
+
+# 1D parabolic slice (clipped to bowl interior)
+curve_proj <- trans3d(b0_curve, b1_curve, ll_curve, pmat)
+lines(curve_proj, col = "gray", lwd = 4)
+
+# peak-to-peak connector along the bowl surface
+connect_proj <- trans3d(b0_connect, b1_connect, ll_connect, pmat)
+lines(connect_proj, col = "black", lwd = 4)
+
+# mark bowl peak
+peak_proj <- trans3d(p0, p1, peak_ll, pmat)
+points(peak_proj, col = "black", pch = 16, cex = 2)
+
+# mark parabola peak (b0=1, b1=0)
+par_peak_proj <- trans3d(1, 0, ll_bowl(1, 0), pmat)
+points(par_peak_proj, col = "gray", pch = 16, cex = 2)
+
+trans3d(cos(seq(-1.5, 1, length.out = 100)) * rim_r, 
+       sin(seq(-1.5, 1, length.out = 100)) * rim_r, 
+       rep(-3.8, 10), 
+       pmat) |> 
+    lines(col = "white", lwd = 10)
+
+```
+
+::::
+
+:::: {.column width=40%}
+
+differences in log likelihoods between models (times 2) will be $\chi^2$-distributed
+
+::: {.fragment}
+
+the *times 2* is a scaling factor from deep in the math
+
+:::
+
+
+
+::::
+
+:::
+
+
+
+
+## The likelihood ratio test
+
+This $\chi^2$ distribution provides our null, and gives us a significance test!
+
+$$
+\Lambda = 2\!\left(\log\mathscr{L}_\text{full} - \log\mathscr{L}_\text{null}\right) \;\sim\; \chi^2_{df}
+$$
+
+::: {.incremental}
+
+- $df$ = difference in number of parameters between models
+- If the added parameters *are* ***truly*** meaningful, $\Lambda$ should be large and we should reject the null
+
+:::
+
+```{r}
+#| include: false
+# hidden: keep simulated data needed for the LRT CI slide later
+set.seed(42)
+n <- 80
+x <- runif(n)
+y <- rpois(n, exp(0.5 + 1.2 * x))
+m <- glm(y ~ x, family = poisson)
+b1_hat <- coef(m)[2]
+b1_grid <- seq(b1_hat - 0.2, b1_hat + 0.2, length.out = 200)
+ll_vals <- sapply(b1_grid, function(b) {
+    mu <- exp(coef(m)[1] + b * x)
+    sum(dpois(y, mu, log = TRUE))
+})
+ll_df <- data.frame(b1 = b1_grid, ll = ll_vals)
+```
+
+
+## LRT applied to overdispersion
+
+```{r}
+#| echo: true
+
+ll_pois <- logLik(mod_pois)
+ll_nb <- logLik(mod_nb)
+
+Lambda <- 2 * (ll_nb - ll_pois)
+Lambda
+
+# negative binomial has one extra parameter (k)
+pchisq(Lambda, df = 1, lower.tail = FALSE)
+```
+
+
+
+
+## LRT applied to overdispersion
+
+
+We can also use the built-in `anova` function:
+
+```{r}
+#| echo: true
+
+anova(mod_pois, mod_nb, test = "Chisq")
+```
+
+
+
+## LRT: key assumption
+
+**Nested models**
+
+The LRT requires the null model to be a **special case** of the full model
+
+::: {.incremental}
+
+- Poisson is nested in negative binomial ($k \to \infty$ recovers Poisson)
+- `glm(y ~ x)` is nested in `glm(y ~ x + z)`
+- **Not** nested: Poisson vs. normal; two models with non-overlapping predictors
+
+:::
+
+
+
+## LRT for a predictor: does human impact matter?
+
+After accounting for area, does human impact (`hii`) improve the fit?
+
+```{r}
+#| echo: true
+
+mod_nb_area <- glm.nb(nspp ~ log(Plot_Area), data = dat_plt)
+mod_nb_area_hii <- glm.nb(nspp ~ log(Plot_Area) + hii, data = dat_plt)
+```
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+logLik(mod_nb_area)
+logLik(mod_nb_area_hii)
+```
+
+:::
+
+
+## LRT for a predictor: does human impact matter?
+
+```{r}
+#| echo: true
+
+anova(mod_nb_area, mod_nb_area_hii, test = "Chisq")
+```
+
+::: {.fragment}
+
+`anova` with `test = "Chisq"` does the LRT for us when comparing nested `glm` objects
+
+:::
+
+::: {.fragment}
+
+One extra parameter (`hii`), so $df = 1$
+
+:::
+
+
+## LRT for a predictor: interpreting the result
+
+```{r}
+#| echo: true
+
+coefficients(mod_nb_area_hii)
+```
+
+::: {.fragment}
+
+Despite the slope for `hii` being small (and positive), $P$-value is less than 0.05
+
+:::
+
+
+
+
+## Confidence intervals as another way to evaluate significance
+
+A coefficient is judged significant if its confidence interval **does not include zero**
+
+::: {.fragment}
+
+Two ways to build CIs from likelihood:
+
+1. **Likelihood ratio interval** — invert the LRT
+2. **Wald interval** — use the CLT approximation directly
+
+:::
+
+
+
+## LRT confidence interval
+
+Find all values of $\theta$ such that the LRT would *not* reject the null $H_0: \theta = \theta_0$
+
+$$
+2\!\left(\log\mathscr{L}(\hat\theta) - \log\mathscr{L}(\theta_0)\right) \leq 3.84
+$$
+
+Rearranging:
+
+$$
+\log\mathscr{L}(\theta_0) \geq \log\mathscr{L}(\hat\theta) - 1.92
+$$
+
+
+## LRT confidence interval
+
+```{r}
+#| fig-width: 7
+#| fig-height: 4
+#| fig-align: center
+
+ll_max <- max(ll_vals)
+cutoff <- ll_max - qchisq(0.95, df = 1) / 2
+
+ll_in  <- ll_df[ll_df$ll >= cutoff, ]
+
+ggplot(ll_df, aes(b1, ll)) +
+    geom_ribbon(data = ll_in,
+                aes(ymin = cutoff, ymax = ll),
+                fill = hsv(0.52, 0.6, 0.85), alpha = 0.6) +
+    geom_line(linewidth = 2) +
+    geom_hline(yintercept = cutoff, color = "red", linewidth = 1.5,
+               linetype = "dashed") +
+    geom_vline(xintercept = b1_hat, color = "orange", linewidth = 1.5) +
+    annotate("text", x = b1_hat + 0.05, y = ll_max - 0.25,
+             label = "peak", hjust = 0, size = 5) +
+    annotate("text", x = b1_hat + 0.2, y = cutoff + 0.15,
+             label = "peak - 1.92", hjust = 0, size = 5, color = "red") +
+    xlab(expression(hat(beta)[1])) +
+    ylab("log likelihood") +
+    theme_cowplot() +
+    theme(axis.title = element_text(size = 20),
+          axis.text = element_text(size = 18))
+```
+
+
+## LRT confidence interval
+
+In R, `confint` on a `glm` uses this profile likelihood approach by default:
+
+```{r}
+#| echo: true
+
+confint(mod_nb_area_hii)
+```
+
+
+
+
+## Wald confidence intervals
+
+Another approach: use the CLT approximation directly
+
+According to CLT $\hat\theta$ is approximately normally distributed:
+
+$$
+\hat\theta \pm z_{0.975} \cdot \widehat{\text{SE}}(\hat\theta)
+$$
+
+::: {.fragment}
+
+```{r}
+#| echo: true
+
+confint.default(mod_nb_area_hii)
+```
+
+`confint.default` uses the Wald approach — fast but less accurate
+
+:::
+
+
+## LRT vs. Wald intervals
+
+::: {.columns}
+
+:::: {.column}
+
+**LRT (profile likelihood)**
+
+- more accurate, especially for small $n$
+- CI can be asymmetric — follows the actual shape of the likelihood surface
+
+::::
+
+:::: {.column}
+
+**Wald**
+
+- fast and simple
+- symmetric by construction
+- less accurate when log likelihood surface is asymmetric
+
+::::
+
+:::
+
+
+## Summary
+
+::: {.incremental}
+
+- The **LRT** compares nested models: $\Lambda = 2(\log\mathscr{L}_\text{full} - \log\mathscr{L}_\text{null}) \sim \chi^2_{df}$
+- The $\chi^2$ null distribution arises from the **CLT** applied to MLE — the log likelihood surface is approximately quadratic
+- **Nested models** are required: null must be a special case of full
+- `anova(mod1, mod2, test = "Chisq")` does the work in R
+
+:::
+
+## Summary
+
+::: {.incremental}
+
+- **LRT confidence intervals** invert the LRT: all $\theta$ within 1.92 log likelihood units of the peak form the 95% CI
+- **Wald intervals** use the normal approximation directly 
+
+:::
