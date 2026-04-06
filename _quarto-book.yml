@@ -39,6 +39,7 @@ book:
             - pois-glm.qmd
             - pois-glm-lab.qmd
             - overdisp-glm-lab.qmd
+        - part: hyp-mod-select.qmd
 
 
 bibliography: stat-mod.bib

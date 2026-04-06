@@ -1,0 +1,8 @@
+# Significance testing and model selection
+
+
+Jump straight to:
+
+*Null hypothesis testing and confidence intervals*
+
+- Likelihood ratio test and confidence intervals [slides](lrt-ci-slides.html)
