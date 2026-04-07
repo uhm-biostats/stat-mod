@@ -1410,5 +1410,59 @@
       "Linear models",
       "<span class='chapter-number'>23</span>  <span class='chapter-title'>Overdispersion and the Negative Binomial GLM</span>"
     ]
+  },
+  {
+    "objectID": "hyp-mod-select.html",
+    "href": "hyp-mod-select.html",
+    "title": "Significance testing and model selection",
+    "section": "",
+    "text": "Jump straight to:\nNull hypothesis testing and confidence intervals\n\nLikelihood ratio test and confidence intervals slides",
+    "crumbs": [
+      "Significance testing and model selection"
+    ]
+  },
+  {
+    "objectID": "lrt-ci.html",
+    "href": "lrt-ci.html",
+    "title": "24  Likelihood ratio test and confidence intervals",
+    "section": "",
+    "text": "24.1 Slides",
+    "crumbs": [
+      "Significance testing and model selection",
+      "<span class='chapter-number'>24</span>  <span class='chapter-title'>Likelihood ratio test and confidence intervals</span>"
+    ]
+  },
+  {
+    "objectID": "lrt-lab.html",
+    "href": "lrt-lab.html",
+    "title": "25  The Likelihood Ratio Test",
+    "section": "",
+    "text": "25.1 Understanding the Likelihood Ratio Test\nThis lab will guide you through running the likelihood ratio test to calculate and interpret \\(P\\)-values. You can download the template .qmd file for this lab here:\nDownload lab template\nThe template will prompt you to work through the following sections.\nThe goal of the likelihood ratio test is to compare two, nested models, and see if the added parameters of the more complex model are warranted by the data. To do that, we will calculate a \\(P\\)-value. A \\(P\\)-value less than 0.05 is our usual cut off for rejecting the null. The null is that the added parameters of the more complex model are just fitting noise in the data.\nWe can also think of our two nested models like this:\n\\[\n\\begin{aligned}\n\\log(\\mu)_{full} &= b_0 + b_1 x \\\\\n\\log(\\mu)_{0} &= b_0 + 0 \\times x \\\\\n\\end{aligned}\n\\]\nwhere the \\(full\\) subscript indicates the more complex model and the \\(0\\) subscript indicates the reduced model nested within it. So a likelihood ratio test between these two models can also be thought of as testing whether \\(b_1 = 0\\) (the null) or not.\nNotice the formulation of the models: we’re modeling the log mean \\(\\mu\\) and calling it \\(\\mu\\), so you might guess we will be working with negative binomial generalized linear models. That would be correct.\nThe likelihood ratio test statistics (for any nested models, negative binomial or otherwise) is\n\\[\n\\Lambda = 2(\\log\\mathscr{L}_{full} - \\log\\mathscr{L}_0)\n\\]\nand has a \\(\\chi^2\\) distribution with degrees of freedom equal to the difference in number of parameters. In the case of the full and reduced models above, the difference in number of parameters in one. The degrees of freedom is equal to the difference in numbers of parameters because each added parameter has the opportunity to increase the log likelihood of a model just by chance.\nLet’s visualize the \\(\\chi^2\\) distribution with one degree of freedom\ngp_chi1 &lt;- ggplot(data.frame(x = c(0, 5)), aes(x = x)) +\n    stat_function(fun = dchisq, \n                  args = list(df = 1), \n                  fill = \"gray\", geom = \"area\") +\n    ylab(\"Probability density\") +\n    xlab(expression(Lambda))\n\ngp_chi1\n\n\n\n\n\n\n\nFigure 25.1\nIf we observed a likelihood ratio test statistics of \\(\\Lambda = 3\\) we could visualize the associated \\(P\\)-value as the area under the curve for \\(\\Lambda \\geq 3\\) like this\ngp_chi1 + \n    stat_function(fun = dchisq, \n                  args = list(df = 1), \n                  xlim = c(4, 5), \n                  fill = \"red\", geom = \"area\")\n\n\n\n\n\n\n\nFigure 25.2\nWe can use pchisq to calculate that \\(P\\)-value\npchisq(4, 1, lower.tail = FALSE)\n\n[1] 0.04550026\nSo with a likelihood ratio test statistic of \\(\\Lambda = 4\\) and \\(df = 1\\) we would reject the null because \\(P &lt; 0.05\\), meaning there is less than a 0.05 chance of observing a \\(\\Lambda\\) statistic of this magnitude, and the data support the additional parameter of the more complex model.\nWhat if we were comparing models with a difference of 2 parameters? The degrees of freedom would be 2. Would we still reject the null with a \\(\\Lambda = 4\\)? Let’s visualize and calculate to find out\nggplot(data.frame(x = c(0, 10)), aes(x = x)) +\n    stat_function(fun = dchisq, \n                  args = list(df = 2), \n                  fill = \"gray\", geom = \"area\") +\n    ylab(\"Probability density\") +\n    xlab(expression(Lambda)) +\n    stat_function(fun = dchisq, \n                  args = list(df = 2), \n                  xlim = c(4, 10), \n                  fill = \"red\", geom = \"area\")\n\n\n\n\n\n\n\nFigure 25.3\npchisq(4, 2, lower.tail = FALSE)\n\n[1] 0.1353353\nNo, we would not reject the null because the \\(P\\)-value is substantially larger than 0.05. More degrees of freedom shift the null \\(\\chi^2\\) distribution toward larger values, meaning we need even larger differences in log likelihood values between full and reduced models to warrant adding the multiple additional parameters of the null.",
+    "crumbs": [
+      "Significance testing and model selection",
+      "<span class='chapter-number'>25</span>  <span class='chapter-title'>The Likelihood Ratio Test</span>"
+    ]
+  },
+  {
+    "objectID": "lrt-lab.html#applying-the-likelihood-ratio-test",
+    "href": "lrt-lab.html#applying-the-likelihood-ratio-test",
+    "title": "25  The Likelihood Ratio Test",
+    "section": "25.2 Applying the Likelihood Ratio Test",
+    "text": "25.2 Applying the Likelihood Ratio Test\nBut now let’s try it out with your own model! Refer back to the Poisson GLM you’ve been working with that uses area as an explanatory variable as well as two other explanatory variables. Do the data support the inclusion of those additional variables? To find out go through the steps:\n\ntranslate your model into a negative binomial GLM with glm.nb from MASS\ncreate a reduced model that lacks the explanatory variables of interest\ncalculate \\(\\Lambda = 2(\\log\\mathscr{L}_{full} - \\log\\mathscr{L}_0)\\)\nfigure out the degrees of freedom\nvisualize the \\(\\Chi^2\\) distribution with appropriate degrees of freedom and highlight the tail probability (i.e. the area greater than or equal to the \\(\\Lambda\\) you calculated for your actual model)\nuse pchisq to compute the \\(P\\)-value\nuse anova to confirm your calculated \\(P\\)-value",
+    "crumbs": [
+      "Significance testing and model selection",
+      "<span class='chapter-number'>25</span>  <span class='chapter-title'>The Likelihood Ratio Test</span>"
+    ]
+  },
+  {
+    "objectID": "lrt-lab.html#understanding-p-values",
+    "href": "lrt-lab.html#understanding-p-values",
+    "title": "25  The Likelihood Ratio Test",
+    "section": "25.3 Understanding \\(P\\)-values",
+    "text": "25.3 Understanding \\(P\\)-values\nIn this section we will use simulation to prove to ourselves several aspects of the likelihood ratio test and \\(P\\)-values.\n\nEven with random data that have no statistical connection to any explanatory variable, adding an explanatory variable to a model increases the log likelihood compared to an “intercepts only” model\nA likelihood ratio test for such data will produce a \\(P\\)-value greater than 0.05 nearly every time\nSimulated data where the response variable really does respond to an explanatory variable will most often be confirmed by a likelihood ratio test. But not always—if the \\(P\\)-value cut off is 0.05, then 5% of the time we will fail to reject the null; this is the false negative rate\n\nFirst let’s see how our data simulation will work. Let’s see how to simulate data without any true relationship between response and explanatory variables:\n\n# would-be explanatory variable\nx &lt;- runif(100, 0, 10)\n\n# mean for a negative binomial\nmu_no_effect &lt;- exp(-1 + 0.5 * mean(x))\n\n# response variable\ny_no_effect &lt;- rnbinom(length(x), mu = mu_no_effect, size = 8)\n\n# put all together\ndat_no_effect &lt;- data.frame(x, y = y_no_effect)\n\nhead(dat_no_effect)\n\n          x y\n1 1.2881150 4\n2 0.9467573 5\n3 3.3469703 4\n4 8.3237188 6\n5 7.6042365 4\n6 8.1930301 8\n\n\nLet’s make a quick visualization\n\nggplot(dat_no_effect, aes(x, y)) +\n    geom_point()\n\n\n\n\n\n\n\nFigure 25.4\n\n\n\n\n\nNow let’s see how to simulate data with a true effect of x on y\n\n# explanatory variable\nx &lt;- runif(100, 0, 10)\n\n# mean for a negative binomial *with* effect\nmu_yes_effect &lt;- exp(-1 + 0.5 * x)\n\n# response variable\ny_yes_effect &lt;- rnbinom(length(x), mu = mu_yes_effect, size = 8)\n\n# put all together\ndat_yes_effect &lt;- data.frame(x, y = y_yes_effect)\n\n\n# again, visualize\nggplot(dat_yes_effect, aes(x, y)) +\n    geom_point()\n\n\n\n\n\n\n\nFigure 25.5\n\n\n\n\n\nNow if we want to see if the effect of x is supported by a likelihood ratio test we need to make two models: one with x and one without. Here is the way to do that, using the model where x really has no effect\n\n# full model\nmod_no_effect_full &lt;- glm.nb(y ~ x, data = dat_no_effect)\n\n# reduced model, note: we just say `y ~ 1` to mean \"intecept only\"\nmod_no_effect_0 &lt;- glm.nb(y ~ 1, data = dat_no_effect)\n\n\n# calculate log likelihoods\nlogLik(mod_no_effect_full)\n\n'log Lik.' -227.7952 (df=3)\n\nlogLik(mod_no_effect_0)\n\n'log Lik.' -227.8895 (df=2)\n\n\nWhich one is bigger (i.e. less negative)?\nDespite the difference in log likelihoods, is that difference significant? That’s the job for the likelihood ratio test. Remember, the likelihood ratio test statistic is\n\\[\n\\Lambda = 2(\\log\\mathscr{L}_{full} - \\log\\mathscr{L}_0)\n\\]\nWe can calculate that like this:\n\nL_no_effect &lt;- 2 * (logLik(mod_no_effect_full) - logLik(mod_no_effect_0))\n\nAnd calculate the \\(P\\)-value\n\n# 1 df because models differ by only one parameter\npchisq(L_no_effect, 1, lower.tail = FALSE)\n\n'log Lik.' 0.6641133 (df=3)\n\n\nNow repeat those steps but for the data where there truly is an effect of x on y\n\n25.3.1 Repeated simulations show we reject the null about 95% of the time\nIf our threshold for rejecting the null is \\(P \\leq 0.05\\), then we will only reject the null, even when we should, about 95% of the time. Those 5% of cases are false negatives. Let’s use a for loop to repeatedly simulate data where y really does respond to x to prove this to ourselves.\nHere is a skeleton of some code to get you started:\n\n# note: this code chunk is not being evaluated, make sure to \n# change `eval` to `true`\n\n# number of simualtions (i.e. steps of for loop)\nn_sim &lt;- 1000\n\n# set up vector to hold P-values\npvals &lt;- numeric(n_sim)\n\n# loop `n_sim` times, each time simulating new data and \n# calculating likelihood ratio test P-value\n\nfor(i in 1:n_sim) {\n    # simulate `x`, `mu`, `y` like we did before when \n    # `x` really does effect `y`\n    \n    # combine into one data.frame\n    \n    # fit full and reduced models as before\n    \n    # calculate Lambda\n    \n    # calculate p-val and store in pre-built vector\n    pvals[i] &lt;- pchisq(...)\n}\n\nNow see how many times we reject the null\n\n# make sure to flip `eval` to `true`\n\nsum(pvals &lt;= 0.05) / length(pvals)\n\n# or equivilantly\nmean(pvals)",
+    "crumbs": [
+      "Significance testing and model selection",
+      "<span class='chapter-number'>25</span>  <span class='chapter-title'>The Likelihood Ratio Test</span>"
+    ]
   }
 ]
