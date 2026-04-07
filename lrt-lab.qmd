@@ -26,8 +26,6 @@ library(ggplot2)
 library(MASS)
 
 
-
-
 source("R/utils.R")
 out <- render_lab("labs/lab08-lrt.qmd")
 ```

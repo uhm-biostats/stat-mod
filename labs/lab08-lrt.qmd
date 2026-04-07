@@ -112,7 +112,7 @@ But now let's try it out with your own model!  Refer back to the Poisson GLM you
 2. create a reduced model that lacks the explanatory variables of interest
 3. calculate $\Lambda = 2(\log\mathscr{L}_{full} - \log\mathscr{L}_0)$
 4. figure out the degrees of freedom
-5. visualize the $\Chi^2$ distribution with appropriate degrees of freedom and highlight the tail probability (i.e. the area greater than or equal to the $\Lambda$ you calculated for your actual model)
+5. visualize the $\chi^2$ distribution with appropriate degrees of freedom and highlight the tail probability (i.e. the area greater than or equal to the $\Lambda$ you calculated for your actual model)
 6. use `pchisq` to compute the $P$-value
 7. use `anova` to confirm your calculated $P$-value
 
@@ -121,8 +121,8 @@ But now let's try it out with your own model!  Refer back to the Poisson GLM you
 In this section we will use simulation to prove to ourselves several aspects of the likelihood ratio test and $P$-values. 
 
 1. Even with random data that have no statistical connection to any explanatory variable, adding an explanatory variable to a model increases the log likelihood compared to an "intercepts only" model
-2. A likelihood ratio test for such data will produce a $P$-value greater than 0.05 nearly every time
-3. Simulated data where the response variable really does respond to an explanatory variable will most often be confirmed by a likelihood ratio test. But not always---if the $P$-value cut off is 0.05, then 5% of the time we will fail to reject the null; this is the false negative rate
+2. A likelihood ratio test for such data will produce a $P$-value greater than 0.05 most every time, but not every time! (More on that soon)
+3. Simulated data where the response variable really does respond to an explanatory variable will almost always be confirmed by a likelihood ratio test as long as we have sufficient sample size. 
 
 First let's see how our data simulation will work. Let's see how to simulate data without any true relationship between response and explanatory variables:
 
@@ -219,9 +219,9 @@ pchisq(L_no_effect, 1, lower.tail = FALSE)
 
 Now repeat those steps but for the data where there truly *is* an effect of `x` on `y`
 
-### Repeated simulations show we reject the null about 95% of the time
+### Repeated simulations show a false positive rate of 5%
 
-If our threshold for rejecting the null is $P \leq 0.05$, then we will only reject the null, even when we should, about 95% of the time. Those 5% of cases are false negatives. Let's use a for loop to repeatedly simulate data where `y` really does respond to `x` to prove this to ourselves.
+If our threshold for rejecting the null is $P \leq 0.05$, then this is also saying we are accepting a false positive rate of 5%. A false positive occurs when we reject the null even though the null is actually true. Let's use a for loop to repeatedly simulate data where `y` really *does* ***not*** respond to `x` to prove this to ourselves.
 
 Here is a skeleton of some code to get you started:
 
@@ -242,7 +242,7 @@ pvals <- numeric(n_sim)
 
 for(i in 1:n_sim) {
     # simulate `x`, `mu`, `y` like we did before when 
-    # `x` really does effect `y`
+    # `x` actually has no effect on `y`
     
     # combine into one data.frame
     
@@ -265,7 +265,7 @@ Now see how many times we reject the null
 
 sum(pvals <= 0.05) / length(pvals)
 
-# or equivilantly
+# or equivalently
 mean(pvals)
 
 ```
