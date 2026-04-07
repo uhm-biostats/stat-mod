@@ -1,0 +1,271 @@
+---
+title: "Likelihood Ratio Test"
+format:
+    pdf:
+        include-in-header:
+            text: |
+                \usepackage{newunicodechar}
+                \newunicodechar{ʻ}{`}
+author:
+    - your name here
+---
+
+```{r}
+#| label: setup
+
+# load all necessary packages
+
+
+```
+
+
+## Understanding the Likelihood Ratio Test
+
+
+The goal of the likelihood ratio test is to compare two, nested models, and see if the added parameters of the more complex model are warranted by the data. To do that, we will calculate a $P$-value. A $P$-value less than 0.05 is our usual cut off for rejecting the null. The null is that the added parameters of the more complex model are just fitting noise in the data. 
+
+We can also think of our two nested models like this:
+
+$$
+\begin{aligned}
+\log(\mu)_{full} &= b_0 + b_1 x \\
+\log(\mu)_{0} &= b_0 + 0 \times x \\
+\end{aligned}
+$$
+
+where the $full$ subscript indicates the more complex model and the $0$ subscript indicates the reduced model nested within it. So a likelihood ratio test between these two models can also be thought of as testing whether $b_1 = 0$ (the null) or not.
+
+Notice the formulation of the models: we're modeling the log mean $\mu$ and calling it $\mu$, so you might guess we will be working with negative binomial generalized linear models. That would be correct.
+
+The likelihood ratio test statistics (for any nested models, negative binomial or otherwise) is 
+
+$$
+\Lambda = 2(\log\mathscr{L}_{full} - \log\mathscr{L}_0)
+$$
+
+and has a $\chi^2$ distribution with degrees of freedom equal to the difference in number of parameters. In the case of the full and reduced models above, the difference in number of parameters in one. The degrees of freedom is equal to the difference in numbers of parameters because each added parameter has the opportunity to increase the log likelihood of a model just by chance.
+
+Let's visualize the $\chi^2$ distribution with one degree of freedom 
+
+```{r}
+#| label: fig-chi1
+gp_chi1 <- ggplot(data.frame(x = c(0, 5)), aes(x = x)) +
+    stat_function(fun = dchisq, 
+                  args = list(df = 1), 
+                  fill = "gray", geom = "area") +
+    ylab("Probability density") +
+    xlab(expression(Lambda))
+
+gp_chi1
+```
+
+If we observed a likelihood ratio test statistics of $\Lambda = 3$ we could visualize the associated $P$-value as the area under the curve for $\Lambda \geq 3$ like this
+
+```{r}
+#| label: fig-chi1-pval
+
+gp_chi1 + 
+    stat_function(fun = dchisq, 
+                  args = list(df = 1), 
+                  xlim = c(4, 5), 
+                  fill = "red", geom = "area")
+```
+
+We can use `pchisq` to calculate that $P$-value
+
+```{r}
+pchisq(4, 1, lower.tail = FALSE)
+
+```
+
+So with a likelihood ratio test statistic of $\Lambda = 4$ and $df = 1$ we would *reject the null* because $P < 0.05$, meaning there is less than a 0.05 chance of observing a $\Lambda$ statistic of this magnitude, and the data support the additional parameter of the more complex model.
+
+What if we were comparing models with a difference of 2 parameters? The degrees of freedom would be 2. Would we still reject the null with a $\Lambda = 4$? Let's visualize and calculate to find out
+
+```{r}
+#| label: fig-chi2
+ggplot(data.frame(x = c(0, 10)), aes(x = x)) +
+    stat_function(fun = dchisq, 
+                  args = list(df = 2), 
+                  fill = "gray", geom = "area") +
+    ylab("Probability density") +
+    xlab(expression(Lambda)) +
+    stat_function(fun = dchisq, 
+                  args = list(df = 2), 
+                  xlim = c(4, 10), 
+                  fill = "red", geom = "area")
+```
+
+
+```{r}
+pchisq(4, 2, lower.tail = FALSE)
+
+```
+
+No, we would not reject the null because the $P$-value is substantially larger than 0.05. More degrees of freedom shift the null $\chi^2$ distribution toward larger values, meaning we need even larger differences in log likelihood values between full and reduced models to warrant adding the multiple additional parameters of the null.
+
+## Applying the Likelihood Ratio Test
+
+But now let's try it out with your own model!  Refer back to the Poisson GLM you've been working with that uses area as an explanatory variable as well as two other explanatory variables.  Do the data support the inclusion of those additional variables?  To find out go through the steps:
+
+1. translate your model into a negative binomial GLM with `glm.nb` from *MASS*
+2. create a reduced model that lacks the explanatory variables of interest
+3. calculate $\Lambda = 2(\log\mathscr{L}_{full} - \log\mathscr{L}_0)$
+4. figure out the degrees of freedom
+5. visualize the $\Chi^2$ distribution with appropriate degrees of freedom and highlight the tail probability (i.e. the area greater than or equal to the $\Lambda$ you calculated for your actual model)
+6. use `pchisq` to compute the $P$-value
+7. use `anova` to confirm your calculated $P$-value
+
+## Understanding $P$-values
+
+In this section we will use simulation to prove to ourselves several aspects of the likelihood ratio test and $P$-values. 
+
+1. Even with random data that have no statistical connection to any explanatory variable, adding an explanatory variable to a model increases the log likelihood compared to an "intercepts only" model
+2. A likelihood ratio test for such data will produce a $P$-value greater than 0.05 nearly every time
+3. Simulated data where the response variable really does respond to an explanatory variable will most often be confirmed by a likelihood ratio test. But not always---if the $P$-value cut off is 0.05, then 5% of the time we will fail to reject the null; this is the false negative rate
+
+First let's see how our data simulation will work. Let's see how to simulate data without any true relationship between response and explanatory variables:
+
+```{r}
+# would-be explanatory variable
+x <- runif(100, 0, 10)
+
+# mean for a negative binomial
+mu_no_effect <- exp(-1 + 0.5 * mean(x))
+
+# response variable
+y_no_effect <- rnbinom(length(x), mu = mu_no_effect, size = 8)
+
+# put all together
+dat_no_effect <- data.frame(x, y = y_no_effect)
+
+head(dat_no_effect)
+```
+
+
+Let's make a quick visualization
+
+
+```{r}
+#| label: fig-no-effect
+
+ggplot(dat_no_effect, aes(x, y)) +
+    geom_point()
+```
+
+
+Now let's see how to simulate data with a true effect of `x` on `y`
+
+```{r}
+#| label: fig-yes-effect
+
+# explanatory variable
+x <- runif(100, 0, 10)
+
+# mean for a negative binomial *with* effect
+mu_yes_effect <- exp(-1 + 0.5 * x)
+
+# response variable
+y_yes_effect <- rnbinom(length(x), mu = mu_yes_effect, size = 8)
+
+# put all together
+dat_yes_effect <- data.frame(x, y = y_yes_effect)
+
+
+# again, visualize
+ggplot(dat_yes_effect, aes(x, y)) +
+    geom_point()
+```
+
+
+
+Now if we want to see if the effect of `x` is supported by a likelihood ratio test we need to make two models: one with `x` and one without. Here is the way to do that, using the model where `x` really has no effect
+
+```{r}
+# full model
+mod_no_effect_full <- glm.nb(y ~ x, data = dat_no_effect)
+
+# reduced model, note: we just say `y ~ 1` to mean "intecept only"
+mod_no_effect_0 <- glm.nb(y ~ 1, data = dat_no_effect)
+
+
+# calculate log likelihoods
+logLik(mod_no_effect_full)
+logLik(mod_no_effect_0)
+```
+
+Which one is bigger (i.e. less negative)?
+
+Despite the difference in log likelihoods, is that difference significant? That's the job for the likelihood ratio test. Remember, the likelihood ratio test statistic is 
+
+$$
+\Lambda = 2(\log\mathscr{L}_{full} - \log\mathscr{L}_0)
+$$
+
+We can calculate that like this:
+
+```{r}
+L_no_effect <- 2 * (logLik(mod_no_effect_full) - logLik(mod_no_effect_0))
+
+```
+
+And calculate the $P$-value
+
+```{r}
+# 1 df because models differ by only one parameter
+pchisq(L_no_effect, 1, lower.tail = FALSE)
+
+```
+
+Now repeat those steps but for the data where there truly *is* an effect of `x` on `y`
+
+### Repeated simulations show we reject the null about 95% of the time
+
+If our threshold for rejecting the null is $P \leq 0.05$, then we will only reject the null, even when we should, about 95% of the time. Those 5% of cases are false negatives. Let's use a for loop to repeatedly simulate data where `y` really does respond to `x` to prove this to ourselves.
+
+Here is a skeleton of some code to get you started:
+
+```{r}
+#| eval: false
+
+# note: this code chunk is not being evaluated, make sure to 
+# change `eval` to `true`
+
+# number of simualtions (i.e. steps of for loop)
+n_sim <- 1000
+
+# set up vector to hold P-values
+pvals <- numeric(n_sim)
+
+# loop `n_sim` times, each time simulating new data and 
+# calculating likelihood ratio test P-value
+
+for(i in 1:n_sim) {
+    # simulate `x`, `mu`, `y` like we did before when 
+    # `x` really does effect `y`
+    
+    # combine into one data.frame
+    
+    # fit full and reduced models as before
+    
+    # calculate Lambda
+    
+    # calculate p-val and store in pre-built vector
+    pvals[i] <- pchisq(...)
+}
+
+```
+
+Now see how many times we reject the null
+
+```{r}
+#| eval: false
+
+# make sure to flip `eval` to `true`
+
+sum(pvals <= 0.05) / length(pvals)
+
+# or equivilantly
+mean(pvals)
+
+```

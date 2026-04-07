@@ -1,0 +1,40 @@
+---
+format:
+  html:
+    code-links:
+      - text: View source
+        icon: github
+        href: https://github.com/uhm-biostats/stat-mod/blob/main/lrt-lab.qmd
+---
+
+
+# The Likelihood Ratio Test
+
+
+This lab will guide you through running the likelihood ratio test to calculate and interpret $P$-values. You can download the template `.qmd` file for this lab here:
+
+{{< downloadthis labs/lab08-lrt.qmd dname=lab08-lrt label="Download lab template">}}
+
+The template will prompt you to work through the following sections.
+
+
+
+```{r}
+#| include: false
+
+library(ggplot2)
+library(MASS)
+
+
+
+
+source("R/utils.R")
+out <- render_lab("labs/lab08-lrt.qmd")
+```
+
+```{r}
+#| echo: false
+#| results: asis
+
+cat(out$m, sep = "\n")
+```
