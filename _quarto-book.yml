@@ -40,7 +40,9 @@ book:
             - pois-glm-lab.qmd
             - overdisp-glm-lab.qmd
         - part: hyp-mod-select.qmd
+          chapters:
             - lrt-ci.qmd
+            - lrt-lab.qmd
 
 
 bibliography: stat-mod.bib
