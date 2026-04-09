@@ -8,7 +8,7 @@ format:
 ---
 
 
-# The Likelihood Ratio Test
+# Applying the Likelihood Ratio Test
 
 
 This lab will guide you through running the likelihood ratio test to calculate and interpret $P$-values. You can download the template `.qmd` file for this lab here:
