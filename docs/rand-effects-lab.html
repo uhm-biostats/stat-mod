@@ -353,7 +353,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./lrt-lab.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">The Likelihood Ratio Test</span></span></a>
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Applying the Likelihood Ratio Test</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./lrt-ci-lab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Constructing confidence intervals</span></span></a>
   </div>
 </li>
       </ul>
@@ -400,7 +406,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <p>This lab will walk us through how to use the <em>lme4</em> package to fit a mixed effects model.</p>
 <p>You can download the lab template <code>.qmd</code> file for this lab here:</p>
-<p><a href="#dnldts754" onclick="fetch('data:text/plain;base64,LS0tCnRpdGxlOiAiV29ya2luZyB3aXRoIG1peGVkIGVmZmVjdHMgbW9kZWxzIGluIFIiCmZvcm1hdDogCiAgICBwZGY6IAogICAgICAgIGluY2x1ZGUtaW4taGVhZGVyOgogICAgICAgICAgICB0ZXh0OiB8CiAgICAgICAgICAgICAgICBcdXNlcGFja2FnZXtuZXd1bmljb2RlY2hhcn0KICAgICAgICAgICAgICAgIFxuZXd1bmljb2RlY2hhcnvKu317YH0gCmF1dGhvcjogCiAgICAtIHlvdXIgbmFtZSBoZXJlCi0tLQoKYGBge3J9CiN8IGxhYmVsOiBzZXR1cAoKIyBsb2FkIGFsbCBuZWNlc3NhcnkgcGFja2FnZXMKIyAuLi4geW91IG1heSBuZWVkIHRvIGFkZCB0byB0aGlzISBjYW4gZGVsZXRlIHRoaXMgY29tbWVudCBvbmNlIGRvbmUKbGlicmFyeShnZ3Bsb3QyKQpsaWJyYXJ5KGRwbHlyKQpsaWJyYXJ5KGxtZTQpICMgeW91IG1pZ2h0IG5lZWQgdG8gYGluc3RhbGwucGFja2FnZXNgIHRoaXMgb25lCgpgYGAKCgoKIyMgVXNpbmcgc2ltdWxhdGVkIGRhdGEgdG8gdW5kZXJzdGFuZCBmaXR0aW5nIG1peGVkIGVmZmVjdHMgbW9kZWxzIAoKTGV0J3Mgc3RhcnQgd2l0aCBzb21lIHNpbXVsYXRlZCBkYXRhIHRvIGJvdGggbWFrZSBzdXJlIHdlIHVuZGVyc3RhbmQgaG93IG1peGVkIGVmZmVjdHMgbW9kZWwgd29yayAoYW5kIHRoZWlyIGFzc3VtcHRpb25zKSBhbmQgaG93IHRoZSAqbG1lNCogcGFja2FnZSBpbXBsZW1lbnRzIGZpdHRpbmcgbWl4ZWQgZWZmZWN0cyBtb2RlbHMuCgpGaXJzdCB3ZSBzaW11bGF0ZSB0aGUgZGF0YS4gSW1hZ2luZSB3ZSBoYXZlIHNvbWUgcmVzcG9uc2UgdmFyaWFibGUgYHlgIGFuZCBzb21lIG51bWVyaWMgZXhwbGFuYXRvcnkgdmFyaWFibGUgYHhgIGFuZCB3ZSBoYXZlIGNvbGxlY3RlZCBkYXRhIG9uIHRoZXNlIHZhcmlhYmxlcyBmcm9tIDggc2l0ZXMgKHRoaW5rIHNhbXBsaW5nIGxvY2F0aW9ucyBhY3Jvc3Mgc3BhY2UpIHdpdGggMjAgb2JzZXJ2YXRpb25zIGNvbWluZyBmcm9tIGVhY2ggc2l0ZS4KCmBgYHtyfQojfCBsYWJlbDogc2ltLWRhdGEKCiMgc2V0LXVwIHRoZSBzaW11bGF0aW9uCgojIG51bWJlciBvZiBzaXRlcyAod2lsbCBiZSByYW5kIGVmZmVjdCkKbnNpdGUgPC0gOAoKIyBudW1iZXIgb2YgKHBzZXVkbykgcmVwcyBwZXIgc2l0ZQpucmVwIDwtIDIwCgojIHNkIG9mIHRoZSByYW5kb20gZWZmZWN0IG9mIHNpdGUKc2lnX3JhbmQgPC0gMQoKIyBzZCBvZiB0aGUgInJlc2lkdWFscyIKc2lnX3Jlc2lkIDwtIDAuMjUKCiMgb3ZlcmFsbCBpbnRlcmNlcHQKYTAgPC0gOAoKIyBzbG9wZQphMSA8LSAyCgpzaW1fZGF0IDwtIGRhdGEuZnJhbWUoc2l0ZSA9IHJlcChwYXN0ZTAoInNpdGVfIiwgMTpuc2l0ZSksIGVhY2ggPSBucmVwKSwgCiAgICAgICAgICAgICAgICAgICAgICAjIHNpbXVsYXRlIHJhbmRvbSBlZmZlY3Qgb2Ygc2l0ZSwgd2Ugd291bGQgbmV2ZXIKICAgICAgICAgICAgICAgICAgICAgICMgYWN0dWFsbHkgaGF2ZSB0aGlzIGluIHJlYWwgZGF0YQogICAgICAgICAgICAgICAgICAgICAgc2l0ZV9yYW5kID0gcmVwKHJub3JtKG5zaXRlLCBtZWFuID0gMCwgc2QgPSBzaWdfcmFuZCksIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGVhY2ggPSBucmVwKSwKICAgICAgICAgICAgICAgICAgICAgIHggPSBydW5pZihuc2l0ZSAqIG5yZXApKSB8PiAKICAgICMgYWRkIHRoZSByZXNwb25zZSB2YXJpYWJsZQogICAgbXV0YXRlKHkgPSBybm9ybShuc2l0ZSAqIG5yZXAsIAogICAgICAgICAgICAgICAgICAgICBtZWFuID0gYTAgKyBzaXRlX3JhbmQgKyBhMSAqIHgsIAogICAgICAgICAgICAgICAgICAgICBzZCA9IHNpZ19yZXNpZCkpCgpoZWFkKHNpbV9kYXQpCmBgYAoKCkxldCdzIGhhdmUgYSBsb29rIGF0IHRoZXNlIGRhdGEKCmBgYHtyfQojfCBsYWJlbDogZmlnLXNpbS12aXoKI3wgZmlnLXdpZHRoOiA0CiN8IGZpZy1oZWlnaHQ6IDMKCmdncGxvdChzaW1fZGF0LCBhZXMoeCwgeSwgY29sb3IgPSBzaXRlKSkgKwogICAgZ2VvbV9wb2ludCgpICsKICAgIHNjYWxlX2NvbG9yX3ZpcmlkaXNfZCgpCmBgYAoKV2UgY2FuIHNlZSB0aGF0IHRoZSByYW5kb20gZWZmZWN0IG9mIHNpdGUgYnVtcHMgdGhlIG9ic2VydmF0aW9ucyB1cCBvciBkb3duIGJ1dCBkb2VzIG5vdCBjaGFuZ2UgdGhlIHNsb3BlIG9mIGB5YCB2ZXJzdXMgYHhgLiBTbyB0aGUgcmFuZCBlZmZlY3Qgb2Ygc2l0ZSBvbmx5IGltcGFjdHMgdGhlIGludGVyY2VwdCAobW9yZSBvbiB0aGF0IHNob3J0bHkpLgoKVGhpcyBpcyBpbmRlZWQgd2hhdCB3ZSBzaG91bGQgZXhwZWN0IGJlY2F1c2UgdGhpcyBpcyBob3cgd2Ugc2ltdWxhdGVkIHRoZSBkYXRhLCB3ZSBzYWlkIHRoZSBtZWFuIG9mIGB5YCBpcyAKCmBgYAphMCArIHNpdGVfcmFuZCArIGExICogeApgYGAKClRoZSBgc2l0ZV9yYW5kYCBlbnRlcnMgdGhpcyBleHByZXNzaW9uIGFzIGFuIGFkZGl0aW9uYWwgaW50ZXJjZXB0IHRlcm0gYWxvbmcgd2l0aCBgYTBgLgoKCiMjIyBJbnRyb2R1Y2luZyAqbG1lNCogYW5kIHRoZSBgbG1lcmAgZnVuY3Rpb24KCk5vdyB3ZSBhcmUgZ29pbmcgdG8gdHJ5IHRvIHVzZSBtYXhpbXVtIGxpa2VsaWhvb2QgdG8gZXN0aW1hdGUgdGhlIHZhbHVlcyBvZiB0aGUgcGFyYW1ldGVycyBgYTBgLCBgYTFgLCBgc2lnX3JhbmRgLCBhbmQgYHNpZ19yZXNpZGAgZnJvbSB0aGUgc2ltdWxhdGVkIGRhdGEuIFdlIGtub3cgdGhlICJ0cnVlIiB2YWx1ZXMgb2YgdGhvc2UgcGFyYW1ldGVycywgc28gd2UgY2FuIGV2YWx1YXRlIHdoZXRoZXIgdGhlIG1heGltdW0gbGlrZWxpaG9vZCBtZXRob2QgaW1wbGVtZW50ZWQgaW4gYGxtZXJgIHdvcmtlZC4KCkhlcmUgaXMgaG93IHRvIHVzZSB0aGUgYGxtZXJgIGZ1bmN0aW9uOgoKYGBge3J9CiN8IGxhYmVsOiBmaXQtbW9kCgpzaW1fbW9kIDwtIGxtZXIoeSB+IHggKyAoMSB8IHNpdGUpLCBkYXRhID0gc2ltX2RhdCwgUkVNTCA9IEZBTFNFKQpgYGAKCk5vdGljZSBhIGZldyB0aGluZ3M6IAoKLSBUaGUgZml4ZWQgZWZmZWN0cyBwYXJ0IG9mIHRoZSBtb2RlbCBpcyBsaWtlIHdoYXQgd2UndmUgc2VlbiBiZWZvcmU6IGB5IH4geGAKLSBUaGUgd2F5IGEgcmFuZG9tIGVmZmVjdCBpcyBpbXBsZW1lbnRlZCBpcyB0aHJvdWdoIHRoZSBub3RhdGlvbiBgKDEgfCBzaXRlKWAgd2hpY2ggbWVhbnMgImxldCB0aGVyZSBiZSBhbiBhZGRpdGlvbmFsIGludGVyY2VwdCB0ZXJtIGNvbmRpdGlvbmFsIG9uIHNpdGUiCi0gV2UgYWxzbyBoYWQgdG8gc3BlY2lmeSBgUkVNTCA9IEZBTFNFYCwgdGhpcyBpcyBiZWNhdXNlIHRoZSBkZWZhdWx0IGlzIGBSRU1MID0gVFJVRWAgYW5kIHRoYXQgZGVmYXVsdCBhY3R1YWxseSBkb2VzIG5vdCBtYXhpbWl6ZSB0aGUgbGlrZWxpaG9vZCBmdW5jdGlvbiAod2hhdCB3ZSB3YW50KSBidXQgcmF0aGVyIG1heGltaXplcyB0aGUgInJlbGF0aXZlIiBvciAicmVzaWR1YWwiIGxpa2VsaWhvb2QgKHdoYXQgd2UgZG9uJ3Qgd2FudCkKCk5vdyB3ZSBjYW4gbG9vayBhdCB0aGUgcmVzdWx0cwoKYGBge3J9CgpzaW1fbW9kCgpgYGAKClRoZSBwcmludC1vdXQgc2hvdWxkIHNob3cgdXMgYSBzdGFuZGFyZCBkZXZpYXRpb24gZm9yIHJhbmRvbSBlZmZlY3QgYHNpdGVgIHRoYXQgaXMgY2xvc2UgdG8gYHIgc2lnX3JhbmRgIGFuZCBhIHN0YW5kYXJkIGRldmlhdGlvbiBmb3IgdGhlIHJlc2lkdWFscyB0aGF0IGlzIGNsb3NlIHRvIGByIHNpZ19yZXNpZGAuIElmIHdlIHdhbnQgdG8gZGlyZWN0bHkgYWNjZXNzIHRob3NlIHZhbHVlcyB3ZSBjYW4gbGlrZSB0aGlzOgoKYGBge3J9CiMgZXh0cmFjdCB0aGUgZml4ZWQgZWZmZWN0cwpmaXhlZihzaW1fbW9kKQoKIyBleHRyYWN0IHRoZSBzdGFuZGFyZCBkZXZpYXRpb25zIG9mIHJhbmRvbSBlZmZlY3RzClZhckNvcnIoc2ltX21vZCkKYGBgCgoKU29tZXRoaW5nIGludGVyZXN0aW5nIGFib3V0IHRoZSB3YXkgbWl4ZWQgZWZmZWN0cyBtb2RlbHMgYXJlIGZpdCBpcyB0aGF0IHRoZSBhbGdvcml0aG0gYWN0dWFsbHkgaW5mZXJzIHRoZSBvcHRpbWFsIHZhbHVlcyB0aGF0IHNob3VsZCBiZSBzYW1wbGVkIGZyb20gdGhlIHJhbmRvbSBlZmZlY3QgdG8gbWF4aW1pemUgdGhlIGxpa2VsaWhvb2QuIFdlIGNhbiBzZWUgZXZpZGVuY2Ugb2YgdGhhdCBieSBhc2tpbmcgZm9yIHRoZSAiY29lZmZpY2llbnRzIiBvZiB0aGUgbW9kZWwKCmBgYHtyfQpjb2VmKHNpbV9tb2QpCgpgYGAKCldlIHNlZSBhbiBpbnRlcmNlcHQgZm9yIGVhY2ggc2l0ZS4gVGhlIGZhY3QgdGhhdCBlYWNoIHNpdGUgZ2V0cyBpdHMgb3duIChyYW5kb21seSBzYW1wbGVkKSBpbnRlcmNlcHQgaXMgd2h5IHRoaXMga2luZCBtaXhlZCBlZmZlY3RzIG1vZGVsIGlzIGNhbGwgYSAicmFuZG9tIGludGVyY2VwdHMiIG1vZGVsLiAKCiMjIEZpdHRpbmcgYSBtaXhlZCBlZmZlY3RzIG1vZGVsIHRvIHJlYWwgZGF0YQoKTm93IGl0cyB5b3VyIHR1cm4gdG8gdGFrZSB3aGF0IHdlIGxlYXJuZWQgd2l0aCBzaW11bGF0ZWQgZGF0YSBhbmQgZml0IGEgcmFuZG9tIGludGVyY2VwdHMgbW9kZWwgdG8gdGhlIHJlYWwgZGF0YS4gTGV0J3MgcmV0dXJuIHRvIHRoZSBtb2RlbCBvZiB0cnlpbmcgdG8gcHJlZGljdCBsb2cgREJIIGJhc2VkIG9uIGh1bWFuIGltcGFjdCBhbmQgaW52YXNpdmUgc3RhdHVzICh3aXRoIGFuIGludGVyYWN0aW9uKSBidXQgbm93IHdlJ2xsIGluY2x1ZGUgYSByYW5kb20gZWZmZWN0IG9mIHN1cnZleSBwbG90LiBUaGUgZml4ZWQgZWZmZWN0cyBwYXJ0IG9mIHRoZSBtb2RlbCBzaG91bGQgYmUgdGhlIHNhbWUgYXMgYmVmb3JlIGFuZCBsb29rIGxpa2UgdGhpczoKCmBgYApsb2dfZGJoX2NtIH4gTmF0aXZlX1N0YXR1cyAqIGhpaQpgYGAKCgpGaXJzdCBsb2FkIGFuZCBjbGVhbiB0aGUgZGF0YSBhcyB3ZSBoYXZlIGJlZm9yZToKCmBgYHtyfQojfCBsYWJlbDogcmVhZGluLWRhdGEKCnRyZWUgPC0gcmVhZC5jc3YoImh0dHBzOi8vcmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbS91aG0tYmlvc3RhdHMvc3RhdC1tb2QvcmVmcy9oZWFkcy9tYWluL2RhdGEvT3Blbk5haGVsZV9UcmVlX0RhdGEuY3N2IikKCmhpaV9nZW8gPC0gcmVhZC5jc3YoImh0dHBzOi8vcmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbS91aG0tYmlvc3RhdHMvc3RhdC1tb2QvcmVmcy9oZWFkcy9tYWluL2RhdGEvaGlpX2dlby5jc3YiKQoKIyBtZXJnZSB0aGUgZGF0YSBpbnRvIG9uZSBkYXRhLmZyYW1lLCBjbGVhbiwgYWRkIG5lZWRlZCBjb2x1bW5zCmRhdCA8LSBsZWZ0X2pvaW4odHJlZSwgaGlpX2dlbykgfD4gCiAgICAjIHJlbW92ZSBtaXNzaW5nIERCSCB2YWx1ZXMKICAgIGZpbHRlcighaXMubmEoREJIX2NtKSkgfD4gCiAgICAjIGFkZCBhIGNvbHVtbiBmb3IgbG9nLXRyYW5zZm9ybWVkIERCSCBzaW5jZSB0aGlzIHdpbGwgYmUgCiAgICAjIHRoZSB2YXJpYWJsZSB3ZSB1c2UgYXMgYSByZXNwb25zZSB2YXJpYWJsZQogICAgbXV0YXRlKGxvZ19kYmhfY20gPSBsb2coREJIX2NtKSkgfD4gCiAgICAjIHJlbW92ZSBOQXMgZm9yIGVsZXZhdGlvbgogICAgZmlsdGVyKCFpcy5uYShoaWkpKSB8PiAKICAgICMgcmVtb3ZlICJ1bmNlcnRhaW4iIGZvciBuYXRpdmUgc3RhdHVzCiAgICBmaWx0ZXIoTmF0aXZlX1N0YXR1cyAhPSAidW5jZXJ0YWluIikKCmBgYAoKCk5vdyB0YWtlIGl0IGZyb20gdGhlcmUhCgo=').then(res => res.blob()).then(blob => {
+<p><a href="#dnldts37576" onclick="fetch('data:text/plain;base64,LS0tCnRpdGxlOiAiV29ya2luZyB3aXRoIG1peGVkIGVmZmVjdHMgbW9kZWxzIGluIFIiCmZvcm1hdDogCiAgICBwZGY6IAogICAgICAgIGluY2x1ZGUtaW4taGVhZGVyOgogICAgICAgICAgICB0ZXh0OiB8CiAgICAgICAgICAgICAgICBcdXNlcGFja2FnZXtuZXd1bmljb2RlY2hhcn0KICAgICAgICAgICAgICAgIFxuZXd1bmljb2RlY2hhcnvKu317YH0gCmF1dGhvcjogCiAgICAtIHlvdXIgbmFtZSBoZXJlCi0tLQoKYGBge3J9CiN8IGxhYmVsOiBzZXR1cAoKIyBsb2FkIGFsbCBuZWNlc3NhcnkgcGFja2FnZXMKIyAuLi4geW91IG1heSBuZWVkIHRvIGFkZCB0byB0aGlzISBjYW4gZGVsZXRlIHRoaXMgY29tbWVudCBvbmNlIGRvbmUKbGlicmFyeShnZ3Bsb3QyKQpsaWJyYXJ5KGRwbHlyKQpsaWJyYXJ5KGxtZTQpICMgeW91IG1pZ2h0IG5lZWQgdG8gYGluc3RhbGwucGFja2FnZXNgIHRoaXMgb25lCgpgYGAKCgoKIyMgVXNpbmcgc2ltdWxhdGVkIGRhdGEgdG8gdW5kZXJzdGFuZCBmaXR0aW5nIG1peGVkIGVmZmVjdHMgbW9kZWxzIAoKTGV0J3Mgc3RhcnQgd2l0aCBzb21lIHNpbXVsYXRlZCBkYXRhIHRvIGJvdGggbWFrZSBzdXJlIHdlIHVuZGVyc3RhbmQgaG93IG1peGVkIGVmZmVjdHMgbW9kZWwgd29yayAoYW5kIHRoZWlyIGFzc3VtcHRpb25zKSBhbmQgaG93IHRoZSAqbG1lNCogcGFja2FnZSBpbXBsZW1lbnRzIGZpdHRpbmcgbWl4ZWQgZWZmZWN0cyBtb2RlbHMuCgpGaXJzdCB3ZSBzaW11bGF0ZSB0aGUgZGF0YS4gSW1hZ2luZSB3ZSBoYXZlIHNvbWUgcmVzcG9uc2UgdmFyaWFibGUgYHlgIGFuZCBzb21lIG51bWVyaWMgZXhwbGFuYXRvcnkgdmFyaWFibGUgYHhgIGFuZCB3ZSBoYXZlIGNvbGxlY3RlZCBkYXRhIG9uIHRoZXNlIHZhcmlhYmxlcyBmcm9tIDggc2l0ZXMgKHRoaW5rIHNhbXBsaW5nIGxvY2F0aW9ucyBhY3Jvc3Mgc3BhY2UpIHdpdGggMjAgb2JzZXJ2YXRpb25zIGNvbWluZyBmcm9tIGVhY2ggc2l0ZS4KCmBgYHtyfQojfCBsYWJlbDogc2ltLWRhdGEKCiMgc2V0LXVwIHRoZSBzaW11bGF0aW9uCgojIG51bWJlciBvZiBzaXRlcyAod2lsbCBiZSByYW5kIGVmZmVjdCkKbnNpdGUgPC0gOAoKIyBudW1iZXIgb2YgKHBzZXVkbykgcmVwcyBwZXIgc2l0ZQpucmVwIDwtIDIwCgojIHNkIG9mIHRoZSByYW5kb20gZWZmZWN0IG9mIHNpdGUKc2lnX3JhbmQgPC0gMQoKIyBzZCBvZiB0aGUgInJlc2lkdWFscyIKc2lnX3Jlc2lkIDwtIDAuMjUKCiMgb3ZlcmFsbCBpbnRlcmNlcHQKYTAgPC0gOAoKIyBzbG9wZQphMSA8LSAyCgpzaW1fZGF0IDwtIGRhdGEuZnJhbWUoc2l0ZSA9IHJlcChwYXN0ZTAoInNpdGVfIiwgMTpuc2l0ZSksIGVhY2ggPSBucmVwKSwgCiAgICAgICAgICAgICAgICAgICAgICAjIHNpbXVsYXRlIHJhbmRvbSBlZmZlY3Qgb2Ygc2l0ZSwgd2Ugd291bGQgbmV2ZXIKICAgICAgICAgICAgICAgICAgICAgICMgYWN0dWFsbHkgaGF2ZSB0aGlzIGluIHJlYWwgZGF0YQogICAgICAgICAgICAgICAgICAgICAgc2l0ZV9yYW5kID0gcmVwKHJub3JtKG5zaXRlLCBtZWFuID0gMCwgc2QgPSBzaWdfcmFuZCksIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGVhY2ggPSBucmVwKSwKICAgICAgICAgICAgICAgICAgICAgIHggPSBydW5pZihuc2l0ZSAqIG5yZXApKSB8PiAKICAgICMgYWRkIHRoZSByZXNwb25zZSB2YXJpYWJsZQogICAgbXV0YXRlKHkgPSBybm9ybShuc2l0ZSAqIG5yZXAsIAogICAgICAgICAgICAgICAgICAgICBtZWFuID0gYTAgKyBzaXRlX3JhbmQgKyBhMSAqIHgsIAogICAgICAgICAgICAgICAgICAgICBzZCA9IHNpZ19yZXNpZCkpCgpoZWFkKHNpbV9kYXQpCmBgYAoKCkxldCdzIGhhdmUgYSBsb29rIGF0IHRoZXNlIGRhdGEKCmBgYHtyfQojfCBsYWJlbDogZmlnLXNpbS12aXoKI3wgZmlnLXdpZHRoOiA0CiN8IGZpZy1oZWlnaHQ6IDMKCmdncGxvdChzaW1fZGF0LCBhZXMoeCwgeSwgY29sb3IgPSBzaXRlKSkgKwogICAgZ2VvbV9wb2ludCgpICsKICAgIHNjYWxlX2NvbG9yX3ZpcmlkaXNfZCgpCmBgYAoKV2UgY2FuIHNlZSB0aGF0IHRoZSByYW5kb20gZWZmZWN0IG9mIHNpdGUgYnVtcHMgdGhlIG9ic2VydmF0aW9ucyB1cCBvciBkb3duIGJ1dCBkb2VzIG5vdCBjaGFuZ2UgdGhlIHNsb3BlIG9mIGB5YCB2ZXJzdXMgYHhgLiBTbyB0aGUgcmFuZCBlZmZlY3Qgb2Ygc2l0ZSBvbmx5IGltcGFjdHMgdGhlIGludGVyY2VwdCAobW9yZSBvbiB0aGF0IHNob3J0bHkpLgoKVGhpcyBpcyBpbmRlZWQgd2hhdCB3ZSBzaG91bGQgZXhwZWN0IGJlY2F1c2UgdGhpcyBpcyBob3cgd2Ugc2ltdWxhdGVkIHRoZSBkYXRhLCB3ZSBzYWlkIHRoZSBtZWFuIG9mIGB5YCBpcyAKCmBgYAphMCArIHNpdGVfcmFuZCArIGExICogeApgYGAKClRoZSBgc2l0ZV9yYW5kYCBlbnRlcnMgdGhpcyBleHByZXNzaW9uIGFzIGFuIGFkZGl0aW9uYWwgaW50ZXJjZXB0IHRlcm0gYWxvbmcgd2l0aCBgYTBgLgoKCiMjIyBJbnRyb2R1Y2luZyAqbG1lNCogYW5kIHRoZSBgbG1lcmAgZnVuY3Rpb24KCk5vdyB3ZSBhcmUgZ29pbmcgdG8gdHJ5IHRvIHVzZSBtYXhpbXVtIGxpa2VsaWhvb2QgdG8gZXN0aW1hdGUgdGhlIHZhbHVlcyBvZiB0aGUgcGFyYW1ldGVycyBgYTBgLCBgYTFgLCBgc2lnX3JhbmRgLCBhbmQgYHNpZ19yZXNpZGAgZnJvbSB0aGUgc2ltdWxhdGVkIGRhdGEuIFdlIGtub3cgdGhlICJ0cnVlIiB2YWx1ZXMgb2YgdGhvc2UgcGFyYW1ldGVycywgc28gd2UgY2FuIGV2YWx1YXRlIHdoZXRoZXIgdGhlIG1heGltdW0gbGlrZWxpaG9vZCBtZXRob2QgaW1wbGVtZW50ZWQgaW4gYGxtZXJgIHdvcmtlZC4KCkhlcmUgaXMgaG93IHRvIHVzZSB0aGUgYGxtZXJgIGZ1bmN0aW9uOgoKYGBge3J9CiN8IGxhYmVsOiBmaXQtbW9kCgpzaW1fbW9kIDwtIGxtZXIoeSB+IHggKyAoMSB8IHNpdGUpLCBkYXRhID0gc2ltX2RhdCwgUkVNTCA9IEZBTFNFKQpgYGAKCk5vdGljZSBhIGZldyB0aGluZ3M6IAoKLSBUaGUgZml4ZWQgZWZmZWN0cyBwYXJ0IG9mIHRoZSBtb2RlbCBpcyBsaWtlIHdoYXQgd2UndmUgc2VlbiBiZWZvcmU6IGB5IH4geGAKLSBUaGUgd2F5IGEgcmFuZG9tIGVmZmVjdCBpcyBpbXBsZW1lbnRlZCBpcyB0aHJvdWdoIHRoZSBub3RhdGlvbiBgKDEgfCBzaXRlKWAgd2hpY2ggbWVhbnMgImxldCB0aGVyZSBiZSBhbiBhZGRpdGlvbmFsIGludGVyY2VwdCB0ZXJtIGNvbmRpdGlvbmFsIG9uIHNpdGUiCi0gV2UgYWxzbyBoYWQgdG8gc3BlY2lmeSBgUkVNTCA9IEZBTFNFYCwgdGhpcyBpcyBiZWNhdXNlIHRoZSBkZWZhdWx0IGlzIGBSRU1MID0gVFJVRWAgYW5kIHRoYXQgZGVmYXVsdCBhY3R1YWxseSBkb2VzIG5vdCBtYXhpbWl6ZSB0aGUgbGlrZWxpaG9vZCBmdW5jdGlvbiAod2hhdCB3ZSB3YW50KSBidXQgcmF0aGVyIG1heGltaXplcyB0aGUgInJlbGF0aXZlIiBvciAicmVzaWR1YWwiIGxpa2VsaWhvb2QgKHdoYXQgd2UgZG9uJ3Qgd2FudCkKCk5vdyB3ZSBjYW4gbG9vayBhdCB0aGUgcmVzdWx0cwoKYGBge3J9CgpzaW1fbW9kCgpgYGAKClRoZSBwcmludC1vdXQgc2hvdWxkIHNob3cgdXMgYSBzdGFuZGFyZCBkZXZpYXRpb24gZm9yIHJhbmRvbSBlZmZlY3QgYHNpdGVgIHRoYXQgaXMgY2xvc2UgdG8gYHIgc2lnX3JhbmRgIGFuZCBhIHN0YW5kYXJkIGRldmlhdGlvbiBmb3IgdGhlIHJlc2lkdWFscyB0aGF0IGlzIGNsb3NlIHRvIGByIHNpZ19yZXNpZGAuIElmIHdlIHdhbnQgdG8gZGlyZWN0bHkgYWNjZXNzIHRob3NlIHZhbHVlcyB3ZSBjYW4gbGlrZSB0aGlzOgoKYGBge3J9CiMgZXh0cmFjdCB0aGUgZml4ZWQgZWZmZWN0cwpmaXhlZihzaW1fbW9kKQoKIyBleHRyYWN0IHRoZSBzdGFuZGFyZCBkZXZpYXRpb25zIG9mIHJhbmRvbSBlZmZlY3RzClZhckNvcnIoc2ltX21vZCkKYGBgCgoKU29tZXRoaW5nIGludGVyZXN0aW5nIGFib3V0IHRoZSB3YXkgbWl4ZWQgZWZmZWN0cyBtb2RlbHMgYXJlIGZpdCBpcyB0aGF0IHRoZSBhbGdvcml0aG0gYWN0dWFsbHkgaW5mZXJzIHRoZSBvcHRpbWFsIHZhbHVlcyB0aGF0IHNob3VsZCBiZSBzYW1wbGVkIGZyb20gdGhlIHJhbmRvbSBlZmZlY3QgdG8gbWF4aW1pemUgdGhlIGxpa2VsaWhvb2QuIFdlIGNhbiBzZWUgZXZpZGVuY2Ugb2YgdGhhdCBieSBhc2tpbmcgZm9yIHRoZSAiY29lZmZpY2llbnRzIiBvZiB0aGUgbW9kZWwKCmBgYHtyfQpjb2VmKHNpbV9tb2QpCgpgYGAKCldlIHNlZSBhbiBpbnRlcmNlcHQgZm9yIGVhY2ggc2l0ZS4gVGhlIGZhY3QgdGhhdCBlYWNoIHNpdGUgZ2V0cyBpdHMgb3duIChyYW5kb21seSBzYW1wbGVkKSBpbnRlcmNlcHQgaXMgd2h5IHRoaXMga2luZCBtaXhlZCBlZmZlY3RzIG1vZGVsIGlzIGNhbGwgYSAicmFuZG9tIGludGVyY2VwdHMiIG1vZGVsLiAKCiMjIEZpdHRpbmcgYSBtaXhlZCBlZmZlY3RzIG1vZGVsIHRvIHJlYWwgZGF0YQoKTm93IGl0cyB5b3VyIHR1cm4gdG8gdGFrZSB3aGF0IHdlIGxlYXJuZWQgd2l0aCBzaW11bGF0ZWQgZGF0YSBhbmQgZml0IGEgcmFuZG9tIGludGVyY2VwdHMgbW9kZWwgdG8gdGhlIHJlYWwgZGF0YS4gTGV0J3MgcmV0dXJuIHRvIHRoZSBtb2RlbCBvZiB0cnlpbmcgdG8gcHJlZGljdCBsb2cgREJIIGJhc2VkIG9uIGh1bWFuIGltcGFjdCBhbmQgaW52YXNpdmUgc3RhdHVzICh3aXRoIGFuIGludGVyYWN0aW9uKSBidXQgbm93IHdlJ2xsIGluY2x1ZGUgYSByYW5kb20gZWZmZWN0IG9mIHN1cnZleSBwbG90LiBUaGUgZml4ZWQgZWZmZWN0cyBwYXJ0IG9mIHRoZSBtb2RlbCBzaG91bGQgYmUgdGhlIHNhbWUgYXMgYmVmb3JlIGFuZCBsb29rIGxpa2UgdGhpczoKCmBgYApsb2dfZGJoX2NtIH4gTmF0aXZlX1N0YXR1cyAqIGhpaQpgYGAKCgpGaXJzdCBsb2FkIGFuZCBjbGVhbiB0aGUgZGF0YSBhcyB3ZSBoYXZlIGJlZm9yZToKCmBgYHtyfQojfCBsYWJlbDogcmVhZGluLWRhdGEKCnRyZWUgPC0gcmVhZC5jc3YoImh0dHBzOi8vcmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbS91aG0tYmlvc3RhdHMvc3RhdC1tb2QvcmVmcy9oZWFkcy9tYWluL2RhdGEvT3Blbk5haGVsZV9UcmVlX0RhdGEuY3N2IikKCmhpaV9nZW8gPC0gcmVhZC5jc3YoImh0dHBzOi8vcmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbS91aG0tYmlvc3RhdHMvc3RhdC1tb2QvcmVmcy9oZWFkcy9tYWluL2RhdGEvaGlpX2dlby5jc3YiKQoKIyBtZXJnZSB0aGUgZGF0YSBpbnRvIG9uZSBkYXRhLmZyYW1lLCBjbGVhbiwgYWRkIG5lZWRlZCBjb2x1bW5zCmRhdCA8LSBsZWZ0X2pvaW4odHJlZSwgaGlpX2dlbykgfD4gCiAgICAjIHJlbW92ZSBtaXNzaW5nIERCSCB2YWx1ZXMKICAgIGZpbHRlcighaXMubmEoREJIX2NtKSkgfD4gCiAgICAjIGFkZCBhIGNvbHVtbiBmb3IgbG9nLXRyYW5zZm9ybWVkIERCSCBzaW5jZSB0aGlzIHdpbGwgYmUgCiAgICAjIHRoZSB2YXJpYWJsZSB3ZSB1c2UgYXMgYSByZXNwb25zZSB2YXJpYWJsZQogICAgbXV0YXRlKGxvZ19kYmhfY20gPSBsb2coREJIX2NtKSkgfD4gCiAgICAjIHJlbW92ZSBOQXMgZm9yIGVsZXZhdGlvbgogICAgZmlsdGVyKCFpcy5uYShoaWkpKSB8PiAKICAgICMgcmVtb3ZlICJ1bmNlcnRhaW4iIGZvciBuYXRpdmUgc3RhdHVzCiAgICBmaWx0ZXIoTmF0aXZlX1N0YXR1cyAhPSAidW5jZXJ0YWluIikKCmBgYAoKCk5vdyB0YWtlIGl0IGZyb20gdGhlcmUhCgo=').then(res => res.blob()).then(blob => {
       const downloadURL = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       document.body.appendChild(a);
@@ -408,7 +414,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       a.download = 'lab05-mixed-effects.qmd'; a.click();
       window.URL.revokeObjectURL(downloadURL);
       document.body.removeChild(a);
-        });"><button class="btn btn-default downloadthis  " id="dnldts754"><i class="bi bi-download"></i> Download lab template </button></a></p>
+        });"><button class="btn btn-default downloadthis  " id="dnldts37576"><i class="bi bi-download"></i> Download lab template </button></a></p>
 <p>The template will prompt you to work through the following sections.</p>
 <section id="using-simulated-data-to-understand-fitting-mixed-effects-models" class="level2" data-number="17.1">
 <h2 data-number="17.1" class="anchored" data-anchor-id="using-simulated-data-to-understand-fitting-mixed-effects-models"><span class="header-section-number">17.1</span> Using simulated data to understand fitting mixed effects models</h2>
@@ -448,13 +454,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sim_dat)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>    site site_rand          x        y
-1 site_1 -0.652066 0.88232886 8.982502
-2 site_1 -0.652066 0.62881545 8.338896
-3 site_1 -0.652066 0.04772945 7.408728
-4 site_1 -0.652066 0.74576461 8.699420
-5 site_1 -0.652066 0.84435693 8.987621
-6 site_1 -0.652066 0.29729844 7.909985</code></pre>
+<pre><code>    site site_rand          x         y
+1 site_1  1.697885 0.77202315 11.033307
+2 site_1  1.697885 0.21750979 10.162655
+3 site_1  1.697885 0.68475055 10.711050
+4 site_1  1.697885 0.09434311  9.770182
+5 site_1  1.697885 0.87380343 11.510986
+6 site_1  1.697885 0.30712589  9.996297</code></pre>
 </div>
 </div>
 <p>Let’s have a look at these data</p>
@@ -500,15 +506,15 @@ Figure&nbsp;17.1
 Formula: y ~ x + (1 | site)
    Data: sim_dat
       AIC       BIC    logLik -2*log(L)  df.resid 
-  46.0995   58.4002  -19.0498   38.0995       156 
+  43.1723   55.4730  -17.5862   35.1723       156 
 Random effects:
  Groups   Name        Std.Dev.
- site     (Intercept) 0.7954  
- Residual             0.2381  
+ site     (Intercept) 0.8655  
+ Residual             0.2347  
 Number of obs: 160, groups:  site, 8
 Fixed Effects:
 (Intercept)            x  
-      8.302        2.159  </code></pre>
+      7.835        2.022  </code></pre>
 </div>
 </div>
 <p>The print-out should show us a standard deviation for random effect <code>site</code> that is close to 1 and a standard deviation for the residuals that is close to 0.25. If we want to directly access those values we can like this:</p>
@@ -517,14 +523,14 @@ Fixed Effects:
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">fixef</span>(sim_mod)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>(Intercept)           x 
-   8.301693    2.158829 </code></pre>
+   7.834852    2.022116 </code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># extract the standard deviations of random effects</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">VarCorr</span>(sim_mod)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> Groups   Name        Std.Dev.
- site     (Intercept) 0.79537 
- Residual             0.23807 </code></pre>
+ site     (Intercept) 0.86551 
+ Residual             0.23475 </code></pre>
 </div>
 </div>
 <p>Something interesting about the way mixed effects models are fit is that the algorithm actually infers the optimal values that should be sampled from the random effect to maximize the likelihood. We can see evidence of that by asking for the “coefficients” of the model</p>
@@ -533,20 +539,20 @@ Fixed Effects:
 <div class="cell-output cell-output-stdout">
 <pre><code>$site
        (Intercept)        x
-site_1    7.336477 2.158829
-site_2    7.847663 2.158829
-site_3    8.521560 2.158829
-site_4   10.149815 2.158829
-site_5    8.502909 2.158829
-site_6    8.340087 2.158829
-site_7    7.864515 2.158829
-site_8    7.850518 2.158829
+site_1    9.623717 2.022116
+site_2    7.364343 2.022116
+site_3    6.497422 2.022116
+site_4    7.957060 2.022116
+site_5    8.353393 2.022116
+site_6    7.499828 2.022116
+site_7    8.093754 2.022116
+site_8    7.289295 2.022116
 
 attr(,"class")
 [1] "coef.mer"</code></pre>
 </div>
 </div>
-<p>We see an intercept for each site. The fact that each site gets its own (randomly sampled) intercept is why this kind mixed effects model is call a “random intercepts” model. Random slopes models also exist but we won’t cover them.</p>
+<p>We see an intercept for each site. The fact that each site gets its own (randomly sampled) intercept is why this kind mixed effects model is call a “random intercepts” model.</p>
 </section>
 </section>
 <section id="fitting-a-mixed-effects-model-to-real-data" class="level2" data-number="17.2">
@@ -555,23 +561,21 @@ attr(,"class")
 <pre><code>log_dbh_cm ~ Native_Status * hii</code></pre>
 <p>First load and clean the data as we have before:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># tree &lt;- read.csv("https://raw.githubusercontent.com/uhm-biostats/stat-mod/refs/heads/main/data/OpenNahele_Tree_Data.csv")</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>tree <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/OpenNahele_Tree_Data.csv"</span>)</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># hii_geo &lt;- read.csv("https://raw.githubusercontent.com/uhm-biostats/stat-mod/refs/heads/main/data/hii_geo.csv")</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>hii_geo <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/hii_geo.csv"</span>)</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="co"># merge the data into one data.frame, clean, add needed columns</span></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">left_join</span>(tree, hii_geo) <span class="sc">|&gt;</span> </span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># remove missing DBH values</span></span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(DBH_cm)) <span class="sc">|&gt;</span> </span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># add a column for log-transformed DBH since this will be </span></span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># the variable we use as a response variable</span></span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">log_dbh_cm =</span> <span class="fu">log</span>(DBH_cm)) <span class="sc">|&gt;</span> </span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># remove NAs for elevation</span></span>
-<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(hii)) <span class="sc">|&gt;</span> </span>
-<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># remove "uncertain" for native status</span></span>
-<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(Native_Status <span class="sc">!=</span> <span class="st">"uncertain"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>tree <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"https://raw.githubusercontent.com/uhm-biostats/stat-mod/refs/heads/main/data/OpenNahele_Tree_Data.csv"</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>hii_geo <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"https://raw.githubusercontent.com/uhm-biostats/stat-mod/refs/heads/main/data/hii_geo.csv"</span>)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co"># merge the data into one data.frame, clean, add needed columns</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">left_join</span>(tree, hii_geo) <span class="sc">|&gt;</span> </span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># remove missing DBH values</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(DBH_cm)) <span class="sc">|&gt;</span> </span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># add a column for log-transformed DBH since this will be </span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># the variable we use as a response variable</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">log_dbh_cm =</span> <span class="fu">log</span>(DBH_cm)) <span class="sc">|&gt;</span> </span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># remove NAs for elevation</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(hii)) <span class="sc">|&gt;</span> </span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># remove "uncertain" for native status</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(Native_Status <span class="sc">!=</span> <span class="st">"uncertain"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Joining with `by = join_by(PlotID)`</code></pre>
 </div>
