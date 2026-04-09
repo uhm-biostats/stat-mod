@@ -43,6 +43,7 @@ book:
           chapters:
             - lrt-ci.qmd
             - lrt-lab.qmd
+            - lrt-ci-lab.qmd
 
 
 bibliography: stat-mod.bib
