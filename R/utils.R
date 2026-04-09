@@ -18,9 +18,16 @@ render_lab <- function(f, show_yaml = FALSE) {
     # yaml as character vector
     y <- l[iyaml]
 
-    # remove yaml and "delete this once complete" instructions from body
-    idelt <- grep("delete this .* once complete", l, ignore.case = TRUE)
-    b <- l[-c(iyaml, idelt)] |>
+    # locate all instances of "```" which indicate code chunks
+    chnk_lines <- grep("```", l)
+
+    # locate setup chunk
+    setup_idx <- grep("^#\\| label: setup$", l)
+    isetup <- max(chnk_lines[chnk_lines < setup_idx]):
+        min(chnk_lines[chnk_lines > setup_idx])
+
+    # remove yaml, setup chunk, and "delete this once complete" instructions from body
+    b <- l[-c(iyaml, isetup)] |>
         gsub("\\*delete this .* once complete\\*", "", x = _,
              ignore.case = TRUE)
 
