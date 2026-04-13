@@ -74,7 +74,7 @@ Some of this info in fact directly relates to the LRT
 
 s <- capture.output(summary(sar_mod))
 
-s[15:16]
+cat(s[15:16], sep = "\n")
 ```
 
 
@@ -248,7 +248,7 @@ The `summary` function also gave $P$-values
 ```{r}
 #| echo: false
 
-s[6:11]
+cat(s[6:11], sep = "\n")
 ```
 
 What are those about?
