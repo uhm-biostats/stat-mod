@@ -1,0 +1,24 @@
+---
+format:
+  html:
+    code-links:
+      - text: View source
+        icon: github
+        href: https://github.com/uhm-biostats/stat-mod/blob/main/hyp-test-recap.qmd
+bibliography: stat-mod.bib
+csl: conservation-biology.csl
+---
+
+
+# Null hypothesis testing considerations and connections
+
+
+
+
+## Slides {#sec-slides}
+
+
+```{=html}
+<iframe class="slide-deck" src="hyp-test-recap-slides.html"></iframe>
+```
+
