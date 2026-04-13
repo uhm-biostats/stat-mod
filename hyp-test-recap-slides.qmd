@@ -1,0 +1,307 @@
+---
+title: "Null hypothesis testing considerations and connections"
+---
+
+```{r}
+#| label: setup
+#| echo: false
+#| message: false
+#| warning: false
+
+library(knitr)
+library(ggplot2)
+library(cowplot)
+library(dplyr)
+library(MASS)
+
+opts_chunk$set(echo = TRUE)
+
+# shared data setup used throughout
+clim <- read.csv("data/plot_climate.csv")
+geo_hii <- read.csv("data/hii_geo.csv")
+tree <- read.csv("data/OpenNahele_Tree_Data.csv")
+
+all_dat <- left_join(tree, clim, by = "PlotID") |>
+    left_join(dplyr::select(geo_hii, !(lon:lat)), by = "PlotID")
+
+dat_plt <- group_by(all_dat, PlotID) |>
+    summarize(across(c(Island, Plot_Area, lon:elev_m), first),
+              nspp = n_distinct(Scientific_name)) |>
+    ungroup() |>
+    filter(Plot_Area < 10000)
+```
+
+
+## The GLM
+
+We've been working with models like
+
+```{r}
+sar_mod <- glm.nb(nspp ~ log(Plot_Area), data = dat_plt)
+
+```
+
+::: {.fragment}
+
+<br>
+And testing "significance" with a likelihood ratio test (LRT)
+
+:::
+
+
+::: {.fragment}
+
+<br>
+But there are other approaches, perhaps some that seem more familiar
+
+:::
+
+## The GLM {.scrollable}
+
+The `summary` function gives us a lot of info (scroll down)
+
+```{r}
+summary(sar_mod)
+```
+
+
+## The GLM 
+
+Some of this info in fact directly relates to the LRT
+
+```{r}
+#| echo: false
+
+s <- capture.output(summary(sar_mod))
+
+s[15:16]
+```
+
+
+::: {.fragment}
+
+(`527` d.f.) - (`526` d.f.) = 1 d.f., the right number if we were comparing models
+
+```{r}
+#| eval: false
+
+mod_full <- nspp ~ log(Plot_Area)
+mod_reduced <- nspp ~ 1
+```
+
+:::
+
+
+::: {.fragment}
+
+The LRT statistic for those two models is
+
+```{r}
+#| echo: false
+mod_red <- glm.nb(nspp ~ 1, data = dat_plt)
+
+lam <- 2 * (logLik(sar_mod) - logLik(mod_red))
+```
+
+$$
+\begin{aligned}
+\Lambda &= 2 (\log\mathscr{L}_\text{full} - \log\mathscr{L}_\text{reduced}) \\
+&= `r round(as.numeric(lam), 2)`
+\end{aligned}
+$$
+
+which is (approx.) equal to `622.95 - 515.85`
+
+(approx. because printed summary for `glm.nb` is a little strange)
+
+:::
+
+
+
+## The GLM 
+
+What's going on?
+
+::: {.fragment}
+
+The *deviance* is an attempt to generalize the idea of *"sum of squares"*
+
+:::
+
+
+::: {.fragment}
+
+$$
+\begin{aligned}
+\text{Null deviance} &= 2 (\log\mathscr{L}_\text{saturated} - \log\mathscr{L}_\text{reduced}) \\
+\text{Residual deviance} &= 2 (\log\mathscr{L}_\text{saturated} - \log\mathscr{L}_\text{full})
+\end{aligned}
+$$
+Where $\log\mathscr{L}_\text{saturated}$ is the log likelihood of a model where every data point gets a parameter (i.e. its the highest possible log likelihood)
+:::
+
+
+## The GLM 
+
+What's going on?
+
+::: {.columns}
+
+
+:::: {.column width=30%}
+
+*Null deviance* 
+
+<br>
+
+*Residual deviance*
+
+::::
+
+:::: {.column width=70%}
+
+
+corresponds to "total sum of squares" in a least squares world
+
+
+corresponds to "residual sum of squares"
+
+::::
+
+
+:::
+
+::: {.fragment}
+
+In least squares world we do an $F$-test (aka ANOVA) which compares residual and total sums of squares
+
+:::
+
+::: {.fragment}
+
+<br>
+In likelihood world we do an LRT (perhaps with function `anova`) which compares residual and null deviances
+
+:::
+
+
+## The GLM versus the LM
+
+The only difference between a GLM and LM is an LM assumes normality
+
+
+::: {.fragment}
+
+It is a mathematical novelty that under normality, 
+
+
+::: {.columns}
+
+:::: {.column width=45%}
+
+::: {style="text-align: right;"}
+
+least squares 
+
+minimize sum of squares residual 
+
+$P$-value of SumSq ANOVA
+
+:::
+
+::::
+
+:::: {.column width=10%}
+
+::: {style="text-align: center;"}
+
+$\Longleftrightarrow$
+
+$\Longleftrightarrow$
+
+<br>
+$=$
+
+::: 
+
+::::
+
+:::: {.column width=45%}
+
+maximum likelihood
+
+maximize log likelihood function
+
+$P$-value of LRT
+
+::::
+
+:::
+
+:::
+
+
+## The GLM 
+
+The `summary` function also gave $P$-values
+
+```{r}
+#| echo: false
+
+s[6:11]
+```
+
+What are those about?
+
+::: {.fragment .incremental}
+
+- Those come from the asymptotic (CLT) behavior of maximum likelihood estimates being normally distributed
+- They are generally not as robust as the $t$-test we can do for LM with normality assumption
+- The LRT is preferred for significance testing
+
+:::
+
+
+## The mixed effects model
+
+Recall for a mixed effects model we did not get any $P$-values despite `summary` reporting $t$-values ($t$ as in $T$-test)
+
+```{r}
+#| echo: false
+
+
+dat <- left_join(tree, geo_hii) |> 
+    # remove missing DBH values
+    filter(!is.na(DBH_cm)) |> 
+    # add a column for log-transformed DBH since this will be 
+    # the variable we use as a response variable
+    mutate(log_dbh_cm = log(DBH_cm)) |> 
+    # remove NAs for elevation
+    filter(!is.na(hii)) |> 
+    # remove "uncertain" for native status
+    filter(Native_Status != "uncertain")
+
+```
+
+```{r}
+library(lme4)
+
+mixed_mod <- lmer(log_dbh_cm ~ Native_Status * hii + (1 | PlotID), 
+                  data = dat, REML = FALSE)
+
+summary(mixed_mod)
+```
+
+
+## The mixed effects model
+
+Here again an LRT is the better option
+
+```{r}
+# a model to single out the interaction term
+reduced_mod <- lmer(log_dbh_cm ~ Native_Status + hii + (1 | PlotID), 
+                  data = dat, REML = FALSE)
+
+# the LRT
+anova(mixed_mod, reduced_mod, test = "Chisq")
+```
