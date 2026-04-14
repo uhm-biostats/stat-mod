@@ -20,6 +20,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -42,6 +77,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-27c261d06b905028a18691de25d09dde.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/quarto-contrib/downloadthis-1.9.1/downloadthis.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -70,6 +106,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -344,8 +409,18 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#the-connection-between-sample-size-and-uncertainty" id="toc-the-connection-between-sample-size-and-uncertainty" class="nav-link active" data-scroll-target="#the-connection-between-sample-size-and-uncertainty"><span class="header-section-number">28.1</span> The connection between sample size and uncertainty</a></li>
+  <li><a href="#sample-size-and-power" id="toc-sample-size-and-power" class="nav-link" data-scroll-target="#sample-size-and-power"><span class="header-section-number">28.2</span> Sample size and power</a>
+  <ul>
+  <li><a href="#visualizin-the-power-analysis" id="toc-visualizin-the-power-analysis" class="nav-link" data-scroll-target="#visualizin-the-power-analysis"><span class="header-section-number">28.2.1</span> Visualizin the power analysis</a></li>
+  </ul></li>
+  </ul>
+<div class="quarto-code-links"><h2>Code Links</h2><ul><li><a href="https://github.com/uhm-biostats/stat-mod/blob/main/power-analysis.qmd"><i class="bi bi-github"></i>View source</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -369,8 +444,227 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<p>This lab will guide you through the connection between sample size and confidence, culminating in a power analysis. You can download the template <code>.qmd</code> file for this lab here:</p>
+<p><a href="#dnldts5031" onclick="fetch('data:text/plain;base64,LS0tCnRpdGxlOiAiU2FtcGxlIHNpemUgYW5kIHBvd2VyIGFuYWx5c2lzIgpmb3JtYXQ6CiAgICBwZGY6CiAgICAgICAgaW5jbHVkZS1pbi1oZWFkZXI6CiAgICAgICAgICAgIHRleHQ6IHwKICAgICAgICAgICAgICAgIFx1c2VwYWNrYWdle25ld3VuaWNvZGVjaGFyfQogICAgICAgICAgICAgICAgXG5ld3VuaWNvZGVjaGFye8q7fXtgfQphdXRob3I6CiAgICAtIHlvdXIgbmFtZSBoZXJlCi0tLQoKYGBge3J9CiN8IGxhYmVsOiBzZXR1cAoKIyBsb2FkIGFsbCBuZWNlc3NhcnkgcGFja2FnZXMKbGlicmFyeShnZ3Bsb3QyKQpsaWJyYXJ5KGNvd3Bsb3QpCmxpYnJhcnkoZHBseXIpCgpgYGAKCgojIyBUaGUgY29ubmVjdGlvbiBiZXR3ZWVuIHNhbXBsZSBzaXplIGFuZCB1bmNlcnRhaW50eQoKSW50dWl0aXZlbHkgaWYgd2UgaGF2ZSBhIGxhcmdlciBzYW1wbGUgc2l6ZSwgd2UgZmVlbCBtb3JlIGNvbmZpZGVudCBpbiBvdXIgYW5hbHlzaXMuIEJ1dCB3aHk/CgpUaGUgcmVhc29uIGlzIHRoYXQsIG1hdGhlbWF0aWNhbGx5LCBsYXJnZXIgc2FtcGxlIHNpemVzIGluY3JlYXNlcyB0aGUgcHJlY2lzaW9uIG9mIG91ciBzdGF0aXN0aWNhbCBpbmZlcmVuY2UuIEEgZGlyZWN0IGNvbnNlcXVlbmNlIGlzIHRoYXQsIGZvciBleGFtcGxlLCBsYXJnZXIgc2FtcGxlIHNpemVzIHdpbGwgbGVhZCB0byB0aWdodGVyIGNvbmZpZGVuY2UgaW50ZXJ2YWxzLiBMZXQncyBzZWUgYW4gZXhhbXBsZSBvZiB0aGlzIGJ5IGNhbGN1bGF0aW5nIHByb2ZpbGUgbGlrZWxpaG9vZHMgZm9yIHRoZSBzYW1lIG1vZGVsLCBidXQgYmFzZWQgb24gdHdvIGRpZmZlcmVudCBkYXRhIHNldHM6IG9uZSB3aXRoIDEwMCBzYW1wbGVzLCB0aGUgb3RoZXIgd2l0aCAxLDAwMCBzYW1wbGVzLgoKRmlyc3QgbGV0J3Mgc2ltdWxhdGUgZGF0YS4gRm9yIHNpbXBsaWNpdHkgKGFuZCBjb21wdXRhdGlvbmFsIHNwZWVkKSB3ZSB3aWxsIGdvIGJhY2sgdG8gYSBsaW5lYXIgbW9kZWwgd2l0aCBub3JtYWxseSBkaXN0cmlidXRlZCByZXNwb25zZSBkYXRhIGFuZCBqdXN0IGEgc2xvcGUgYW5kIGludGVyY2VwdAoKCmBgYHtyfQojIHRoZSB0cnVlIGludGVyY2VwdApiMCA8LSAzCgojIHRoZSB0cnVlIHNsb3BlCmIxIDwtIDIKCiMgdGhlIHRydWUgc2Qgb2YgdGhlIG5vcm1hbCBkaXN0CnMgPC0gMQoKIyBub3cgYSBkYXRhIHNldCB3aXRoIDEwMCBzYW1wbGVzCnggPC0gcnVuaWYoMTAwLCAwLCAyKQp5IDwtIHJub3JtKGxlbmd0aCh4KSwgYjAgKyBiMSAqIHgsIHNkID0gcykKZGF0XzEwMCA8LSBkYXRhLmZyYW1lKHgsIHkpCgojIG5leHQgYSBkYXRhIHNldCB3aXRoIDEwMDAgc2FtcGxlcwp4IDwtIHJ1bmlmKDEwMDAsIDAsIDIpCnkgPC0gcm5vcm0obGVuZ3RoKHgpLCBiMCArIGIxICogeCwgc2QgPSBzKQpkYXRfMTAwMCA8LSBkYXRhLmZyYW1lKHgsIHkpCgoKYGBgCgoKSGF2ZSBhIGxvb2sgYXQgZWFjaCB0byBzZWUgdGhhdCB0aGV5IGZvbGxvdyB0aGUgc2FtZSB0cmVuZAoKYGBge3J9CiN8IGxhYmVsOiBmaWctc2ltCgpncF8xMDAgPC0gZ2dwbG90KGRhdF8xMDAsIGFlcyh4LCB5KSkgKwogICAgZ2VvbV9wb2ludCgpICsKICAgIHhsaW0ocmFuZ2UoZGF0XzEwMCR4LCBkYXRfMTAwMCR4KSkgKwogICAgeWxpbShyYW5nZShkYXRfMTAwJHksIGRhdF8xMDAwJHkpKQoKZ3BfMTAwMCA8LSBnZ3Bsb3QoZGF0XzEwMDAsIGFlcyh4LCB5KSkgKwogICAgZ2VvbV9wb2ludCgpICsKICAgIHhsaW0ocmFuZ2UoZGF0XzEwMCR4LCBkYXRfMTAwMCR4KSkgKwogICAgeWxpbShyYW5nZShkYXRfMTAwJHksIGRhdF8xMDAwJHkpKQoKIyBub3RlOiB3ZSBjYW4gdXNlIGBwbG90X2dyaWRgIGZyb20gcGFja2FnZSBjb3dwbG90CiMgdG8gY29tcG9zZSBtdWx0aXBsZSBwbG90cyBpbiBvbmUsIGJ1dCB3ZSBuZWVkZWQKIyB0byBtYW51YWxseSBzZXQgYHhsaW1gIGFuZCBgeWxpbWAgdG8gYmUgdGhlIHNhbWUKIyBhY3Jvc3MgcGxvdHMKcGxvdF9ncmlkKGdwXzEwMCwgZ3BfMTAwMCwgbnJvdyA9IDEpCmBgYAoKTm93IHdlIGNhbiBtYWtlIHByb2ZpbGUgbGlrZWxpaG9vZHMgZm9yIHRoZSBtYXhpbXVtIGxpa2VsaWhvb2QgZXN0aW1hdGUgb2YgdGhlIHNsb3BlIGZvciBlYWNoIGRhdGEgc2V0LiBUaGlzIHRhc2sgd2lsbCBmb2xsb3cgdGhlIHNhbWUgYXBwcm9hY2ggYXMgdGhlIGxhc3QgbGFiLCBidXQgYmVjYXVzZSB3ZSBuZWVkIHRvIHJlcGVhdCB0aGUgcHJvZmlsaW5nIHR3aWNlLCBsZXQncyB3cmFwIGFsbCB0aGUgY29kZSBpbiBhIGZ1bmNpdG9uIHNvIHdlIGNhbiB1c2UgdGhlIGZ1bmN0aW9uIHJlcGVhdGVkbHksIHJhdGhlciB0aGFuIGNvcHktcGFzdGluZyBjb2RlIG11bHRpcGxlIHRpbWVzCgpgYGB7cn0KIyBhIGZ1bmN0aW9uIHRvIGNhbGN1bGF0ZSBwcm9maWxlIGxpa2VsaWhvb2QgZm9yIHNsb3BlIG9mIAojIGEgbGluZWFyIG1vZGVsIGB5IH4geGAKcHJvZl9sbF9mdW4gPC0gZnVuY3Rpb24oYjFfdmVjLCB4LCB5KSB7CiAgICAjIHZlY3RvciB0byBob2xkIGxvZyBsaWtlbGlob29kcwogICAgbGxfdmVjIDwtIG51bWVyaWMobGVuZ3RoKGIxX3ZlYykpCiAgICAKICAgICMgbG9vcCBvdmVyIGFsbCB2YWx1ZXMgb2YgYjFfdmVjCiAgICBmb3IoaSBpbiAxOmxlbmd0aChiMV92ZWMpKSB7CiAgICAgICAgIyBtYWtlIGZpeGVkIG1vZGVsCiAgICAgICAgbW9kX2ZpeGVkIDwtIGxtKHkgfiAxICsgb2Zmc2V0KGIxX3ZlY1tpXSAqIHgpKQogICAgICAgIAogICAgICAgICMgY2FsY3VsYXRlIGxvZyBsaWsgYW5kIHN0b3JlIGl0CiAgICAgICAgbGxfdmVjW2ldIDwtIGFzLm51bWVyaWMobG9nTGlrKG1vZF9maXhlZCkpCiAgICB9CiAgICAKICAgICMgY29tYmluZSBpbnRvIGRhdGEuZnJhbWUKICAgIGxsIDwtIGRhdGEuZnJhbWUoYjFfdmVjLCBsbF92ZWMpCiAgICAKICAgICMgbm93IGNvbXBhcmUgbG9nIGxpayBvZiBmaXhlZCBtb2RlbHMgdG8gbG9nIGxpayBvZiBmdWxsIG1vZGVsCiAgICAKICAgICMgdGhlIGZ1bGwgbW9kZWwKICAgICMgbm8gbmVlZCBmb3IgYGRhdGFgIGFyZyBiZWNhdXNlIHdlIGRpcmVjdGx5IHBhc3MgYHhgIGFuZCBgeWAKICAgICMgdG8gdGhlIGBwcm9mX2xsX2Z1bmAgZnVuY3Rpb24KICAgIG1vZCA8LSBsbSh5IH4geCkgCiAgICAKICAgICMgbG9nIGxpayBvZiBmdWxsIG1vZGVsCiAgICBsbF9mdWxsIDwtIGFzLm51bWVyaWMobG9nTGlrKG1vZCkpCiAgICAKICAgICMgYWRkIGNvbHVtbiBmb3Igd2hldGhlciBwb2ludCBpcyB3aXRoaW4gOTUlIENJCiAgICBsbCA8LSBtdXRhdGUobGwsIAogICAgICAgICAgICAgICAgIGluX2NpID0gbGxfdmVjID49IGxsX2Z1bGwgLSBwY2hpc3EoMC45NSwgMSkgLyAyKQogICAgCiAgICAjIHJldHVybiB0aGUgZGF0YS5mcmFtZQogICAgcmV0dXJuKGxsKQp9CgpgYGAKCgpOb3cgbGV0J3MgcGxvdCB0aGUgcHJvZmlsZSBsaWtlbGlob29kcyBmb3IgYm90aCB0aGUgZGF0YSBzZXRzIHdpdGggMTAwIGFuZCAxLDAwMCBzYW1wbGVzLgoKSGVyZSBpcyB0aGUgY29kZSBmb3IgdGhlIDEwMCBzYW1wbGUgc2l6ZSBkYXRhIHNldAoKYGBge3J9CiN8IGxhYmVsOiBmaWctcHJvZi1sbC0xMDAKCiMgbWFrZSBhIHZlY3RvciBvZiBwb3NzaWJsZSBiMSB2YWx1ZXMKIyB3ZSBrbm93IHRoZSB0cnVlIHNsb3BlIGlzIDIsIHNvIG1ha2UgdmFsdWVzIG9uIGVpdGhlcgojIHNpZGUgb2YgdGhhdApwb3NzaWJsZV9iMSA8LSBzZXEoMS41LCAyLjUsIGxlbmd0aC5vdXQgPSA1MDApCgojIHJ1biB0aGUgcHJvZmlsZSBsaWtlbGlob29kIGZ1bmN0aW9uCnByb2ZfbGxfMTAwIDwtIHByb2ZfbGxfZnVuKHBvc3NpYmxlX2IxLCBkYXRfMTAwJHgsIGRhdF8xMDAkeSkKCiMgcGxvdCBpdApncF9wcm9mXzEwMCA8LSBnZ3Bsb3QocHJvZl9sbF8xMDAsIGFlcyhiMV92ZWMsIGxsX3ZlYywgY29sb3IgPSBpbl9jaSkpICsKICAgIGdlb21fcG9pbnQoKSArCiAgICAjIHJlbW92aW5nIGxlZ2VuZCBzbyB3ZSBjYW4gdWx0aW1hdGVseSBhZGQgdGhpcyBwbG90CiAgICAjIHRvIHRoZSBwbG90IGZvciBwcm9maWxlIGxpa2VsaWhvb2Qgd2l0aCAxMDAwIHNhbXBsZXMKICAgIHRoZW1lKGxlZ2VuZC5wb3NpdGlvbiA9ICJub25lIikKCmdwX3Byb2ZfMTAwCmBgYAoKCk5vdyBpdCdzIHlvdXIgdHVybiB0byBtYWtlIGEgcGxvdCBmb3IgdGhlIHByb2ZpbGUgbGlrZWxpaG9vZCBmb3IgdGhlIHNsb3BlIGVzdGltYXRlZCBmcm9tIHRoZSBkYXRhIHNldCB3aXRoIDEsMDAwIHNhbXBsZXMgYW5kIGNvbWJpbmUgdGhlIHR3byBwbG90cyB3aXRoIGBwbG90X2dyaWRgLiBBc2sgeW91cnNlbGY6CgotIHdoYXQgYWJvdXQgdGhlIGFib3ZlIGNvZGUgbmVlZHMgdG8gY2hhbmdlIGZvciBmb3IgdGhlIGRhdGEgc2V0IHdpdGggMSwwMDAgc2FtcGxlcz8KLSBob3cgc2hvdWxkIEkgYWxpZ24gdGhlIHBsb3RzPyBXaGF0IGNvZGUgbmVlZHMgdG8gY2hhbmdlIHRvIG1ha2UgdGhhdCBoYXBwZW4/Ci0gUmVnYXJkaW5nIGFsaWdubWVudCwgc2hvdWxkIEkgc3RhY2sgdGhlIHBsb3RzLCBvciBwdXQgdGhlbSBzaWRlLWJ5LXNpZGU/CgoKT25jZSB0aGUgZmluYWwgZ3JhcGhpYyBpcyBtYWRlOiB3aGF0IGRvIHlvdSBub3RpY2U/IFdoaWNoIGRhdGEgc2V0IGhhcyBhIHdpZGVyIGNvbmZpZGVuY2UgaW50ZXJ2YWw/IEhvdyBkb2VzIHRoZSBjb25maWRlbmNlIGludGVydmFsIHJlbGF0ZSB0byB0aGUgc2hhcGUgb2YgdGhlIHByb2ZpbGUgbGlrZWxpaG9vZD8KCiMjIFNhbXBsZSBzaXplIGFuZCBwb3dlcgoKQmVjYXVzZSBhIGxhcmdlciBzYW1wbGUgc2l6ZSBpbmNyZWFzZXMgb3VyIGNvbmZpZGVuY2UsIGl0IGFsc28gaW5jcmVhc2VzIG91ciBhYmlsaXR5IHRvIGNvcnJlY3RseSByZWplY3QgdGhlIG51bGwgKGkuZS4gJFAkLXZhbHVlICRcbGVxIDAuMDUkKSB3aGVuIHRoZSBudWxsIGlzIGluZGVlZCBmYWxzZS4gQ29udmVyc2VseSwgYSBzbWFsbGVyIHNhbXBsZSBzaXplIGluY3JlYXNlcyBvdXIgY2hhbmNlIG9mICp3cm9uZ2x5KiBmYWlsaW5nIHRvIHJlamVjdCB0aGUgbnVsbCAoaS5lLiAkUCQtdmFsdWUgJD4gMC4wNSQpIHdoZW4gaW4gZmFjdCB0aGUgbnVsbCBpcyBmYWxzZSBhbmQgd2Ugc2hvdWxkIGhhdmUgcmVqZWN0ZWQgaXQuIFRoaXMgc2NlbmFyaW8gb2YgZmFsc2VseSBmYWlsaW5nIHRvIHJlamVjdCB0aGUgbnVsbCBpcyBhIGZhbHNlIG5lZ2F0aXZlLCBvdGhlcndpc2Uga25vd24gYXMgYSB0eXBlIElJIGVycm9yLiBUaGUgdHlwZSBJSSBlcnJvciByYXRlIGlzIHRoZSBwcm9iYWJpbGl0eSwgb3ZlciBtYW55IHJlcGVhdGVkIGh5cG90aGV0aWNhbCBzdHVkaWVzLCBvZiBhIGZhbHNlIG5lZ2F0aXZlLiBUaGUgY29udmVyc2UgaXMgc29tZXRoaW5nIGNhbGxlZCAqcG93ZXIqCgokJApcYmVnaW57YWxpZ25lZH0KXHRleHR7cG93ZXJ9ICY9IDEgLSBcbWF0aGJie1B9KFx0ZXh0e1R5cGUgSUl9KSBcXAomPSBcbWF0aGJie1B9KFx0ZXh0e3JlamVjdCBudWxsfSkKXGVuZHthbGlnbmVkfQokJAoKUG93ZXIgaXMgc29tZXRoaW5nIHdlIGNhcmUgYSBsb3QgYWJvdXQgd2hlbiBkZXNpZ25pbmcgYSBzdHVkeTogd2Ugd2FudCBzdWZmaWNpZW50IHNhbXBsZSBzaXplIHNvIHRoYXQgd2UgaGF2ZSBoaWdoIHBvd2VyLiBCdXQgc2FtcGxpbmcgaXMgb2Z0ZW4gZXhwZW5zaXZlIGFuZCB0aW1lIGludGVuc2l2ZSwgc28gd2UgZG9uJ3Qgd2FudCB0byBoYXZlIGFuIGFyYml0cmFyaWx5IGxhcmdlIHNhbXBsZSwganVzdCBsYXJnZSBlbm91Z2ggdG8gcmVhY2ggYW4gYWNjZXB0YWJsZSBwb3dlci4KClRoZSBsb3dlciB0aHJlc2hvbGQgZm9yIHBvd2VyIGlzIG9mdGVuIHNldCBhdCAkXHRleHR7cG93ZXJ9ID0gMC44JC4gRXF1aXZhbGVudGx5LCB0aGF0IGlzIGEgMjAlIGNoYW5jZSBvZiBhIGZhbHNlIG5lZ2F0aXZlLiAKCkFzIHN0YXRlZCwgcG93ZXIgZGVwZW5kcyBvbiBzYW1wbGUgc2l6ZSwgYnV0IGFsc28gb24gZWZmZWN0IHNpemUuIElmIHRoZSBzbG9wZSByZWxhdGluZyBgeGAgYW5kIGB5YCBpcyBodWdlIHJlbGF0aXZlIHRvIHRoZSBtYWduaXR1ZGVzIG9mIHRoZSB2YXJpYWJsZXMsIHdlIHdvbid0IG5lZWQgYSB2ZXJ5IGxhcmdlIHNhbXBsZSBzaXplIHRvIHJlamVjdCB0aGUgbnVsbCBvZiBzbG9wZSAkYl8xID0gMCQuIEJ1dCBpZiB0aGUgc2xvcGUgaXMgc2hhbGxvdywgd2Ugd2lsbCBuZWVkIGEgbXVjaCBsYXJnZXIgc2FtcGxlIHNpemUgdG8gcmVqZWN0IHRoZSBudWxsLiBUaGUgbWFnbml0dWRlcyBvZiB0aGUgdmFyaWFibGVzIGlzIGRldGVybWluZWQsIGluIHBhcnQsIGJ5IHRoZWlyIGluaGVyZW50IHZhcmlhYmlsaXR5LiBGb3IgZXhhbXBsZSBpZiAKCiQkCnkgXHNpbSBcbWF0aGNhbHtOfShiXzAgKyBiXzEgeCwgflxzaWdtYSkKJCQKCnRoZW4gYSBsYXJnZXIgJFxzaWdtYSQgd2lsbCBpbmNyZWFzZSB0aGUgbWFnbml0dWRlIG9mICR5JCByZWdhcmRsZXNzIG9mICR4JCBhbmQgdGhlIHNsb3BlICRiXzEkLiAKCkEgcG93ZXIgYW5hbHlzaXMgaXMgb3VyIHRvb2wgZm9yIGZpZ3VyaW5nIG91dCB3aGF0IHNhbXBsZSBzaXplIHdlIHNob3VsZCBjaG9vc2Ugd2hlbiBkZXNpZ25pbmcgYSBzdHVkeS4gQSBwb3dlciBhbmFseXNpcyByZXF1aXJlcyB1cyB0byBzaW11bGF0ZSBkYXRhLCBmaXQgbW9kZWxzIHRvIGl0LCBhbmQgY2FsY3VsYXRlICRQJC12YWx1ZXMgbWFueSB0aW1lcy4gV2hlbiBzaW11bGF0aW5nIGRhdGEsIHdlIGhhdmUgdG8gbWFrZSBqdWRnZW1lbnQgY2FsbHMgYWJvdXQgd2hhdCB3ZSB0aGluayB0aGUgZWZmZWN0IHNpemVzIChlLmcuIHNsb3BlcykgbWlnaHQgYmUgZm9yIHRoZSByZWFsIGRhdGEgd2Ugd2lsbCBjb2xsZWN0LiBJZiB0aGlzIHNvdW5kcyBsaWtlIHRoZSBqb2IgZm9yIGEgZm9yIGxvb3AsIHlvdSBhcmUgY29ycmVjdC4KCkxldCdzIGZpcnN0IGdvIHRocm91Z2ggdGhlIHN0ZXBzIHRoYXQgd2lsbCBiZSBwYXJ0IG9mIGEgZm9yIGxvb3AKCmBgYHtyfQojIHNhbXBsZSBzaXplICh0aGlzIHdpbGwgdmFyeSBhY3Jvc3MgdGhlIGxvb3ApCm4gPC0gMTAwCgojIHRydWUgc2xvcGUgKHRoaXMgd2lsbCB2YXJ5KQpiMSA8LSAyCgojIHNpbXVsYXRlZCBkYXRhICh0aGlzIHdpbGwgYWxzbyB2YXJ5IGZvciBldmVyeSBpdGVyYXRpb24pCnggPC0gcnVuaWYobiwgMCwgMikKCiMgZm9yIHNpbXBsaWNpdHkgd2Ugd2lsbCBrZWVwIGludGVyY2VwdCBhbmQgdmFyaWFuY2UKIyBjb25zdGFudCBhY3Jvc3Mgc2ltdWxhdGlvbnMsIGJ1dCBgeWAgaXRzZWxmIHdpbGwgbmVlZCB0byAKIyBiZSByZS1zaW11bGF0ZWQgZXZlcnkgdGltZQp5IDwtIHJub3JtKG4sIG1lYW4gPSAxICsgYjEgKiB4LCBzZCA9IDEpCgojIGZ1bGwgbW9kZWwKbW9kMSA8LSBsbSh5IH4geCkKCiMgcmVkdWNlZCBtb2RlbAptb2QwIDwtIGxtKHkgfiB4KQoKIyBjYWxjdWxhdGUgTFJUIHAtdmFsdWUgYnkgaGFuZCAod2lsbCBiZSBmYXN0ZXIgCiMgaW4gYSBmb3IgbG9vcCkKbGFtYmRhIDwtIDIgKiAobG9nTGlrKG1vZDEpIC0gbG9nTGlrKG1vZDApKSB8PiAKICAgIGFzLm51bWVyaWMoKQoKcHZhbCA8LSBwY2hpc3EobGFtYmRhLCAxLCBsb3dlci50YWlsID0gVFJVRSkKCiMgdGVzdCBpZiBwdmFsIGlzIDw9IDAuMDUgKHdpbGwgd2lsbCBuZWVkIHRvIGJlIHN0b3JlZCAKIyBpbiBhIHZlY3RvciB0aGF0IHlvdSBpbml0aWFsaXplIGJlZm9yZSB0aGUgZm9yIGxvb3ApCnB2YWwgPD0gMC4wNQpgYGAKClRob3NlIGFyZSB0aGUgc3RlcHMgd2Ugd2lsbCBuZWVkIHRvIHJlLXJ1biBmb3IgZXZlcnkgaXRlcmF0aW9uIG9mIG91ciBmb3IgbG9vcC4gWW91ciBqb2IgaXMgdG8gcHV0IHRoYXQgZm9yIGxvb3AgdG9nZXRoZXIuIFRvIGhlbHAgZ2V0IHlvdSBzdGFydGVkLCB5b3Ugd2lsbCBuZWVkIHRvIGNyZWF0ZSB2ZWN0b3JzIGZvciBkaWZmZXJlbnQgc2xvcGVzIGFuZCBzYW1wbGUgc2l6ZXMuIFlvdSB3aWxsIGFsc28gd2FudCB0byByZXBsaWNhdGUgZWFjaCB1bmlxdWUgdmFsdWUgb2Ygc2xvcGUgYW5kIHNhbXBsZSBzaXplIG11bHRpcGxlIHRpbWVzIHNvIHlvdSBjYW4gY2FsY3VsYXRlIHRoZSBwcm9wb3J0aW9uIG9mIHRpbWVzIHlvdSByZWplY3QgdGhlIG51bGwgZm9yIGVhY2guIEhlcmUncyBhIHdheSBvZiBhY2hpZXZpbmcgdGhhdAoKYGBge3J9CmIxX2FuZF9zaXplIDwtIGV4cGFuZC5ncmlkKHJlcHMgPSAxOjIwLCAKICAgICAgICAgICAgICAgICAgICAgICAgICAgYjEgPSAwOjQsIAogICAgICAgICAgICAgICAgICAgICAgICAgICBuID0gc2VxKDIwLCA0MDAsIGJ5ID0gMjApKQoKYWxsX2IxIDwtIGIxX2FuZF9zaXplJGIxCmFsbF9uIDwtIGIxX2FuZF9zaXplJG4KYGBgCgpJbiB0aGUgYWJvdmUgY29kZSBgZXhwYW5kLmdyaWRgIG1hZGUgYSBsYXJnZSBgZGF0YS5mcmFtZWAgb2YgYWxsIHBvc3NpYmxlIGNvbWJpbmF0aW9ucyBvZiBgcmVwc2AsIGBiYCwgYW5kIGBuYC4gVGhlIGByZXBzYCBjb2x1bW4gb2YgdGhhdCBgZGF0YS5mcmFtZWAgd2FzIHByZXNlbnQganVzdCB0byBtYWtlIHN1cmUgZWFjaCB1bmlxdWUgY29tYmluYXRpb24gb2YgYGJgIGFuZCBgbmAgd2FzIHJlcGxpY2F0ZWQuIEJlY2F1c2UgYHJlcHMgPSAxOjIwYCB0aGF0IG1lYW5zIHdlIHJlcGxpY2F0ZSBlYWNoIHVuaXF1ZSB2YWx1ZSAyMCB0aW1lcy4KCk5vdyB3ZSBoYXZlIGEgdmVjdG9yIGZvciBhbGwgdGhlIHNsb3BlIHZhbHVlcyB0byB0cnkgb3V0IGBhbGxfYjFgLCBhbmQgd2UgaGF2ZSBhIHZlY3RvciBmb3IgYWxsIHRoZSBzYW1wbGUgc2l6ZXMgdG8gdHJ5IG91dCBgYWxsX25gLiBZb3UgY2FuIG5vdyBtYWtlIHlvdXIgZm9yIGxvb3AsIGl0ZXJhdGluZyBvdmVyIGFsbCBlbGVtZW50cyBpbiBgYWxsX2IxYCBhbmQgYGFsbF9uYC4KCiMjIyBWaXN1YWxpemluIHRoZSBwb3dlciBhbmFseXNpcwoKV2hlbiB0aGUgZm9yIGxvb3AgaXMgY29tcGxldGUgeW91IGNhbiBjb21iaW5lIGBhbGxfYjFgLCBgYWxsX25gLCBhbmQgdGhlIG91dHB1dCBvZiB0aGUgZm9yIGxvb3AgKHBlcmhhcHMgeW91IHdpbGwgY2FsbCBpdCBgcmVqZWN0X251bGxgKSBpbiBhIGBkYXRhLmZyYW1lYC4gWW91IGNvdWxkIGNhbGwgdGhpcyBgZGF0YS5mcmFtZWAgc29tZXRoaW5nIGxpa2UgYHB3cl9hbmFseXNpc2AuIE5vdyB5b3UgbmVlZCB0byB2aXN1YWxpemUgdGhlIGFuYWx5c2lzLiBCdXQgZmlyc3Qgd2UgbmVlZCB0byBzdW1tYXJpemUgdGhlIHJhdyBvdXRwdXQgc28gd2Uga25vdywgZm9yIGV2ZXJ5IHVuaXF1ZSBjb21iaW5hdGlvbiBvZiBgYjFgIGFuZCBgbmAsIHdoYXQgJFx0ZXh0e3Bvd2VyfSA9IFxtYXRoYmJ7UH0oXHRleHR7cmVqZWN0IG51bGx9KSQgaXMuIFRoYXQgaXMgYSBqb2IgZm9yIGBncm91cF9ieSB8PiBzdW1tYXJpemUgfD4gdW5ncm91cGAuIFlvdXIgY29kZSB3aWxsIGxpa2VseSBsb29rIHNvbWV0aGluZyBsaWtlCgoKYGBge3J9CiN8IGV2YWw6IGZhbHNlCgpwd3IgPC0gZ3JvdXBfYnkocHdyX2FuYWx5c2lzLCBiMSwgbikgfD4gCiAgICBzdW1tYXJpemUocG93ZXIgPSBtZWFuKHJlamVjdF9udWxsKSkgfD4gCiAgICB1bmdyb3VwKCkKYGBgCgpOb3cgeW91IGNvdWxkIHZpc3VhbGl6ZSBgcHdyYCBieSBwbG90dGluZyBgcG93ZXJgIGFnYWluc3QgYG5gIGFuZCBjb2xvcmluZyB0aGUgcGxvdHRpbmcgY2hhcmFjdGVycyAobGluZXMgb3IgcG9pbnRzIG9yIGJvdGgpIGJ5IGBiMWAuIEdvIGZvciBpdCEK').then(res => res.blob()).then(blob => {
+      const downloadURL = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      document.body.appendChild(a);
+      a.href = downloadURL;
+      a.download = 'lab08-power.qmd'; a.click();
+      window.URL.revokeObjectURL(downloadURL);
+      document.body.removeChild(a);
+        });"><button class="btn btn-default downloadthis  " id="dnldts5031"><i class="bi bi-download"></i> Download lab template </button></a></p>
+<p>The template will prompt you to work through the following sections.</p>
+<section id="the-connection-between-sample-size-and-uncertainty" class="level2" data-number="28.1">
+<h2 data-number="28.1" class="anchored" data-anchor-id="the-connection-between-sample-size-and-uncertainty"><span class="header-section-number">28.1</span> The connection between sample size and uncertainty</h2>
+<p>Intuitively if we have a larger sample size, we feel more confident in our analysis. But why?</p>
+<p>The reason is that, mathematically, larger sample sizes increases the precision of our statistical inference. A direct consequence is that, for example, larger sample sizes will lead to tighter confidence intervals. Let’s see an example of this by calculating profile likelihoods for the same model, but based on two different data sets: one with 100 samples, the other with 1,000 samples.</p>
+<p>First let’s simulate data. For simplicity (and computational speed) we will go back to a linear model with normally distributed response data and just a slope and intercept</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># the true intercept</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>b0 <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># the true slope</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>b1 <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># the true sd of the normal dist</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># now a data set with 100 samples</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">100</span>, <span class="dv">0</span>, <span class="dv">2</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="fu">length</span>(x), b0 <span class="sc">+</span> b1 <span class="sc">*</span> x, <span class="at">sd =</span> s)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>dat_100 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(x, y)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># next a data set with 1000 samples</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">1000</span>, <span class="dv">0</span>, <span class="dv">2</span>)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="fu">length</span>(x), b0 <span class="sc">+</span> b1 <span class="sc">*</span> x, <span class="at">sd =</span> s)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>dat_1000 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(x, y)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Have a look at each to see that they follow the same trend</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>gp_100 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(dat_100, <span class="fu">aes</span>(x, y)) <span class="sc">+</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlim</span>(<span class="fu">range</span>(dat_100<span class="sc">$</span>x, dat_1000<span class="sc">$</span>x)) <span class="sc">+</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylim</span>(<span class="fu">range</span>(dat_100<span class="sc">$</span>y, dat_1000<span class="sc">$</span>y))</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>gp_1000 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(dat_1000, <span class="fu">aes</span>(x, y)) <span class="sc">+</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlim</span>(<span class="fu">range</span>(dat_100<span class="sc">$</span>x, dat_1000<span class="sc">$</span>x)) <span class="sc">+</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylim</span>(<span class="fu">range</span>(dat_100<span class="sc">$</span>y, dat_1000<span class="sc">$</span>y))</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># note: we can use `plot_grid` from package cowplot</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># to compose multiple plots in one, but we needed</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co"># to manually set `xlim` and `ylim` to be the same</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co"># across plots</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_grid</span>(gp_100, gp_1000, <span class="at">nrow =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-sim" class="quarto-float quarto-figure quarto-figure-center anchored" width="672">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="power-analysis_files/figure-html/fig-sim-1.png" id="fig-sim" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-sim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;28.1
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Now we can make profile likelihoods for the maximum likelihood estimate of the slope for each data set. This task will follow the same approach as the last lab, but because we need to repeat the profiling twice, let’s wrap all the code in a funciton so we can use the function repeatedly, rather than copy-pasting code multiple times</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># a function to calculate profile likelihood for slope of </span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># a linear model `y ~ x`</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>prof_ll_fun <span class="ot">&lt;-</span> <span class="cf">function</span>(b1_vec, x, y) {</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># vector to hold log likelihoods</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    ll_vec <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="fu">length</span>(b1_vec))</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># loop over all values of b1_vec</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(b1_vec)) {</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        <span class="co"># make fixed model</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>        mod_fixed <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> <span class="fu">offset</span>(b1_vec[i] <span class="sc">*</span> x))</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        <span class="co"># calculate log lik and store it</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>        ll_vec[i] <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">logLik</span>(mod_fixed))</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># combine into data.frame</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    ll <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(b1_vec, ll_vec)</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># now compare log lik of fixed models to log lik of full model</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    <span class="co"># the full model</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># no need for `data` arg because we directly pass `x` and `y`</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># to the `prof_ll_fun` function</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x) </span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    <span class="co"># log lik of full model</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    ll_full <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">logLik</span>(mod))</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    <span class="co"># add column for whether point is within 95% CI</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>    ll <span class="ot">&lt;-</span> <span class="fu">mutate</span>(ll, </span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>                 <span class="at">in_ci =</span> ll_vec <span class="sc">&gt;=</span> ll_full <span class="sc">-</span> <span class="fu">pchisq</span>(<span class="fl">0.95</span>, <span class="dv">1</span>) <span class="sc">/</span> <span class="dv">2</span>)</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>    <span class="co"># return the data.frame</span></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(ll)</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Now let’s plot the profile likelihoods for both the data sets with 100 and 1,000 samples.</p>
+<p>Here is the code for the 100 sample size data set</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># make a vector of possible b1 values</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># we know the true slope is 2, so make values on either</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># side of that</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>possible_b1 <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">1.5</span>, <span class="fl">2.5</span>, <span class="at">length.out =</span> <span class="dv">500</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># run the profile likelihood function</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>prof_ll_100 <span class="ot">&lt;-</span> <span class="fu">prof_ll_fun</span>(possible_b1, dat_100<span class="sc">$</span>x, dat_100<span class="sc">$</span>y)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co"># plot it</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>gp_prof_100 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(prof_ll_100, <span class="fu">aes</span>(b1_vec, ll_vec, <span class="at">color =</span> in_ci)) <span class="sc">+</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># removing legend so we can ultimately add this plot</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># to the plot for profile likelihood with 1000 samples</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>gp_prof_100</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-prof-ll-100" class="quarto-float quarto-figure quarto-figure-center anchored" width="672">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-prof-ll-100-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="power-analysis_files/figure-html/fig-prof-ll-100-1.png" id="fig-prof-ll-100" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-prof-ll-100-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;28.2
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Now it’s your turn to make a plot for the profile likelihood for the slope estimated from the data set with 1,000 samples and combine the two plots with <code>plot_grid</code>. Ask yourself:</p>
+<ul>
+<li>what about the above code needs to change for for the data set with 1,000 samples?</li>
+<li>how should I align the plots? What code needs to change to make that happen?</li>
+<li>Regarding alignment, should I stack the plots, or put them side-by-side?</li>
+</ul>
+<p>Once the final graphic is made: what do you notice? Which data set has a wider confidence interval? How does the confidence interval relate to the shape of the profile likelihood?</p>
+</section>
+<section id="sample-size-and-power" class="level2" data-number="28.2">
+<h2 data-number="28.2" class="anchored" data-anchor-id="sample-size-and-power"><span class="header-section-number">28.2</span> Sample size and power</h2>
+<p>Because a larger sample size increases our confidence, it also increases our ability to correctly reject the null (i.e.&nbsp;<span class="math inline">\(P\)</span>-value <span class="math inline">\(\leq 0.05\)</span>) when the null is indeed false. Conversely, a smaller sample size increases our chance of <em>wrongly</em> failing to reject the null (i.e.&nbsp;<span class="math inline">\(P\)</span>-value <span class="math inline">\(&gt; 0.05\)</span>) when in fact the null is false and we should have rejected it. This scenario of falsely failing to reject the null is a false negative, otherwise known as a type II error. The type II error rate is the probability, over many repeated hypothetical studies, of a false negative. The converse is something called <em>power</em></p>
+<p><span class="math display">\[
+\begin{aligned}
+\text{power} &amp;= 1 - \mathbb{P}(\text{Type II}) \\
+&amp;= \mathbb{P}(\text{reject null})
+\end{aligned}
+\]</span></p>
+<p>Power is something we care a lot about when designing a study: we want sufficient sample size so that we have high power. But sampling is often expensive and time intensive, so we don’t want to have an arbitrarily large sample, just large enough to reach an acceptable power.</p>
+<p>The lower threshold for power is often set at <span class="math inline">\(\text{power} = 0.8\)</span>. Equivalently, that is a 20% chance of a false negative.</p>
+<p>As stated, power depends on sample size, but also on effect size. If the slope relating <code>x</code> and <code>y</code> is huge relative to the magnitudes of the variables, we won’t need a very large sample size to reject the null of slope <span class="math inline">\(b_1 = 0\)</span>. But if the slope is shallow, we will need a much larger sample size to reject the null. The magnitudes of the variables is determined, in part, by their inherent variability. For example if</p>
+<p><span class="math display">\[
+y \sim \mathcal{N}(b_0 + b_1 x, ~\sigma)
+\]</span></p>
+<p>then a larger <span class="math inline">\(\sigma\)</span> will increase the magnitude of <span class="math inline">\(y\)</span> regardless of <span class="math inline">\(x\)</span> and the slope <span class="math inline">\(b_1\)</span>.</p>
+<p>A power analysis is our tool for figuring out what sample size we should choose when designing a study. A power analysis requires us to simulate data, fit models to it, and calculate <span class="math inline">\(P\)</span>-values many times. When simulating data, we have to make judgement calls about what we think the effect sizes (e.g.&nbsp;slopes) might be for the real data we will collect. If this sounds like the job for a for loop, you are correct.</p>
+<p>Let’s first go through the steps that will be part of a for loop</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># sample size (this will vary across the loop)</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># true slope (this will vary)</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>b1 <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># simulated data (this will also vary for every iteration)</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">runif</span>(n, <span class="dv">0</span>, <span class="dv">2</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co"># for simplicity we will keep intercept and variance</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co"># constant across simulations, but `y` itself will need to </span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co"># be re-simulated every time</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">1</span> <span class="sc">+</span> b1 <span class="sc">*</span> x, <span class="at">sd =</span> <span class="dv">1</span>)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co"># full model</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>mod1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x)</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co"># reduced model</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>mod0 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x)</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate LRT p-value by hand (will be faster </span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="co"># in a for loop)</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> (<span class="fu">logLik</span>(mod1) <span class="sc">-</span> <span class="fu">logLik</span>(mod0)) <span class="sc">|&gt;</span> </span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as.numeric</span>()</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>pval <span class="ot">&lt;-</span> <span class="fu">pchisq</span>(lambda, <span class="dv">1</span>, <span class="at">lower.tail =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a><span class="co"># test if pval is &lt;= 0.05 (will will need to be stored </span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="co"># in a vector that you initialize before the for loop)</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>pval <span class="sc">&lt;=</span> <span class="fl">0.05</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+<p>Those are the steps we will need to re-run for every iteration of our for loop. Your job is to put that for loop together. To help get you started, you will need to create vectors for different slopes and sample sizes. You will also want to replicate each unique value of slope and sample size multiple times so you can calculate the proportion of times you reject the null for each. Here’s a way of achieving that</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>b1_and_size <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">reps =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>, </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                           <span class="at">b1 =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">4</span>, </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                           <span class="at">n =</span> <span class="fu">seq</span>(<span class="dv">20</span>, <span class="dv">400</span>, <span class="at">by =</span> <span class="dv">20</span>))</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>all_b1 <span class="ot">&lt;-</span> b1_and_size<span class="sc">$</span>b1</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>all_n <span class="ot">&lt;-</span> b1_and_size<span class="sc">$</span>n</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>In the above code <code>expand.grid</code> made a large <code>data.frame</code> of all possible combinations of <code>reps</code>, <code>b</code>, and <code>n</code>. The <code>reps</code> column of that <code>data.frame</code> was present just to make sure each unique combination of <code>b</code> and <code>n</code> was replicated. Because <code>reps = 1:20</code> that means we replicate each unique value 20 times.</p>
+<p>Now we have a vector for all the slope values to try out <code>all_b1</code>, and we have a vector for all the sample sizes to try out <code>all_n</code>. You can now make your for loop, iterating over all elements in <code>all_b1</code> and <code>all_n</code>.</p>
+<section id="visualizin-the-power-analysis" class="level3" data-number="28.2.1">
+<h3 data-number="28.2.1" class="anchored" data-anchor-id="visualizin-the-power-analysis"><span class="header-section-number">28.2.1</span> Visualizin the power analysis</h3>
+<p>When the for loop is complete you can combine <code>all_b1</code>, <code>all_n</code>, and the output of the for loop (perhaps you will call it <code>reject_null</code>) in a <code>data.frame</code>. You could call this <code>data.frame</code> something like <code>pwr_analysis</code>. Now you need to visualize the analysis. But first we need to summarize the raw output so we know, for every unique combination of <code>b1</code> and <code>n</code>, what <span class="math inline">\(\text{power} = \mathbb{P}(\text{reject null})\)</span> is. That is a job for <code>group_by |&gt; summarize |&gt; ungroup</code>. Your code will likely look something like</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>pwr <span class="ot">&lt;-</span> <span class="fu">group_by</span>(pwr_analysis, b1, n) <span class="sc">|&gt;</span> </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="at">power =</span> <span class="fu">mean</span>(reject_null)) <span class="sc">|&gt;</span> </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ungroup</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Now you could visualize <code>pwr</code> by plotting <code>power</code> against <code>n</code> and coloring the plotting characters (lines or points or both) by <code>b1</code>. Go for it!</p>
 
 
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
