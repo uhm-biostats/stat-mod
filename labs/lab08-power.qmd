@@ -199,14 +199,14 @@ y <- rnorm(n, mean = 1 + b1 * x, sd = 1)
 mod1 <- lm(y ~ x)
 
 # reduced model
-mod0 <- lm(y ~ x)
+mod0 <- lm(y ~ 1)
 
 # calculate LRT p-value by hand (will be faster 
 # in a for loop)
 lambda <- 2 * (logLik(mod1) - logLik(mod0)) |> 
     as.numeric()
 
-pval <- pchisq(lambda, 1, lower.tail = TRUE)
+pval <- pchisq(lambda, 1, lower.tail = FALSE)
 
 # test if pval is <= 0.05 (will will need to be stored 
 # in a vector that you initialize before the for loop)
