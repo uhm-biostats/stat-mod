@@ -10,7 +10,6 @@ format:
 
 # Sample size and power analysis
 
-
 This lab will guide you through the connection between sample size and confidence, culminating in a power analysis. You can download the template `.qmd` file for this lab here:
 
 {{< downloadthis labs/lab08-power.qmd dname=lab08-power label="Download lab template">}}

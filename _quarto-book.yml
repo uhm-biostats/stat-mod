@@ -46,6 +46,7 @@ book:
             - lrt-ci-lab.qmd
             - hyp-test-recap.qmd
             - power-analysis.qmd
+            - aic.qmd
 
 
 bibliography: stat-mod.bib
