@@ -1,16 +1,6 @@
 ---
 title: "Model Comparison and Averaging"
 
-format:
-  revealjs:
-    slide-number: true
-    preview-links: auto
-    auto-stretch: false
-    embed-resources: false
-    controls: true
-    html-math-method:
-      method: mathjax
-      url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
 
 bibliography: stat-mod.bib
 csl: conservation-biology.csl
@@ -127,7 +117,7 @@ AIC(mod_hii)
 
 ```
 
-The temperature model is better supported (lower AIC)
+The human impact model is better supported (lower AIC)
 
 
 ## This is a job for AIC
@@ -136,7 +126,7 @@ $$
 AIC = -2 \mathcal{l}(\hat{\theta}_{MLE}) + 2k
 $$
 
-Purpose of $2k$ term is more clear for models with equal d.f.
+Purpose of $2k$ term is more clear for models with unequal d.f.
 
 ```{r}
 #| echo: true
@@ -150,7 +140,12 @@ AIC(mod_temp_precip)
 AIC(mod_hii)
 ```
 
+
+Now the `temp + rain` model is better supported 
+
 ## AIC penalizes more parameters
+
+But...
 
 ```{r}
 #| echo: true
@@ -159,7 +154,7 @@ logLik(mod_temp_precip)
 logLik(mod_temp)
 ```
 
-Adding parameters will always increase log likelihood
+adding parameters will always increase log likelihood
 
 ::: {.fragment}
 
@@ -365,8 +360,6 @@ The difference between the mean log likelihood of the original data and the mean
 :::
 
 
-:::
-
 ::: {.absolute top="70%" left="35%" style="z-index: 10;"}
 
 ::: {.fragment}
@@ -409,28 +402,424 @@ A common rule is that models with AIC values within 2 points are effectively equ
 
 ::: {.incremental}
 
-- model comparisons tells us which model is more supported
+- model comparisons tells us which model is more supported, a way of testing hypotheses
 - model averaging is less about testing hypotheses and more about ***prediction***
 - for example: how can we best predict tree richness across the pae ʻāina?
 
 :::
 
 
-## References
+## Model averaging
+
+Consider the 3 models we have made so far
+
+```{r}
+#| echo: true
+#| eval: false
+
+nspp ~ log(Plot_Area) + hii
+nspp ~ log(Plot_Area) + avg_temp_annual_c
+nspp ~ log(Plot_Area) + avg_temp_annual_c + rain_annual_mm
+```
+
+
+::: {.fragment}
+
+Each model makes a different prediction about the expected number of species in a plot
+
+:::
+
+::: {.fragment}
+
+How could we combine the models to make one prediction?
+
+:::
+
+::: {.fragment}
+
+Why do we want to?
+
+:::
+
+
+## Model averaging
+
+Consider the 3 models we have made so far
+
+```{r}
+#| echo: true
+#| eval: false
+
+nspp ~ log(Plot_Area) + hii
+nspp ~ log(Plot_Area) + avg_temp_annual_c
+nspp ~ log(Plot_Area) + avg_temp_annual_c + rain_annual_mm
+```
+
+The predictions from the combined model will be more accurate than any one model by itself
+
+::: {.fragment}
+
+And also better than one big model
+
+```{r}
+#| echo: true
+#| eval: false
+
+nspp ~ log(Plot_Area) + hii + avg_temp_annual_c + rain_annual_mm
+```
+
+Because we know, e.g., there are issues of collinearity. *For smaller data sets over fitting one big model is also an issue*
+
+:::
+
+
+## Model averaging
+
+How do we combine models to make one prediction?
+
+
+::: {.fragment}
+
+We could average the parameters of each model to make an ***average*** model
+
+$$
+\begin{aligned}
+\log(\mu_\text{nspp}) = &b_0^{\text(avg.)} + b_1^{\text(avg.)} \log(\text{area}) + b_2^{\text(avg.)} \text{hii} + \\ 
+&b_3^{\text(avg.)} \text{temp} + b_4^{\text(avg.)} \text{rain}
+\end{aligned}
+$$
+
+where, e.g., $b_3^{\text(avg.)}$ is the *average* of all slope estimates for `avg_temp_annual_c` across all the models
+
+:::
+
+
+## Model averaging
+
+Let's make that more concrete with our actual models. 
+
+::: {.fragment}
+
+Here are the slope estimates for temperature in every model where it shows up
 
 
 ```{r}
-#| eval: false
-AIC(mod0, mod1)
-
-sw(list(mod0, mod1))
+#| echo: true
 
 
-fm1 <- lm(y ~ ., data = Cement, na.action = na.fail)
-ms1 <- dredge(fm1)
-
-# Sum of weights can be calculated/extracted from various objects:
-sw(ms1)
-
+coefficients(mod_temp)["avg_temp_annual_c"]
+coefficients(mod_temp_precip)["avg_temp_annual_c"]
 
 ```
+
+:::
+
+::: {.fragment}
+
+```{r}
+b31 <- coefficients(mod_temp)["avg_temp_annual_c"]
+b32 <- coefficients(mod_temp_precip)["avg_temp_annual_c"]
+b3avg <- mean(c(b31, b32))
+```
+
+So the average slope is $b_3^{\text(avg.)} = \frac{`r round(b31, 3)` + `r round(b32, 3)`}{2} = `r round(b3avg, 3)`$
+
+:::
+
+
+## Model averaging
+
+
+Note: there are two ways to average
+
+::: {.columns}
+
+:::: {.column}
+
+average over ***only models*** where the variable shows up
+<br>
+
+$b_3^{\text(avg.)} = \frac{`r round(b31, 3)` + `r round(b32, 3)`}{2}$
+
+::::
+
+:::: {.column}
+
+average over ***all models*** no matter if the variable shows up
+<br>
+
+$b_3^{\text(avg.)} = \frac{0 + `r round(b31, 3)` + `r round(b32, 3)`}{3}$
+
+::::
+
+:::
+
+<br>
+
+::: {.fragment}
+
+The default in the code we'll use for model average is to use ***only models*** where the variable shows up
+
+:::
+
+## Model averaging
+
+But this simple average parameter value ignores the fact that some individual models are already better at making predictions
+
+::: {.fragment}
+
+The AIC values tell us about the support of each model
+
+```{r}
+#| echo: true
+
+AIC(mod_hii)
+AIC(mod_temp)
+AIC(mod_temp_precip)
+```
+
+:::
+
+We want to account for these differences in support when averaging
+
+
+## Model averaging
+
+We turn AIC values into weights. For model $i$:
+
+
+$$
+w_i = \frac{e^{-\Delta\text{AIC}_i / 2}}{\sum_j e^{-\Delta\text{AIC}_j / 2}}
+$$
+
+where $\Delta\text{AIC}_i = \text{AIC}(\text{model}_i) - (\text{minimum AIC})$
+
+::: {.fragment}
+
+The weights sum to 1, they can be roughly interpreted as the probability that $\text{model}_i$ is the best supported model
+
+:::
+
+## Model averaging
+
+Again, let's make this concrete
+
+::: {.columns}
+
+:::: {.column width=33%}
+
+$\text{AIC}_i$
+
+```{r}
+#| echo: true
+
+AIC(mod_hii)
+AIC(mod_temp)
+AIC(mod_temp_precip)
+```
+
+::::
+
+:::: {.column width=33%}
+
+$\Delta\text{AIC}_i$
+
+<div style="height: 15px;"></div>
+
+```{r}
+#| output: asis
+
+cat(round(AIC(mod_hii) - AIC(mod_temp_precip), 3))
+```
+
+<div style="height: 5px;"></div>
+
+```{r}
+#| output: asis
+cat(round(AIC(mod_temp) - AIC(mod_temp_precip), 3))
+```
+
+<div style="height: 5px;"></div>
+
+```{r}
+#| output: asis
+cat(round(AIC(mod_temp_precip) - AIC(mod_temp_precip), 3))
+```
+
+::::
+
+
+:::: {.column width=33%}
+
+$w_i$
+
+```{r}
+wfun <- function(all_mod, i) {
+    all_aic <- sapply(all_mod, AIC)
+    dAIC <- all_aic - min(all_aic)
+    
+    e <- exp(-dAIC / 2)
+    
+    e[i] / sum(e)
+}
+```
+
+
+<div style="height: 15px;"></div>
+
+```{r}
+#| output: asis
+
+cat(round(wfun(list(mod_hii, mod_temp, mod_temp_precip), 1), 5))
+```
+
+<div style="height: 5px;"></div>
+
+```{r}
+#| output: asis
+round(wfun(list(mod_hii, mod_temp, mod_temp_precip), 2), 5) |> 
+    format(scientific = FALSE) |> 
+    cat()
+```
+
+<div style="height: 5px;"></div>
+
+```{r}
+#| output: asis
+cat(round(wfun(list(mod_hii, mod_temp, mod_temp_precip), 3), 5))
+```
+
+::::
+
+
+:::
+
+## Package *MuMIn* does this for us!
+
+Create the averaged model
+
+```{r}
+#| echo: true
+
+library(MuMIn)
+
+# pass in a list of all models we want to consider
+mod_avg <- model.avg(list(mod_hii, mod_temp, mod_temp_precip))
+
+```
+
+
+::: {.fragment}
+
+Have a look at the averaged coefficients
+
+```{r}
+#| echo: true
+
+coefficients(mod_avg)
+```
+
+:::
+
+## Package *MuMIn* does this for us!
+
+Look at a similar table of AIC, $\Delta$AIC, and weights
+
+
+```{r}
+#| echo: true
+
+mod_avg$msTable
+```
+
+A few things to note:
+
+- order is ranked best supported model to least supported
+- AICc is used instead of AIC
+
+::: {.fragment}
+AICc is a sample size corrected version AIC, not a bad idea to use
+:::
+
+
+## Package *MuMIn* does this for us!
+
+You can get AICc with the `AICc` function from *MuMIn*
+
+```{r}
+#| echo: true
+
+# uncorrected AIC
+AIC(mod_temp_precip)
+
+# sample size corrected
+AICc(mod_temp_precip)
+
+```
+
+::: {.fragment}
+
+Our sample size is *large*, so the correction is small
+
+:::
+
+
+## Package *MuMIn* does other things 
+
+*MuMIn* lets us do some things we maybe shouldn't
+
+::: {.incremental}
+
+- make all possible models with all possible variables
+- then let AIC pick one, or average over all of them
+- not recommended because we're just kind of "fishing" for something "significant" rather than testing hypotheses based in ecology/evolution/conservation
+- *MuMIn* knows it's bad, their function for this workflow is called `dredge`
+
+:::
+
+## Package *MuMIn* does other things 
+
+But `dredge`-ing can be useful for identifying which variables in our data are most "meaningful"
+
+
+::: {.incremental}
+
+- `dredge` up all models
+- for each variable, sum up the weights of the models it is a part of
+- normalize those summed weights to be [0, 1]
+- the higher the summed weight, the more "important" that variable
+- should do this based on variables of interest biologically, not just every variable you could possibly get your hands on
+
+::::
+
+## Package *MuMIn* does other things 
+
+Variable importance via summed weights
+
+```{r}
+#| echo: true
+
+# model with all possible variables
+mod_big <- glm.nb(
+    nspp ~ log(Plot_Area) + hii + avg_temp_annual_c + rain_annual_mm, 
+    data = dat_plt, na.action = "na.fail"
+)
+
+# dredge it
+big_dredge <- dredge(mod_big)
+
+sw(big_dredge)
+```
+
+::: {.fragment}
+
+So area is important (no surprise). But a new insight: human impact and rain are quite important, and temperature less so
+
+:::
+
+
+
+## References
+
+
+
