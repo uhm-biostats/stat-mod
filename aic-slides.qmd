@@ -1,0 +1,436 @@
+---
+title: "Model Comparison and Averaging"
+
+format:
+  revealjs:
+    slide-number: true
+    preview-links: auto
+    auto-stretch: false
+    embed-resources: false
+    controls: true
+    html-math-method:
+      method: mathjax
+      url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+
+bibliography: stat-mod.bib
+csl: conservation-biology.csl
+
+---
+
+```{r}
+#| label: setup
+#| echo: false
+#| message: false
+#| warning: false
+
+library(knitr)
+library(ggplot2)
+library(cowplot)
+library(dplyr)
+library(MASS)
+
+opts_chunk$set(echo = FALSE)
+
+# shared data setup used throughout
+clim <- read.csv("data/plot_climate.csv")
+geo_hii <- read.csv("data/hii_geo.csv")
+tree <- read.csv("data/OpenNahele_Tree_Data.csv")
+
+all_dat <- left_join(tree, clim, by = "PlotID") |>
+    left_join(dplyr::select(geo_hii, !(lon:lat)), by = "PlotID")
+
+dat_plt <- group_by(all_dat, PlotID) |>
+    summarize(across(c(Island, Plot_Area, lon:elev_m), first),
+              nspp = n_distinct(Scientific_name)) |>
+    ungroup() |>
+    filter(Plot_Area < 10000)
+```
+
+
+## What predicts species richness best?
+
+***Temperature*** or ***Human Impact***?
+
+
+
+::: {.fragment}
+
+We saw that including both in one model had problem of collinearity
+
+:::
+
+::: {.fragment}
+
+But does one predict richness better than another?
+
+:::
+
+
+::: {.fragment}
+
+We cannot use LRT because these are not nested models, in fact they have the same d.f.
+
+::: {.columns}
+
+:::: {.column}
+
+$$
+\begin{aligned}
+\log(\mu_\text{spp richness}) &= b_0 + b_1 \log(\text{area}) + b_2 \text{temperature} \\
+\log(\mu_\text{spp richness}) &= b_0 + b_1 \log(\text{area}) + b_2 (\text{human impact})
+\end{aligned}
+$$
+
+::::
+
+:::
+
+:::
+
+## This is a job for AIC
+
+***Akaike Information Criterion***
+
+
+$$
+AIC = -2 \mathcal{l}(\hat{\theta}_{MLE}) + 2k
+$$
+
+- $\mathcal{l}(\hat{\theta}_{MLE})$ is max of the log likelihood
+- $k$ is number of parameters
+
+::: {.fragment}
+
+We can compare non-nested models with AIC
+
+:::
+
+
+## This is a job for AIC
+
+$$
+AIC = -2 \mathcal{l}(\hat{\theta}_{MLE}) + 2k
+$$
+
+
+
+```{r}
+#| echo: true
+
+mod_temp <- glm.nb(nspp ~ log(Plot_Area) + avg_temp_annual_c, 
+                   data = dat_plt)
+AIC(mod_temp)
+
+mod_hii <- glm.nb(nspp ~ log(Plot_Area) + hii, 
+                  data = dat_plt)
+AIC(mod_hii)
+
+```
+
+The temperature model is better supported (lower AIC)
+
+
+## This is a job for AIC
+
+$$
+AIC = -2 \mathcal{l}(\hat{\theta}_{MLE}) + 2k
+$$
+
+Purpose of $2k$ term is more clear for models with equal d.f.
+
+```{r}
+#| echo: true
+
+mod_temp_precip <- glm.nb(
+    nspp ~ log(Plot_Area) + avg_temp_annual_c + rain_annual_mm, 
+    data = dat_plt
+)
+AIC(mod_temp_precip)
+
+AIC(mod_hii)
+```
+
+## AIC penalizes more parameters
+
+```{r}
+#| echo: true
+
+logLik(mod_temp_precip)
+logLik(mod_temp)
+```
+
+Adding parameters will always increase log likelihood
+
+::: {.fragment}
+
+Is the increase real? Or just *"over fitting"*
+
+:::
+
+
+::: {.fragment}
+
+*"over fitting"* is a term for what we know already: more parameters could let a model wiggle to fit noise
+
+:::
+
+## AIC penalizes more parameters
+
+How? and why?
+
+
+::: {.r-stack}
+
+:::: {.fragment .fade-in-then-out}
+
+Imagine you have one data set <span style="display:inline-block; width:0.8em; height:0.8em; background-color:black; border-radius:50%; vertical-align:middle;"></span> 
+
+::: {.columns}
+
+:::: {.column}
+
+```{r}
+#| fig-width: 6
+#| fig-height: 6
+
+set.seed(123)
+x <- runif(40)
+y <- 3 + x + rnorm(length(x), sd = 0.25)
+g <- rep(c("old", "new"), each = 20)
+
+dat <- data.frame(x, y, g)
+gp <- ggplot(dat, aes(x, y, color = g)) +
+    geom_point(size = 10) +
+    geom_smooth(method = "lm", se = FALSE, 
+                linewidth = 3, color = "black") +
+    theme_cowplot() +
+    theme(legend.position = "none", 
+          axis.text = element_blank(), 
+          axis.title = element_text(size = 34)) +
+    scale_color_discrete(palette = c("transparent", "black"))
+
+gp
+```
+
+::::
+
+:::: {.column}
+
+and fit a model to it by maximizing likelihood.
+
+::::
+
+:::
+
+::::
+
+:::: {.fragment .fade-in-then-out}
+
+Imagine you have one data set <span style="display:inline-block; width:0.8em; height:0.8em; background-color:black; border-radius:50%; vertical-align:middle;"></span> then collect a new one <span style="display:inline-block; width:0.8em; height:0.8em; background-color:gray; border-radius:50%; vertical-align:middle;"></span>
+
+
+::: {.columns}
+
+:::: {.column}
+
+```{r}
+#| fig-width: 6
+#| fig-height: 6
+
+gp +
+    geom_point(data = filter(dat, g == "new"), 
+               aes(x, y), 
+               color = "gray", size = 10)
+
+```
+
+::::
+
+:::: {.column}
+
+and calculate the log likelihood of the new data given the same model fit to the first data
+
+
+
+::::
+
+:::
+
+
+::::
+
+:::
+
+## AIC penalizes more parameters
+
+How? and why?
+
+
+::: {.r-stack}
+
+:::: {.fragment .fade-in-then-out}
+
+Imagine you have one data set <span style="display:inline-block; width:0.8em; height:0.8em; background-color:black; border-radius:50%; vertical-align:middle;"></span> 
+
+::: {.columns}
+
+:::: {.column}
+
+```{r}
+#| fig-width: 6
+#| fig-height: 6
+
+set.seed(123)
+x <- runif(40)
+y <- 3 + x + rnorm(length(x), sd = 0.25)
+g <- rep(c("old", "new"), each = 20)
+
+dat <- data.frame(x, y, g)
+gp <- ggplot(dat, aes(x, y, color = g)) +
+    geom_point(size = 10) +
+    geom_smooth(method = "lm", se = FALSE, 
+                linewidth = 3, color = "black") +
+    theme_cowplot() +
+    theme(legend.position = "none", 
+          axis.text = element_blank(), 
+          axis.title = element_text(size = 34)) +
+    scale_color_discrete(palette = c("transparent", "black"))
+
+gp
+```
+
+::::
+
+:::: {.column}
+
+and fit a model to it by maximizing likelihood.
+
+::::
+
+:::
+
+::::
+
+:::
+
+## AIC penalizes more parameters
+
+How? and why?
+
+
+Imagine you have one data set <span style="display:inline-block; width:0.8em; height:0.8em; background-color:black; border-radius:50%; vertical-align:middle;"></span> then collect a new one <span style="display:inline-block; width:0.8em; height:0.8em; background-color:gray; border-radius:50%; vertical-align:middle;"></span>
+
+
+::: {.columns}
+
+:::: {.column}
+
+```{r}
+#| fig-width: 6
+#| fig-height: 6
+
+gp +
+    geom_point(data = filter(dat, g == "new"), 
+               aes(x, y), 
+               color = "gray", size = 10)
+
+```
+
+::::
+
+:::: {.column}
+
+
+::: {.r-stack}
+
+:::: {.fragment .fade-in-then-out}
+
+We could calculate the log likelihood for the new data ***but*** with parameter estimates from original model 
+
+::::
+
+:::: {.fragment}
+
+The difference between the mean log likelihood of the original data and the mean log likelihood of the new data will be about $k$
+
+
+::::
+
+
+:::
+
+
+::::
+
+:::
+
+
+:::
+
+::: {.absolute top="70%" left="35%" style="z-index: 10;"}
+
+::: {.fragment}
+
+$$
+\frac{1}{n} \mathcal{l}(\hat{\theta} \mid \text{data}_\text{orig}) - \frac{1}{n} \mathcal{l}(\hat{\theta} \mid \text{data}_\text{new}) \approx k
+$$
+
+:::
+
+:::
+
+## AIC penalizes more parameters
+
+<br><br>
+
+So AIC is trying to account for the chance that additional parameters are just fitting noise by including a penalty for those additional parameters
+
+
+## Returning to model comparisons
+
+We can rest assured that the improvement in AIC for the `temp + rain` model is not due just to adding antother parameter
+
+```{r}
+#| echo: true
+
+AIC(mod_temp_precip)
+
+AIC(mod_hii)
+```
+
+::: {.fragment}
+
+A common rule is that models with AIC values within 2 points are effectively equivalent; $>2$ means one model really is better supported [@burnham-anderson]
+
+:::
+
+
+## Model averaging
+
+::: {.incremental}
+
+- model comparisons tells us which model is more supported
+- model averaging is less about testing hypotheses and more about ***prediction***
+- for example: how can we best predict tree richness across the pae ʻāina?
+
+:::
+
+
+## References
+
+
+```{r}
+#| eval: false
+AIC(mod0, mod1)
+
+sw(list(mod0, mod1))
+
+
+fm1 <- lm(y ~ ., data = Cement, na.action = na.fail)
+ms1 <- dredge(fm1)
+
+# Sum of weights can be calculated/extracted from various objects:
+sw(ms1)
+
+
+```
