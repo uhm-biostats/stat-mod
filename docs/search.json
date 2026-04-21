@@ -1552,5 +1552,38 @@
       "Significance testing and model selection",
       "<span class='chapter-number'>29</span>  <span class='chapter-title'>Model Comparison and Averaging</span>"
     ]
+  },
+  {
+    "objectID": "aic-lab.html",
+    "href": "aic-lab.html",
+    "title": "30  Comparing models with AIC",
+    "section": "",
+    "text": "30.1 Understanding how AIC avoids over fitting\nThis lab will guide you through using AIC to compare models. You can download the template .qmd file for this lab here:\nDownload lab template\nThe template will prompt you to work through the following sections.\nAIC is based on log likelihood but penalizes models based on how many parameters they have. We can think about this as the additional parameters need to prove their utility (by increasing likelihood) compared to the cost of including them.",
+    "crumbs": [
+      "Significance testing and model selection",
+      "<span class='chapter-number'>30</span>  <span class='chapter-title'>Comparing models with AIC</span>"
+    ]
+  },
+  {
+    "objectID": "aic-lab.html#understanding-how-aic-avoids-over-fitting",
+    "href": "aic-lab.html#understanding-how-aic-avoids-over-fitting",
+    "title": "30  Comparing models with AIC",
+    "section": "",
+    "text": "30.1.1 Figuring out if a more complex model is worth it\nLet’s compare two linear models based on simulated data. The first model will be\n\\[\n\\begin{aligned}\n\\bar{y} &= a_0 + a_1 x_1 + a_2 x_2 + a_3 x_3 \\\\\ny &\\sim \\mathcal{N}(\\bar{y}, ~\\sigma)\n\\end{aligned}\n\\]\nand the second model will be\n\\[\n\\begin{aligned}\n\\bar{y} &= b_0 + b_1 x_1 + b_4 x_4 \\\\\ny &\\sim \\mathcal{N}(\\bar{y}, ~\\sigma)\n\\end{aligned}\n\\]\nThe models are not nested and they have different numbers of parameters (more parameters is often called more complex). This is a perfect case for AIC.\nIn our simulation, let’s assume that x2 and x3 actually have no affect on y. So our first model that includes those variables will be fitting noise. It will be over fitting. Here’s the simulation\n\n# sample size\nn &lt;- 200\n\n# set seed so we all get the same results\nset.seed(8)\n\n# explanatory vars\nx1 &lt;- runif(n, 0, 8)\nx2 &lt;- runif(n, 0, 8)\nx3 &lt;- runif(n, 0, 8)\nx4 &lt;- runif(n, 0, 8)\n\n# mean of y (depends only on `x1` and `x4`)\nybar &lt;- 2 + 1.5 * x1 + 0 * x2 + 0 * x3 - 1 * x4\n\ny &lt;- rnorm(n, ybar, sd = 1.5)\n\n# combine into data object for later use\nsim_dat &lt;- data.frame(x1, x2, x3, x4, y)\n\nNow work through the following\n\nmake the two models we spelled out with equations\ncompare their log likelihoods, what do you observe?\ncompare their AIC values, is it worth it including x2 and x3 to make a more complex model?\n\n\n\n30.1.2 Deciding whether to use AIC or likelihood ratio test (LRT)\nAIC can be used to compare any two or more models. LRT can only compare two nested models. We can use AIC any time, but if the models we want to compare are nested, it is often more advisable to use LRT because we can get formal \\(P\\)-values and confidence intervals.\nLet’s test our skill in identifying when only AIC will work versus when LRT can be applied. For each of the following questions\n\nwrite the models being suggested by the questions, either as an equation or with an un-evaluated R formula like y ~ x (set eval: false for any code chunks with such formulas)\nuse the written out models to determine if they are nested or not, if AIC is the only option\n\nQuestion 1\n\nIs substrate age or human impact the better predictor of the proportion of non-native species in a plot?\n\nQuestion 2\n\nIs there an interactive effect of temperature and precipication in driving species richness?\n\nQuestion 3\n\nDo temperature and preciptiation, and their interaction, drive species richness, or is substrate age a better predictor, or is substrate age interacting with NDVI the better predictor?",
+    "crumbs": [
+      "Significance testing and model selection",
+      "<span class='chapter-number'>30</span>  <span class='chapter-title'>Comparing models with AIC</span>"
+    ]
+  },
+  {
+    "objectID": "aic-lab.html#applying-aic-to-your-own-models",
+    "href": "aic-lab.html#applying-aic-to-your-own-models",
+    "title": "30  Comparing models with AIC",
+    "section": "30.2 Applying AIC to your own models",
+    "text": "30.2 Applying AIC to your own models\nTake any two or three of the models we have worked on as a class, or that you have been working on individually in your labs, or any from the list of questions above. With those models, use AIC to compare them and figure out which is best supported.\nIt might be that the \\(\\Delta AIC\\) between models will be \\(\\leq 2\\), in which case there is an inconclusive result as to which model is best supported. Report any inconclusive comparisons.",
+    "crumbs": [
+      "Significance testing and model selection",
+      "<span class='chapter-number'>30</span>  <span class='chapter-title'>Comparing models with AIC</span>"
+    ]
   }
 ]
