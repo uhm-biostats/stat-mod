@@ -47,6 +47,7 @@ book:
             - hyp-test-recap.qmd
             - power-analysis.qmd
             - aic.qmd
+            - aic-lab.qmd
 
 
 bibliography: stat-mod.bib
