@@ -1,0 +1,107 @@
+---
+title: "Comparing models with AIC"
+format:
+    pdf:
+        include-in-header:
+            text: |
+                \usepackage{newunicodechar}
+                \newunicodechar{ʻ}{`}
+author:
+    - your name here
+---
+
+```{r}
+#| label: setup
+
+# load all necessary packages
+library(ggplot2)
+library(dplyr)
+
+```
+
+
+## Understanding how AIC avoids over fitting
+
+AIC is based on log likelihood but penalizes models based on how many parameters they have. We can think about this as the additional parameters need to prove their utility (by increasing likelihood) compared to the cost of including them.
+
+Let's compare two linear models based on simulated data. The first model will be 
+
+$$
+\begin{aligned}
+\bar{y} &= a_0 + a_1 x_1 + a_2 x_2 + a_3 x_3 \\
+y &\sim \mathcal{N}(\bar{y}, ~\sigma)
+\end{aligned}
+$$
+
+and the second model will be 
+
+
+$$
+\begin{aligned}
+\bar{y} &= b_0 + b_1 x_1 + b_4 x_4 \\
+y &\sim \mathcal{N}(\bar{y}, ~\sigma)
+\end{aligned}
+$$
+
+The models are not nested and they have different numbers of parameters (more parameters is often called more complex). This is a perfect case for AIC.
+
+In our simulation, let's assume that `x2` and `x3` actually have no affect on `y`. So our first model that includes those variables will be fitting noise. It will be *over fitting*. Here's the simulation
+
+
+```{r}
+# sample size
+n <- 200
+
+# set seed so we all get the same results
+set.seed(8)
+
+# explanatory vars
+x1 <- runif(n, 0, 8)
+x2 <- runif(n, 0, 8)
+x3 <- runif(n, 0, 8)
+x4 <- runif(n, 0, 8)
+
+# mean of y (depends only on `x1` and `x4`)
+ybar <- 2 + 1.5 * x1 + 0 * x2 + 0 * x3 - 1 * x4
+
+y <- rnorm(n, ybar, sd = 1.5)
+
+# combine into data object for later use
+sim_dat <- data.frame(x1, x2, x3, x4, y)
+
+```
+
+
+Now work through the following
+
+- make the two models we spelled out with equations
+- compare their log likelihoods, what do you observe?
+- compare their AIC values, is it worth it including `x2` and `x3` to make a more complex model?
+
+## Deciding whether to use AIC or likelihood ratio test (LRT)
+
+AIC can be used to compare any two or more models. LRT can only compare two nested models. We can use AIC any time, but if the models we want to compare are nested, it is often more advisable to use LRT because we can get formal $P$-values and confidence intervals.  
+
+Let's test our skill in identifying when only AIC will work versus when LRT can be applied. For each of the following questions
+
+- write the models being suggested by the questions, either as an equation or with an un-evaluated R formula like `y ~ x` (set `eval: false` for any code chunks with such formulas)
+- use the written out models to determine if they are nested or not, if AIC is the only option
+
+***Question 1***
+
+> Is substrate age or human impact the better predictor of the proportion of non-native species in a plot?
+
+***Question 2***
+
+> Is there an interactive effect of temperature and precipication in driving species richness?
+
+***Question 3***
+
+> Do temperature and preciptiation, and their interaction, drive species richness, or is substrate age a better predictor, or is substrate age interacting with NDVI the better predictor?
+
+
+## Applying AIC to your own models
+
+Take any two or three of the models we have worked on as a class, or that you have been working on individually in your labs, or any from the list of questions above. With those models, use AIC to compare them and figure out which is best supported. 
+
+It might be that the $\Delta AIC$ between models will be $\leq 2$, in which case there is an inconclusive result as to which model is best supported. Report any inconclusive comparisons.
