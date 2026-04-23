@@ -48,6 +48,7 @@ book:
             - power-analysis.qmd
             - aic.qmd
             - aic-lab.qmd
+            - mod-avg-lab.qmd
 
 
 bibliography: stat-mod.bib
