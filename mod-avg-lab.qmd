@@ -1,0 +1,38 @@
+---
+format:
+  html:
+    code-links:
+      - text: View source
+        icon: github
+        href: https://github.com/uhm-biostats/stat-mod/blob/main/mod-avg-lab.qmd
+---
+
+
+# Averaging models with AIC
+
+This lab will guide you through averaging models with AIC. You can download the template `.qmd` file for this lab here:
+
+{{< downloadthis labs/lab09-mod-avg.qmd dname=lab09-mod-avg label="Download lab template">}}
+
+The template will prompt you to work through the following sections.
+
+
+
+```{r}
+#| include: false
+
+library(ggplot2)
+library(cowplot)
+library(dplyr)
+
+
+source("R/utils.R")
+out <- render_lab("labs/lab09-mod-avg.qmd")
+```
+
+```{r}
+#| echo: false
+#| results: asis
+
+cat(out$m, sep = "\n")
+```
