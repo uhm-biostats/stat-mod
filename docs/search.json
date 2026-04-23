@@ -1585,5 +1585,49 @@
       "Significance testing and model selection",
       "<span class='chapter-number'>30</span>  <span class='chapter-title'>Comparing models with AIC</span>"
     ]
+  },
+  {
+    "objectID": "mod-avg-lab.html",
+    "href": "mod-avg-lab.html",
+    "title": "31  Averaging models with AIC",
+    "section": "",
+    "text": "31.1 Overall goal\nThis lab will guide you through averaging models with AIC. You can download the template .qmd file for this lab here:\nDownload lab template\nThe template will prompt you to work through the following sections.\nWe want to understand how to average models with AIC, and then we also want to see for ourselves why model averaging is useful for prediction. So we will build a hand full of models, average them, and then compare the predictive abilities of individual models against the predictive ability of the averaged model. For all these goals we will split our real data in half and use one half for training our models, and the other half for testing them.\nWe will return to the question of what drives the proportion of non-native trees in a plot—something that would be very useful for land managers to be able to predict! To model proportions we will again be using our old friend the binomial GLM.",
+    "crumbs": [
+      "Significance testing and model selection",
+      "<span class='chapter-number'>31</span>  <span class='chapter-title'>Averaging models with AIC</span>"
+    ]
+  },
+  {
+    "objectID": "mod-avg-lab.html#preparing-the-data",
+    "href": "mod-avg-lab.html#preparing-the-data",
+    "title": "31  Averaging models with AIC",
+    "section": "31.2 Preparing the data",
+    "text": "31.2 Preparing the data\nWe need to join the tree survey, climate, and geo/human impact data.frames and then use the split-apply-combine workflow to calculate plot-level data. The plot-level data we will need are:\n\nall explanatory variables (hint: use across)\nnumber of non-native species\nnumber of native species\n\nFor ease of working together, let’s all name our final, combined data object dat_non_nat.\nOnce those steps are completed, we’ll split our data into training and testing sets. The key is, we want these training and testing sets to be random samples from the data. For random samples, we use the function sample. We are sampling rows, so this is how it will work\n\n# be sure to switch `eval` to `true` in this chunk\n\n# size of half the data\nn_subsamp &lt;- round(nrow(dat_non_nat) / 2)\n\n# random indexes to be used for sampling\nrand_idx &lt;- sample(nrow(dat_non_nat), n_subsamp)\n\n# extract the training data\ndat_train &lt;- dat_non_nat[rand_idx, ]\n\n# the test data is everything left\ndat_test &lt;- dat_non_nat[-rand_idx, ]",
+    "crumbs": [
+      "Significance testing and model selection",
+      "<span class='chapter-number'>31</span>  <span class='chapter-title'>Averaging models with AIC</span>"
+    ]
+  },
+  {
+    "objectID": "mod-avg-lab.html#making-models-and-averaging-them",
+    "href": "mod-avg-lab.html#making-models-and-averaging-them",
+    "title": "31  Averaging models with AIC",
+    "section": "31.3 Making models and averaging them",
+    "text": "31.3 Making models and averaging them\nNow let’s make three different models based on genuine hypotheses about what processes might affect the proportion of non-native species in a plot. Again, for simplicity of working together, let’s name those models mod1, mod2, and mod3, even though each of us might have different explanatory variables in the models.\nAs a refresher, for making a binomial GLM when we know the number of “successes” and “failures”, we use this syntax\n\n# `x` is just a place holder for a real explanatory variable\nmod1 &lt;- glm(cbind(n_non, n_nat) ~ x, data = dat_train, \n            family = binomial)\n\nNotice that we are using dat_train! We are only fitting these models on the training data so we can then see how good (or bad) they predict data they have never seen before—dat_test.\nOnce your three models are built, let’s average them. We’ll use model.avg from the MuMIn package:\n\nmod_avg &lt;- model.avg(list(mod1, mod2, mod3))\n\nFor the sake of really understanding how the model averaging works, let’s calculate by hand the Akaike weights and compare to what model.avg gave us. The equation for weights is\n\\[\nw_i = \\frac{e^{-\\Delta\\text{AIC}_i / 2}}{\\sum_j e^{-\\Delta\\text{AIC}_j / 2}}\n\\]\nwhere \\(\\Delta\\text{AIC}_i = \\text{AIC}(\\text{model}_i) - \\min(\\text{AIC})\\).\nWhen calculating AIC, we might as well use AICc from MuMIn so our comparison with the output of model.avg will be equivalent.\nNext let’s use the weights to calculate averaged coefficients for the explanatory variables we used in our models. As an example, if explanatory variable x showed up in models mod1 and mod2, its averaged coefficient would be\n\n# assume w1 is weight for mod1, and w2 is weight for mod2\ncoefficients(mod1)[\"x\"] * w1 + coefficients(mod2)[\"x\"] * w2\n\nYou only need to do this for one of your explanatory variables. Compare to the output of coefficients(mod_avg).",
+    "crumbs": [
+      "Significance testing and model selection",
+      "<span class='chapter-number'>31</span>  <span class='chapter-title'>Averaging models with AIC</span>"
+    ]
+  },
+  {
+    "objectID": "mod-avg-lab.html#testing-the-models",
+    "href": "mod-avg-lab.html#testing-the-models",
+    "title": "31  Averaging models with AIC",
+    "section": "31.4 Testing the models",
+    "text": "31.4 Testing the models\nFinally we get to the why. Why is it useful to average models? Because the predictive ability of an averaged model will be greater than the predictive ability of an individual model on its own. We’ll show this to ourselves by comparing the log likelihood values of the test data set under each our three individual models and the averaged model.\nWe’ll need to calculate AIC by hand for this exercise. But how do we calculate the log likelihood for the test data when our model was fit to the training data? By using dbinom.\n\n# first use `predict` to get the predicted binomial p parameter\n# for the test data\np_mod1 &lt;- predict(mod1, newdata = dat_test, type = \"response\")\n\n\n# then plug the predicted p into dbinom and sum log probs\nll_mod1 &lt;- dbinom(x = dat_test$n_non, \n       size = dat_test$n_non + dat_test$n_nat, \n       prob = p_mod1, \n       log = TRUE) |&gt; \n    sum()\n\nCompare the log likelihood values for mod1, mod2, mod3, and mod_avg on dat_test. Which has the highest log likelihood?\nBonus question: why are we comparing log likelihoods even though our models have different numbers of parameters that may or may not be nested?",
+    "crumbs": [
+      "Significance testing and model selection",
+      "<span class='chapter-number'>31</span>  <span class='chapter-title'>Averaging models with AIC</span>"
+    ]
   }
 ]
