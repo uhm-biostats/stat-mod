@@ -1,0 +1,224 @@
+---
+title: "Basics of Bayesian inference"
+format:
+    pdf:
+        include-in-header:
+            text: |
+                \usepackage{newunicodechar}
+                \newunicodechar{ʻ}{`}
+author:
+    - your name here
+---
+
+```{r}
+#| label: setup
+
+# load all necessary packages
+library(ggplot2)
+library(dplyr)
+library(brms)
+library(bayesplot)
+
+```
+
+
+## Simulating a familiar model
+
+We'll start by simulating a simple and familiar GLM: a Poisson response variable responding to a single numeric explanatory variable.
+
+```{r}
+# set seed so we all have the same data
+set.seed(123)
+
+# random numeric data for explanatory variable
+x <- runif(400, 0, 1)
+
+# log(m) is the link function so mu = exp(...)
+mu <- exp(-1 + 4 * x)
+
+# draw random Poisson data based on mu responding to x
+y <- rpois(length(x), mu)
+
+# combine in one data object
+dat <- data.frame(x, y)
+```
+
+
+Use `ggplot` to visualize these data.
+
+
+## A quick start guide to Bayesian inference with *brms*
+
+The *brms* package lets estimate posteriors in a way that looks very similar to how we fit GLMs with maximum likelihood using the `glm` function.  The workhorse function of *brms* is `brm` which takes `forumal`, `data`, and `family` arguments just like `glm`. But `brm` can take many additional arguments that are specific to Bayesian MCMC. Three especially important Bayesian MCMC arguments are `prior`, `iter`, and `warmup`. These all have meaningful defaults (so `brm` will run without specifying values for these arguments) but we should understand them so we can evaluate when to use or not use the defaults.
+
+First we build a model
+
+
+```{r}
+#| label: brm-500
+#| cache: true
+
+m_500 <- brm(y ~ x, data = dat, 
+             # note: by convention the family gets `()`
+             family = poisson(), 
+             prior = c(prior(normal(0, 1000), class = Intercept),
+                       prior(normal(0, 1000), class = b)), 
+             iter = 1000, 
+             warmup = 500)
+```
+
+
+Something you'll notice is that there is more printed output while the function is running, and it takes much longer to run compared to `glm`. The output mentions `Chain 1`, ..., `Chain 4`. By default the MCMC under the hood of `brm` runs 4 times. We'll get into why in the next section.
+
+First, let's investigate `prior`, `iter`, and `warmup`.
+
+The argument `iter` tells `brm` how many total iterations of the No-U-Turns Hamiltonian MC to run. The `warmup` specifies how many of those iterations to use as a "warm-up," meaning finding the right fine tuning of the NUTS HMC. The warm-up is always the first `warmup` number of iterations, and these warm-up iterations are not included in the final sample of the posterior. We used `warmup = 500`, thus the name of this model `m_500`.
+
+We specify the prior for both `Intercept` and slope `b` as `normal(0, 1000)`, meaning normal with mean = 0 and standard deviation = 1,000. In making the prior we need to indicate what parameter the prior is for with `class`. We use the special function `normal` rather than `rnorm` or `dnorm` because we are creating a prior and letting `brm` sample from it. But we can use `rnorm` to visualize what the prior looks like.
+
+Use `rnorm` to draw 2,000 samples from a normal distribution with mean = 0 and standard deviation = 1,000, then visualize a two histograms, the first for just the values between -300 and +300, the second for all the randomly sampled values.
+
+
+You should find that between -300 and +300 the prior is nearly flat. But over its full range it of course looks like a bell curve. Consider this: very large negative and positive numbers will almost never end up in our posterior sample, why?
+
+
+Speaking of the posterior, let's visualize it.  First we can extract the posterior with `as_draws_df`
+
+```{r}
+post_500 <- as_draws_df(m_500)
+
+# have a look
+post_500
+```
+
+We have a `data.frame` type object with columns for `b_Intercept` and `b_x`, those are the intercept and slope parameters of our model. The other columns store additional information that we will not consider.
+
+Because we ran 4 chains (4 separate MCMC's) each with 500 post-warm-up iterations, we should have `4 * 500 = 2000` samples in `post_500`. Let's confirm
+
+```{r}
+nrow(post_500)
+```
+
+Make a histogram of the posterior for the intercept `b_Intercept` and the slope `b_x`. Is the range of the posteriors consistent with the true intercept and slope we used to simulate the data (intercept = -1, slope = 4)? (side note: the *bayesplot* package offers function `mcmc_hist` which can more directly make a histogram of posteriors)
+
+Now use `mean` and `quantile` on `post_500` to calculate the estimate and 95% credible intervals for the intercept and slope. Compare to the output of `fixef`.
+
+```{r}
+fixef(m_500)
+```
+
+Hint: for calculating 95% CI, use `quantile` with the `probs` argument set to `c(0.025, 0.975)`. Here's an example:
+
+```{r}
+x <- rnorm(100)
+quantile(x, probs = c(0.025, 0.975))
+```
+
+## Diagnosing the success (or failure) or Bayesian MCMC
+
+Bayesian MCMC is a lot more sensitive compared to maximizing the likelihood. If the MCMC does not run successfully, the posterior sample is not reliable.  So it is very important that we diagnose whether the MCMC was successful. There are a few key metrics of success:
+
+- did the MCMC converge (meaning did it find the region of parameter space where the posterior is highest)?
+- did the MCMC produce sufficient samples?
+- did the MCMC get stuck somewhere?
+- specifically for NUTS: were there any *"divergences"*? (we'll get into what that means)
+
+The `summary` function provides some useful information
+
+```{r}
+summary(m_500)
+
+```
+
+In addition to information about the parameter values (i.e. estimates, CI) we have two new pieces of information: `Rhat` (or $\hat{R}$) and `ESS` which stands for "effective sample size" (both `Bulk` and `Tail`).
+
+$\hat{R}$ is a useful measure of convergence. It quantifies the ratio of within-chain variance to the between chain variance. At convergence, this ratio should be 1. From the output of `summary` we see that it is indeed `1`. Note: we get separate information for both `Intercept` and `x` (i.e. slope) because the shape of the posterior across different parameters can be different, leading to different outcomes despite all running in the same MCMC.
+
+Effective sample size tells us what our sample size is accounting for potential autocorrelation of the samples produced by the MCMC. We ran the MCMC for 500 iterations post-warm-up, so we should aim for an EES of close to 500. The fact that our EES values and $> 500$ is well known for the NUTS algorithm because its sampling method can produce negative autocorrelation.
+
+EES is split into `Bulk` and `Tail` because `Bulk` tells us about the overall posterior distribution while `Tail` tells us specificlaly about the tails of the posterior. A common problem is having `Tail_EES` be much smaller than `Bulk_EES`. This indicates that the MCMC had difficulty sampling from the tails of the posterior.
+
+### Trace plots
+
+Visual diagnostics are a mainstay of Bayesian MCMC. One of the most common visuals is the ***trace plot***. The trace plot shows the timeseries of samples from the MCMC. It is a great visual way of confirming convergence. Here are two hypothetical trace plots
+
+```{r}
+#| label:fig-trace-converge
+
+conv <- data.frame(iter = rep(1:100, 4), 
+                   chain = factor(rep(1:4, each = 100)), 
+                   b_x = rnorm(400), 
+                   convergence = "converged")
+
+no_conv <- conv |> 
+    mutate(b_x = rnorm(400) + 2 * as.numeric(chain) - 4, 
+           convergence = "not converged")
+
+b_x_conv <- rbind(conv, no_conv)
+
+ggplot(b_x_conv, aes(iter, b_x, color = chain)) +
+    geom_line() +
+    facet_grid(cols = vars(convergence)) +
+    scale_color_viridis_d()
+```
+
+Load the *bayesplot* package and use function `mcmc_trace` to visualize the trace of `m_500`. Can we confirm convergence?
+
+Another issue that trace plots can diagnose is a stuck MCMC. This happens when one or more chains gets stuck in a region (or regions) of parameter space. That might look something like
+
+```{r}
+#| label: fig-trace-stuck
+
+stuck <- conv |>
+    mutate(b_x = b_x + rep(c(0, 0, 0, rnorm(5, sd = 3)), each = 25))
+
+ggplot(stuck, aes(iter, b_x, color = chain)) +
+    geom_line() +
+    scale_color_viridis_d()
+
+```
+
+Compared to the trace plot of the acutual model, did the MCMC get stuck?
+
+### Divergence
+
+Divergence is a special concept for the NUTS and HMC algorithms. These algorithms try to simulate actual physics, but sometimes they get it wrong. Imagine if a kid kicked a ball but instead of rolling down a hill it just started floating. That would be a divergence. If divergences occur we cannot trust the posterior sample.
+
+Our MCMC with 500 warm-up iterations did not encounter any divergence. But if we don't allow the MCMC to properly warm up, divergences are increasingly likely.  Let's make a new model object from the same data and with 500 post-warm-up iterations, but with only 10 warm up steps and then see how we can evaluate divergence.
+
+
+```{r}
+#| label: brm-10
+#| cache: true
+
+set.seed(1)
+m_10 <- brm(y ~ x, data = dat, 
+            family = poisson(), 
+            prior = c(prior(normal(0, 1000), class = Intercept),
+                      prior(normal(0, 1000), class = b)), 
+            iter = 510, 
+            warmup = 10)
+```
+
+One thing we'll notice right away is that `brm` gave us a warning about divergence. Let's use visual diagnostics to see what happened.
+
+To make a visual about divergence we first have to gather some extra information specifically about the NUTS sampler
+
+
+```{r}
+# info about MCMC
+np <- nuts_params(m_10)
+
+# now we can visualize divergences in the trace plot
+mcmc_trace(m_10, np = np)
+
+```
+
+Divergences happen seemingly at random. We can confirm this by looking at the joint posterior distribution
+
+```{r}
+mcmc_pairs(m_10, pars = c("b_Intercept", "b_x"), np = np)
+
+```
+
+Because divergences happen all over parameter space, we likely just need to better warm-up the MCMC (we knew this because we forced it to have too few warm-up iterations). If there were clear patterns to the divergences that would indicate a problem in the model specification and we might need to revise how we build our model.

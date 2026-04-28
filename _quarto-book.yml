@@ -52,6 +52,7 @@ book:
         - part: brief-bayes.qmd
           chapters:
             - bayes-intro.qmd
+            - bayes-basics-lab.qmd
 
 
 bibliography: stat-mod.bib

@@ -1,0 +1,40 @@
+---
+format:
+  html:
+    code-links:
+      - text: View source
+        icon: github
+        href: https://github.com/uhm-biostats/stat-mod/blob/main/bayes-basics-lab.qmd
+---
+
+
+# Comparing models with AIC
+
+This lab will guide you through an introduction to using *brms* for Bayesian model inference. You can download the template `.qmd` file for this lab here:
+
+{{< downloadthis labs/lab10-bayes-basics.qmd dname=lab10-bayes-basics label="Download lab template">}}
+
+The template will prompt you to work through the following sections.
+
+
+
+```{r}
+#| include: false
+
+library(ggplot2)
+library(cowplot)
+library(dplyr)
+library(brms)
+library(bayesplot)
+
+
+source("R/utils.R")
+out <- render_lab("labs/lab10-bayes-basics.qmd")
+```
+
+```{r}
+#| echo: false
+#| results: asis
+
+cat(out$m, sep = "\n")
+```
