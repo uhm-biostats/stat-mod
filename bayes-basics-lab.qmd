@@ -8,7 +8,7 @@ format:
 ---
 
 
-# Comparing models with AIC
+# Basics of Bayesian inference
 
 This lab will guide you through an introduction to using *brms* for Bayesian model inference. You can download the template `.qmd` file for this lab here:
 
