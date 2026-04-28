@@ -1,0 +1,22 @@
+---
+format:
+  html:
+    code-links:
+      - text: View source
+        icon: github
+        href: https://github.com/uhm-biostats/stat-mod/blob/main/bayes-intro.qmd
+bibliography: stat-mod.bib
+csl: conservation-biology.csl
+---
+
+
+# Intro to Bayesian Statistics
+
+
+## Slides {#sec-slides}
+
+
+```{=html}
+<iframe class="slide-deck" src="bayes-intro-slides.html"></iframe>
+```
+
