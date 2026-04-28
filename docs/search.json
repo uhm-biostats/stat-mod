@@ -1547,7 +1547,84 @@
     "href": "aic.html",
     "title": "29  Model Comparison and Averaging",
     "section": "",
-    "text": "29.1 Slides",
+    "text": "29.1 The Akaike Information Criterion\nPreviously we saw that the likelihood ratio test (LRT) can compare models. But the LRT has a key restriction: the models being compared must be nested—one model must be a simplified version of the other, obtainable by setting some parameter(s) to zero or another fixed constant. What happens when the models we want to compare cannot be nested?\nConsider a question we left unresolved when studying collinearity: does temperature or human impact do a better job predicting tree species richness? We cannot combine both explanatory variables in one model because they are collinear and estimates of their slopes will be inconsistent. Instead we are left with two competing single-predictor models:\n\\[\n\\begin{aligned}\n\\log(\\mu_\\text{nspp}) &= b_0 + b_1 \\log(\\text{area}) + b_2 \\text{ temperature} \\\\\n\\log(\\mu_\\text{nspp}) &= b_0 + b_1 \\log(\\text{area}) + b_2 \\text{ human impact}\n\\end{aligned}\n\\]\nNeither of these is a special case of the other. In fact they have the same number of parameters, so even if we compared the difference of their log likelihoods, the proper \\(\\chi^2\\) distribution would have degrees of freedom equal to 0, which cannot exist. So the LRT cannot help us here, but a new approach called Akaike Information Criterion can.\nThe Akaike Information Criterion (AIC) is a measure of model support that can be applied to any two models fit to the same data, regardless of whether they are nested:\n\\[\n\\mathcal{l}(\\hat{\\theta}_\\text{MLE}) - k\n\\]\nThen to get AIC we multiply that above expression by \\(-2\\)\n\\[\n\\text{AIC} = -2\\mathcal{l}(\\hat{\\theta}_\\text{MLE}) + 2k\n\\]\nwhere \\(\\mathcal{l}(\\hat{\\theta}_\\text{MLE})\\) is the maximum log-likelihood of the model and \\(k\\) is the number of estimated parameters. Lower AIC means better support. We can compute it directly in R with the AIC function:\nmod_temp &lt;- glm.nb(nspp ~ log(Plot_Area) + avg_temp_annual_c,\n                   data = dat_plt)\nAIC(mod_temp)\n\n[1] 2321.152\n\nmod_hii &lt;- glm.nb(nspp ~ log(Plot_Area) + hii,\n                  data = dat_plt)\nAIC(mod_hii)\n\n[1] 2314.374\nNote that these models are built using dat_plt which is the same data.frame we have been working with that we made by joining the tree survey data, with climate data, with geophysical and human impact data.\nWe see that the AIC for the human impact model is lower so we conclude that the human impact model is better supported by the data.",
+    "crumbs": [
+      "Significance testing and model selection",
+      "<span class='chapter-number'>29</span>  <span class='chapter-title'>Model Comparison and Averaging</span>"
+    ]
+  },
+  {
+    "objectID": "aic.html#why-aic-penalizes-more-parameters",
+    "href": "aic.html#why-aic-penalizes-more-parameters",
+    "title": "29  Model Comparison and Averaging",
+    "section": "29.2 Why AIC penalizes more parameters",
+    "text": "29.2 Why AIC penalizes more parameters\nThe \\(2k\\) term in AIC deserves some thought. In the case with human impact model versus the temperature model, this \\(2k\\) term is irrelevant because both models have the same number of parameters. So let’s make another, more complex (meaning more parameters) model.\n\nmod_temp_precip &lt;- glm.nb(\n    nspp ~ log(Plot_Area) + avg_temp_annual_c + rain_annual_mm,\n    data = dat_plt\n)\n\nIt’s reasonable to ask: why penalize for the number of parameters at all? The reason is that adding parameters to a model will always increase the log-likelihood—a model with more parameters can always fit the data at least as well as a simpler one. We can see that in comparing the mod_temp_precip model to the mod_temp model:\n\nlogLik(mod_temp_precip)\n\n'log Lik.' -1143.968 (df=5)\n\nlogLik(mod_temp)\n\n'log Lik.' -1156.576 (df=4)\n\n\nThe increased log likelihood of the more complex model could indicate that the model really does describe the data better. But a higher log likelihood does not necessarily mean the more complex model is genuinely better at making predictions. A model with too many parameters can overfit: it starts fitting the noise specific to the sample rather than the underlying signal.\nThe AIC penalty of \\(2k\\) addresses this directly: it tries to account for the artificial increase in log likelihood due to potential overfitting while not overly penalizing genuine improvement in predictive ability. The reason for a penalty of \\(2k\\) is quite interesting and is based on trying to balance having enough parameters to make good predictions, but not too many so that our model is overfit. Figuring out that balance relies on using this hypothetical scenario:\nImagine we have two data sets, each with sample size \\(n\\), that come from exactly the same study system. And imagine we use one data set (we’ll call it the “training” set) to fit a model with maximum likelihood. The other data set well call the “test” set, because soon we will test our model on that “test” data set. Our two data sets, and the one model, might look something like this\n\n\n\n\n\n\n\n\n\nNow that we have fit our model to the training data (aka we have “trained” our model) let’s see how well it predicts the test data. To see how well it predicts the test data we could calculate the maximum of the log likelihood function (with parameters fit to the training data) given the test data. Put another way, what is the maximum log likelihood of the model when we show it data it has never seen before?\nFor the two hypothetical data sets shown in the figure above we have these two maximum log likelihood values\n\n\nGiven the training data, the max log likelihood of model fit to training data is\nGiven the test data, the max log likelihood of model fit to training data is\n\n\\(\\mathcal{l}(\\hat{\\theta}_\\text{training} \\mid \\text{data}_\\text{training})\\)\n\\(\\mathcal{l}(\\hat{\\theta}_\\text{training} \\mid \\text{data}_\\text{test})\\)\n\n\nThe surprisingly simple result first identified by Akaike (1974) is that if we divide each of these max log likelihoods by sample size (equivilant to the average log likelihood of each data point) we find the difference between them is approximately \\(k\\)\n\\[\n\\frac{1}{n}\\mathcal{l}(\\hat{\\theta}_\\text{training} \\mid \\text{data}_\\text{training}) - \\frac{1}{n}\\mathcal{l}(\\hat{\\theta}_\\text{training} \\mid \\text{data}_\\text{test}) \\approx k\n\\]\nSo the difference between these average log likelihoods will be larger for a model with more parameters. That’s the cost of potential over fitting.\nIf we deduct this “over fitting cost” from the log likelihood of a model we get\n\\[\n\\text{AIC} = -2\\mathcal{l}(\\hat{\\theta}_\\text{MLE}) + 2k\n\\]\nBecause we have accounted for the cost of additional parameters, we can safely use AIC to compare the models mod_temp_precip and mod_hii which have different numbers of parameters.\n\nAIC(mod_temp_precip)\n\n[1] 2297.937\n\nAIC(mod_hii)\n\n[1] 2314.374\n\n\nWe can now be confident that the improvement for the temp + rain model is not simply due to more parameters, but is genuinely because those additional parameters add to the predictive ability of the model.",
+    "crumbs": [
+      "Significance testing and model selection",
+      "<span class='chapter-number'>29</span>  <span class='chapter-title'>Model Comparison and Averaging</span>"
+    ]
+  },
+  {
+    "objectID": "aic.html#interpreting-deltaaic",
+    "href": "aic.html#interpreting-deltaaic",
+    "title": "29  Model Comparison and Averaging",
+    "section": "29.3 Interpreting \\(\\Delta\\)AIC",
+    "text": "29.3 Interpreting \\(\\Delta\\)AIC\nBecause AIC values are only interpretable relative to one another, it is conventional to work with \\(\\Delta\\text{AIC}\\), the difference between each model’s AIC and the minimum AIC in the set of models we’re considering. For the three models we’ve been working with, the \\(\\Delta AIC\\) values are\n\nAIC_min &lt;- AIC(mod_temp_precip)\n\nAIC(mod_temp_precip) - AIC_min\n\n[1] 0\n\nAIC(mod_hii) - AIC_min\n\n[1] 16.43757\n\nAIC(mod_temp) - AIC_min\n\n[1] 23.21558\n\n\nBurnham & Anderson (2002) studied the behavior of AIC for many different models and found the heuristic rule that models within 2 AIC units of the best model are effectively equivalent in their support. Only a difference larger than 2 indicates that one model is genuinely better supported than another. In our case, each model is separated by \\(&gt; 2 \\Delta AIC\\) so their respective supports are different.",
+    "crumbs": [
+      "Significance testing and model selection",
+      "<span class='chapter-number'>29</span>  <span class='chapter-title'>Model Comparison and Averaging</span>"
+    ]
+  },
+  {
+    "objectID": "aic.html#model-averaging",
+    "href": "aic.html#model-averaging",
+    "title": "29  Model Comparison and Averaging",
+    "section": "29.4 Model averaging",
+    "text": "29.4 Model averaging\nModel comparison tells us which model is best supported—a useful way of testing hypotheses. But sometimes our goal is not to pick which model is best supported, but rather make the most accurate prediction possible. When the goal is prediction, a different strategy often performs better: model averaging. Rather than relying on a single model, we combine the predictions of multiple models. This can be more accurate than any one model individually, and can more honestly represent our uncertainty as scientists about which model might make the most biological sense a priori.\nConsider the three models we have built:\n\n#| eval: false\n\nnspp ~ log(Plot_Area) + hii\n\nnspp ~ log(Plot_Area) + hii\n\nnspp ~ log(Plot_Area) + avg_temp_annual_c\n\nnspp ~ log(Plot_Area) + avg_temp_annual_c\n\nnspp ~ log(Plot_Area) + avg_temp_annual_c + rain_annual_mm\n\nnspp ~ log(Plot_Area) + avg_temp_annual_c + rain_annual_mm\n\n\nEach makes different predictions about the expected species richness of a plot. But if our goal is making one prediction for richness of a plot, we need to somehow combine the three different predictions into one. We could just make one big model with all explanatory variables\n\nnspp ~ log(Plot_Area) + hii + avg_temp_annual_c + rain_annual_mm\n\nBut this approach is not neccesarily ideal because we already know that including all predictors together creates collinearity problems, and for smaller data sets there is an ever greater risk of overfitting.\n\n29.4.1 Averaging the parameters\nOne natural way to combine models is to average the coefficients. For a variable like temperature that appears in some but not all models, we could simply take the mean of its estimated slopes across all models where it appears:\n\nb31 &lt;- coefficients(mod_temp)[\"avg_temp_annual_c\"]\nb32 &lt;- coefficients(mod_temp_precip)[\"avg_temp_annual_c\"]\n\nmean(c(b31, b32))\n\n[1] 0.02612386\n\n\nThere are actually two conventions for handling variables that do not appear in every model. One averages only over models where the variable appears (as above). The other includes a slope of zero for models that omit the variable, giving a more conservative (smaller) average. The default behavior of the R package we will use follows the first convention.\n\n\n29.4.2 Weighting by model support\nA simple average treats all models equally, but we already know from the AIC values that some models are better supported than others:\n\nAIC(mod_hii)\n\n[1] 2314.374\n\nAIC(mod_temp)\n\n[1] 2321.152\n\nAIC(mod_temp_precip)\n\n[1] 2297.937\n\n\nIt makes sense when averaging to give more weight to better-supported models. To do this we first calculate Akaike weights. These weights are used when averaging to make better supported models contribute more to the average value. The Akaike weight \\(w_i\\) for model \\(i\\) is\n\\[\nw_i = \\frac{e^{-\\Delta\\text{AIC}_i / 2}}{\\sum_j e^{-\\Delta\\text{AIC}_j / 2}}\n\\]\nwhere \\(\\Delta\\text{AIC}_i = \\text{AIC}(\\text{model}_i) - \\min(\\text{AIC})\\). The weights sum to 1 across all models we’re considering (like a probability) and can be loosely interpreted as the probability that model \\(i\\) is the best-supported model given the data and the set of models considered.\n\ndelta_AIC_hii &lt;- AIC(mod_hii) - AIC_min\ndelta_AIC_temp &lt;- AIC(mod_temp) - AIC_min\ndelta_AIC_temp_precip &lt;- AIC(mod_temp_precip) - AIC_min\n\n# we need to calculate e^{-delta AIC / 2} for each model, \n# do it in a vector\nexp_terms &lt;- exp(-c(delta_AIC_hii, delta_AIC_temp, delta_AIC_temp_precip) / 2)\n\n# now we can use that vector to make the weights\nw_hii &lt;- exp_terms[1] / sum(exp_terms)\nw_temp &lt;- exp_terms[2] / sum(exp_terms)\nw_temp_precip &lt;- exp_terms[3] / sum(exp_terms)\n\nw_hii\n\n[1] 0.0002694676\n\nw_temp\n\n[1] 9.092406e-06\n\nw_temp_precip\n\n[1] 0.9997214\n\n\nTo use the weights for averaging models we take a weighted mean. A weighted mean is simply a sum of values, each multiplied by a weight, with the weights summing to 1. Earlier we averaged the slope of temperature, we will now do the same but with a weighted mean. Because temperature is not present in all models, we have to re-normalize the weights (so they sum to 1) of the models where it is present\n\nweighted.mean(c(b31, b32), \n              c(w_temp, w_temp_precip) / (w_temp + w_temp_precip))\n\n[1] 0.02797481",
+    "crumbs": [
+      "Significance testing and model selection",
+      "<span class='chapter-number'>29</span>  <span class='chapter-title'>Model Comparison and Averaging</span>"
+    ]
+  },
+  {
+    "objectID": "aic.html#model-averaging-with-the-mumin-package",
+    "href": "aic.html#model-averaging-with-the-mumin-package",
+    "title": "29  Model Comparison and Averaging",
+    "section": "29.5 Model averaging with the MuMIn package",
+    "text": "29.5 Model averaging with the MuMIn package\nComputing these weights and averaging parameters by hand is tedious. The MuMIn package does this for us. The model.avg function takes a list of candidate models and returns an averaged model object:\n\nlibrary(MuMIn)\n\nmod_avg &lt;- model.avg(list(mod_hii, mod_temp, mod_temp_precip))\n\nWe can inspect the averaged coefficients directly:\n\ncoefficients(mod_avg)\n\n      (Intercept)    log(Plot_Area) avg_temp_annual_c    rain_annual_mm \n    -2.5267209876      0.4876844180      0.0279748056      0.0000782252 \n              hii \n     0.0133591861 \n\n\nThe model table, accessed with $msTable, shows each candidate model ranked from best to worst supported, along with its AIC, \\(\\Delta\\)AIC, and weight:\n\nmod_avg$msTable\n\n    df    logLik     AICc    delta       weight\n134  5 -1143.968 2298.052  0.00000 9.997160e-01\n23   4 -1153.187 2314.451 16.39911 2.746982e-04\n13   4 -1156.576 2321.229 23.17712 9.268898e-06\n\n\nYou will notice that MuMIn reports AICc rather than AIC, which makes the output of mod.avg slightly different from our by-hand calculations. AICc is a sample-size-corrected version of AIC that applies an additional penalty for small samples. It is generally a good idea to use AICc. But for large samples, like the one we’re using, the correction is negligible:\n\nAIC(mod_temp_precip)\n\n[1] 2297.937\n\n# the AICc function is provided by MuMIn\nAICc(mod_temp_precip)\n\n[1] 2298.052",
+    "crumbs": [
+      "Significance testing and model selection",
+      "<span class='chapter-number'>29</span>  <span class='chapter-title'>Model Comparison and Averaging</span>"
+    ]
+  },
+  {
+    "objectID": "aic.html#in-between-prediction-and-hypothesis-testing",
+    "href": "aic.html#in-between-prediction-and-hypothesis-testing",
+    "title": "29  Model Comparison and Averaging",
+    "section": "29.6 In between prediction and hypothesis testing",
+    "text": "29.6 In between prediction and hypothesis testing\nModel averaging can also be used to evaluate a form of “importance” for explanatory variables. The idea of variable importance seeks to assign a weight to each explanatory variable we are considering with higher weights indicating that a variable is more important for making accurate predictions of the response variable.\nWe calculate this importance by summing the Akaike weights of the models where each variable is present. This is typically done by making all possible models from a set of variables. For three explanatory variables x1, x2, and x3, and excluding interaction terms, that would be\n\ny ~ x1\ny ~ x2\ny ~ x3\ny ~ x1 + x2\ny ~ x1 + x3\ny ~ x2 + x3\ny ~ x1 + x2 + x3\n\nMuMIn provides a function dredge that automatically builds all such models from one global model containing every explanatory variable of interest.\n\n# global model with all predictors of interest\n# na.action = \"na.fail\" is required by dredge\nmod_big &lt;- glm.nb(\n    nspp ~ log(Plot_Area) + hii + avg_temp_annual_c + rain_annual_mm,\n    data = dat_plt, na.action = \"na.fail\"\n)\n\n# fit all sub-models and compute AIC weights\nbig_dredge &lt;- dredge(mod_big)\n\nNow we can look at the summed weights for each explanatory variable with the sw function\n\n# summed weights = variable importance\nsw(big_dredge)\n\n                     log(Plot_Area) rain_annual_mm hii  avg_temp_annual_c\nSum of weights:      1.00           1.00           0.99 0.45             \nN containing models:    8              8              8    8             \n\n\nPlot area is highly important—not a surprise given the well-established species–area relationship. Among the environmental and anthropogenic predictors, human impact index and annual rainfall both receive high summed weights, while temperature is somewhat less consistently supported. This matches the earlier head-to-head comparison where the human impact model outperformed the temperature-only model.\nThis workflow based on dredgeing should be approached with some care. Generating every possible combination of predictors and letting AIC pick the winner is not usually considered best practice. Its name—dredging—is meant to communicate this negative implication. The primary issue is that building multiple models can inflate false-positive rates and is no substitute for thinking carefully about which variables are biologically meaningful. However, when the candidate variables are pre-selected on biological grounds, summed variable importance scores can provide a useful summary of which predictors are most consistently supported across the model set.",
+    "crumbs": [
+      "Significance testing and model selection",
+      "<span class='chapter-number'>29</span>  <span class='chapter-title'>Model Comparison and Averaging</span>"
+    ]
+  },
+  {
+    "objectID": "aic.html#sec-slides",
+    "href": "aic.html#sec-slides",
+    "title": "29  Model Comparison and Averaging",
+    "section": "29.7 Slides",
+    "text": "29.7 Slides",
+    "crumbs": [
+      "Significance testing and model selection",
+      "<span class='chapter-number'>29</span>  <span class='chapter-title'>Model Comparison and Averaging</span>"
+    ]
+  },
+  {
+    "objectID": "aic.html#references",
+    "href": "aic.html#references",
+    "title": "29  Model Comparison and Averaging",
+    "section": "29.8 References",
+    "text": "29.8 References\n\n\n\n\nAkaike H. 1974. A new look at the statistical model identification. IEEE Transactions on Automatic Control 19:716–723.\n\n\nBurnham KP, Anderson DR. 2002. Model selection and multimodel inference: A practical information-theoretic approach. Springer.",
     "crumbs": [
       "Significance testing and model selection",
       "<span class='chapter-number'>29</span>  <span class='chapter-title'>Model Comparison and Averaging</span>"
@@ -1633,11 +1710,11 @@
   {
     "objectID": "brief-bayes.html",
     "href": "brief-bayes.html",
-    "title": "A biref introduction to Bayesian",
+    "title": "A biref introduction to Bayesian Statistics",
     "section": "",
     "text": "Everything up to this point has been Frequentist, but Bayesian statistics centers on the likelihood as well. The difference is that Bayesian statistics uses Bayes Theorem to flip the condition in the likelihood. While likelihood is \\(\\mathbb{P}(\\text{data} \\mid \\text{model})\\), Bayesian statistics looks at \\(\\mathbb{P}(\\text{model} \\mid \\text{data})\\), a probability distribution called the posterior. This can be a powerful tool, especially for complex models. We will use our knowledge of likelihood to introduce simple Bayesian statistics.",
     "crumbs": [
-      "A biref introduction to Bayesian"
+      "A biref introduction to Bayesian Statistics"
     ]
   },
   {
@@ -1647,7 +1724,7 @@
     "section": "",
     "text": "32.1 Slides",
     "crumbs": [
-      "A biref introduction to Bayesian",
+      "A biref introduction to Bayesian Statistics",
       "<span class='chapter-number'>32</span>  <span class='chapter-title'>Intro to Bayesian Statistics</span>"
     ]
   }

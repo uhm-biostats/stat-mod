@@ -20,7 +20,62 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -71,6 +126,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -361,7 +445,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="./brief-bayes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">A biref introduction to Bayesian</span></a>
+ <span class="menu-text">A biref introduction to Bayesian Statistics</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -385,7 +469,18 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#sec-slides" id="toc-sec-slides" class="nav-link active" data-scroll-target="#sec-slides"><span class="header-section-number">29.1</span> Slides</a></li>
+  <li><a href="#the-akaike-information-criterion" id="toc-the-akaike-information-criterion" class="nav-link active" data-scroll-target="#the-akaike-information-criterion"><span class="header-section-number">29.1</span> The Akaike Information Criterion</a></li>
+  <li><a href="#why-aic-penalizes-more-parameters" id="toc-why-aic-penalizes-more-parameters" class="nav-link" data-scroll-target="#why-aic-penalizes-more-parameters"><span class="header-section-number">29.2</span> Why AIC penalizes more parameters</a></li>
+  <li><a href="#interpreting-deltaaic" id="toc-interpreting-deltaaic" class="nav-link" data-scroll-target="#interpreting-deltaaic"><span class="header-section-number">29.3</span> Interpreting <span class="math inline">\(\Delta\)</span>AIC</a></li>
+  <li><a href="#model-averaging" id="toc-model-averaging" class="nav-link" data-scroll-target="#model-averaging"><span class="header-section-number">29.4</span> Model averaging</a>
+  <ul>
+  <li><a href="#averaging-the-parameters" id="toc-averaging-the-parameters" class="nav-link" data-scroll-target="#averaging-the-parameters"><span class="header-section-number">29.4.1</span> Averaging the parameters</a></li>
+  <li><a href="#weighting-by-model-support" id="toc-weighting-by-model-support" class="nav-link" data-scroll-target="#weighting-by-model-support"><span class="header-section-number">29.4.2</span> Weighting by model support</a></li>
+  </ul></li>
+  <li><a href="#model-averaging-with-the-mumin-package" id="toc-model-averaging-with-the-mumin-package" class="nav-link" data-scroll-target="#model-averaging-with-the-mumin-package"><span class="header-section-number">29.5</span> Model averaging with the <em>MuMIn</em> package</a></li>
+  <li><a href="#in-between-prediction-and-hypothesis-testing" id="toc-in-between-prediction-and-hypothesis-testing" class="nav-link" data-scroll-target="#in-between-prediction-and-hypothesis-testing"><span class="header-section-number">29.6</span> In between prediction and hypothesis testing</a></li>
+  <li><a href="#sec-slides" id="toc-sec-slides" class="nav-link" data-scroll-target="#sec-slides"><span class="header-section-number">29.7</span> Slides</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">29.8</span> References</a></li>
   </ul>
 <div class="quarto-code-links"><h2>Code Links</h2><ul><li><a href="https://github.com/uhm-biostats/stat-mod/blob/main/aic.qmd"><i class="bi bi-github"></i>View source</a></li></ul></div></nav>
     </div>
@@ -411,11 +506,322 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="sec-slides" class="level2" data-number="29.1">
-<h2 data-number="29.1" class="anchored" data-anchor-id="sec-slides"><span class="header-section-number">29.1</span> Slides</h2>
+<p><a href="./lrt-ci.html">Previously</a> we saw that the likelihood ratio test (LRT) can compare models. But the LRT has a key restriction: the models being compared must be <em>nested</em>—one model must be a simplified version of the other, obtainable by setting some parameter(s) to zero or another fixed constant. What happens when the models we want to compare cannot be nested?</p>
+<p>Consider a question we left unresolved when <a href="./pois-glm.html">studying collinearity</a>: does <strong><em>temperature</em></strong> or <strong><em>human impact</em></strong> do a better job predicting tree species richness? We cannot combine both explanatory variables in one model because they are collinear and estimates of their slopes will be inconsistent. Instead we are left with two competing single-predictor models:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\log(\mu_\text{nspp}) &amp;= b_0 + b_1 \log(\text{area}) + b_2 \text{ temperature} \\
+\log(\mu_\text{nspp}) &amp;= b_0 + b_1 \log(\text{area}) + b_2 \text{ human impact}
+\end{aligned}
+\]</span></p>
+<p>Neither of these is a special case of the other. In fact they have the same number of parameters, so even if we compared the difference of their log likelihoods, the proper <span class="math inline">\(\chi^2\)</span> distribution would have degrees of freedom equal to 0, which cannot exist. So the LRT cannot help us here, but a new approach called Akaike Information Criterion can.</p>
+<section id="the-akaike-information-criterion" class="level2" data-number="29.1">
+<h2 data-number="29.1" class="anchored" data-anchor-id="the-akaike-information-criterion"><span class="header-section-number">29.1</span> The Akaike Information Criterion</h2>
+<p>The <strong><em>Akaike Information Criterion</em></strong> (AIC) is a measure of model support that can be applied to any two models fit to the same data, regardless of whether they are nested:</p>
+<p><span class="math display">\[
+\mathcal{l}(\hat{\theta}_\text{MLE}) - k
+\]</span></p>
+<p>Then to get AIC we multiply that above expression by <span class="math inline">\(-2\)</span></p>
+<p><span class="math display">\[
+\text{AIC} = -2\mathcal{l}(\hat{\theta}_\text{MLE}) + 2k
+\]</span></p>
+<p>where <span class="math inline">\(\mathcal{l}(\hat{\theta}_\text{MLE})\)</span> is the maximum log-likelihood of the model and <span class="math inline">\(k\)</span> is the number of estimated parameters. Lower AIC means better support. We can compute it directly in R with the <code>AIC</code> function:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>mod_temp <span class="ot">&lt;-</span> <span class="fu">glm.nb</span>(nspp <span class="sc">~</span> <span class="fu">log</span>(Plot_Area) <span class="sc">+</span> avg_temp_annual_c,</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">data =</span> dat_plt)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(mod_temp)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2321.152</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>mod_hii <span class="ot">&lt;-</span> <span class="fu">glm.nb</span>(nspp <span class="sc">~</span> <span class="fu">log</span>(Plot_Area) <span class="sc">+</span> hii,</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">data =</span> dat_plt)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(mod_hii)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2314.374</code></pre>
+</div>
+</div>
+<p>Note that these models are built using <code>dat_plt</code> which is the same <code>data.frame</code> we have been working with that we made by joining the tree survey data, with climate data, with geophysical and human impact data.</p>
+<p>We see that the AIC for the human impact model is lower so we conclude that the human impact model is better supported by the data.</p>
+</section>
+<section id="why-aic-penalizes-more-parameters" class="level2" data-number="29.2">
+<h2 data-number="29.2" class="anchored" data-anchor-id="why-aic-penalizes-more-parameters"><span class="header-section-number">29.2</span> Why AIC penalizes more parameters</h2>
+<p>The <span class="math inline">\(2k\)</span> term in AIC deserves some thought. In the case with human impact model versus the temperature model, this <span class="math inline">\(2k\)</span> term is irrelevant because both models have the same number of parameters. So let’s make another, more complex (meaning more parameters) model.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>mod_temp_precip <span class="ot">&lt;-</span> <span class="fu">glm.nb</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    nspp <span class="sc">~</span> <span class="fu">log</span>(Plot_Area) <span class="sc">+</span> avg_temp_annual_c <span class="sc">+</span> rain_annual_mm,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> dat_plt</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>It’s reasonable to ask: why penalize for the number of parameters at all? The reason is that adding parameters to a model will <em>always</em> increase the log-likelihood—a model with more parameters can always fit the data at least as well as a simpler one. We can see that in comparing the <code>mod_temp_precip</code> model to the <code>mod_temp</code> model:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">logLik</span>(mod_temp_precip)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'log Lik.' -1143.968 (df=5)</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">logLik</span>(mod_temp)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'log Lik.' -1156.576 (df=4)</code></pre>
+</div>
+</div>
+<p>The increased log likelihood of the more complex model could indicate that the model really does describe the data better. But a higher log likelihood does not necessarily mean the more complex model is genuinely better at making predictions. A model with too many parameters can <strong><em>overfit</em></strong>: it starts fitting the noise specific to the sample rather than the underlying signal.</p>
+<p>The AIC penalty of <span class="math inline">\(2k\)</span> addresses this directly: it tries to account for the artificial increase in log likelihood due to potential overfitting while not overly penalizing genuine improvement in predictive ability. The reason for a penalty of <span class="math inline">\(2k\)</span> is quite interesting and is based on trying to balance having enough parameters to make good predictions, but not too many so that our model is overfit. Figuring out that balance relies on using this hypothetical scenario:</p>
+<p>Imagine we have two data sets, each with sample size <span class="math inline">\(n\)</span>, that come from exactly the same study system. And imagine we use one data set (we’ll call it the “training” set) to fit a model with maximum likelihood. The other data set well call the “test” set, because soon we will test our model on that “test” data set. Our two data sets, and the one model, might look something like this</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="aic_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Now that we have fit our model to the training data (aka we have “trained” our model) let’s see how well it predicts the test data. To see how well it predicts the test data we could calculate the maximum of the log likelihood function (with parameters fit to the training data) given the test data. Put another way, what is the maximum log likelihood of the model when we show it data it has never seen before?</p>
+<p>For the two hypothetical data sets shown in the figure above we have these two maximum log likelihood values</p>
+<div class="columns">
+<div class="column">
+<p>Given the training data, the max log likelihood of model fit to training data is</p>
+<p>Given the test data, the max log likelihood of model fit to training data is</p>
+</div><div class="column">
+<p><span class="math inline">\(\mathcal{l}(\hat{\theta}_\text{training} \mid \text{data}_\text{training})\)</span></p>
+<p><span class="math inline">\(\mathcal{l}(\hat{\theta}_\text{training} \mid \text{data}_\text{test})\)</span></p>
+</div>
+</div>
+<p>The surprisingly simple result first identified by <span class="citation" data-cites="akaike">Akaike (<a href="#ref-akaike" role="doc-biblioref">1974</a>)</span> is that if we divide each of these max log likelihoods by sample size (equivilant to the average log likelihood of each data point) we find the difference between them is approximately <span class="math inline">\(k\)</span></p>
+<p><span class="math display">\[
+\frac{1}{n}\mathcal{l}(\hat{\theta}_\text{training} \mid \text{data}_\text{training}) - \frac{1}{n}\mathcal{l}(\hat{\theta}_\text{training} \mid \text{data}_\text{test}) \approx k
+\]</span></p>
+<p>So the difference between these average log likelihoods will be larger for a model with more parameters. That’s the cost of potential over fitting.</p>
+<p>If we deduct this “over fitting cost” from the log likelihood of a model we get</p>
+<p><span class="math display">\[
+\text{AIC} = -2\mathcal{l}(\hat{\theta}_\text{MLE}) + 2k
+\]</span></p>
+<p>Because we have accounted for the cost of additional parameters, we can safely use AIC to compare the models <code>mod_temp_precip</code> and <code>mod_hii</code> which have different numbers of parameters.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(mod_temp_precip)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2297.937</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(mod_hii)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2314.374</code></pre>
+</div>
+</div>
+<p>We can now be confident that the improvement for the <code>temp + rain</code> model is not simply due to more parameters, but is genuinely because those additional parameters add to the predictive ability of the model.</p>
+</section>
+<section id="interpreting-deltaaic" class="level2" data-number="29.3">
+<h2 data-number="29.3" class="anchored" data-anchor-id="interpreting-deltaaic"><span class="header-section-number">29.3</span> Interpreting <span class="math inline">\(\Delta\)</span>AIC</h2>
+<p>Because AIC values are only interpretable relative to one another, it is conventional to work with <span class="math inline">\(\Delta\text{AIC}\)</span>, the difference between each model’s AIC and the minimum AIC in the set of models we’re considering. For the three models we’ve been working with, the <span class="math inline">\(\Delta AIC\)</span> values are</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>AIC_min <span class="ot">&lt;-</span> <span class="fu">AIC</span>(mod_temp_precip)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(mod_temp_precip) <span class="sc">-</span> AIC_min</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(mod_hii) <span class="sc">-</span> AIC_min</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 16.43757</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(mod_temp) <span class="sc">-</span> AIC_min</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 23.21558</code></pre>
+</div>
+</div>
+<p><span class="citation" data-cites="burnham-anderson">Burnham &amp; Anderson (<a href="#ref-burnham-anderson" role="doc-biblioref">2002</a>)</span> studied the behavior of AIC for many different models and found the heuristic rule that models within 2 AIC units of the best model are effectively equivalent in their support. Only a difference larger than 2 indicates that one model is genuinely better supported than another. In our case, each model is separated by <span class="math inline">\(&gt; 2 \Delta AIC\)</span> so their respective supports are different.</p>
+</section>
+<section id="model-averaging" class="level2" data-number="29.4">
+<h2 data-number="29.4" class="anchored" data-anchor-id="model-averaging"><span class="header-section-number">29.4</span> Model averaging</h2>
+<p>Model comparison tells us which model is best supported—a useful way of testing hypotheses. But sometimes our goal is not to pick which model is best supported, but rather make the most accurate prediction possible. When the goal is <strong><em>prediction</em></strong>, a different strategy often performs better: <strong><em>model averaging</em></strong>. Rather than relying on a single model, we combine the predictions of multiple models. This can be more accurate than any one model individually, and can more honestly represent our uncertainty as scientists about which model might make the most biological sense <em>a priori</em>.</p>
+<p>Consider the three models we have built:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>nspp <span class="sc">~</span> <span class="fu">log</span>(Plot_Area) <span class="sc">+</span> hii</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>nspp ~ log(Plot_Area) + hii</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>nspp <span class="sc">~</span> <span class="fu">log</span>(Plot_Area) <span class="sc">+</span> avg_temp_annual_c</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>nspp ~ log(Plot_Area) + avg_temp_annual_c</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>nspp <span class="sc">~</span> <span class="fu">log</span>(Plot_Area) <span class="sc">+</span> avg_temp_annual_c <span class="sc">+</span> rain_annual_mm</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>nspp ~ log(Plot_Area) + avg_temp_annual_c + rain_annual_mm</code></pre>
+</div>
+</div>
+<p>Each makes different predictions about the expected species richness of a plot. But if our goal is making one prediction for richness of a plot, we need to somehow combine the three different predictions into one. We could just make one big model with all explanatory variables</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>nspp <span class="sc">~</span> <span class="fu">log</span>(Plot_Area) <span class="sc">+</span> hii <span class="sc">+</span> avg_temp_annual_c <span class="sc">+</span> rain_annual_mm</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>But this approach is not neccesarily ideal because we already know that including all predictors together creates collinearity problems, and for smaller data sets there is an ever greater risk of overfitting.</p>
+<section id="averaging-the-parameters" class="level3" data-number="29.4.1">
+<h3 data-number="29.4.1" class="anchored" data-anchor-id="averaging-the-parameters"><span class="header-section-number">29.4.1</span> Averaging the parameters</h3>
+<p>One natural way to combine models is to average the coefficients. For a variable like temperature that appears in some but not all models, we could simply take the mean of its estimated slopes across all models where it appears:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>b31 <span class="ot">&lt;-</span> <span class="fu">coefficients</span>(mod_temp)[<span class="st">"avg_temp_annual_c"</span>]</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>b32 <span class="ot">&lt;-</span> <span class="fu">coefficients</span>(mod_temp_precip)[<span class="st">"avg_temp_annual_c"</span>]</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">c</span>(b31, b32))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.02612386</code></pre>
+</div>
+</div>
+<p>There are actually two conventions for handling variables that do not appear in every model. One averages only over models where the variable appears (as above). The other includes a slope of zero for models that omit the variable, giving a more conservative (smaller) average. The default behavior of the R package we will use follows the first convention.</p>
+</section>
+<section id="weighting-by-model-support" class="level3" data-number="29.4.2">
+<h3 data-number="29.4.2" class="anchored" data-anchor-id="weighting-by-model-support"><span class="header-section-number">29.4.2</span> Weighting by model support</h3>
+<p>A simple average treats all models equally, but we already know from the AIC values that some models are better supported than others:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(mod_hii)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2314.374</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(mod_temp)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2321.152</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(mod_temp_precip)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2297.937</code></pre>
+</div>
+</div>
+<p>It makes sense when averaging to give more weight to better-supported models. To do this we first calculate <strong><em>Akaike weights</em></strong>. These weights are used when averaging to make better supported models contribute more to the average value. The Akaike weight <span class="math inline">\(w_i\)</span> for model <span class="math inline">\(i\)</span> is</p>
+<p><span class="math display">\[
+w_i = \frac{e^{-\Delta\text{AIC}_i / 2}}{\sum_j e^{-\Delta\text{AIC}_j / 2}}
+\]</span></p>
+<p>where <span class="math inline">\(\Delta\text{AIC}_i = \text{AIC}(\text{model}_i) - \min(\text{AIC})\)</span>. The weights sum to 1 across all models we’re considering (like a probability) and can be loosely interpreted as the probability that model <span class="math inline">\(i\)</span> is the best-supported model given the data and the set of models considered.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>delta_AIC_hii <span class="ot">&lt;-</span> <span class="fu">AIC</span>(mod_hii) <span class="sc">-</span> AIC_min</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>delta_AIC_temp <span class="ot">&lt;-</span> <span class="fu">AIC</span>(mod_temp) <span class="sc">-</span> AIC_min</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>delta_AIC_temp_precip <span class="ot">&lt;-</span> <span class="fu">AIC</span>(mod_temp_precip) <span class="sc">-</span> AIC_min</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="co"># we need to calculate e^{-delta AIC / 2} for each model, </span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a><span class="co"># do it in a vector</span></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>exp_terms <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="sc">-</span><span class="fu">c</span>(delta_AIC_hii, delta_AIC_temp, delta_AIC_temp_precip) <span class="sc">/</span> <span class="dv">2</span>)</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a><span class="co"># now we can use that vector to make the weights</span></span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>w_hii <span class="ot">&lt;-</span> exp_terms[<span class="dv">1</span>] <span class="sc">/</span> <span class="fu">sum</span>(exp_terms)</span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>w_temp <span class="ot">&lt;-</span> exp_terms[<span class="dv">2</span>] <span class="sc">/</span> <span class="fu">sum</span>(exp_terms)</span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>w_temp_precip <span class="ot">&lt;-</span> exp_terms[<span class="dv">3</span>] <span class="sc">/</span> <span class="fu">sum</span>(exp_terms)</span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>w_hii</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.0002694676</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>w_temp</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 9.092406e-06</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>w_temp_precip</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.9997214</code></pre>
+</div>
+</div>
+<p>To use the weights for averaging models we take a weighted mean. A weighted mean is simply a sum of values, each multiplied by a weight, with the weights summing to 1. Earlier we averaged the slope of temperature, we will now do the same but with a weighted mean. Because temperature is not present in all models, we have to re-normalize the weights (so they sum to 1) of the models where it is present</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">weighted.mean</span>(<span class="fu">c</span>(b31, b32), </span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>              <span class="fu">c</span>(w_temp, w_temp_precip) <span class="sc">/</span> (w_temp <span class="sc">+</span> w_temp_precip))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.02797481</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="model-averaging-with-the-mumin-package" class="level2" data-number="29.5">
+<h2 data-number="29.5" class="anchored" data-anchor-id="model-averaging-with-the-mumin-package"><span class="header-section-number">29.5</span> Model averaging with the <em>MuMIn</em> package</h2>
+<p>Computing these weights and averaging parameters by hand is tedious. The <em>MuMIn</em> package does this for us. The <code>model.avg</code> function takes a list of candidate models and returns an averaged model object:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MuMIn)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>mod_avg <span class="ot">&lt;-</span> <span class="fu">model.avg</span>(<span class="fu">list</span>(mod_hii, mod_temp, mod_temp_precip))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>We can inspect the averaged coefficients directly:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coefficients</span>(mod_avg)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      (Intercept)    log(Plot_Area) avg_temp_annual_c    rain_annual_mm 
+    -2.5267209876      0.4876844180      0.0279748056      0.0000782252 
+              hii 
+     0.0133591861 </code></pre>
+</div>
+</div>
+<p>The model table, accessed with <code>$msTable</code>, shows each candidate model ranked from best to worst supported, along with its AIC, <span class="math inline">\(\Delta\)</span>AIC, and weight:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>mod_avg<span class="sc">$</span>msTable</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    df    logLik     AICc    delta       weight
+134  5 -1143.968 2298.052  0.00000 9.997160e-01
+23   4 -1153.187 2314.451 16.39911 2.746982e-04
+13   4 -1156.576 2321.229 23.17712 9.268898e-06</code></pre>
+</div>
+</div>
+<p>You will notice that <em>MuMIn</em> reports AICc rather than AIC, which makes the output of <code>mod.avg</code> slightly different from our by-hand calculations. AICc is a sample-size-corrected version of AIC that applies an additional penalty for small samples. It is generally a good idea to use AICc. But for large samples, like the one we’re using, the correction is negligible:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(mod_temp_precip)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2297.937</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># the AICc function is provided by MuMIn</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="fu">AICc</span>(mod_temp_precip)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2298.052</code></pre>
+</div>
+</div>
+</section>
+<section id="in-between-prediction-and-hypothesis-testing" class="level2" data-number="29.6">
+<h2 data-number="29.6" class="anchored" data-anchor-id="in-between-prediction-and-hypothesis-testing"><span class="header-section-number">29.6</span> In between prediction and hypothesis testing</h2>
+<p>Model averaging can also be used to evaluate a form of “importance” for explanatory variables. The idea of variable importance seeks to assign a weight to each explanatory variable we are considering with higher weights indicating that a variable is more important for making accurate predictions of the response variable.</p>
+<p>We calculate this importance by summing the Akaike weights of the models where each variable is present. This is typically done by making all possible models from a set of variables. For three explanatory variables <code>x1</code>, <code>x2</code>, and <code>x3</code>, and excluding interaction terms, that would be</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>y <span class="sc">~</span> x1</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>y <span class="sc">~</span> x2</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>y <span class="sc">~</span> x3</span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>y <span class="sc">~</span> x1 <span class="sc">+</span> x2</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>y <span class="sc">~</span> x1 <span class="sc">+</span> x3</span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>y <span class="sc">~</span> x2 <span class="sc">+</span> x3</span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>y <span class="sc">~</span> x1 <span class="sc">+</span> x2 <span class="sc">+</span> x3</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><em>MuMIn</em> provides a function <code>dredge</code> that automatically builds all such models from one global model containing every explanatory variable of interest.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># global model with all predictors of interest</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="co"># na.action = "na.fail" is required by dredge</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>mod_big <span class="ot">&lt;-</span> <span class="fu">glm.nb</span>(</span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>    nspp <span class="sc">~</span> <span class="fu">log</span>(Plot_Area) <span class="sc">+</span> hii <span class="sc">+</span> avg_temp_annual_c <span class="sc">+</span> rain_annual_mm,</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> dat_plt, <span class="at">na.action =</span> <span class="st">"na.fail"</span></span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a><span class="co"># fit all sub-models and compute AIC weights</span></span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>big_dredge <span class="ot">&lt;-</span> <span class="fu">dredge</span>(mod_big)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Now we can look at the summed weights for each explanatory variable with the <code>sw</code> function</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># summed weights = variable importance</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sw</span>(big_dredge)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                     log(Plot_Area) rain_annual_mm hii  avg_temp_annual_c
+Sum of weights:      1.00           1.00           0.99 0.45             
+N containing models:    8              8              8    8             </code></pre>
+</div>
+</div>
+<p>Plot area is highly important—not a surprise given the well-established species–area relationship. Among the environmental and anthropogenic predictors, human impact index and annual rainfall both receive high summed weights, while temperature is somewhat less consistently supported. This matches the earlier head-to-head comparison where the human impact model outperformed the temperature-only model.</p>
+<p>This workflow based on <code>dredge</code>ing should be approached with some care. Generating every possible combination of predictors and letting AIC pick the winner is not usually considered best practice. Its name—dredging—is meant to communicate this negative implication. The primary issue is that building multiple models can inflate false-positive rates and is no substitute for thinking carefully about which variables are biologically meaningful. However, when the candidate variables are pre-selected on biological grounds, summed variable importance scores can provide a useful summary of which predictors are most consistently supported across the model set.</p>
+</section>
+<section id="sec-slides" class="level2" data-number="29.7">
+<h2 data-number="29.7" class="anchored" data-anchor-id="sec-slides"><span class="header-section-number">29.7</span> Slides</h2>
 <iframe class="slide-deck" src="aic-slides.html"></iframe>
+</section>
+<section id="references" class="level2" data-number="29.8">
+<h2 data-number="29.8" class="anchored" data-anchor-id="references"><span class="header-section-number">29.8</span> References</h2>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-akaike" class="csl-entry" role="listitem">
+Akaike H. 1974. <a href="https://doi.org/10.1109/TAC.1974.1100705">A new look at the statistical model identification</a>. IEEE Transactions on Automatic Control <strong>19</strong>:716–723.
+</div>
+<div id="ref-burnham-anderson" class="csl-entry" role="listitem">
+Burnham KP, Anderson DR. 2002. Model selection and multimodel inference: A practical information-theoretic approach. Springer.
+</div>
+</div>
 </section>
 
 </main> <!-- /main -->
