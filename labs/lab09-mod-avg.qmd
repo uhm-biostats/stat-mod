@@ -34,6 +34,8 @@ We need to *join* the tree survey, climate, and geo/human impact `data.frame`s a
 - number of non-native species
 - number of native species
 
+Because we will ultimately be building models with these data and averaging those models, we need to be very conservative in our handling of missing values. If our explanatory variables have differences in terms of which variables are missing, model averaging will fail. So a final step in our data preparation workflow needs to be `filter`ing out any rows that contain `NA` for the explanatory variables we'd like to use. Plan which explanatory variables you'd like to build models with and then use `filter(!is.na(x1) & !is.na(x2) & !is.na(x3) & ... so on)` for all your intendened explanatory variables.
+
 For ease of working together, let's all name our final, combined data object `dat_non_nat`. 
 
 Once those steps are completed, we'll split our data into training and testing sets.  The key is, we want these training and testing sets to be *random* samples from the data. For random samples, we use the function `sample`.  We are sampling *rows*, so this is how it will work
