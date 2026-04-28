@@ -1602,7 +1602,7 @@
     "href": "mod-avg-lab.html#preparing-the-data",
     "title": "31  Averaging models with AIC",
     "section": "31.2 Preparing the data",
-    "text": "31.2 Preparing the data\nWe need to join the tree survey, climate, and geo/human impact data.frames and then use the split-apply-combine workflow to calculate plot-level data. The plot-level data we will need are:\n\nall explanatory variables (hint: use across)\nnumber of non-native species\nnumber of native species\n\nFor ease of working together, let’s all name our final, combined data object dat_non_nat.\nOnce those steps are completed, we’ll split our data into training and testing sets. The key is, we want these training and testing sets to be random samples from the data. For random samples, we use the function sample. We are sampling rows, so this is how it will work\n\n# be sure to switch `eval` to `true` in this chunk\n\n# size of half the data\nn_subsamp &lt;- round(nrow(dat_non_nat) / 2)\n\n# random indexes to be used for sampling\nrand_idx &lt;- sample(nrow(dat_non_nat), n_subsamp)\n\n# extract the training data\ndat_train &lt;- dat_non_nat[rand_idx, ]\n\n# the test data is everything left\ndat_test &lt;- dat_non_nat[-rand_idx, ]",
+    "text": "31.2 Preparing the data\nWe need to join the tree survey, climate, and geo/human impact data.frames and then use the split-apply-combine workflow to calculate plot-level data. The plot-level data we will need are:\n\nall explanatory variables (hint: use across)\nnumber of non-native species\nnumber of native species\n\nBecause we will ultimately be building models with these data and averaging those models, we need to be very conservative in our handling of missing values. If our explanatory variables have differences in terms of which variables are missing, model averaging will fail. So a final step in our data preparation workflow needs to be filtering out any rows that contain NA for the explanatory variables we’d like to use. Plan which explanatory variables you’d like to build models with and then use filter(!is.na(x1) & !is.na(x2) & !is.na(x3) & ... so on) for all your intendened explanatory variables.\nFor ease of working together, let’s all name our final, combined data object dat_non_nat.\nOnce those steps are completed, we’ll split our data into training and testing sets. The key is, we want these training and testing sets to be random samples from the data. For random samples, we use the function sample. We are sampling rows, so this is how it will work\n\n# be sure to switch `eval` to `true` in this chunk\n\n# size of half the data\nn_subsamp &lt;- round(nrow(dat_non_nat) / 2)\n\n# random indexes to be used for sampling\nrand_idx &lt;- sample(nrow(dat_non_nat), n_subsamp)\n\n# extract the training data\ndat_train &lt;- dat_non_nat[rand_idx, ]\n\n# the test data is everything left\ndat_test &lt;- dat_non_nat[-rand_idx, ]",
     "crumbs": [
       "Significance testing and model selection",
       "<span class='chapter-number'>31</span>  <span class='chapter-title'>Averaging models with AIC</span>"
@@ -1628,6 +1628,27 @@
     "crumbs": [
       "Significance testing and model selection",
       "<span class='chapter-number'>31</span>  <span class='chapter-title'>Averaging models with AIC</span>"
+    ]
+  },
+  {
+    "objectID": "brief-bayes.html",
+    "href": "brief-bayes.html",
+    "title": "A biref introduction to Bayesian",
+    "section": "",
+    "text": "Everything up to this point has been Frequentist, but Bayesian statistics centers on the likelihood as well. The difference is that Bayesian statistics uses Bayes Theorem to flip the condition in the likelihood. While likelihood is \\(\\mathbb{P}(\\text{data} \\mid \\text{model})\\), Bayesian statistics looks at \\(\\mathbb{P}(\\text{model} \\mid \\text{data})\\), a probability distribution called the posterior. This can be a powerful tool, especially for complex models. We will use our knowledge of likelihood to introduce simple Bayesian statistics.",
+    "crumbs": [
+      "A biref introduction to Bayesian"
+    ]
+  },
+  {
+    "objectID": "bayes-intro.html",
+    "href": "bayes-intro.html",
+    "title": "32  Intro to Bayesian Statistics",
+    "section": "",
+    "text": "32.1 Slides",
+    "crumbs": [
+      "A biref introduction to Bayesian",
+      "<span class='chapter-number'>32</span>  <span class='chapter-title'>Intro to Bayesian Statistics</span>"
     ]
   }
 ]
