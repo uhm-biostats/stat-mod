@@ -49,6 +49,9 @@ book:
             - aic.qmd
             - aic-lab.qmd
             - mod-avg-lab.qmd
+        - part: brief-bayes.qmd
+          chapters:
+            - bayes-intro.qmd
 
 
 bibliography: stat-mod.bib
