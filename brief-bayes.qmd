@@ -1,4 +1,4 @@
-# A biref introduction to Bayesian 
+# A biref introduction to Bayesian Statistics
 
 Everything up to this point has been Frequentist, but Bayesian statistics centers on the likelihood as well. The difference is that Bayesian statistics uses Bayes Theorem to flip the condition in the likelihood. While likelihood is $\mathbb{P}(\text{data} \mid \text{model})$, Bayesian statistics looks at $\mathbb{P}(\text{model} \mid \text{data})$, a probability distribution called the posterior. This can be a powerful tool, especially for complex models. We will use our knowledge of likelihood to introduce simple Bayesian statistics.
 
