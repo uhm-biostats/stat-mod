@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>33&nbsp; Comparing models with AIC – Intro to Statistical Modeling</title>
+<title>33&nbsp; Basics of Bayesian inference – Intro to Statistical Modeling</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -148,7 +148,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./brief-bayes.html">A biref introduction to Bayesian Statistics</a></li><li class="breadcrumb-item"><a href="./bayes-basics-lab.html"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Comparing models with AIC</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./brief-bayes.html">A biref introduction to Bayesian Statistics</a></li><li class="breadcrumb-item"><a href="./bayes-basics-lab.html"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Basics of Bayesian inference</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -440,7 +440,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./bayes-basics-lab.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Comparing models with AIC</span></span></a>
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Basics of Bayesian inference</span></span></a>
   </div>
 </li>
       </ul>
@@ -468,9 +468,9 @@ window.Quarto = {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./brief-bayes.html">A biref introduction to Bayesian Statistics</a></li><li class="breadcrumb-item"><a href="./bayes-basics-lab.html"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Comparing models with AIC</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./brief-bayes.html">A biref introduction to Bayesian Statistics</a></li><li class="breadcrumb-item"><a href="./bayes-basics-lab.html"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Basics of Bayesian inference</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Comparing models with AIC</span></h1>
+<h1 class="title"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Basics of Bayesian inference</span></h1>
 </div>
 
 
@@ -488,7 +488,7 @@ window.Quarto = {
 
 
 <p>This lab will guide you through an introduction to using <em>brms</em> for Bayesian model inference. You can download the template <code>.qmd</code> file for this lab here:</p>
-<p><a href="#dnldts35423" onclick="fetch('data:text/plain;base64,LS0tCnRpdGxlOiAiQmFzaWNzIG9mIEJheWVzaWFuIGluZmVyZW5jZSIKZm9ybWF0OgogICAgcGRmOgogICAgICAgIGluY2x1ZGUtaW4taGVhZGVyOgogICAgICAgICAgICB0ZXh0OiB8CiAgICAgICAgICAgICAgICBcdXNlcGFja2FnZXtuZXd1bmljb2RlY2hhcn0KICAgICAgICAgICAgICAgIFxuZXd1bmljb2RlY2hhcnvKu317YH0KYXV0aG9yOgogICAgLSB5b3VyIG5hbWUgaGVyZQotLS0KCmBgYHtyfQojfCBsYWJlbDogc2V0dXAKCiMgbG9hZCBhbGwgbmVjZXNzYXJ5IHBhY2thZ2VzCmxpYnJhcnkoZ2dwbG90MikKbGlicmFyeShkcGx5cikKbGlicmFyeShicm1zKQpsaWJyYXJ5KGJheWVzcGxvdCkKCmBgYAoKCiMjIFNpbXVsYXRpbmcgYSBmYW1pbGlhciBtb2RlbAoKV2UnbGwgc3RhcnQgYnkgc2ltdWxhdGluZyBhIHNpbXBsZSBhbmQgZmFtaWxpYXIgR0xNOiBhIFBvaXNzb24gcmVzcG9uc2UgdmFyaWFibGUgcmVzcG9uZGluZyB0byBhIHNpbmdsZSBudW1lcmljIGV4cGxhbmF0b3J5IHZhcmlhYmxlLgoKYGBge3J9CiMgc2V0IHNlZWQgc28gd2UgYWxsIGhhdmUgdGhlIHNhbWUgZGF0YQpzZXQuc2VlZCgxMjMpCgojIHJhbmRvbSBudW1lcmljIGRhdGEgZm9yIGV4cGxhbmF0b3J5IHZhcmlhYmxlCnggPC0gcnVuaWYoNDAwLCAwLCAxKQoKIyBsb2cobSkgaXMgdGhlIGxpbmsgZnVuY3Rpb24gc28gbXUgPSBleHAoLi4uKQptdSA8LSBleHAoLTEgKyA0ICogeCkKCiMgZHJhdyByYW5kb20gUG9pc3NvbiBkYXRhIGJhc2VkIG9uIG11IHJlc3BvbmRpbmcgdG8geAp5IDwtIHJwb2lzKGxlbmd0aCh4KSwgbXUpCgojIGNvbWJpbmUgaW4gb25lIGRhdGEgb2JqZWN0CmRhdCA8LSBkYXRhLmZyYW1lKHgsIHkpCmBgYAoKClVzZSBgZ2dwbG90YCB0byB2aXN1YWxpemUgdGhlc2UgZGF0YS4KCgojIyBBIHF1aWNrIHN0YXJ0IGd1aWRlIHRvIEJheWVzaWFuIGluZmVyZW5jZSB3aXRoICpicm1zKgoKVGhlICpicm1zKiBwYWNrYWdlIGxldHMgZXN0aW1hdGUgcG9zdGVyaW9ycyBpbiBhIHdheSB0aGF0IGxvb2tzIHZlcnkgc2ltaWxhciB0byBob3cgd2UgZml0IEdMTXMgd2l0aCBtYXhpbXVtIGxpa2VsaWhvb2QgdXNpbmcgdGhlIGBnbG1gIGZ1bmN0aW9uLiAgVGhlIHdvcmtob3JzZSBmdW5jdGlvbiBvZiAqYnJtcyogaXMgYGJybWAgd2hpY2ggdGFrZXMgYGZvcnVtYWxgLCBgZGF0YWAsIGFuZCBgZmFtaWx5YCBhcmd1bWVudHMganVzdCBsaWtlIGBnbG1gLiBCdXQgYGJybWAgY2FuIHRha2UgbWFueSBhZGRpdGlvbmFsIGFyZ3VtZW50cyB0aGF0IGFyZSBzcGVjaWZpYyB0byBCYXllc2lhbiBNQ01DLiBUaHJlZSBlc3BlY2lhbGx5IGltcG9ydGFudCBCYXllc2lhbiBNQ01DIGFyZ3VtZW50cyBhcmUgYHByaW9yYCwgYGl0ZXJgLCBhbmQgYHdhcm11cGAuIFRoZXNlIGFsbCBoYXZlIG1lYW5pbmdmdWwgZGVmYXVsdHMgKHNvIGBicm1gIHdpbGwgcnVuIHdpdGhvdXQgc3BlY2lmeWluZyB2YWx1ZXMgZm9yIHRoZXNlIGFyZ3VtZW50cykgYnV0IHdlIHNob3VsZCB1bmRlcnN0YW5kIHRoZW0gc28gd2UgY2FuIGV2YWx1YXRlIHdoZW4gdG8gdXNlIG9yIG5vdCB1c2UgdGhlIGRlZmF1bHRzLgoKRmlyc3Qgd2UgYnVpbGQgYSBtb2RlbAoKCmBgYHtyfQojfCBsYWJlbDogYnJtLTUwMAojfCBjYWNoZTogdHJ1ZQoKbV81MDAgPC0gYnJtKHkgfiB4LCBkYXRhID0gZGF0LCAKICAgICAgICAgICAgICMgbm90ZTogYnkgY29udmVudGlvbiB0aGUgZmFtaWx5IGdldHMgYCgpYAogICAgICAgICAgICAgZmFtaWx5ID0gcG9pc3NvbigpLCAKICAgICAgICAgICAgIHByaW9yID0gYyhwcmlvcihub3JtYWwoMCwgMTAwMCksIGNsYXNzID0gSW50ZXJjZXB0KSwKICAgICAgICAgICAgICAgICAgICAgICBwcmlvcihub3JtYWwoMCwgMTAwMCksIGNsYXNzID0gYikpLCAKICAgICAgICAgICAgIGl0ZXIgPSAxMDAwLCAKICAgICAgICAgICAgIHdhcm11cCA9IDUwMCkKYGBgCgoKU29tZXRoaW5nIHlvdSdsbCBub3RpY2UgaXMgdGhhdCB0aGVyZSBpcyBtb3JlIHByaW50ZWQgb3V0cHV0IHdoaWxlIHRoZSBmdW5jdGlvbiBpcyBydW5uaW5nLCBhbmQgaXQgdGFrZXMgbXVjaCBsb25nZXIgdG8gcnVuIGNvbXBhcmVkIHRvIGBnbG1gLiBUaGUgb3V0cHV0IG1lbnRpb25zIGBDaGFpbiAxYCwgLi4uLCBgQ2hhaW4gNGAuIEJ5IGRlZmF1bHQgdGhlIE1DTUMgdW5kZXIgdGhlIGhvb2Qgb2YgYGJybWAgcnVucyA0IHRpbWVzLiBXZSdsbCBnZXQgaW50byB3aHkgaW4gdGhlIG5leHQgc2VjdGlvbi4KCkZpcnN0LCBsZXQncyBpbnZlc3RpZ2F0ZSBgcHJpb3JgLCBgaXRlcmAsIGFuZCBgd2FybXVwYC4KClRoZSBhcmd1bWVudCBgaXRlcmAgdGVsbHMgYGJybWAgaG93IG1hbnkgdG90YWwgaXRlcmF0aW9ucyBvZiB0aGUgTm8tVS1UdXJucyBIYW1pbHRvbmlhbiBNQyB0byBydW4uIFRoZSBgd2FybXVwYCBzcGVjaWZpZXMgaG93IG1hbnkgb2YgdGhvc2UgaXRlcmF0aW9ucyB0byB1c2UgYXMgYSAid2FybS11cCwiIG1lYW5pbmcgZmluZGluZyB0aGUgcmlnaHQgZmluZSB0dW5pbmcgb2YgdGhlIE5VVFMgSE1DLiBUaGUgd2FybS11cCBpcyBhbHdheXMgdGhlIGZpcnN0IGB3YXJtdXBgIG51bWJlciBvZiBpdGVyYXRpb25zLCBhbmQgdGhlc2Ugd2FybS11cCBpdGVyYXRpb25zIGFyZSBub3QgaW5jbHVkZWQgaW4gdGhlIGZpbmFsIHNhbXBsZSBvZiB0aGUgcG9zdGVyaW9yLiBXZSB1c2VkIGB3YXJtdXAgPSA1MDBgLCB0aHVzIHRoZSBuYW1lIG9mIHRoaXMgbW9kZWwgYG1fNTAwYC4KCldlIHNwZWNpZnkgdGhlIHByaW9yIGZvciBib3RoIGBJbnRlcmNlcHRgIGFuZCBzbG9wZSBgYmAgYXMgYG5vcm1hbCgwLCAxMDAwKWAsIG1lYW5pbmcgbm9ybWFsIHdpdGggbWVhbiA9IDAgYW5kIHN0YW5kYXJkIGRldmlhdGlvbiA9IDEsMDAwLiBJbiBtYWtpbmcgdGhlIHByaW9yIHdlIG5lZWQgdG8gaW5kaWNhdGUgd2hhdCBwYXJhbWV0ZXIgdGhlIHByaW9yIGlzIGZvciB3aXRoIGBjbGFzc2AuIFdlIHVzZSB0aGUgc3BlY2lhbCBmdW5jdGlvbiBgbm9ybWFsYCByYXRoZXIgdGhhbiBgcm5vcm1gIG9yIGBkbm9ybWAgYmVjYXVzZSB3ZSBhcmUgY3JlYXRpbmcgYSBwcmlvciBhbmQgbGV0dGluZyBgYnJtYCBzYW1wbGUgZnJvbSBpdC4gQnV0IHdlIGNhbiB1c2UgYHJub3JtYCB0byB2aXN1YWxpemUgd2hhdCB0aGUgcHJpb3IgbG9va3MgbGlrZS4KClVzZSBgcm5vcm1gIHRvIGRyYXcgMiwwMDAgc2FtcGxlcyBmcm9tIGEgbm9ybWFsIGRpc3RyaWJ1dGlvbiB3aXRoIG1lYW4gPSAwIGFuZCBzdGFuZGFyZCBkZXZpYXRpb24gPSAxLDAwMCwgdGhlbiB2aXN1YWxpemUgYSB0d28gaGlzdG9ncmFtcywgdGhlIGZpcnN0IGZvciBqdXN0IHRoZSB2YWx1ZXMgYmV0d2VlbiAtMzAwIGFuZCArMzAwLCB0aGUgc2Vjb25kIGZvciBhbGwgdGhlIHJhbmRvbWx5IHNhbXBsZWQgdmFsdWVzLgoKCllvdSBzaG91bGQgZmluZCB0aGF0IGJldHdlZW4gLTMwMCBhbmQgKzMwMCB0aGUgcHJpb3IgaXMgbmVhcmx5IGZsYXQuIEJ1dCBvdmVyIGl0cyBmdWxsIHJhbmdlIGl0IG9mIGNvdXJzZSBsb29rcyBsaWtlIGEgYmVsbCBjdXJ2ZS4gQ29uc2lkZXIgdGhpczogdmVyeSBsYXJnZSBuZWdhdGl2ZSBhbmQgcG9zaXRpdmUgbnVtYmVycyB3aWxsIGFsbW9zdCBuZXZlciBlbmQgdXAgaW4gb3VyIHBvc3RlcmlvciBzYW1wbGUsIHdoeT8KCgpTcGVha2luZyBvZiB0aGUgcG9zdGVyaW9yLCBsZXQncyB2aXN1YWxpemUgaXQuICBGaXJzdCB3ZSBjYW4gZXh0cmFjdCB0aGUgcG9zdGVyaW9yIHdpdGggYGFzX2RyYXdzX2RmYAoKYGBge3J9CnBvc3RfNTAwIDwtIGFzX2RyYXdzX2RmKG1fNTAwKQoKIyBoYXZlIGEgbG9vawpwb3N0XzUwMApgYGAKCldlIGhhdmUgYSBgZGF0YS5mcmFtZWAgdHlwZSBvYmplY3Qgd2l0aCBjb2x1bW5zIGZvciBgYl9JbnRlcmNlcHRgIGFuZCBgYl94YCwgdGhvc2UgYXJlIHRoZSBpbnRlcmNlcHQgYW5kIHNsb3BlIHBhcmFtZXRlcnMgb2Ygb3VyIG1vZGVsLiBUaGUgb3RoZXIgY29sdW1ucyBzdG9yZSBhZGRpdGlvbmFsIGluZm9ybWF0aW9uIHRoYXQgd2Ugd2lsbCBub3QgY29uc2lkZXIuCgpCZWNhdXNlIHdlIHJhbiA0IGNoYWlucyAoNCBzZXBhcmF0ZSBNQ01DJ3MpIGVhY2ggd2l0aCA1MDAgcG9zdC13YXJtLXVwIGl0ZXJhdGlvbnMsIHdlIHNob3VsZCBoYXZlIGA0ICogNTAwID0gMjAwMGAgc2FtcGxlcyBpbiBgcG9zdF81MDBgLiBMZXQncyBjb25maXJtCgpgYGB7cn0KbnJvdyhwb3N0XzUwMCkKYGBgCgpNYWtlIGEgaGlzdG9ncmFtIG9mIHRoZSBwb3N0ZXJpb3IgZm9yIHRoZSBpbnRlcmNlcHQgYGJfSW50ZXJjZXB0YCBhbmQgdGhlIHNsb3BlIGBiX3hgLiBJcyB0aGUgcmFuZ2Ugb2YgdGhlIHBvc3RlcmlvcnMgY29uc2lzdGVudCB3aXRoIHRoZSB0cnVlIGludGVyY2VwdCBhbmQgc2xvcGUgd2UgdXNlZCB0byBzaW11bGF0ZSB0aGUgZGF0YSAoaW50ZXJjZXB0ID0gLTEsIHNsb3BlID0gNCk/IChzaWRlIG5vdGU6IHRoZSAqYmF5ZXNwbG90KiBwYWNrYWdlIG9mZmVycyBmdW5jdGlvbiBgbWNtY19oaXN0YCB3aGljaCBjYW4gbW9yZSBkaXJlY3RseSBtYWtlIGEgaGlzdG9ncmFtIG9mIHBvc3RlcmlvcnMpCgpOb3cgdXNlIGBtZWFuYCBhbmQgYHF1YW50aWxlYCBvbiBgcG9zdF81MDBgIHRvIGNhbGN1bGF0ZSB0aGUgZXN0aW1hdGUgYW5kIDk1JSBjcmVkaWJsZSBpbnRlcnZhbHMgZm9yIHRoZSBpbnRlcmNlcHQgYW5kIHNsb3BlLiBDb21wYXJlIHRvIHRoZSBvdXRwdXQgb2YgYGZpeGVmYC4KCmBgYHtyfQpmaXhlZihtXzUwMCkKYGBgCgpIaW50OiBmb3IgY2FsY3VsYXRpbmcgOTUlIENJLCB1c2UgYHF1YW50aWxlYCB3aXRoIHRoZSBgcHJvYnNgIGFyZ3VtZW50IHNldCB0byBgYygwLjAyNSwgMC45NzUpYC4gSGVyZSdzIGFuIGV4YW1wbGU6CgpgYGB7cn0KeCA8LSBybm9ybSgxMDApCnF1YW50aWxlKHgsIHByb2JzID0gYygwLjAyNSwgMC45NzUpKQpgYGAKCiMjIERpYWdub3NpbmcgdGhlIHN1Y2Nlc3MgKG9yIGZhaWx1cmUpIG9yIEJheWVzaWFuIE1DTUMKCkJheWVzaWFuIE1DTUMgaXMgYSBsb3QgbW9yZSBzZW5zaXRpdmUgY29tcGFyZWQgdG8gbWF4aW1pemluZyB0aGUgbGlrZWxpaG9vZC4gSWYgdGhlIE1DTUMgZG9lcyBub3QgcnVuIHN1Y2Nlc3NmdWxseSwgdGhlIHBvc3RlcmlvciBzYW1wbGUgaXMgbm90IHJlbGlhYmxlLiAgU28gaXQgaXMgdmVyeSBpbXBvcnRhbnQgdGhhdCB3ZSBkaWFnbm9zZSB3aGV0aGVyIHRoZSBNQ01DIHdhcyBzdWNjZXNzZnVsLiBUaGVyZSBhcmUgYSBmZXcga2V5IG1ldHJpY3Mgb2Ygc3VjY2VzczoKCi0gZGlkIHRoZSBNQ01DIGNvbnZlcmdlIChtZWFuaW5nIGRpZCBpdCBmaW5kIHRoZSByZWdpb24gb2YgcGFyYW1ldGVyIHNwYWNlIHdoZXJlIHRoZSBwb3N0ZXJpb3IgaXMgaGlnaGVzdCk/Ci0gZGlkIHRoZSBNQ01DIHByb2R1Y2Ugc3VmZmljaWVudCBzYW1wbGVzPwotIGRpZCB0aGUgTUNNQyBnZXQgc3R1Y2sgc29tZXdoZXJlPwotIHNwZWNpZmljYWxseSBmb3IgTlVUUzogd2VyZSB0aGVyZSBhbnkgKiJkaXZlcmdlbmNlcyIqPyAod2UnbGwgZ2V0IGludG8gd2hhdCB0aGF0IG1lYW5zKQoKVGhlIGBzdW1tYXJ5YCBmdW5jdGlvbiBwcm92aWRlcyBzb21lIHVzZWZ1bCBpbmZvcm1hdGlvbgoKYGBge3J9CnN1bW1hcnkobV81MDApCgpgYGAKCkluIGFkZGl0aW9uIHRvIGluZm9ybWF0aW9uIGFib3V0IHRoZSBwYXJhbWV0ZXIgdmFsdWVzIChpLmUuIGVzdGltYXRlcywgQ0kpIHdlIGhhdmUgdHdvIG5ldyBwaWVjZXMgb2YgaW5mb3JtYXRpb246IGBSaGF0YCAob3IgJFxoYXR7Un0kKSBhbmQgYEVTU2Agd2hpY2ggc3RhbmRzIGZvciAiZWZmZWN0aXZlIHNhbXBsZSBzaXplIiAoYm90aCBgQnVsa2AgYW5kIGBUYWlsYCkuCgokXGhhdHtSfSQgaXMgYSB1c2VmdWwgbWVhc3VyZSBvZiBjb252ZXJnZW5jZS4gSXQgcXVhbnRpZmllcyB0aGUgcmF0aW8gb2Ygd2l0aGluLWNoYWluIHZhcmlhbmNlIHRvIHRoZSBiZXR3ZWVuIGNoYWluIHZhcmlhbmNlLiBBdCBjb252ZXJnZW5jZSwgdGhpcyByYXRpbyBzaG91bGQgYmUgMS4gRnJvbSB0aGUgb3V0cHV0IG9mIGBzdW1tYXJ5YCB3ZSBzZWUgdGhhdCBpdCBpcyBpbmRlZWQgYDFgLiBOb3RlOiB3ZSBnZXQgc2VwYXJhdGUgaW5mb3JtYXRpb24gZm9yIGJvdGggYEludGVyY2VwdGAgYW5kIGB4YCAoaS5lLiBzbG9wZSkgYmVjYXVzZSB0aGUgc2hhcGUgb2YgdGhlIHBvc3RlcmlvciBhY3Jvc3MgZGlmZmVyZW50IHBhcmFtZXRlcnMgY2FuIGJlIGRpZmZlcmVudCwgbGVhZGluZyB0byBkaWZmZXJlbnQgb3V0Y29tZXMgZGVzcGl0ZSBhbGwgcnVubmluZyBpbiB0aGUgc2FtZSBNQ01DLgoKRWZmZWN0aXZlIHNhbXBsZSBzaXplIHRlbGxzIHVzIHdoYXQgb3VyIHNhbXBsZSBzaXplIGlzIGFjY291bnRpbmcgZm9yIHBvdGVudGlhbCBhdXRvY29ycmVsYXRpb24gb2YgdGhlIHNhbXBsZXMgcHJvZHVjZWQgYnkgdGhlIE1DTUMuIFdlIHJhbiB0aGUgTUNNQyBmb3IgNTAwIGl0ZXJhdGlvbnMgcG9zdC13YXJtLXVwLCBzbyB3ZSBzaG91bGQgYWltIGZvciBhbiBFRVMgb2YgY2xvc2UgdG8gNTAwLiBUaGUgZmFjdCB0aGF0IG91ciBFRVMgdmFsdWVzIGFuZCAkPiA1MDAkIGlzIHdlbGwga25vd24gZm9yIHRoZSBOVVRTIGFsZ29yaXRobSBiZWNhdXNlIGl0cyBzYW1wbGluZyBtZXRob2QgY2FuIHByb2R1Y2UgbmVnYXRpdmUgYXV0b2NvcnJlbGF0aW9uLgoKRUVTIGlzIHNwbGl0IGludG8gYEJ1bGtgIGFuZCBgVGFpbGAgYmVjYXVzZSBgQnVsa2AgdGVsbHMgdXMgYWJvdXQgdGhlIG92ZXJhbGwgcG9zdGVyaW9yIGRpc3RyaWJ1dGlvbiB3aGlsZSBgVGFpbGAgdGVsbHMgdXMgc3BlY2lmaWNsYWx5IGFib3V0IHRoZSB0YWlscyBvZiB0aGUgcG9zdGVyaW9yLiBBIGNvbW1vbiBwcm9ibGVtIGlzIGhhdmluZyBgVGFpbF9FRVNgIGJlIG11Y2ggc21hbGxlciB0aGFuIGBCdWxrX0VFU2AuIFRoaXMgaW5kaWNhdGVzIHRoYXQgdGhlIE1DTUMgaGFkIGRpZmZpY3VsdHkgc2FtcGxpbmcgZnJvbSB0aGUgdGFpbHMgb2YgdGhlIHBvc3Rlcmlvci4KCiMjIyBUcmFjZSBwbG90cwoKVmlzdWFsIGRpYWdub3N0aWNzIGFyZSBhIG1haW5zdGF5IG9mIEJheWVzaWFuIE1DTUMuIE9uZSBvZiB0aGUgbW9zdCBjb21tb24gdmlzdWFscyBpcyB0aGUgKioqdHJhY2UgcGxvdCoqKi4gVGhlIHRyYWNlIHBsb3Qgc2hvd3MgdGhlIHRpbWVzZXJpZXMgb2Ygc2FtcGxlcyBmcm9tIHRoZSBNQ01DLiBJdCBpcyBhIGdyZWF0IHZpc3VhbCB3YXkgb2YgY29uZmlybWluZyBjb252ZXJnZW5jZS4gSGVyZSBhcmUgdHdvIGh5cG90aGV0aWNhbCB0cmFjZSBwbG90cwoKYGBge3J9CiN8IGxhYmVsOmZpZy10cmFjZS1jb252ZXJnZQoKY29udiA8LSBkYXRhLmZyYW1lKGl0ZXIgPSByZXAoMToxMDAsIDQpLCAKICAgICAgICAgICAgICAgICAgIGNoYWluID0gZmFjdG9yKHJlcCgxOjQsIGVhY2ggPSAxMDApKSwgCiAgICAgICAgICAgICAgICAgICBiX3ggPSBybm9ybSg0MDApLCAKICAgICAgICAgICAgICAgICAgIGNvbnZlcmdlbmNlID0gImNvbnZlcmdlZCIpCgpub19jb252IDwtIGNvbnYgfD4gCiAgICBtdXRhdGUoYl94ID0gcm5vcm0oNDAwKSArIDIgKiBhcy5udW1lcmljKGNoYWluKSAtIDQsIAogICAgICAgICAgIGNvbnZlcmdlbmNlID0gIm5vdCBjb252ZXJnZWQiKQoKYl94X2NvbnYgPC0gcmJpbmQoY29udiwgbm9fY29udikKCmdncGxvdChiX3hfY29udiwgYWVzKGl0ZXIsIGJfeCwgY29sb3IgPSBjaGFpbikpICsKICAgIGdlb21fbGluZSgpICsKICAgIGZhY2V0X2dyaWQoY29scyA9IHZhcnMoY29udmVyZ2VuY2UpKSArCiAgICBzY2FsZV9jb2xvcl92aXJpZGlzX2QoKQpgYGAKCkxvYWQgdGhlICpiYXllc3Bsb3QqIHBhY2thZ2UgYW5kIHVzZSBmdW5jdGlvbiBgbWNtY190cmFjZWAgdG8gdmlzdWFsaXplIHRoZSB0cmFjZSBvZiBgbV81MDBgLiBDYW4gd2UgY29uZmlybSBjb252ZXJnZW5jZT8KCkFub3RoZXIgaXNzdWUgdGhhdCB0cmFjZSBwbG90cyBjYW4gZGlhZ25vc2UgaXMgYSBzdHVjayBNQ01DLiBUaGlzIGhhcHBlbnMgd2hlbiBvbmUgb3IgbW9yZSBjaGFpbnMgZ2V0cyBzdHVjayBpbiBhIHJlZ2lvbiAob3IgcmVnaW9ucykgb2YgcGFyYW1ldGVyIHNwYWNlLiBUaGF0IG1pZ2h0IGxvb2sgc29tZXRoaW5nIGxpa2UKCmBgYHtyfQojfCBsYWJlbDogZmlnLXRyYWNlLXN0dWNrCgpzdHVjayA8LSBjb252IHw+CiAgICBtdXRhdGUoYl94ID0gYl94ICsgcmVwKGMoMCwgMCwgMCwgcm5vcm0oNSwgc2QgPSAzKSksIGVhY2ggPSAyNSkpCgpnZ3Bsb3Qoc3R1Y2ssIGFlcyhpdGVyLCBiX3gsIGNvbG9yID0gY2hhaW4pKSArCiAgICBnZW9tX2xpbmUoKSArCiAgICBzY2FsZV9jb2xvcl92aXJpZGlzX2QoKQoKYGBgCgpDb21wYXJlZCB0byB0aGUgdHJhY2UgcGxvdCBvZiB0aGUgYWN1dHVhbCBtb2RlbCwgZGlkIHRoZSBNQ01DIGdldCBzdHVjaz8KCiMjIyBEaXZlcmdlbmNlCgpEaXZlcmdlbmNlIGlzIGEgc3BlY2lhbCBjb25jZXB0IGZvciB0aGUgTlVUUyBhbmQgSE1DIGFsZ29yaXRobXMuIFRoZXNlIGFsZ29yaXRobXMgdHJ5IHRvIHNpbXVsYXRlIGFjdHVhbCBwaHlzaWNzLCBidXQgc29tZXRpbWVzIHRoZXkgZ2V0IGl0IHdyb25nLiBJbWFnaW5lIGlmIGEga2lkIGtpY2tlZCBhIGJhbGwgYnV0IGluc3RlYWQgb2Ygcm9sbGluZyBkb3duIGEgaGlsbCBpdCBqdXN0IHN0YXJ0ZWQgZmxvYXRpbmcuIFRoYXQgd291bGQgYmUgYSBkaXZlcmdlbmNlLiBJZiBkaXZlcmdlbmNlcyBvY2N1ciB3ZSBjYW5ub3QgdHJ1c3QgdGhlIHBvc3RlcmlvciBzYW1wbGUuCgpPdXIgTUNNQyB3aXRoIDUwMCB3YXJtLXVwIGl0ZXJhdGlvbnMgZGlkIG5vdCBlbmNvdW50ZXIgYW55IGRpdmVyZ2VuY2UuIEJ1dCBpZiB3ZSBkb24ndCBhbGxvdyB0aGUgTUNNQyB0byBwcm9wZXJseSB3YXJtIHVwLCBkaXZlcmdlbmNlcyBhcmUgaW5jcmVhc2luZ2x5IGxpa2VseS4gIExldCdzIG1ha2UgYSBuZXcgbW9kZWwgb2JqZWN0IGZyb20gdGhlIHNhbWUgZGF0YSBhbmQgd2l0aCA1MDAgcG9zdC13YXJtLXVwIGl0ZXJhdGlvbnMsIGJ1dCB3aXRoIG9ubHkgMTAgd2FybSB1cCBzdGVwcyBhbmQgdGhlbiBzZWUgaG93IHdlIGNhbiBldmFsdWF0ZSBkaXZlcmdlbmNlLgoKCmBgYHtyfQojfCBsYWJlbDogYnJtLTEwCiN8IGNhY2hlOiB0cnVlCgpzZXQuc2VlZCgxKQptXzEwIDwtIGJybSh5IH4geCwgZGF0YSA9IGRhdCwgCiAgICAgICAgICAgIGZhbWlseSA9IHBvaXNzb24oKSwgCiAgICAgICAgICAgIHByaW9yID0gYyhwcmlvcihub3JtYWwoMCwgMTAwMCksIGNsYXNzID0gSW50ZXJjZXB0KSwKICAgICAgICAgICAgICAgICAgICAgIHByaW9yKG5vcm1hbCgwLCAxMDAwKSwgY2xhc3MgPSBiKSksIAogICAgICAgICAgICBpdGVyID0gNTEwLCAKICAgICAgICAgICAgd2FybXVwID0gMTApCmBgYAoKT25lIHRoaW5nIHdlJ2xsIG5vdGljZSByaWdodCBhd2F5IGlzIHRoYXQgYGJybWAgZ2F2ZSB1cyBhIHdhcm5pbmcgYWJvdXQgZGl2ZXJnZW5jZS4gTGV0J3MgdXNlIHZpc3VhbCBkaWFnbm9zdGljcyB0byBzZWUgd2hhdCBoYXBwZW5lZC4KClRvIG1ha2UgYSB2aXN1YWwgYWJvdXQgZGl2ZXJnZW5jZSB3ZSBmaXJzdCBoYXZlIHRvIGdhdGhlciBzb21lIGV4dHJhIGluZm9ybWF0aW9uIHNwZWNpZmljYWxseSBhYm91dCB0aGUgTlVUUyBzYW1wbGVyCgoKYGBge3J9CiMgaW5mbyBhYm91dCBNQ01DCm5wIDwtIG51dHNfcGFyYW1zKG1fMTApCgojIG5vdyB3ZSBjYW4gdmlzdWFsaXplIGRpdmVyZ2VuY2VzIGluIHRoZSB0cmFjZSBwbG90Cm1jbWNfdHJhY2UobV8xMCwgbnAgPSBucCkKCmBgYAoKRGl2ZXJnZW5jZXMgaGFwcGVuIHNlZW1pbmdseSBhdCByYW5kb20uIFdlIGNhbiBjb25maXJtIHRoaXMgYnkgbG9va2luZyBhdCB0aGUgam9pbnQgcG9zdGVyaW9yIGRpc3RyaWJ1dGlvbgoKYGBge3J9Cm1jbWNfcGFpcnMobV8xMCwgcGFycyA9IGMoImJfSW50ZXJjZXB0IiwgImJfeCIpLCBucCA9IG5wKQoKYGBgCgpCZWNhdXNlIGRpdmVyZ2VuY2VzIGhhcHBlbiBhbGwgb3ZlciBwYXJhbWV0ZXIgc3BhY2UsIHdlIGxpa2VseSBqdXN0IG5lZWQgdG8gYmV0dGVyIHdhcm0tdXAgdGhlIE1DTUMgKHdlIGtuZXcgdGhpcyBiZWNhdXNlIHdlIGZvcmNlZCBpdCB0byBoYXZlIHRvbyBmZXcgd2FybS11cCBpdGVyYXRpb25zKS4gSWYgdGhlcmUgd2VyZSBjbGVhciBwYXR0ZXJucyB0byB0aGUgZGl2ZXJnZW5jZXMgdGhhdCB3b3VsZCBpbmRpY2F0ZSBhIHByb2JsZW0gaW4gdGhlIG1vZGVsIHNwZWNpZmljYXRpb24gYW5kIHdlIG1pZ2h0IG5lZWQgdG8gcmV2aXNlIGhvdyB3ZSBidWlsZCBvdXIgbW9kZWwuCg==').then(res => res.blob()).then(blob => {
+<p><a href="#dnldts45577" onclick="fetch('data:text/plain;base64,LS0tCnRpdGxlOiAiQmFzaWNzIG9mIEJheWVzaWFuIGluZmVyZW5jZSIKZm9ybWF0OgogICAgcGRmOgogICAgICAgIGluY2x1ZGUtaW4taGVhZGVyOgogICAgICAgICAgICB0ZXh0OiB8CiAgICAgICAgICAgICAgICBcdXNlcGFja2FnZXtuZXd1bmljb2RlY2hhcn0KICAgICAgICAgICAgICAgIFxuZXd1bmljb2RlY2hhcnvKu317YH0KYXV0aG9yOgogICAgLSB5b3VyIG5hbWUgaGVyZQotLS0KCmBgYHtyfQojfCBsYWJlbDogc2V0dXAKCiMgbG9hZCBhbGwgbmVjZXNzYXJ5IHBhY2thZ2VzCmxpYnJhcnkoZ2dwbG90MikKbGlicmFyeShkcGx5cikKbGlicmFyeShicm1zKQpsaWJyYXJ5KGJheWVzcGxvdCkKCmBgYAoKCiMjIFNpbXVsYXRpbmcgYSBmYW1pbGlhciBtb2RlbAoKV2UnbGwgc3RhcnQgYnkgc2ltdWxhdGluZyBhIHNpbXBsZSBhbmQgZmFtaWxpYXIgR0xNOiBhIFBvaXNzb24gcmVzcG9uc2UgdmFyaWFibGUgcmVzcG9uZGluZyB0byBhIHNpbmdsZSBudW1lcmljIGV4cGxhbmF0b3J5IHZhcmlhYmxlLgoKYGBge3J9CiMgc2V0IHNlZWQgc28gd2UgYWxsIGhhdmUgdGhlIHNhbWUgZGF0YQpzZXQuc2VlZCgxMjMpCgojIHJhbmRvbSBudW1lcmljIGRhdGEgZm9yIGV4cGxhbmF0b3J5IHZhcmlhYmxlCnggPC0gcnVuaWYoNDAwLCAwLCAxKQoKIyBsb2cobSkgaXMgdGhlIGxpbmsgZnVuY3Rpb24gc28gbXUgPSBleHAoLi4uKQptdSA8LSBleHAoLTEgKyA0ICogeCkKCiMgZHJhdyByYW5kb20gUG9pc3NvbiBkYXRhIGJhc2VkIG9uIG11IHJlc3BvbmRpbmcgdG8geAp5IDwtIHJwb2lzKGxlbmd0aCh4KSwgbXUpCgojIGNvbWJpbmUgaW4gb25lIGRhdGEgb2JqZWN0CmRhdCA8LSBkYXRhLmZyYW1lKHgsIHkpCmBgYAoKClVzZSBgZ2dwbG90YCB0byB2aXN1YWxpemUgdGhlc2UgZGF0YS4KCgojIyBBIHF1aWNrIHN0YXJ0IGd1aWRlIHRvIEJheWVzaWFuIGluZmVyZW5jZSB3aXRoICpicm1zKgoKVGhlICpicm1zKiBwYWNrYWdlIGxldHMgZXN0aW1hdGUgcG9zdGVyaW9ycyBpbiBhIHdheSB0aGF0IGxvb2tzIHZlcnkgc2ltaWxhciB0byBob3cgd2UgZml0IEdMTXMgd2l0aCBtYXhpbXVtIGxpa2VsaWhvb2QgdXNpbmcgdGhlIGBnbG1gIGZ1bmN0aW9uLiAgVGhlIHdvcmtob3JzZSBmdW5jdGlvbiBvZiAqYnJtcyogaXMgYGJybWAgd2hpY2ggdGFrZXMgYGZvcnVtYWxgLCBgZGF0YWAsIGFuZCBgZmFtaWx5YCBhcmd1bWVudHMganVzdCBsaWtlIGBnbG1gLiBCdXQgYGJybWAgY2FuIHRha2UgbWFueSBhZGRpdGlvbmFsIGFyZ3VtZW50cyB0aGF0IGFyZSBzcGVjaWZpYyB0byBCYXllc2lhbiBNQ01DLiBUaHJlZSBlc3BlY2lhbGx5IGltcG9ydGFudCBCYXllc2lhbiBNQ01DIGFyZ3VtZW50cyBhcmUgYHByaW9yYCwgYGl0ZXJgLCBhbmQgYHdhcm11cGAuIFRoZXNlIGFsbCBoYXZlIG1lYW5pbmdmdWwgZGVmYXVsdHMgKHNvIGBicm1gIHdpbGwgcnVuIHdpdGhvdXQgc3BlY2lmeWluZyB2YWx1ZXMgZm9yIHRoZXNlIGFyZ3VtZW50cykgYnV0IHdlIHNob3VsZCB1bmRlcnN0YW5kIHRoZW0gc28gd2UgY2FuIGV2YWx1YXRlIHdoZW4gdG8gdXNlIG9yIG5vdCB1c2UgdGhlIGRlZmF1bHRzLgoKRmlyc3Qgd2UgYnVpbGQgYSBtb2RlbAoKCmBgYHtyfQojfCBsYWJlbDogYnJtLTUwMAojfCBjYWNoZTogdHJ1ZQoKbV81MDAgPC0gYnJtKHkgfiB4LCBkYXRhID0gZGF0LCAKICAgICAgICAgICAgICMgbm90ZTogYnkgY29udmVudGlvbiB0aGUgZmFtaWx5IGdldHMgYCgpYAogICAgICAgICAgICAgZmFtaWx5ID0gcG9pc3NvbigpLCAKICAgICAgICAgICAgIHByaW9yID0gYyhwcmlvcihub3JtYWwoMCwgMTAwMCksIGNsYXNzID0gSW50ZXJjZXB0KSwKICAgICAgICAgICAgICAgICAgICAgICBwcmlvcihub3JtYWwoMCwgMTAwMCksIGNsYXNzID0gYikpLCAKICAgICAgICAgICAgIGl0ZXIgPSAxMDAwLCAKICAgICAgICAgICAgIHdhcm11cCA9IDUwMCkKYGBgCgoKU29tZXRoaW5nIHlvdSdsbCBub3RpY2UgaXMgdGhhdCB0aGVyZSBpcyBtb3JlIHByaW50ZWQgb3V0cHV0IHdoaWxlIHRoZSBmdW5jdGlvbiBpcyBydW5uaW5nLCBhbmQgaXQgdGFrZXMgbXVjaCBsb25nZXIgdG8gcnVuIGNvbXBhcmVkIHRvIGBnbG1gLiBUaGUgb3V0cHV0IG1lbnRpb25zIGBDaGFpbiAxYCwgLi4uLCBgQ2hhaW4gNGAuIEJ5IGRlZmF1bHQgdGhlIE1DTUMgdW5kZXIgdGhlIGhvb2Qgb2YgYGJybWAgcnVucyA0IHRpbWVzLiBXZSdsbCBnZXQgaW50byB3aHkgaW4gdGhlIG5leHQgc2VjdGlvbi4KCkZpcnN0LCBsZXQncyBpbnZlc3RpZ2F0ZSBgcHJpb3JgLCBgaXRlcmAsIGFuZCBgd2FybXVwYC4KClRoZSBhcmd1bWVudCBgaXRlcmAgdGVsbHMgYGJybWAgaG93IG1hbnkgdG90YWwgaXRlcmF0aW9ucyBvZiB0aGUgTm8tVS1UdXJucyBIYW1pbHRvbmlhbiBNQyB0byBydW4uIFRoZSBgd2FybXVwYCBzcGVjaWZpZXMgaG93IG1hbnkgb2YgdGhvc2UgaXRlcmF0aW9ucyB0byB1c2UgYXMgYSAid2FybS11cCwiIG1lYW5pbmcgZmluZGluZyB0aGUgcmlnaHQgZmluZSB0dW5pbmcgb2YgdGhlIE5VVFMgSE1DLiBUaGUgd2FybS11cCBpcyBhbHdheXMgdGhlIGZpcnN0IGB3YXJtdXBgIG51bWJlciBvZiBpdGVyYXRpb25zLCBhbmQgdGhlc2Ugd2FybS11cCBpdGVyYXRpb25zIGFyZSBub3QgaW5jbHVkZWQgaW4gdGhlIGZpbmFsIHNhbXBsZSBvZiB0aGUgcG9zdGVyaW9yLiBXZSB1c2VkIGB3YXJtdXAgPSA1MDBgLCB0aHVzIHRoZSBuYW1lIG9mIHRoaXMgbW9kZWwgYG1fNTAwYC4KCldlIHNwZWNpZnkgdGhlIHByaW9yIGZvciBib3RoIGBJbnRlcmNlcHRgIGFuZCBzbG9wZSBgYmAgYXMgYG5vcm1hbCgwLCAxMDAwKWAsIG1lYW5pbmcgbm9ybWFsIHdpdGggbWVhbiA9IDAgYW5kIHN0YW5kYXJkIGRldmlhdGlvbiA9IDEsMDAwLiBJbiBtYWtpbmcgdGhlIHByaW9yIHdlIG5lZWQgdG8gaW5kaWNhdGUgd2hhdCBwYXJhbWV0ZXIgdGhlIHByaW9yIGlzIGZvciB3aXRoIGBjbGFzc2AuIFdlIHVzZSB0aGUgc3BlY2lhbCBmdW5jdGlvbiBgbm9ybWFsYCByYXRoZXIgdGhhbiBgcm5vcm1gIG9yIGBkbm9ybWAgYmVjYXVzZSB3ZSBhcmUgY3JlYXRpbmcgYSBwcmlvciBhbmQgbGV0dGluZyBgYnJtYCBzYW1wbGUgZnJvbSBpdC4gQnV0IHdlIGNhbiB1c2UgYHJub3JtYCB0byB2aXN1YWxpemUgd2hhdCB0aGUgcHJpb3IgbG9va3MgbGlrZS4KClVzZSBgcm5vcm1gIHRvIGRyYXcgMiwwMDAgc2FtcGxlcyBmcm9tIGEgbm9ybWFsIGRpc3RyaWJ1dGlvbiB3aXRoIG1lYW4gPSAwIGFuZCBzdGFuZGFyZCBkZXZpYXRpb24gPSAxLDAwMCwgdGhlbiB2aXN1YWxpemUgYSB0d28gaGlzdG9ncmFtcywgdGhlIGZpcnN0IGZvciBqdXN0IHRoZSB2YWx1ZXMgYmV0d2VlbiAtMzAwIGFuZCArMzAwLCB0aGUgc2Vjb25kIGZvciBhbGwgdGhlIHJhbmRvbWx5IHNhbXBsZWQgdmFsdWVzLgoKCllvdSBzaG91bGQgZmluZCB0aGF0IGJldHdlZW4gLTMwMCBhbmQgKzMwMCB0aGUgcHJpb3IgaXMgbmVhcmx5IGZsYXQuIEJ1dCBvdmVyIGl0cyBmdWxsIHJhbmdlIGl0IG9mIGNvdXJzZSBsb29rcyBsaWtlIGEgYmVsbCBjdXJ2ZS4gQ29uc2lkZXIgdGhpczogdmVyeSBsYXJnZSBuZWdhdGl2ZSBhbmQgcG9zaXRpdmUgbnVtYmVycyB3aWxsIGFsbW9zdCBuZXZlciBlbmQgdXAgaW4gb3VyIHBvc3RlcmlvciBzYW1wbGUsIHdoeT8KCgpTcGVha2luZyBvZiB0aGUgcG9zdGVyaW9yLCBsZXQncyB2aXN1YWxpemUgaXQuICBGaXJzdCB3ZSBjYW4gZXh0cmFjdCB0aGUgcG9zdGVyaW9yIHdpdGggYGFzX2RyYXdzX2RmYAoKYGBge3J9CnBvc3RfNTAwIDwtIGFzX2RyYXdzX2RmKG1fNTAwKQoKIyBoYXZlIGEgbG9vawpwb3N0XzUwMApgYGAKCldlIGhhdmUgYSBgZGF0YS5mcmFtZWAgdHlwZSBvYmplY3Qgd2l0aCBjb2x1bW5zIGZvciBgYl9JbnRlcmNlcHRgIGFuZCBgYl94YCwgdGhvc2UgYXJlIHRoZSBpbnRlcmNlcHQgYW5kIHNsb3BlIHBhcmFtZXRlcnMgb2Ygb3VyIG1vZGVsLiBUaGUgb3RoZXIgY29sdW1ucyBzdG9yZSBhZGRpdGlvbmFsIGluZm9ybWF0aW9uIHRoYXQgd2Ugd2lsbCBub3QgY29uc2lkZXIuCgpCZWNhdXNlIHdlIHJhbiA0IGNoYWlucyAoNCBzZXBhcmF0ZSBNQ01DJ3MpIGVhY2ggd2l0aCA1MDAgcG9zdC13YXJtLXVwIGl0ZXJhdGlvbnMsIHdlIHNob3VsZCBoYXZlIGA0ICogNTAwID0gMjAwMGAgc2FtcGxlcyBpbiBgcG9zdF81MDBgLiBMZXQncyBjb25maXJtCgpgYGB7cn0KbnJvdyhwb3N0XzUwMCkKYGBgCgpNYWtlIGEgaGlzdG9ncmFtIG9mIHRoZSBwb3N0ZXJpb3IgZm9yIHRoZSBpbnRlcmNlcHQgYGJfSW50ZXJjZXB0YCBhbmQgdGhlIHNsb3BlIGBiX3hgLiBJcyB0aGUgcmFuZ2Ugb2YgdGhlIHBvc3RlcmlvcnMgY29uc2lzdGVudCB3aXRoIHRoZSB0cnVlIGludGVyY2VwdCBhbmQgc2xvcGUgd2UgdXNlZCB0byBzaW11bGF0ZSB0aGUgZGF0YSAoaW50ZXJjZXB0ID0gLTEsIHNsb3BlID0gNCk/IChzaWRlIG5vdGU6IHRoZSAqYmF5ZXNwbG90KiBwYWNrYWdlIG9mZmVycyBmdW5jdGlvbiBgbWNtY19oaXN0YCB3aGljaCBjYW4gbW9yZSBkaXJlY3RseSBtYWtlIGEgaGlzdG9ncmFtIG9mIHBvc3RlcmlvcnMpCgpOb3cgdXNlIGBtZWFuYCBhbmQgYHF1YW50aWxlYCBvbiBgcG9zdF81MDBgIHRvIGNhbGN1bGF0ZSB0aGUgZXN0aW1hdGUgYW5kIDk1JSBjcmVkaWJsZSBpbnRlcnZhbHMgZm9yIHRoZSBpbnRlcmNlcHQgYW5kIHNsb3BlLiBDb21wYXJlIHRvIHRoZSBvdXRwdXQgb2YgYGZpeGVmYC4KCmBgYHtyfQpmaXhlZihtXzUwMCkKYGBgCgpIaW50OiBmb3IgY2FsY3VsYXRpbmcgOTUlIENJLCB1c2UgYHF1YW50aWxlYCB3aXRoIHRoZSBgcHJvYnNgIGFyZ3VtZW50IHNldCB0byBgYygwLjAyNSwgMC45NzUpYC4gSGVyZSdzIGFuIGV4YW1wbGU6CgpgYGB7cn0KeCA8LSBybm9ybSgxMDApCnF1YW50aWxlKHgsIHByb2JzID0gYygwLjAyNSwgMC45NzUpKQpgYGAKCiMjIERpYWdub3NpbmcgdGhlIHN1Y2Nlc3MgKG9yIGZhaWx1cmUpIG9yIEJheWVzaWFuIE1DTUMKCkJheWVzaWFuIE1DTUMgaXMgYSBsb3QgbW9yZSBzZW5zaXRpdmUgY29tcGFyZWQgdG8gbWF4aW1pemluZyB0aGUgbGlrZWxpaG9vZC4gSWYgdGhlIE1DTUMgZG9lcyBub3QgcnVuIHN1Y2Nlc3NmdWxseSwgdGhlIHBvc3RlcmlvciBzYW1wbGUgaXMgbm90IHJlbGlhYmxlLiAgU28gaXQgaXMgdmVyeSBpbXBvcnRhbnQgdGhhdCB3ZSBkaWFnbm9zZSB3aGV0aGVyIHRoZSBNQ01DIHdhcyBzdWNjZXNzZnVsLiBUaGVyZSBhcmUgYSBmZXcga2V5IG1ldHJpY3Mgb2Ygc3VjY2VzczoKCi0gZGlkIHRoZSBNQ01DIGNvbnZlcmdlIChtZWFuaW5nIGRpZCBpdCBmaW5kIHRoZSByZWdpb24gb2YgcGFyYW1ldGVyIHNwYWNlIHdoZXJlIHRoZSBwb3N0ZXJpb3IgaXMgaGlnaGVzdCk/Ci0gZGlkIHRoZSBNQ01DIHByb2R1Y2Ugc3VmZmljaWVudCBzYW1wbGVzPwotIGRpZCB0aGUgTUNNQyBnZXQgc3R1Y2sgc29tZXdoZXJlPwotIHNwZWNpZmljYWxseSBmb3IgTlVUUzogd2VyZSB0aGVyZSBhbnkgKiJkaXZlcmdlbmNlcyIqPyAod2UnbGwgZ2V0IGludG8gd2hhdCB0aGF0IG1lYW5zKQoKVGhlIGBzdW1tYXJ5YCBmdW5jdGlvbiBwcm92aWRlcyBzb21lIHVzZWZ1bCBpbmZvcm1hdGlvbgoKYGBge3J9CnN1bW1hcnkobV81MDApCgpgYGAKCkluIGFkZGl0aW9uIHRvIGluZm9ybWF0aW9uIGFib3V0IHRoZSBwYXJhbWV0ZXIgdmFsdWVzIChpLmUuIGVzdGltYXRlcywgQ0kpIHdlIGhhdmUgdHdvIG5ldyBwaWVjZXMgb2YgaW5mb3JtYXRpb246IGBSaGF0YCAob3IgJFxoYXR7Un0kKSBhbmQgYEVTU2Agd2hpY2ggc3RhbmRzIGZvciAiZWZmZWN0aXZlIHNhbXBsZSBzaXplIiAoYm90aCBgQnVsa2AgYW5kIGBUYWlsYCkuCgokXGhhdHtSfSQgaXMgYSB1c2VmdWwgbWVhc3VyZSBvZiBjb252ZXJnZW5jZS4gSXQgcXVhbnRpZmllcyB0aGUgcmF0aW8gb2Ygd2l0aGluLWNoYWluIHZhcmlhbmNlIHRvIHRoZSBiZXR3ZWVuIGNoYWluIHZhcmlhbmNlLiBBdCBjb252ZXJnZW5jZSwgdGhpcyByYXRpbyBzaG91bGQgYmUgMS4gRnJvbSB0aGUgb3V0cHV0IG9mIGBzdW1tYXJ5YCB3ZSBzZWUgdGhhdCBpdCBpcyBpbmRlZWQgYDFgLiBOb3RlOiB3ZSBnZXQgc2VwYXJhdGUgaW5mb3JtYXRpb24gZm9yIGJvdGggYEludGVyY2VwdGAgYW5kIGB4YCAoaS5lLiBzbG9wZSkgYmVjYXVzZSB0aGUgc2hhcGUgb2YgdGhlIHBvc3RlcmlvciBhY3Jvc3MgZGlmZmVyZW50IHBhcmFtZXRlcnMgY2FuIGJlIGRpZmZlcmVudCwgbGVhZGluZyB0byBkaWZmZXJlbnQgb3V0Y29tZXMgZGVzcGl0ZSBhbGwgcnVubmluZyBpbiB0aGUgc2FtZSBNQ01DLgoKRWZmZWN0aXZlIHNhbXBsZSBzaXplIHRlbGxzIHVzIHdoYXQgb3VyIHNhbXBsZSBzaXplIGlzIGFjY291bnRpbmcgZm9yIHBvdGVudGlhbCBhdXRvY29ycmVsYXRpb24gb2YgdGhlIHNhbXBsZXMgcHJvZHVjZWQgYnkgdGhlIE1DTUMuIFdlIHJhbiB0aGUgTUNNQyBmb3IgNTAwIGl0ZXJhdGlvbnMgcG9zdC13YXJtLXVwLCBzbyB3ZSBzaG91bGQgYWltIGZvciBhbiBFRVMgb2YgY2xvc2UgdG8gNTAwLiBUaGUgZmFjdCB0aGF0IG91ciBFRVMgdmFsdWVzIGFuZCAkPiA1MDAkIGlzIHdlbGwga25vd24gZm9yIHRoZSBOVVRTIGFsZ29yaXRobSBiZWNhdXNlIGl0cyBzYW1wbGluZyBtZXRob2QgY2FuIHByb2R1Y2UgbmVnYXRpdmUgYXV0b2NvcnJlbGF0aW9uLgoKRUVTIGlzIHNwbGl0IGludG8gYEJ1bGtgIGFuZCBgVGFpbGAgYmVjYXVzZSBgQnVsa2AgdGVsbHMgdXMgYWJvdXQgdGhlIG92ZXJhbGwgcG9zdGVyaW9yIGRpc3RyaWJ1dGlvbiB3aGlsZSBgVGFpbGAgdGVsbHMgdXMgc3BlY2lmaWNsYWx5IGFib3V0IHRoZSB0YWlscyBvZiB0aGUgcG9zdGVyaW9yLiBBIGNvbW1vbiBwcm9ibGVtIGlzIGhhdmluZyBgVGFpbF9FRVNgIGJlIG11Y2ggc21hbGxlciB0aGFuIGBCdWxrX0VFU2AuIFRoaXMgaW5kaWNhdGVzIHRoYXQgdGhlIE1DTUMgaGFkIGRpZmZpY3VsdHkgc2FtcGxpbmcgZnJvbSB0aGUgdGFpbHMgb2YgdGhlIHBvc3Rlcmlvci4KCiMjIyBUcmFjZSBwbG90cwoKVmlzdWFsIGRpYWdub3N0aWNzIGFyZSBhIG1haW5zdGF5IG9mIEJheWVzaWFuIE1DTUMuIE9uZSBvZiB0aGUgbW9zdCBjb21tb24gdmlzdWFscyBpcyB0aGUgKioqdHJhY2UgcGxvdCoqKi4gVGhlIHRyYWNlIHBsb3Qgc2hvd3MgdGhlIHRpbWVzZXJpZXMgb2Ygc2FtcGxlcyBmcm9tIHRoZSBNQ01DLiBJdCBpcyBhIGdyZWF0IHZpc3VhbCB3YXkgb2YgY29uZmlybWluZyBjb252ZXJnZW5jZS4gSGVyZSBhcmUgdHdvIGh5cG90aGV0aWNhbCB0cmFjZSBwbG90cwoKYGBge3J9CiN8IGxhYmVsOmZpZy10cmFjZS1jb252ZXJnZQoKY29udiA8LSBkYXRhLmZyYW1lKGl0ZXIgPSByZXAoMToxMDAsIDQpLCAKICAgICAgICAgICAgICAgICAgIGNoYWluID0gZmFjdG9yKHJlcCgxOjQsIGVhY2ggPSAxMDApKSwgCiAgICAgICAgICAgICAgICAgICBiX3ggPSBybm9ybSg0MDApLCAKICAgICAgICAgICAgICAgICAgIGNvbnZlcmdlbmNlID0gImNvbnZlcmdlZCIpCgpub19jb252IDwtIGNvbnYgfD4gCiAgICBtdXRhdGUoYl94ID0gcm5vcm0oNDAwKSArIDIgKiBhcy5udW1lcmljKGNoYWluKSAtIDQsIAogICAgICAgICAgIGNvbnZlcmdlbmNlID0gIm5vdCBjb252ZXJnZWQiKQoKYl94X2NvbnYgPC0gcmJpbmQoY29udiwgbm9fY29udikKCmdncGxvdChiX3hfY29udiwgYWVzKGl0ZXIsIGJfeCwgY29sb3IgPSBjaGFpbikpICsKICAgIGdlb21fbGluZSgpICsKICAgIGZhY2V0X2dyaWQoY29scyA9IHZhcnMoY29udmVyZ2VuY2UpKSArCiAgICBzY2FsZV9jb2xvcl92aXJpZGlzX2QoKQpgYGAKCkxvYWQgdGhlICpiYXllc3Bsb3QqIHBhY2thZ2UgYW5kIHVzZSBmdW5jdGlvbiBgbWNtY190cmFjZWAgdG8gdmlzdWFsaXplIHRoZSB0cmFjZSBvZiBgbV81MDBgLiBDYW4gd2UgY29uZmlybSBjb252ZXJnZW5jZT8KCkFub3RoZXIgaXNzdWUgdGhhdCB0cmFjZSBwbG90cyBjYW4gZGlhZ25vc2UgaXMgYSBzdHVjayBNQ01DLiBUaGlzIGhhcHBlbnMgd2hlbiBvbmUgb3IgbW9yZSBjaGFpbnMgZ2V0cyBzdHVjayBpbiBhIHJlZ2lvbiAob3IgcmVnaW9ucykgb2YgcGFyYW1ldGVyIHNwYWNlLiBUaGF0IG1pZ2h0IGxvb2sgc29tZXRoaW5nIGxpa2UKCmBgYHtyfQojfCBsYWJlbDogZmlnLXRyYWNlLXN0dWNrCgpzdHVjayA8LSBjb252IHw+CiAgICBtdXRhdGUoYl94ID0gYl94ICsgcmVwKGMoMCwgMCwgMCwgcm5vcm0oNSwgc2QgPSAzKSksIGVhY2ggPSAyNSkpCgpnZ3Bsb3Qoc3R1Y2ssIGFlcyhpdGVyLCBiX3gsIGNvbG9yID0gY2hhaW4pKSArCiAgICBnZW9tX2xpbmUoKSArCiAgICBzY2FsZV9jb2xvcl92aXJpZGlzX2QoKQoKYGBgCgpDb21wYXJlZCB0byB0aGUgdHJhY2UgcGxvdCBvZiB0aGUgYWN1dHVhbCBtb2RlbCwgZGlkIHRoZSBNQ01DIGdldCBzdHVjaz8KCiMjIyBEaXZlcmdlbmNlCgpEaXZlcmdlbmNlIGlzIGEgc3BlY2lhbCBjb25jZXB0IGZvciB0aGUgTlVUUyBhbmQgSE1DIGFsZ29yaXRobXMuIFRoZXNlIGFsZ29yaXRobXMgdHJ5IHRvIHNpbXVsYXRlIGFjdHVhbCBwaHlzaWNzLCBidXQgc29tZXRpbWVzIHRoZXkgZ2V0IGl0IHdyb25nLiBJbWFnaW5lIGlmIGEga2lkIGtpY2tlZCBhIGJhbGwgYnV0IGluc3RlYWQgb2Ygcm9sbGluZyBkb3duIGEgaGlsbCBpdCBqdXN0IHN0YXJ0ZWQgZmxvYXRpbmcuIFRoYXQgd291bGQgYmUgYSBkaXZlcmdlbmNlLiBJZiBkaXZlcmdlbmNlcyBvY2N1ciB3ZSBjYW5ub3QgdHJ1c3QgdGhlIHBvc3RlcmlvciBzYW1wbGUuCgpPdXIgTUNNQyB3aXRoIDUwMCB3YXJtLXVwIGl0ZXJhdGlvbnMgZGlkIG5vdCBlbmNvdW50ZXIgYW55IGRpdmVyZ2VuY2UuIEJ1dCBpZiB3ZSBkb24ndCBhbGxvdyB0aGUgTUNNQyB0byBwcm9wZXJseSB3YXJtIHVwLCBkaXZlcmdlbmNlcyBhcmUgaW5jcmVhc2luZ2x5IGxpa2VseS4gIExldCdzIG1ha2UgYSBuZXcgbW9kZWwgb2JqZWN0IGZyb20gdGhlIHNhbWUgZGF0YSBhbmQgd2l0aCA1MDAgcG9zdC13YXJtLXVwIGl0ZXJhdGlvbnMsIGJ1dCB3aXRoIG9ubHkgMTAgd2FybSB1cCBzdGVwcyBhbmQgdGhlbiBzZWUgaG93IHdlIGNhbiBldmFsdWF0ZSBkaXZlcmdlbmNlLgoKCmBgYHtyfQojfCBsYWJlbDogYnJtLTEwCiN8IGNhY2hlOiB0cnVlCgpzZXQuc2VlZCgxKQptXzEwIDwtIGJybSh5IH4geCwgZGF0YSA9IGRhdCwgCiAgICAgICAgICAgIGZhbWlseSA9IHBvaXNzb24oKSwgCiAgICAgICAgICAgIHByaW9yID0gYyhwcmlvcihub3JtYWwoMCwgMTAwMCksIGNsYXNzID0gSW50ZXJjZXB0KSwKICAgICAgICAgICAgICAgICAgICAgIHByaW9yKG5vcm1hbCgwLCAxMDAwKSwgY2xhc3MgPSBiKSksIAogICAgICAgICAgICBpdGVyID0gNTEwLCAKICAgICAgICAgICAgd2FybXVwID0gMTApCmBgYAoKT25lIHRoaW5nIHdlJ2xsIG5vdGljZSByaWdodCBhd2F5IGlzIHRoYXQgYGJybWAgZ2F2ZSB1cyBhIHdhcm5pbmcgYWJvdXQgZGl2ZXJnZW5jZS4gTGV0J3MgdXNlIHZpc3VhbCBkaWFnbm9zdGljcyB0byBzZWUgd2hhdCBoYXBwZW5lZC4KClRvIG1ha2UgYSB2aXN1YWwgYWJvdXQgZGl2ZXJnZW5jZSB3ZSBmaXJzdCBoYXZlIHRvIGdhdGhlciBzb21lIGV4dHJhIGluZm9ybWF0aW9uIHNwZWNpZmljYWxseSBhYm91dCB0aGUgTlVUUyBzYW1wbGVyCgoKYGBge3J9CiMgaW5mbyBhYm91dCBNQ01DCm5wIDwtIG51dHNfcGFyYW1zKG1fMTApCgojIG5vdyB3ZSBjYW4gdmlzdWFsaXplIGRpdmVyZ2VuY2VzIGluIHRoZSB0cmFjZSBwbG90Cm1jbWNfdHJhY2UobV8xMCwgbnAgPSBucCkKCmBgYAoKRGl2ZXJnZW5jZXMgaGFwcGVuIHNlZW1pbmdseSBhdCByYW5kb20uIFdlIGNhbiBjb25maXJtIHRoaXMgYnkgbG9va2luZyBhdCB0aGUgam9pbnQgcG9zdGVyaW9yIGRpc3RyaWJ1dGlvbgoKYGBge3J9Cm1jbWNfcGFpcnMobV8xMCwgcGFycyA9IGMoImJfSW50ZXJjZXB0IiwgImJfeCIpLCBucCA9IG5wKQoKYGBgCgpCZWNhdXNlIGRpdmVyZ2VuY2VzIGhhcHBlbiBhbGwgb3ZlciBwYXJhbWV0ZXIgc3BhY2UsIHdlIGxpa2VseSBqdXN0IG5lZWQgdG8gYmV0dGVyIHdhcm0tdXAgdGhlIE1DTUMgKHdlIGtuZXcgdGhpcyBiZWNhdXNlIHdlIGZvcmNlZCBpdCB0byBoYXZlIHRvbyBmZXcgd2FybS11cCBpdGVyYXRpb25zKS4gSWYgdGhlcmUgd2VyZSBjbGVhciBwYXR0ZXJucyB0byB0aGUgZGl2ZXJnZW5jZXMgdGhhdCB3b3VsZCBpbmRpY2F0ZSBhIHByb2JsZW0gaW4gdGhlIG1vZGVsIHNwZWNpZmljYXRpb24gYW5kIHdlIG1pZ2h0IG5lZWQgdG8gcmV2aXNlIGhvdyB3ZSBidWlsZCBvdXIgbW9kZWwuCg==').then(res => res.blob()).then(blob => {
       const downloadURL = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       document.body.appendChild(a);
@@ -496,7 +496,7 @@ window.Quarto = {
       a.download = 'lab10-bayes-basics.qmd'; a.click();
       window.URL.revokeObjectURL(downloadURL);
       document.body.removeChild(a);
-        });"><button class="btn btn-default downloadthis  " id="dnldts35423"><i class="bi bi-download"></i> Download lab template </button></a></p>
+        });"><button class="btn btn-default downloadthis  " id="dnldts45577"><i class="bi bi-download"></i> Download lab template </button></a></p>
 <p>The template will prompt you to work through the following sections.</p>
 <section id="simulating-a-familiar-model" class="level2" data-number="33.1">
 <h2 data-number="33.1" class="anchored" data-anchor-id="simulating-a-familiar-model"><span class="header-section-number">33.1</span> Simulating a familiar model</h2>
@@ -559,8 +559,8 @@ make: *** [foo.o] Error 1</code></pre>
 <pre><code>
 SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
 Chain 1: 
-Chain 1: Gradient evaluation took 2.9e-05 seconds
-Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.29 seconds.
+Chain 1: Gradient evaluation took 2.4e-05 seconds
+Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.24 seconds.
 Chain 1: Adjust your expectations accordingly!
 Chain 1: 
 Chain 1: 
@@ -578,8 +578,8 @@ Chain 1: Iteration: 900 / 1000 [ 90%]  (Sampling)
 Chain 1: Iteration: 1000 / 1000 [100%]  (Sampling)
 Chain 1: 
 Chain 1:  Elapsed Time: 0.023 seconds (Warm-up)
-Chain 1:                0.02 seconds (Sampling)
-Chain 1:                0.043 seconds (Total)
+Chain 1:                0.021 seconds (Sampling)
+Chain 1:                0.044 seconds (Total)
 Chain 1: 
 
 SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).
@@ -628,8 +628,8 @@ Chain 3: Iteration: 900 / 1000 [ 90%]  (Sampling)
 Chain 3: Iteration: 1000 / 1000 [100%]  (Sampling)
 Chain 3: 
 Chain 3:  Elapsed Time: 0.021 seconds (Warm-up)
-Chain 3:                0.022 seconds (Sampling)
-Chain 3:                0.043 seconds (Total)
+Chain 3:                0.019 seconds (Sampling)
+Chain 3:                0.04 seconds (Total)
 Chain 3: 
 
 SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 4).
@@ -652,160 +652,10 @@ Chain 4: Iteration: 800 / 1000 [ 80%]  (Sampling)
 Chain 4: Iteration: 900 / 1000 [ 90%]  (Sampling)
 Chain 4: Iteration: 1000 / 1000 [100%]  (Sampling)
 Chain 4: 
-Chain 4:  Elapsed Time: 0.025 seconds (Warm-up)
+Chain 4:  Elapsed Time: 0.021 seconds (Warm-up)
 Chain 4:                0.02 seconds (Sampling)
-Chain 4:                0.045 seconds (Total)
+Chain 4:                0.041 seconds (Total)
 Chain 4: </code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>m_500_more_warm <span class="ot">&lt;-</span> <span class="fu">brm</span>(y <span class="sc">~</span> x, <span class="at">data =</span> dat, </span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                       <span class="co"># note: by convention the family gets `()`</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">family =</span> <span class="fu">poisson</span>(), </span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">prior =</span> <span class="fu">c</span>(<span class="fu">prior</span>(<span class="fu">normal</span>(<span class="dv">0</span>, <span class="dv">1000</span>), <span class="at">class =</span> Intercept),</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>                                 <span class="fu">prior</span>(<span class="fu">normal</span>(<span class="dv">0</span>, <span class="dv">1000</span>), <span class="at">class =</span> b)), </span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">iter =</span> <span class="dv">500</span> <span class="sc">+</span> <span class="dv">10</span>, </span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>                       <span class="at">warmup =</span> <span class="dv">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Compiling Stan program...
-Trying to compile a simple C file</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Running /Library/Frameworks/R.framework/Resources/bin/R CMD SHLIB foo.c
-using C compiler: ‘Apple clang version 16.0.0 (clang-1600.0.26.6)’
-using SDK: ‘MacOSX15.2.sdk’
-clang -arch arm64 -std=gnu2x -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG   -I"/Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library/Rcpp/include/"  -I"/Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library/RcppEigen/include/"  -I"/Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library/RcppEigen/include/unsupported"  -I"/Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library/BH/include" -I"/Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library/StanHeaders/include/src/"  -I"/Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library/StanHeaders/include/"  -I"/Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library/RcppParallel/include/"  -I"/Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library/rstan/include" -DEIGEN_NO_DEBUG  -DBOOST_DISABLE_ASSERTS  -DBOOST_PENDING_INTEGER_LOG2_HPP  -DSTAN_THREADS  -DUSE_STANC3 -DSTRICT_R_HEADERS  -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION  -D_HAS_AUTO_PTR_ETC=0  -include '/Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library/StanHeaders/include/stan/math/prim/fun/Eigen.hpp'  -D_REENTRANT -DRCPP_PARALLEL_USE_TBB=1   -I/opt/R/arm64/include    -fPIC  -falign-functions=64 -Wall -g -O2  -c foo.c -o foo.o
-In file included from &lt;built-in&gt;:1:
-In file included from /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library/StanHeaders/include/stan/math/prim/fun/Eigen.hpp:22:
-In file included from /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library/RcppEigen/include/Eigen/Dense:1:
-In file included from /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library/RcppEigen/include/Eigen/Core:19:
-/Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library/RcppEigen/include/Eigen/src/Core/util/Macros.h:679:10: fatal error: 'cmath' file not found
-  679 | #include &lt;cmath&gt;
-      |          ^~~~~~~
-1 error generated.
-make: *** [foo.o] Error 1</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Start sampling</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
-Chain 1: 
-Chain 1: Gradient evaluation took 2.1e-05 seconds
-Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.21 seconds.
-Chain 1: Adjust your expectations accordingly!
-Chain 1: 
-Chain 1: 
-Chain 1: WARNING: No variance estimation is
-Chain 1:          performed for num_warmup &lt; 20
-Chain 1: 
-Chain 1: Iteration:   1 / 510 [  0%]  (Warmup)
-Chain 1: Iteration:  11 / 510 [  2%]  (Sampling)
-Chain 1: Iteration:  61 / 510 [ 11%]  (Sampling)
-Chain 1: Iteration: 112 / 510 [ 21%]  (Sampling)
-Chain 1: Iteration: 163 / 510 [ 31%]  (Sampling)
-Chain 1: Iteration: 214 / 510 [ 41%]  (Sampling)
-Chain 1: Iteration: 265 / 510 [ 51%]  (Sampling)
-Chain 1: Iteration: 316 / 510 [ 61%]  (Sampling)
-Chain 1: Iteration: 367 / 510 [ 71%]  (Sampling)
-Chain 1: Iteration: 418 / 510 [ 81%]  (Sampling)
-Chain 1: Iteration: 469 / 510 [ 91%]  (Sampling)
-Chain 1: Iteration: 510 / 510 [100%]  (Sampling)
-Chain 1: 
-Chain 1:  Elapsed Time: 0 seconds (Warm-up)
-Chain 1:                0.02 seconds (Sampling)
-Chain 1:                0.02 seconds (Total)
-Chain 1: 
-
-SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).
-Chain 2: 
-Chain 2: Gradient evaluation took 5e-06 seconds
-Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.05 seconds.
-Chain 2: Adjust your expectations accordingly!
-Chain 2: 
-Chain 2: 
-Chain 2: WARNING: No variance estimation is
-Chain 2:          performed for num_warmup &lt; 20
-Chain 2: 
-Chain 2: Iteration:   1 / 510 [  0%]  (Warmup)
-Chain 2: Iteration:  11 / 510 [  2%]  (Sampling)
-Chain 2: Iteration:  61 / 510 [ 11%]  (Sampling)
-Chain 2: Iteration: 112 / 510 [ 21%]  (Sampling)
-Chain 2: Iteration: 163 / 510 [ 31%]  (Sampling)
-Chain 2: Iteration: 214 / 510 [ 41%]  (Sampling)
-Chain 2: Iteration: 265 / 510 [ 51%]  (Sampling)
-Chain 2: Iteration: 316 / 510 [ 61%]  (Sampling)
-Chain 2: Iteration: 367 / 510 [ 71%]  (Sampling)
-Chain 2: Iteration: 418 / 510 [ 81%]  (Sampling)
-Chain 2: Iteration: 469 / 510 [ 91%]  (Sampling)
-Chain 2: Iteration: 510 / 510 [100%]  (Sampling)
-Chain 2: 
-Chain 2:  Elapsed Time: 0.001 seconds (Warm-up)
-Chain 2:                0.03 seconds (Sampling)
-Chain 2:                0.031 seconds (Total)
-Chain 2: 
-
-SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 3).
-Chain 3: 
-Chain 3: Gradient evaluation took 5e-06 seconds
-Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.05 seconds.
-Chain 3: Adjust your expectations accordingly!
-Chain 3: 
-Chain 3: 
-Chain 3: WARNING: No variance estimation is
-Chain 3:          performed for num_warmup &lt; 20
-Chain 3: 
-Chain 3: Iteration:   1 / 510 [  0%]  (Warmup)
-Chain 3: Iteration:  11 / 510 [  2%]  (Sampling)
-Chain 3: Iteration:  61 / 510 [ 11%]  (Sampling)
-Chain 3: Iteration: 112 / 510 [ 21%]  (Sampling)
-Chain 3: Iteration: 163 / 510 [ 31%]  (Sampling)
-Chain 3: Iteration: 214 / 510 [ 41%]  (Sampling)
-Chain 3: Iteration: 265 / 510 [ 51%]  (Sampling)
-Chain 3: Iteration: 316 / 510 [ 61%]  (Sampling)
-Chain 3: Iteration: 367 / 510 [ 71%]  (Sampling)
-Chain 3: Iteration: 418 / 510 [ 81%]  (Sampling)
-Chain 3: Iteration: 469 / 510 [ 91%]  (Sampling)
-Chain 3: Iteration: 510 / 510 [100%]  (Sampling)
-Chain 3: 
-Chain 3:  Elapsed Time: 0 seconds (Warm-up)
-Chain 3:                0.02 seconds (Sampling)
-Chain 3:                0.02 seconds (Total)
-Chain 3: 
-
-SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 4).
-Chain 4: 
-Chain 4: Gradient evaluation took 5e-06 seconds
-Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.05 seconds.
-Chain 4: Adjust your expectations accordingly!
-Chain 4: 
-Chain 4: 
-Chain 4: WARNING: No variance estimation is
-Chain 4:          performed for num_warmup &lt; 20
-Chain 4: 
-Chain 4: Iteration:   1 / 510 [  0%]  (Warmup)
-Chain 4: Iteration:  11 / 510 [  2%]  (Sampling)
-Chain 4: Iteration:  61 / 510 [ 11%]  (Sampling)
-Chain 4: Iteration: 112 / 510 [ 21%]  (Sampling)
-Chain 4: Iteration: 163 / 510 [ 31%]  (Sampling)
-Chain 4: Iteration: 214 / 510 [ 41%]  (Sampling)
-Chain 4: Iteration: 265 / 510 [ 51%]  (Sampling)
-Chain 4: Iteration: 316 / 510 [ 61%]  (Sampling)
-Chain 4: Iteration: 367 / 510 [ 71%]  (Sampling)
-Chain 4: Iteration: 418 / 510 [ 81%]  (Sampling)
-Chain 4: Iteration: 469 / 510 [ 91%]  (Sampling)
-Chain 4: Iteration: 510 / 510 [100%]  (Sampling)
-Chain 4: 
-Chain 4:  Elapsed Time: 0 seconds (Warm-up)
-Chain 4:                0.02 seconds (Sampling)
-Chain 4:                0.02 seconds (Total)
-Chain 4: </code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: There were 1 chains where the estimated Bayesian Fraction of Missing Information was low. See
-https://mc-stan.org/misc/warnings.html#bfmi-low</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Examine the pairs() plot to diagnose sampling problems</code></pre>
 </div>
 </div>
 <p>Something you’ll notice is that there is more printed output while the function is running, and it takes much longer to run compared to <code>glm</code>. The output mentions <code>Chain 1</code>, …, <code>Chain 4</code>. By default the MCMC under the hood of <code>brm</code> runs 4 times. We’ll get into why in the next section.</p>
@@ -816,10 +666,10 @@ https://mc-stan.org/misc/warnings.html#bfmi-low</code></pre>
 <p>You should find that between -300 and +300 the prior is nearly flat. But over its full range it of course looks like a bell curve. Consider this: very large negative and positive numbers will almost never end up in our posterior sample, why?</p>
 <p>Speaking of the posterior, let’s visualize it. First we can extract the posterior with <code>as_draws_df</code></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>post_500 <span class="ot">&lt;-</span> <span class="fu">as_draws_df</span>(m_500)</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co"># have a look</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>post_500</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>post_500 <span class="ot">&lt;-</span> <span class="fu">as_draws_df</span>(m_500)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># have a look</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>post_500</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A draws_df: 500 iterations, 4 chains, and 5 variables
    b_Intercept b_x Intercept lprior lp__
@@ -840,7 +690,7 @@ https://mc-stan.org/misc/warnings.html#bfmi-low</code></pre>
 <p>We have a <code>data.frame</code> type object with columns for <code>b_Intercept</code> and <code>b_x</code>, those are the intercept and slope parameters of our model. The other columns store additional information that we will not consider.</p>
 <p>Because we ran 4 chains (4 separate MCMC’s) each with 500 post-warm-up iterations, we should have <code>4 * 500 = 2000</code> samples in <code>post_500</code>. Let’s confirm</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(post_500)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(post_500)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 2000</code></pre>
 </div>
@@ -848,7 +698,7 @@ https://mc-stan.org/misc/warnings.html#bfmi-low</code></pre>
 <p>Make a histogram of the posterior for the intercept <code>b_Intercept</code> and the slope <code>b_x</code>. Is the range of the posteriors consistent with the true intercept and slope we used to simulate the data (intercept = -1, slope = 4)? (side note: the <em>bayesplot</em> package offers function <code>mcmc_hist</code> which can more directly make a histogram of posteriors)</p>
 <p>Now use <code>mean</code> and <code>quantile</code> on <code>post_500</code> to calculate the estimate and 95% credible intervals for the intercept and slope. Compare to the output of <code>fixef</code>.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fixef</span>(m_500)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fixef</span>(m_500)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>            Estimate  Est.Error      Q2.5      Q97.5
 Intercept -0.9630359 0.08395743 -1.125162 -0.8002164
@@ -857,11 +707,11 @@ x          3.9253919 0.10609808  3.719761  4.1294578</code></pre>
 </div>
 <p>Hint: for calculating 95% CI, use <code>quantile</code> with the <code>probs</code> argument set to <code>c(0.025, 0.975)</code>. Here’s an example:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">100</span>)</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(x, <span class="at">probs =</span> <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">100</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(x, <span class="at">probs =</span> <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>     2.5%     97.5% 
--1.982483  2.069283 </code></pre>
+-1.819025  1.748178 </code></pre>
 </div>
 </div>
 </section>
@@ -876,7 +726,7 @@ x          3.9253919 0.10609808  3.719761  4.1294578</code></pre>
 </ul>
 <p>The <code>summary</code> function provides some useful information</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m_500)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m_500)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> Family: poisson 
   Links: mu = log 
@@ -903,21 +753,21 @@ scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 <h3 data-number="33.3.1" class="anchored" data-anchor-id="trace-plots"><span class="header-section-number">33.3.1</span> Trace plots</h3>
 <p>Visual diagnostics are a mainstay of Bayesian MCMC. One of the most common visuals is the <strong><em>trace plot</em></strong>. The trace plot shows the timeseries of samples from the MCMC. It is a great visual way of confirming convergence. Here are two hypothetical trace plots</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>conv <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">iter =</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>, <span class="dv">4</span>), </span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">chain =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="at">each =</span> <span class="dv">100</span>)), </span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">b_x =</span> <span class="fu">rnorm</span>(<span class="dv">400</span>), </span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">convergence =</span> <span class="st">"converged"</span>)</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>no_conv <span class="ot">&lt;-</span> conv <span class="sc">|&gt;</span> </span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">b_x =</span> <span class="fu">rnorm</span>(<span class="dv">400</span>) <span class="sc">+</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">as.numeric</span>(chain) <span class="sc">-</span> <span class="dv">4</span>, </span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>           <span class="at">convergence =</span> <span class="st">"not converged"</span>)</span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>b_x_conv <span class="ot">&lt;-</span> <span class="fu">rbind</span>(conv, no_conv)</span>
-<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(b_x_conv, <span class="fu">aes</span>(iter, b_x, <span class="at">color =</span> chain)) <span class="sc">+</span></span>
-<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_grid</span>(<span class="at">cols =</span> <span class="fu">vars</span>(convergence)) <span class="sc">+</span></span>
-<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_viridis_d</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>conv <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">iter =</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>, <span class="dv">4</span>), </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">chain =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="at">each =</span> <span class="dv">100</span>)), </span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">b_x =</span> <span class="fu">rnorm</span>(<span class="dv">400</span>), </span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">convergence =</span> <span class="st">"converged"</span>)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>no_conv <span class="ot">&lt;-</span> conv <span class="sc">|&gt;</span> </span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">b_x =</span> <span class="fu">rnorm</span>(<span class="dv">400</span>) <span class="sc">+</span> <span class="dv">2</span> <span class="sc">*</span> <span class="fu">as.numeric</span>(chain) <span class="sc">-</span> <span class="dv">4</span>, </span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>           <span class="at">convergence =</span> <span class="st">"not converged"</span>)</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>b_x_conv <span class="ot">&lt;-</span> <span class="fu">rbind</span>(conv, no_conv)</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(b_x_conv, <span class="fu">aes</span>(iter, b_x, <span class="at">color =</span> chain)) <span class="sc">+</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_grid</span>(<span class="at">cols =</span> <span class="fu">vars</span>(convergence)) <span class="sc">+</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_viridis_d</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -929,12 +779,12 @@ scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 <p>Load the <em>bayesplot</em> package and use function <code>mcmc_trace</code> to visualize the trace of <code>m_500</code>. Can we confirm convergence?</p>
 <p>Another issue that trace plots can diagnose is a stuck MCMC. This happens when one or more chains gets stuck in a region (or regions) of parameter space. That might look something like</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>stuck <span class="ot">&lt;-</span> conv <span class="sc">|&gt;</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">b_x =</span> b_x <span class="sc">+</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="fu">rnorm</span>(<span class="dv">5</span>, <span class="at">sd =</span> <span class="dv">3</span>)), <span class="at">each =</span> <span class="dv">25</span>))</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(stuck, <span class="fu">aes</span>(iter, b_x, <span class="at">color =</span> chain)) <span class="sc">+</span></span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_viridis_d</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>stuck <span class="ot">&lt;-</span> conv <span class="sc">|&gt;</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">b_x =</span> b_x <span class="sc">+</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="fu">rnorm</span>(<span class="dv">5</span>, <span class="at">sd =</span> <span class="dv">3</span>)), <span class="at">each =</span> <span class="dv">25</span>))</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(stuck, <span class="fu">aes</span>(iter, b_x, <span class="at">color =</span> chain)) <span class="sc">+</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_viridis_d</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-trace-stuck" class="quarto-float quarto-figure quarto-figure-center anchored" width="672">
 <figure class="quarto-float quarto-float-fig figure">
@@ -955,13 +805,13 @@ Figure&nbsp;33.1
 <p>Divergence is a special concept for the NUTS and HMC algorithms. These algorithms try to simulate actual physics, but sometimes they get it wrong. Imagine if a kid kicked a ball but instead of rolling down a hill it just started floating. That would be a divergence. If divergences occur we cannot trust the posterior sample.</p>
 <p>Our MCMC with 500 warm-up iterations did not encounter any divergence. But if we don’t allow the MCMC to properly warm up, divergences are increasingly likely. Let’s make a new model object from the same data and with 500 post-warm-up iterations, but with only 10 warm up steps and then see how we can evaluate divergence.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>m_10 <span class="ot">&lt;-</span> <span class="fu">brm</span>(y <span class="sc">~</span> x, <span class="at">data =</span> dat, </span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">family =</span> <span class="fu">poisson</span>(), </span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">prior =</span> <span class="fu">c</span>(<span class="fu">prior</span>(<span class="fu">normal</span>(<span class="dv">0</span>, <span class="dv">1000</span>), <span class="at">class =</span> Intercept),</span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">prior</span>(<span class="fu">normal</span>(<span class="dv">0</span>, <span class="dv">1000</span>), <span class="at">class =</span> b)), </span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">iter =</span> <span class="dv">510</span>, </span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">warmup =</span> <span class="dv">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>m_10 <span class="ot">&lt;-</span> <span class="fu">brm</span>(y <span class="sc">~</span> x, <span class="at">data =</span> dat, </span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">family =</span> <span class="fu">poisson</span>(), </span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">prior =</span> <span class="fu">c</span>(<span class="fu">prior</span>(<span class="fu">normal</span>(<span class="dv">0</span>, <span class="dv">1000</span>), <span class="at">class =</span> Intercept),</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">prior</span>(<span class="fu">normal</span>(<span class="dv">0</span>, <span class="dv">1000</span>), <span class="at">class =</span> b)), </span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">iter =</span> <span class="dv">510</span>, </span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">warmup =</span> <span class="dv">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Compiling Stan program...</code></pre>
 </div>
@@ -1126,11 +976,11 @@ https://mc-stan.org/misc/warnings.html#tail-ess</code></pre>
 <p>One thing we’ll notice right away is that <code>brm</code> gave us a warning about divergence. Let’s use visual diagnostics to see what happened.</p>
 <p>To make a visual about divergence we first have to gather some extra information specifically about the NUTS sampler</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># info about MCMC</span></span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>np <span class="ot">&lt;-</span> <span class="fu">nuts_params</span>(m_10)</span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="co"># now we can visualize divergences in the trace plot</span></span>
-<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_trace</span>(m_10, <span class="at">np =</span> np)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># info about MCMC</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>np <span class="ot">&lt;-</span> <span class="fu">nuts_params</span>(m_10)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="co"># now we can visualize divergences in the trace plot</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_trace</span>(m_10, <span class="at">np =</span> np)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1141,7 +991,7 @@ https://mc-stan.org/misc/warnings.html#tail-ess</code></pre>
 </div>
 <p>Divergences happen seemingly at random. We can confirm this by looking at the joint posterior distribution</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_pairs</span>(m_10, <span class="at">pars =</span> <span class="fu">c</span>(<span class="st">"b_Intercept"</span>, <span class="st">"b_x"</span>), <span class="at">np =</span> np)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_pairs</span>(m_10, <span class="at">pars =</span> <span class="fu">c</span>(<span class="st">"b_Intercept"</span>, <span class="st">"b_x"</span>), <span class="at">np =</span> np)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
