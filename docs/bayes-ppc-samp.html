@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>12&nbsp; Estimating the parameters of a normal distribution – Intro to Statistical Modeling</title>
+<title>34&nbsp; Sample size considerations and posterior predictive checks – Intro to Statistical Modeling</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -55,27 +55,7 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-  margin-bottom: 0em;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -85,8 +65,7 @@ div.csl-indent {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./lin-mod.html" rel="next">
-<link href="./binom-lab.html" rel="prev">
+<link href="./bayes-basics-lab.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -169,7 +148,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./likelihood-intro.html">Introducing the method of maximum likelihood</a></li><li class="breadcrumb-item"><a href="./norm-lab.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Estimating the parameters of a normal distribution</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./brief-bayes.html">A biref introduction to Bayesian Statistics</a></li><li class="breadcrumb-item"><a href="./bayes-ppc-samp.html"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Sample size considerations and posterior predictive checks</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -301,7 +280,7 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./norm-lab.html" class="sidebar-item-text sidebar-link active">
+  <a href="./norm-lab.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Estimating the parameters of a normal distribution</span></span></a>
   </div>
 </li>
@@ -466,7 +445,7 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./bayes-ppc-samp.html" class="sidebar-item-text sidebar-link">
+  <a href="./bayes-ppc-samp.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Sample size considerations and posterior predictive checks</span></span></a>
   </div>
 </li>
@@ -482,19 +461,18 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#central-tendency-and-variability-of-annual-evapotranspiration" id="toc-central-tendency-and-variability-of-annual-evapotranspiration" class="nav-link active" data-scroll-target="#central-tendency-and-variability-of-annual-evapotranspiration"><span class="header-section-number">12.1</span> Central tendency and variability of annual evapotranspiration</a></li>
-  <li><a href="#the-log-likelihood-function-for-a-normal-distribution" id="toc-the-log-likelihood-function-for-a-normal-distribution" class="nav-link" data-scroll-target="#the-log-likelihood-function-for-a-normal-distribution"><span class="header-section-number">12.2</span> The log likelihood function for a normal distribution</a></li>
-  <li><a href="#visualizing-a-surface" id="toc-visualizing-a-surface" class="nav-link" data-scroll-target="#visualizing-a-surface"><span class="header-section-number">12.3</span> Visualizing a surface</a></li>
-  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">12.4</span> References</a></li>
+  <li><a href="#simulating-a-familiar-modelwith-different-sample-sizes" id="toc-simulating-a-familiar-modelwith-different-sample-sizes" class="nav-link active" data-scroll-target="#simulating-a-familiar-modelwith-different-sample-sizes"><span class="header-section-number">34.1</span> Simulating a familiar model…with different sample sizes</a></li>
+  <li><a href="#evaluating-the-effect-of-sample-size-on-bayesian-inference" id="toc-evaluating-the-effect-of-sample-size-on-bayesian-inference" class="nav-link" data-scroll-target="#evaluating-the-effect-of-sample-size-on-bayesian-inference"><span class="header-section-number">34.2</span> Evaluating the effect of sample size on Bayesian inference</a></li>
+  <li><a href="#posterior-predictive-checks" id="toc-posterior-predictive-checks" class="nav-link" data-scroll-target="#posterior-predictive-checks"><span class="header-section-number">34.3</span> Posterior predictive checks</a></li>
   </ul>
-<div class="quarto-code-links"><h2>Code Links</h2><ul><li><a href="https://github.com/uhm-biostats/stat-mod/blob/main/norm-lab.qmd"><i class="bi bi-github"></i>View source</a></li></ul></div></nav>
+<div class="quarto-code-links"><h2>Code Links</h2><ul><li><a href="https://github.com/uhm-biostats/stat-mod/blob/main/bayes-ppc-sampe.qmd"><i class="bi bi-github"></i>View source</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./likelihood-intro.html">Introducing the method of maximum likelihood</a></li><li class="breadcrumb-item"><a href="./norm-lab.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Estimating the parameters of a normal distribution</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./brief-bayes.html">A biref introduction to Bayesian Statistics</a></li><li class="breadcrumb-item"><a href="./bayes-ppc-samp.html"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Sample size considerations and posterior predictive checks</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Estimating the parameters of a normal distribution</span></h1>
+<h1 class="title"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Sample size considerations and posterior predictive checks</span></h1>
 </div>
 
 
@@ -511,183 +489,380 @@ window.Quarto = {
 </header>
 
 
-<p>This lab will introduce you to another log likelihood function, that of a normal distribution. For data we will investigate annual evapotranspiration (ET). ET is the process of water transferring from plants, soil, and surface water into the atmosphere and plays a central role in governing (or at least <em>predicting</em>) ecosystem productivity <span class="citation" data-cites="idol2007 brauman2012">(<a href="#ref-idol2007" role="doc-biblioref">Idol et al. 2007</a>; <a href="#ref-brauman2012" role="doc-biblioref">Brauman et al. 2012</a>)</span> and biodiversity <span class="citation" data-cites="fisher2011">(<a href="#ref-fisher2011" role="doc-biblioref">Fisher et al. 2011</a>)</span>.</p>
-<p>You can download the lab template <code>.qmd</code> file for this lab here:</p>
-<p><a href="#dnldts55392" onclick="fetch('data:text/plain;base64,LS0tCnRpdGxlOiAiRXN0aW1hdGluZyB0aGUgcGFyYW1ldGVycyBvZiBhIG5vcm1hbCBkaXN0cmlidXRpb24iCmZvcm1hdDogCiAgICBwZGY6IAogICAgICAgIGluY2x1ZGUtaW4taGVhZGVyOgogICAgICAgICAgICB0ZXh0OiB8CiAgICAgICAgICAgICAgICBcdXNlcGFja2FnZXtuZXd1bmljb2RlY2hhcn0KICAgICAgICAgICAgICAgIFxuZXd1bmljb2RlY2hhcnvKu317YH0gCmF1dGhvcjogCiAgICAtIHlvdXIgbmFtZSBoZXJlCi0tLQoKYGBge3J9CiN8IGxhYmVsOiBzZXR1cAoKIyBsb2FkIGFsbCBuZWNlc3NhcnkgcGFja2FnZXMKIyAuLi4geW91IG1heSBuZWVkIHRvIGFkZCB0byB0aGlzISBjYW4gZGVsZXRlIHRoaXMgY29tbWVudCBvbmNlIGRvbmUKbGlicmFyeShnZ3Bsb3QyKQpsaWJyYXJ5KGRwbHlyKQoKYGBgCgoKCiMjIENlbnRyYWwgdGVuZGVuY3kgYW5kIHZhcmlhYmlsaXR5IG9mIGFubnVhbCBldmFwb3RyYW5zcGlyYXRpb24KCldoYXQgaXMgdGhlIG1lYW4gYW5udWFsIGV2YXBvdHJhbnNwaXJhdGlvbiBhY3Jvc3MgdGhlIHBsb3RzIGluIHRoZSAqT3Blbk5haGVsZSogZGF0YSBhbmQganVzdCBob3cgdmFyaWFibGUgaXMgRVQ/IExldCdzIHJlYWQgaW4gdGhlIGNsaW1hdGUgZGF0YSBhbmQgZmluZCBvdXQuCgpgYGB7cn0KI3wgbGFiZWw6IHJlYWRpbi1kYXRhCgpjbGltIDwtIHJlYWQuY3N2KCJodHRwczovL3Jhdy5naXRodWJ1c2VyY29udGVudC5jb20vdWhtLWJpb3N0YXRzL3N0YXQtbW9kL3JlZnMvaGVhZHMvbWFpbi9kYXRhL3Bsb3RfY2xpbWF0ZS5jc3YiKQpgYGAKCgpUbyBmaW5kIG91dCB0aGUgYXZlcmFnZSB3ZSBjYW4gc2ltcGx5IHVzZSB0aGUgYG1lYW5gIGZ1bmN0aW9uOgoKYGBge3J9CiN8IGxhYmVsOiBtZWFuLUVUCgptZWFuKGNsaW0kZXZhcG90cmFuc19hbm51YWxfbW0pCmBgYAoKRm9yIHZhcmlhYmlsaXR5LCBzdGFuZGFyZCBkZXZpYXRpb24gaXMgYSBjb21tb24gbWVhc3VyZToKCmBgYHtyfQojfCBsYWJlbDogc2QtRVQKCnNkKGNsaW0kZXZhcG90cmFuc19hbm51YWxfbW0pCmBgYAoKQnV0LCBhcyB3ZSBzZWVtIHRvIGxpa2UgdG8gZG8sIGxldCdzIHRyeSB0byB0YWtlIHRoZSBoYXJkIHdheSB0byBnZXR0aW5nIHRob3NlIGFuc3dlcnMuIExldCdzIHVzZSB0aGUgbWV0aG9kIG9mIG1heGltdW0gbGlrZWxpaG9vZCB0byBmaW5kIHRoZSBtZWFuIGFuZCBzdGFuZGFyZCBkZXZpYXRpb24uICBGaXJzdCBoYXZlIGEgbG9vayBhdCB0aGUgc2hhcGUgb2YgdGhlIGRpc3RyaWJ1dGlvbiBvZiB0aGUgZGF0YToKCmBgYHtyfQojfCBsYWJlbDogZmlnLUVULWhpc3QKI3wgZmlnLXdpZHRoOiA0CiN8IGZpZy1oZWlnaHQ6IDMKCmdncGxvdChjbGltLCBhZXMoZXZhcG90cmFuc19hbm51YWxfbW0pKSArCiAgICBnZW9tX2hpc3RvZ3JhbSgpCmBgYAoKTG9va3MgYSBsb3QgbGlrZSBhIGJlbGwtc2hhcGVkIGN1cnZlLS0tbGlrZSBhIG5vcm1hbCBkaXN0cmlidXRpb24uICBUaGlua2luZyBhYm91dCBhbm51YWwgRVQsIHRoaXMgbWFrZXMgc2Vuc2UgdG9vOiBkYXkgdG8gZGF5IHRoZXJlIGFyZSBhIGxvdCBvZiBsaXR0bGUgcHJvY2Vzc2VzIHRoYXQgYWRkIHVwIHRvIHByb2R1Y2UgRVQsIGFuZCBvbiB0b3Agb2YgdGhhdCAqYW5udWFsKiBFVCBsaXRlcmFsbHkgYWRkcyB1cCB0aGUgRVQgb2YgZWFjaCBkYXkuIFNvIHRoZSBDZW50cmFsIExpbWl0IFRoZW9yZW0gbGlrZWx5IGFwcGxpZXMsIGFuZCB3ZSBzaG91bGRuJ3QgYmUgdG9vIHN1cnByaXNlZCB0byBmaW5kIHRoYXQgYW5udWFsIEVUIGxvb2tzIHRvIGZvbGxvdyBhIG5vcm1hbCBkaXN0cmlidXRpb24uCgojIyBUaGUgbG9nIGxpa2VsaWhvb2QgZnVuY3Rpb24gZm9yIGEgbm9ybWFsIGRpc3RyaWJ1dGlvbgoKQXMgZGlzY3Vzc2VkIGluIHRoZSBpbnRyb2R1Y3RvcnkgbGlrZWxpaG9vZCBbbGVjdHVyZSBub3Rlc10obGlrZWxpaG9vZC1sZWMucW1kKSB0aGUgbG9nIGxpa2VsaWhvb2QgZnVuY3Rpb24gZm9yIGRhdGEgdGhhdCBjb21lIGZyb20gYSBjb250aW51b3VzIHByb2JhYmlsaXR5IGRpc3RyaWJ1dGlvbiB1c2VzIHRoZSBzYW1lIGFwcHJvYWNoIG9mIHN1bW1pbmcgbG9nICJwcm9iYWJpbGl0aWVzIiBidXQgbm93IHdlIGFyZSBhY3R1YWxseSBzdW1taW5nIGxvZyBwcm9iYWJpbGl0eSAqKipkZW5zaXRpZXMqKioKCiQkClxsb2dcbWF0aHNjcntMfShcdGV4dHtwYXJhbWV0ZXJzLCBkYXRhfSkgPSBcc3VtXGxvZyBQREYoXHRleHR7ZGF0YX0gXG1pZCBcdGV4dHtwYXJhbWV0ZXJzfSkKJCQKClNvIG91ciBsb2cgbGlrZWxpaG9vZCBmdW5jdGlvbiBmb3IgdGhlIGFubnVhbCBFVCBkYXRhIHdpbGwgaW52b2x2ZSBzdW1taW5nIHVwIHRoZSBvdXRwdXQgb2YgYGRub3JtKC4uLiwgbG9nID0gVFJVRSlgLiBPbmUgYXNwZWN0IHRoYXQgd2lsbCBiZSBuZXcgYW5kIGRpZmZlcmVudCBmcm9tIHRoZSBsb2cgbGlrZWxpaG9vZCBmdW5jdGlvbiBiYXNlZCBpbiB0aGUgW2Jpbm9taWFsIGRpc3RyaWJ1dGlvbiBsYWJdKGJpbm9tLWxhYi5xbWQpIGlzIHRoYXQgd2UgbmVlZCB0byBlc3RpbWF0ZSAqdHdvKiBwYXJhbWV0ZXJzIGZvciB0aGUgbm9ybWFsIGRpc3RyaWJ1dGlvbjogbWVhbiAkXGhhdHtcbXV9JCBhbmQgc3RhbmRhcmQgZGV2aWF0aW9uICRcaGF0e1xzaWdtYX0kLiAKCipZb3UgY2FuIGRlbGV0ZSB0aGlzIGxpc3Qgb25jZSBjb21wbGV0ZSwgb3IgcGVyaGFwcyBtYWtlIHNvbWUgYnVsbGV0cyBpbnRvIHN1YmhlYWRlcnMsIHVwIHRvIHlvdSEqCgpZb3VyIHRhc2tzIGFyZSB0bwoKLSB3cml0ZSBhbiBSIGZ1bmN0aW9uIHRvIGNhbGN1bGF0ZSB0aGUgbG9nIGxpa2VsaWhvb2QgZnVuY3Rpb24sIGl0IHNob3VsZCBiZSBhYmxlIHRvIHRha2UgYXJndW1lbnRzIGZvciB0aGUgbWVhbiBhbmQgc2QgKHJlbWVtYmVyLCB0aGVzZSBwYXJhbWV0ZXJzIG5lZWQgdG8gYmUgcGFzc2VkIGFzIHRvZ2V0aGVyIGluIGEgc2luZ2xlIHZlY3RvcikgYW5kIHRoZSBkYXRhCi0gdmlzdWFsaXplIHRoZSBsb2cgbGlrZWxpaG9vZCAqc3VyZmFjZSogKHNlZSBiZWxvdywgdGhpcyB3aWxsIHJlcXVpcmUgc29tZSBuZXcgc2tpbGxzKQotIHVzZSBgb3B0aW1gIHRvIGZpbmQgdGhlIG1heGltdW0gbGlrZWxpaG9vZCBlc3RpbWF0ZXMgZm9yICRcaGF0e1xtdX0kIGFuZCAkXGhhdHtcc2lnbWF9JAotIGNvbXBhcmUgdGhlIGVzdGltYXRlcyAkXGhhdHtcbXV9JCBhbmQgJFxoYXR7XHNpZ21hfSQgdG8gdGhlIHZhbHVlcyB3ZSBjYWxjdWxhdGVkIHdpdGggYG1lYW5gIGFuZCBgc2RgCgoKIyMgVmlzdWFsaXppbmcgYSBzdXJmYWNlCgpQYXJ0IG9mIG91ciB0YXNrIGlzIHRvIHZpc3VhbGl6ZSBhIHN1cmZhY2UuIFRoZXJlIGFyZSBtdWx0aXBsZSB3YXlzIHRvIGRvIHRoYXQsIGJ1dCB3ZSB1c2UgYGdlb21fdGlsZWAuIENoZWNrIG91dCBob3cgdGhhdCB3b3JrcwoKYGBge3J9CiN8IGxhYmVsOiBmaWctZ2VvbV90aWxlLWRlbW8KCiMgbWFrZSBzb21lIHNpbXBsZSBkYXRhCnN1cmYgPC0gZGF0YS5mcmFtZSh4ID0gYygxLCAyLCAxLCAyKSwgCiAgICAgICAgICAgICAgICAgICB5ID0gYygxLCAxLCAyLCAyKSwgCiAgICAgICAgICAgICAgICAgICB6ID0gYyg4LCAyLCA2LCAxKSkKCiMgdmlzdWFsaXplIHRoZSBgemAgYXhpcyBhcyBhIHRoaXJkIGRpbWVuc2lvbiBjb2RlZCBieSBjb2xvcgpnZ3Bsb3Qoc3VyZiwgYWVzKHgsIHksIGZpbGwgPSB6KSkgKwogICAgZ2VvbV90aWxlKCkgKwogICAgc2NhbGVfZmlsbF92aXJpZGlzX2MoKQpgYGAKCgpMb29rIGF0IHRoZSBkYXRhIHVuZGVybHlpbmcgdGhhdCBncmFwaAoKYGBge3J9CnN1cmYKCmBgYAoKVGhlIGB4YCBhbmQgYHlgIGNvbHVtbnMgbGF5IG91dCBhIGdyaWQgd2hpbGUgdGhlIGB6YCBjb2x1bW4gcHJvdmlkZXMgdGhlICJoZWlnaHRzIiBvZiB0aGUgc3VyZmFjZSBhdCBlYWNoIG9uZSBvZiB0aG9zZSBncmlkcG9pbnRzLiBUaGUgYGdlb21fdGlsZWAgZ2VvbSBqdXN0IGZpbGxzIHRoZSBzcGFjZSB3aXRoIHNxdWFyZXMgY29sb3JlZCBhY2NvcmRpbmcgdG8gdGhlIHZhbHVlcyBvZiBgemAuCgpZb3UgY2FuIHVzZSB0aGlzIGZvciB5b3VyIHZpc3VhbGl6YXRpb24hCgpCdXQgeW91IHdpbGwgbm90IHdhbnQgdG8gbWFrZSB0aGUgeHkgZ3JpZCBieSBoYW5kLiBUbyBtYWtlIGEgZ3JpZCBvdmVyIGEgcmFuZ2Ugb2YgcGFyYW1ldGVyICgkXG11JCBhbmQgJFxzaWdtYSQgdmFsdWVzKSB1c2UgdGhlIGBleHBhbmQuZ3JpZGAgZnVuY3Rpb24sIGZvciBleGFtcGxlCgpgYGB7cn0KI3wgbGFiZWw6IGV4cGFuZAoKcGFyYW1zIDwtIGV4cGFuZC5ncmlkKG11ID0gc2VxKDY1MCwgODUwLCBsZW5ndGgub3V0ID0gMjApLCAKICAgICAgICAgICAgICAgICAgICAgIHNpZyA9IHNlcSgxMDAsIDIwMCwgbGVuZ3RoLm91dCA9IDIwKSkKCmhlYWQocGFyYW1zKQpgYGAKCk5vdyB3ZSBoYXZlIGEgZ3JpZCBvZiB2YWx1ZXMgaW4gdGhlIG5laWdoYm9yaG9vZCBvZiB0aGUgcmVzdWx0cyB3ZSBnb3QgZnJvbSBgbWVhbihjbGltJGV2YXBvdHJhbnNfYW5udWFsX21tKWAgYW5kIGBzZChjbGltJGV2YXBvdHJhbnNfYW5udWFsX21tKWAuIEluIGVhY2ggY29sdW1uIG9mIHRoZSBvdXRwdXQgb2YgYGV4cGFuZC5ncmlkYCB0aGVyZSB3aWxsIGJlIDIwIHVuaXF1ZSB2YWx1ZXMgYmVjYXVzZSBpbiBvdXIgY2FsbCB0byBgc2VxYCB3ZSBzcGVjaWZpZWQgYGxlbmd0aC5vdXQgPSAyMGAuIFlvdSBjb3VsZCBtYWtlIHRoYXQgbGFyZ2VyIG9yIHNtYWxsZXItLS1sYXJnZXIgaWYgeW91IGZlZWwgbGlrZSB5b3UgZG9uJ3QgaGF2ZSBlbm91Z2ggdGlsZXMgZm9yIGEgcHJldHR5IGZpZ3VyZSwgc21hbGxlciBpZiAoaHlwb3RoZXRpY2FsbHkpIGl0cyB0b28gYmlnIG9mIGEgY29tcHV0YXRpb25hbCB0YXNrIGZvciB5b3VyIGNvbXB1dGVyLiBPdXIgdGFzayBpbiB0aGlzIGxhYiBpcyBub3RoaW5nIHRvIHdvcnJ5IGFib3V0IGNvbXB1dGF0aW9uYWxseS4KClRoZSBuZXh0IHRoaW5nIHlvdSBuZWVkIHRvIGZpZ3VyZSBvdXQgaXMgaG93IHRvIGFwcGx5IHlvdXIgbGlrZWxpaG9vZCBmdW5jdGlvbiB0byBlYWNoIHBhcmFtZXRlciBjb21iaW5hdGlvbiBpbiBlYWNoIG9mIHRoZSByb3dzIG9mIGBwYXJhbXNgLiBVbmZvcnR1bmF0ZWx5IHlvdSBjYW5ub3QganVzdCBwbHVnIHRoZSBjb2x1bW5zIGludG8geW91ciBsb2cgbGlrZWxpaG9vZCBmdW5jdGlvbi4gVGhlIHJlYXNvbiBpcyB0aGF0IHlvdSBhcmUgKGhvcGVmdWxseSkgcGFzc2luZyB0aGUgZW50aXJlIGNvbHVtbiBvZiBFVCBkYXRhIGludG8gYGRub3JtYCBzb21ld2hlcmUgaW4geW91ciBmdW5jdGlvbi4gSWYgeW91IGFsc28gcGFzcyBpbiBjb2x1bW4gdmVjdG9ycyBmb3IgdGhlIGBtZWFuYCBhbmQgYHNkYCBhcmd1bWVudHMgb2YgYGRub3JtYCBpdCB3aWxsIGdldCBjb25mdXNlZCBhYm91dCB3aGF0IHlvdSdyZSBhc2tpbmcgZm9yLiAKClRoYXQgbWVhbnMgd2UgbmVlZCB0byBwbHVnIGluIHRoZSB2YWx1ZXMgZm9yIGBtZWFuYCBhbmQgYHNkYCBvbmUgY29tYmluYXRpb24gYXQgYSB0aW1lLiBUaGUgd2F5IHRvIGRvIHRoYXQgYmFzZWQgb24gd2hhdCB3ZSd2ZSBsZWFybmVkIHNvIGZhciBpcyBhIGZvciBsb29wISAgSWYgeW91IGFyZSBjdXJpb3VzIGFib3V0IG90aGVyIHdheXMgeW91J2xsIHdhbnQgdG8gZGlnIGRlZXAgaW50byBmdW5jdGlvbnMgbGlrZSBgbGFwcGx5YCBhbmQgYHZhcHBseWAgZnJvbSBiYXNlIFIgb3IgYHJvd3dpc2VgIGZvciBhICpkcGx5ciotZmxhdm9yZWQgYXBwcm9hY2guCgpUbyB0aGUgZm9yIGxvb3AhIEhlcmUgaXMgaG93IGl0IHdpbGwgd29yazoKCmBgYHtyfQojfCBsYWJlbDogbG9vcC1kZW1vCgojIHRoaXMgaXMgYSBwcmV0ZW5kIHZlcnNpb24gb2YgYSBsaWtlbGlob29kIGZ1bmN0aW9uCnlvdXJfbGlrX2Z1biA8LSBmdW5jdGlvbihwYXJzLCBkYXRhKSB7CiAgICBwYXJzWzFdICsgcGFyc1syXSArIHN1bShkYXRhKQp9IAoKIyBwcmV0ZW5kIGRhdGEKeW91cl9kYXRhIDwtIDE6NAoKIyBtYWtlIGFuIGVtcHR5IHZlY3RvciB0aGF0IHdpbGwgaG9sZCB0aGUgbG9nIGxpa2VsaWhvb2QgdmFsdWVzCmxsX25vcm0gPC0gbnVtZXJpYyhucm93KHBhcmFtcykpIAoKZm9yKGkgaW4gMTpucm93KHBhcmFtcykpIHsKICAgIHBhcnNfaSA8LSBjKHBhcmFtcyRtdVtpXSwgcGFyYW1zJHNpZ1tpXSkKICAgIGxsX25vcm1baV0gPC0geW91cl9saWtfZnVuKHBhcnNfaSwgeW91cl9kYXRhKQp9CgojIGNvbWJpbmUgcGFyYW1zIGFuZCBsbF9ub3JtIGZvciBwbG90dGluZwpwYXJtc19sbCA8LSBkYXRhLmZyYW1lKHBhcmFtcywgbG9nbGlrID0gbGxfbm9ybSkKCmhlYWQocGFybXNfbGwpCmBgYAoKCg==').then(res => res.blob()).then(blob => {
+<p>This lab will guide you through sample size considerations and posterior predictive checks. You can download the template <code>.qmd</code> file for this lab here:</p>
+<p><a href="#dnldts7992" onclick="fetch('data:text/plain;base64,LS0tCnRpdGxlOiAiU2FtcGxlIHNpemUgY29uc2lkZXJhdGlvbnMgYW5kIHBvc3RlcmlvciBwcmVkaWN0aXZlIGNoZWNrcyIKZm9ybWF0OgogICAgcGRmOgogICAgICAgIGluY2x1ZGUtaW4taGVhZGVyOgogICAgICAgICAgICB0ZXh0OiB8CiAgICAgICAgICAgICAgICBcdXNlcGFja2FnZXtuZXd1bmljb2RlY2hhcn0KICAgICAgICAgICAgICAgIFxuZXd1bmljb2RlY2hhcnvKu317YH0KYXV0aG9yOgogICAgLSB5b3VyIG5hbWUgaGVyZQotLS0KCmBgYHtyfQojfCBsYWJlbDogc2V0dXAKCiMgbG9hZCBhbGwgbmVjZXNzYXJ5IHBhY2thZ2VzCmxpYnJhcnkoZ2dwbG90MikKbGlicmFyeShkcGx5cikKbGlicmFyeShicm1zKQpsaWJyYXJ5KGJheWVzcGxvdCkKYGBgCgoKIyMgU2ltdWxhdGluZyBhIGZhbWlsaWFyIG1vZGVsLi4ud2l0aCBkaWZmZXJlbnQgc2FtcGxlIHNpemVzCgpXZSdsbCBjb250aW51ZSB3aXRoIG91ciBQb2lzc29uIEdMTSwgYnV0IHdlJ3JlIGdvaW5nIHRvIG1peCB0aGluZ3MgdXAgYnkgYWxzbyBpbnRyb2R1Y2luZyBkaWZmZXJlbmNlcyBpbiBzYW1wbGUgc2l6ZS4gSGVyZSBhZ2FpbiBpcyB0aGUgY29kZSBmcm9tIGxhc3QgbGFiCgpgYGB7cn0KIyBzZXQgc2VlZCBzbyB3ZSBhbGwgaGF2ZSB0aGUgc2FtZSBkYXRhCnNldC5zZWVkKDEyMykKCiMgcmFuZG9tIG51bWVyaWMgZGF0YSBmb3IgZXhwbGFuYXRvcnkgdmFyaWFibGUKeCA8LSBydW5pZig0MDAsIDAsIDEpCgojIGxvZyhtKSBpcyB0aGUgbGluayBmdW5jdGlvbiBzbyBtdSA9IGV4cCguLi4pCm11IDwtIGV4cCgtMSArIDQgKiB4KQoKIyBkcmF3IHJhbmRvbSBQb2lzc29uIGRhdGEgYmFzZWQgb24gbXUgcmVzcG9uZGluZyB0byB4CnkgPC0gcnBvaXMobGVuZ3RoKHgpLCBtdSkKCiMgY29tYmluZSBpbiBvbmUgZGF0YSBvYmplY3QKZGF0IDwtIGRhdGEuZnJhbWUoeCwgeSkKYGBgCgpOb3cgbGV0J3MgYWxzbyBjcmVhdGUgYSBzdWJzYW1wbGUgb2YgdGhvc2UgZGF0YSB3aXRoIG9ubHkgNDAgc2FtcGxlcy4gVHVybnMgb3V0ICpkcGx5ciogaGFzIGEgY29udmVuaWVudCBmdW5jaXRvbiB0byBkbyB0aGlzIGBzbGljZV9zYW1wbGVgCgoKYGBge3J9CgojIGFnYWluIHNldCBhIHNlZWQgc28gZXZlcnlvbmUgd29ya3Mgd2l0aCB0aGUgc2FtZSBkYXRhCnNldC5zZWVkKDEpCgpkYXRfc21hbGwgPC0gc2xpY2Vfc2FtcGxlKGRhdCwgcHJvcCA9IDAuMSkKCmBgYAoKCgojIyBFdmFsdWF0aW5nIHRoZSBlZmZlY3Qgb2Ygc2FtcGxlIHNpemUgb24gQmF5ZXNpYW4gaW5mZXJlbmNlCgpOb3cgd2l0aCB0d28gZGF0YSBzZXRzIG9mIHZlcnkgZGlmZmVyZW50IHNpemUsIGJ1dCBjb21pbmcgZnJvbSB0aGUgc2FtZSBwcm9jZXNzLCB3ZSBjYW4gZXZhbHVhdGUgdGhlIGVmZmVjdCBvZiBzYW1wbGUgc2l6ZSBvbiBCYXllc2lhbiBpbmZlcmVuY2UuIExldCdzIGZpdCB0aGUgc2FtZSBtb2RlbCB0byBlYWNoIGRhdGEgc2V0LgoKYGBge3J9CiMganVzdCBsaWtlIGluIHRoZSBwcmV2aW91cyBsYWIsIG1ha2luZyBzdXJlIHdlCiMgaGF2ZSBzdWZmaWNpZW50IHdhcm11cAoKbW9kIDwtIGJybSh5IH4geCwgCiAgICAgICAgICAgZGF0YSA9IGRhdCwgCiAgICAgICAgICAgZmFtaWx5ID0gcG9pc3NvbigpLCAKICAgICAgICAgICBwcmlvciA9IGMocHJpb3Iobm9ybWFsKDAsIDEwMDApLCBjbGFzcyA9IEludGVyY2VwdCksCiAgICAgICAgICAgICAgICAgICAgIHByaW9yKG5vcm1hbCgwLCAxMDAwKSwgY2xhc3MgPSBiKSksIAogICAgICAgICAgIGl0ZXIgPSAxMDAwLCAKICAgICAgICAgICB3YXJtdXAgPSA1MDApCgojIG9ubHkgZGlmZmVyZW5jZSBpcyB1c2luZyBzbWFsbGVyIHNhbXBsZSBzaXplIGRhdGEgc2V0Cm1vZF9zbWFsbCA8LSBicm0oeSB+IHgsIAogICAgICAgICAgICAgICAgIGRhdGEgPSBkYXRfc21hbGwsIAogICAgICAgICAgICAgICAgIGZhbWlseSA9IHBvaXNzb24oKSwgCiAgICAgICAgICAgICAgICAgcHJpb3IgPSBjKHByaW9yKG5vcm1hbCgwLCAxMDAwKSwgY2xhc3MgPSBJbnRlcmNlcHQpLAogICAgICAgICAgICAgICAgICAgICAgICAgICBwcmlvcihub3JtYWwoMCwgMTAwMCksIGNsYXNzID0gYikpLCAKICAgICAgICAgICAgICAgICBpdGVyID0gMTAwMCwgCiAgICAgICAgICAgICAgICAgd2FybXVwID0gNTAwKQoKYGBgCgpOb3cgd2UncmUgZ29pbmcgdG8gdmlzdWFsbHkgY29tcGFyZSB0aGUgcG9zdGVyaW9yIHRvIHByaW9yIGZvciBlYWNoIGZpdHRlZCBtb2RlbCBvYmplY3QuIFdlIHNhdyBsYXN0IGxhYiBob3cgdG8gdmlzdWFsaXplIHRoZSBwb3N0ZXJpb3IuIFdlIGFsc28gc2F3IGhvdyB0byB2aXN1YWxpemUgYSByYW5kb20gc2FtcGxlIGZyb20gdGhlIHByaW9yLCBidXQgdGhpcyB0aW1lIGxldCdzIHZpc3VhbGl6ZSB0aGUgYWN0dWFsIHByb2JhYmlsaXR5IGRlbnNpdHkgZnVuY3Rpb24uCgoKYGBge3J9CmdncGxvdChkYXRhLmZyYW1lKHggPSBjKC00LCA0KSksIGFlcyh4ID0geCkpICsKICAgIHN0YXRfZnVuY3Rpb24oZnVuID0gZG5vcm0sCiAgICAgICAgICAgICAgICAgIGFyZ3MgPSBsaXN0KHNkID0gMTAwMCkpICsKICAgIGxhYnMoeCA9ICJ4IiwgeSA9ICJEZW5zaXR5IikKCmBgYAoKVG8gY29tcGFyZSBwb3N0ZXJpb3IgYW5kIHByaW9yLCBwbG90IHRoZSBwb3N0ZXJpb3IgZmlyc3QgKGFmdGVyIGhhdmluZyBleHRyYWN0ZWQgaXQgd2l0aCBgYXNfZHJhd3NfZGZgLCBpLmUuLCBkb24ndCB1c2UgYG1jbWNfaGlzdGApLiBUaGVuIHlvdSBjYW4gYWRkIHRoZSBwcmlvciB3aXRoIGBzdGF0X2Z1bmN0aW9uYC4gQWRqdXN0IHRoZSB4LWF4aXMgbGltaXRzIHNvIHRoYXQgd2Ugc2VlIG1vcmUgb2YgdGhlIG51bWJlciBsaW5lLgoKTWFrZSBhIHBsb3QgY29tcGFyaW5nIHByaW9yIHRvIHBvc3RlcmlvciBmb3IgdGhlIGBiX3hgIHRlcm0gb2YgdGhlIG1vZGVsIGZpdCBvbiB0aGUgZnVsbCBkYXRhIGFuZCB0aGUgYGJfeGAgdGVybSBvZiB0aGUgbW9kZWwgZml0IG9uIHRoZSBzbWFsbGVyIGRhdGEgc2V0LgoKQ29tcGFyaW5nIHRob3NlIHR3byBwbG90cywgd2hhdCBkbyB5b3Ugbm90aWNlPyBXaGljaCBvbmUgc2hvd3MgYSBiaWdnZXIgZGlmZmVyZW5jZSBiZXR3ZWVuIHRoZSBwcmlvciBhbmQgcG9zdGVyaW9yPwoKIyMgUG9zdGVyaW9yIHByZWRpY3RpdmUgY2hlY2tzCgpMaWtlIHdpdGggYW55IG1vZGVsIGluZmVyZW5jZSBhcHByb2FjaCwgd2Ugc2hvdWxkIGNoZWNrIGlmIG91ciBtb2RlbCBpcyBhY3R1YWxseSBkb2luZyBhIGdvb2Qgam9iIHByZWRpY3RpbmcgdGhlIGRhdGEuIEluIHRoZSBmcmVxdWVudGlzdCBmcmFtZXdvcmsgd2UgY2FuIHVzZSBsaWtlbGlob29kIHJhdGlvIHRlc3QgYW5kIEFJQywgYW1vbmcgb3RoZXIgbWV0aG9kcywgIGZvciB0aGlzIHRhc2suIEluIHRoZSBCYXllc2lhbiBmcmFtZXdvcmsgd2UgY2FuIHVzZSBwb3N0ZXJpb3IgcHJlZGljdGl2ZSBjaGVja3MuCgpUaGUgaWRlYSBiZWhpbmQgcG9zdGVyaW9yIHByZWRpY3RpdmUgY2hlY2tzIGlzIHRvIHNhbXBsZSBwYXJhbWV0ZXIgdmFsdWVzIGZyb20gdGhlIHBvc3Rlcmlvciwgc2ltdWxhdGUgcmVzcG9uc2UgZGF0YSAodGhlICR5JCkgZnJvbSB0aGUgbW9kZWwgd2l0aCB0aG9zZSBwYXJhbWV0ZXIgdmFsdWVzLCB0aGVuIGNvbXBhcmUgdGhlIHNpbXVsYXRlZCBkYXRhIHRvIHRoZSByZWFsIGRhdGEuIExpa2Ugd2l0aCBNQ01DIGRpYWdub3N0aWNzLCB0aGVyZSBhcmUgYSBudW1iZXIgb2YgaGVscGZ1bCB2aXN1YWwgY2hlY2tzLiBMZXQncyBzZWUgdGhvc2UgaW4gYWN0aW9uLgoKRmlyc3Qgd2UgdXNlIGBwb3N0ZXJpb3JfcHJlZGljdGAgdG8gZ2VuZXJhdGUgZGF0YSBzaW11bGF0ZWQgZnJvbSB0aGUgbW9kZWwKCmBgYHtyfQoKIyBgbmRyYXdzYCBpcyBhbiBvcHRpb24gYXJndW1lbnQsIGRlZmF1bHRzIHRvIGFsbAojIHBvc3RlcmlvciBzYW1wbGVzIGlmIHdlIGRvbid0IHNwZWNpZnkKCm1vZF9wcGMgPC0gcG9zdGVyaW9yX3ByZWRpY3QobW9kLCBuZHJhd3MgPSAyMDApCgoKYGBgCgpUaGUgb3V0cHV0IG9mIGBwb3N0ZXJpb3JfcHJlZGljdGAgaXMgYSBtYXRyaXgsIGVhY2ggcm93IGlzIG9uZSBzaW11bGF0aW9uIG9mIHRoZSByZXNwb25zZSB2YXJpYWJsZS4KCk5vdyB3ZSBjYW4gdmlzdWFsbHkgY29tcGFyZSB0aGUgcmVhbCBkYXRhIHRvIHRoZSBzaW11bGF0ZWQgZGF0YSB1c2luZyBmdW5jdGlvbnMgZnJvbSAqYmF5ZXNwbG90Ki4KCmBgYHtyfQpwcGNfZGVuc19vdmVybGF5KGRhdCR5LCBtb2RfcHBjKQoKYGBgCgpUaGlzIHBsb3Qgc2hvd3MgdGhlIHJlYWwgZGF0YSBhcyB0aGUgdGhpY2sgbGluZSBhbmQgdGhlIDIwMCBzaW11bGF0ZWQgZGF0YSBzZXRzIGFzIGxpZ2h0ZXIgYW5kIHRoaW5uZXIgbGluZXMuIFdoYXQgaXMgeW91ciBpbnRlcnByZXRhdGlvbj8gRG9lcyB0aGUgbW9kZWwgKHJlcHJlc2VudGVkIGJ5IHNpbXVsYXRlZCBkYXRhKSBjbG9zZWx5IG1hdGNoIHRoZSByZWFsIGRhdGE/CgpJdCBjYW4gYWxzbyBiZSBoZWxwZnVsIHRvIGNvbXBhcmUgc3VtbWFyeSBzdGF0aXN0aWNzIG9mIHRoZSByZWFsIGFuZCBzaW11bGF0ZWQgZGF0YSBsaWtlIHRoZSBtZWFuIGFuZCB2YXJpYW5jZS4gRm9yIHRoYXQgdGFzayB3ZSB1c2UgYHBwY19zdGF0YC4KCgpgYGB7cn0KcHBjX3N0YXQoZGF0JHksIG1vZF9wcGMsIHN0YXQgPSAibWVhbiIpCgpgYGAKCldoYXQgaXMgeW91ciBpbnRlcnByZXRhdGlvbj8gQXJlIHRoZSBtZWFucyBvZiB0aGUgc2ltdWxhdGVkIGRhdGEgaW4gYWdyZWVtZW50IHdpdGggdGhlIG9ic2VydmVkIG1lYW4gb2YgdGhlIHJlYWwgZGF0YT8KCkZvciBQb2lzc29uIG1vZGVscyBpdCBpcyBnZW5lcmFsbHkgYSBnb29kIGlkZWEgdG8gZG8gcG9zdGVyaW9yIHByZWRpY3RpdmUgY2hlY2tzIG9uIGJvdGggdGhlIG1lYW4gYW5kIHZhcmlhbmNlIGJlY2F1c2UgUG9pc3NvbiBhc3N1bWVzIHRoZXNlIHR3byBtZXRyaWNzIGFyZSBlcXVhbCwgYW5kIHdlIGtub3cgZWNvbG9naWNhbCBkYXRhIGNhbiBvZnRlbiB2aW9sYXRlIHRoYXQgYXNzdW1wdGlvbi4gVXNlIGBwcGNfc3RhdGAgdG8gY29tcGFyZSByZWFsIGFuZCBzaW11bGF0ZWQgZGF0YSBpbiB0ZXJtcyBvZiB2YXJpYW5jZSAoYHZhcmAgaXMgdGhlIHN1bW1hcnkgc3RhdGlzdGljIGZ1bmN0aW9uIHlvdSBuZWVkKS4gSW50ZXJwcmV0IHRoZSByZXN1bHRzOiBpcyBQb2lzc29uIGFuIGFkZXF1YXRlIGNob2ljZSBmb3Igb3VyIG1vZGVsIGFuZCBkYXRhPwoK').then(res => res.blob()).then(blob => {
       const downloadURL = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       document.body.appendChild(a);
       a.href = downloadURL;
-      a.download = 'lab03-norm-likelihood.qmd'; a.click();
+      a.download = 'lab10-bayes-ppc-samp.qmd'; a.click();
       window.URL.revokeObjectURL(downloadURL);
       document.body.removeChild(a);
-        });"><button class="btn btn-default downloadthis  " id="dnldts55392"><i class="bi bi-download"></i> Download lab template </button></a></p>
+        });"><button class="btn btn-default downloadthis  " id="dnldts7992"><i class="bi bi-download"></i> Download lab template </button></a></p>
 <p>The template will prompt you to work through the following sections.</p>
-<section id="central-tendency-and-variability-of-annual-evapotranspiration" class="level2" data-number="12.1">
-<h2 data-number="12.1" class="anchored" data-anchor-id="central-tendency-and-variability-of-annual-evapotranspiration"><span class="header-section-number">12.1</span> Central tendency and variability of annual evapotranspiration</h2>
-<p>What is the mean annual evapotranspiration across the plots in the <em>OpenNahele</em> data and just how variable is ET? Let’s read in the climate data and find out.</p>
+<section id="simulating-a-familiar-modelwith-different-sample-sizes" class="level2" data-number="34.1">
+<h2 data-number="34.1" class="anchored" data-anchor-id="simulating-a-familiar-modelwith-different-sample-sizes"><span class="header-section-number">34.1</span> Simulating a familiar model…with different sample sizes</h2>
+<p>We’ll continue with our Poisson GLM, but we’re going to mix things up by also introducing differences in sample size. Here again is the code from last lab</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>clim <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"https://raw.githubusercontent.com/uhm-biostats/stat-mod/refs/heads/main/data/plot_climate.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set seed so we all have the same data</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># random numeric data for explanatory variable</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">400</span>, <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># log(m) is the link function so mu = exp(...)</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> <span class="dv">4</span> <span class="sc">*</span> x)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># draw random Poisson data based on mu responding to x</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">rpois</span>(<span class="fu">length</span>(x), mu)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># combine in one data object</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(x, y)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>To find out the average we can simply use the <code>mean</code> function:</p>
+<p>Now let’s also create a subsample of those data with only 40 samples. Turns out <em>dplyr</em> has a convenient funciton to do this <code>slice_sample</code></p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(clim<span class="sc">$</span>evapotrans_annual_mm)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># again set a seed so everyone works with the same data</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>dat_small <span class="ot">&lt;-</span> <span class="fu">slice_sample</span>(dat, <span class="at">prop =</span> <span class="fl">0.1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="evaluating-the-effect-of-sample-size-on-bayesian-inference" class="level2" data-number="34.2">
+<h2 data-number="34.2" class="anchored" data-anchor-id="evaluating-the-effect-of-sample-size-on-bayesian-inference"><span class="header-section-number">34.2</span> Evaluating the effect of sample size on Bayesian inference</h2>
+<p>Now with two data sets of very different size, but coming from the same process, we can evaluate the effect of sample size on Bayesian inference. Let’s fit the same model to each data set.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># just like in the previous lab, making sure we</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># have sufficient warmup</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">brm</span>(y <span class="sc">~</span> x, </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">data =</span> dat, </span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">family =</span> <span class="fu">poisson</span>(), </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>           <span class="at">prior =</span> <span class="fu">c</span>(<span class="fu">prior</span>(<span class="fu">normal</span>(<span class="dv">0</span>, <span class="dv">1000</span>), <span class="at">class =</span> Intercept),</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">prior</span>(<span class="fu">normal</span>(<span class="dv">0</span>, <span class="dv">1000</span>), <span class="at">class =</span> b)), </span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>           <span class="at">iter =</span> <span class="dv">1000</span>, </span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">warmup =</span> <span class="dv">500</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Compiling Stan program...</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Trying to compile a simple C file</code></pre>
+</div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 764.6954</code></pre>
+<pre><code>Running /Library/Frameworks/R.framework/Resources/bin/R CMD SHLIB foo.c
+using C compiler: ‘Apple clang version 16.0.0 (clang-1600.0.26.6)’
+using SDK: ‘MacOSX15.2.sdk’
+clang -arch arm64 -std=gnu2x -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG   -I"/Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library/Rcpp/include/"  -I"/Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library/RcppEigen/include/"  -I"/Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library/RcppEigen/include/unsupported"  -I"/Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library/BH/include" -I"/Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library/StanHeaders/include/src/"  -I"/Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library/StanHeaders/include/"  -I"/Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library/RcppParallel/include/"  -I"/Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library/rstan/include" -DEIGEN_NO_DEBUG  -DBOOST_DISABLE_ASSERTS  -DBOOST_PENDING_INTEGER_LOG2_HPP  -DSTAN_THREADS  -DUSE_STANC3 -DSTRICT_R_HEADERS  -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION  -D_HAS_AUTO_PTR_ETC=0  -include '/Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library/StanHeaders/include/stan/math/prim/fun/Eigen.hpp'  -D_REENTRANT -DRCPP_PARALLEL_USE_TBB=1   -I/opt/R/arm64/include    -fPIC  -falign-functions=64 -Wall -g -O2  -c foo.c -o foo.o
+In file included from &lt;built-in&gt;:1:
+In file included from /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library/StanHeaders/include/stan/math/prim/fun/Eigen.hpp:22:
+In file included from /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library/RcppEigen/include/Eigen/Dense:1:
+In file included from /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library/RcppEigen/include/Eigen/Core:19:
+/Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library/RcppEigen/include/Eigen/src/Core/util/Macros.h:679:10: fatal error: 'cmath' file not found
+  679 | #include &lt;cmath&gt;
+      |          ^~~~~~~
+1 error generated.
+make: *** [foo.o] Error 1</code></pre>
 </div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Start sampling</code></pre>
 </div>
-<p>For variability, standard deviation is a common measure:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(clim<span class="sc">$</span>evapotrans_annual_mm)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 194.9598</code></pre>
+<pre><code>
+SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
+Chain 1: 
+Chain 1: Gradient evaluation took 2.5e-05 seconds
+Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.25 seconds.
+Chain 1: Adjust your expectations accordingly!
+Chain 1: 
+Chain 1: 
+Chain 1: Iteration:   1 / 1000 [  0%]  (Warmup)
+Chain 1: Iteration: 100 / 1000 [ 10%]  (Warmup)
+Chain 1: Iteration: 200 / 1000 [ 20%]  (Warmup)
+Chain 1: Iteration: 300 / 1000 [ 30%]  (Warmup)
+Chain 1: Iteration: 400 / 1000 [ 40%]  (Warmup)
+Chain 1: Iteration: 500 / 1000 [ 50%]  (Warmup)
+Chain 1: Iteration: 501 / 1000 [ 50%]  (Sampling)
+Chain 1: Iteration: 600 / 1000 [ 60%]  (Sampling)
+Chain 1: Iteration: 700 / 1000 [ 70%]  (Sampling)
+Chain 1: Iteration: 800 / 1000 [ 80%]  (Sampling)
+Chain 1: Iteration: 900 / 1000 [ 90%]  (Sampling)
+Chain 1: Iteration: 1000 / 1000 [100%]  (Sampling)
+Chain 1: 
+Chain 1:  Elapsed Time: 0.021 seconds (Warm-up)
+Chain 1:                0.021 seconds (Sampling)
+Chain 1:                0.042 seconds (Total)
+Chain 1: 
+
+SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).
+Chain 2: 
+Chain 2: Gradient evaluation took 5e-06 seconds
+Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.05 seconds.
+Chain 2: Adjust your expectations accordingly!
+Chain 2: 
+Chain 2: 
+Chain 2: Iteration:   1 / 1000 [  0%]  (Warmup)
+Chain 2: Iteration: 100 / 1000 [ 10%]  (Warmup)
+Chain 2: Iteration: 200 / 1000 [ 20%]  (Warmup)
+Chain 2: Iteration: 300 / 1000 [ 30%]  (Warmup)
+Chain 2: Iteration: 400 / 1000 [ 40%]  (Warmup)
+Chain 2: Iteration: 500 / 1000 [ 50%]  (Warmup)
+Chain 2: Iteration: 501 / 1000 [ 50%]  (Sampling)
+Chain 2: Iteration: 600 / 1000 [ 60%]  (Sampling)
+Chain 2: Iteration: 700 / 1000 [ 70%]  (Sampling)
+Chain 2: Iteration: 800 / 1000 [ 80%]  (Sampling)
+Chain 2: Iteration: 900 / 1000 [ 90%]  (Sampling)
+Chain 2: Iteration: 1000 / 1000 [100%]  (Sampling)
+Chain 2: 
+Chain 2:  Elapsed Time: 0.022 seconds (Warm-up)
+Chain 2:                0.02 seconds (Sampling)
+Chain 2:                0.042 seconds (Total)
+Chain 2: 
+
+SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 3).
+Chain 3: 
+Chain 3: Gradient evaluation took 6e-06 seconds
+Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.06 seconds.
+Chain 3: Adjust your expectations accordingly!
+Chain 3: 
+Chain 3: 
+Chain 3: Iteration:   1 / 1000 [  0%]  (Warmup)
+Chain 3: Iteration: 100 / 1000 [ 10%]  (Warmup)
+Chain 3: Iteration: 200 / 1000 [ 20%]  (Warmup)
+Chain 3: Iteration: 300 / 1000 [ 30%]  (Warmup)
+Chain 3: Iteration: 400 / 1000 [ 40%]  (Warmup)
+Chain 3: Iteration: 500 / 1000 [ 50%]  (Warmup)
+Chain 3: Iteration: 501 / 1000 [ 50%]  (Sampling)
+Chain 3: Iteration: 600 / 1000 [ 60%]  (Sampling)
+Chain 3: Iteration: 700 / 1000 [ 70%]  (Sampling)
+Chain 3: Iteration: 800 / 1000 [ 80%]  (Sampling)
+Chain 3: Iteration: 900 / 1000 [ 90%]  (Sampling)
+Chain 3: Iteration: 1000 / 1000 [100%]  (Sampling)
+Chain 3: 
+Chain 3:  Elapsed Time: 0.022 seconds (Warm-up)
+Chain 3:                0.018 seconds (Sampling)
+Chain 3:                0.04 seconds (Total)
+Chain 3: 
+
+SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 4).
+Chain 4: 
+Chain 4: Gradient evaluation took 5e-06 seconds
+Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.05 seconds.
+Chain 4: Adjust your expectations accordingly!
+Chain 4: 
+Chain 4: 
+Chain 4: Iteration:   1 / 1000 [  0%]  (Warmup)
+Chain 4: Iteration: 100 / 1000 [ 10%]  (Warmup)
+Chain 4: Iteration: 200 / 1000 [ 20%]  (Warmup)
+Chain 4: Iteration: 300 / 1000 [ 30%]  (Warmup)
+Chain 4: Iteration: 400 / 1000 [ 40%]  (Warmup)
+Chain 4: Iteration: 500 / 1000 [ 50%]  (Warmup)
+Chain 4: Iteration: 501 / 1000 [ 50%]  (Sampling)
+Chain 4: Iteration: 600 / 1000 [ 60%]  (Sampling)
+Chain 4: Iteration: 700 / 1000 [ 70%]  (Sampling)
+Chain 4: Iteration: 800 / 1000 [ 80%]  (Sampling)
+Chain 4: Iteration: 900 / 1000 [ 90%]  (Sampling)
+Chain 4: Iteration: 1000 / 1000 [100%]  (Sampling)
+Chain 4: 
+Chain 4:  Elapsed Time: 0.022 seconds (Warm-up)
+Chain 4:                0.017 seconds (Sampling)
+Chain 4:                0.039 seconds (Total)
+Chain 4: </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># only difference is using smaller sample size data set</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>mod_small <span class="ot">&lt;-</span> <span class="fu">brm</span>(y <span class="sc">~</span> x, </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> dat_small, </span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">family =</span> <span class="fu">poisson</span>(), </span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">prior =</span> <span class="fu">c</span>(<span class="fu">prior</span>(<span class="fu">normal</span>(<span class="dv">0</span>, <span class="dv">1000</span>), <span class="at">class =</span> Intercept),</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">prior</span>(<span class="fu">normal</span>(<span class="dv">0</span>, <span class="dv">1000</span>), <span class="at">class =</span> b)), </span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>                 <span class="at">iter =</span> <span class="dv">1000</span>, </span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>                 <span class="at">warmup =</span> <span class="dv">500</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Compiling Stan program...
+Trying to compile a simple C file</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Running /Library/Frameworks/R.framework/Resources/bin/R CMD SHLIB foo.c
+using C compiler: ‘Apple clang version 16.0.0 (clang-1600.0.26.6)’
+using SDK: ‘MacOSX15.2.sdk’
+clang -arch arm64 -std=gnu2x -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG   -I"/Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library/Rcpp/include/"  -I"/Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library/RcppEigen/include/"  -I"/Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library/RcppEigen/include/unsupported"  -I"/Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library/BH/include" -I"/Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library/StanHeaders/include/src/"  -I"/Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library/StanHeaders/include/"  -I"/Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library/RcppParallel/include/"  -I"/Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library/rstan/include" -DEIGEN_NO_DEBUG  -DBOOST_DISABLE_ASSERTS  -DBOOST_PENDING_INTEGER_LOG2_HPP  -DSTAN_THREADS  -DUSE_STANC3 -DSTRICT_R_HEADERS  -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION  -D_HAS_AUTO_PTR_ETC=0  -include '/Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library/StanHeaders/include/stan/math/prim/fun/Eigen.hpp'  -D_REENTRANT -DRCPP_PARALLEL_USE_TBB=1   -I/opt/R/arm64/include    -fPIC  -falign-functions=64 -Wall -g -O2  -c foo.c -o foo.o
+In file included from &lt;built-in&gt;:1:
+In file included from /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library/StanHeaders/include/stan/math/prim/fun/Eigen.hpp:22:
+In file included from /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library/RcppEigen/include/Eigen/Dense:1:
+In file included from /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library/RcppEigen/include/Eigen/Core:19:
+/Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library/RcppEigen/include/Eigen/src/Core/util/Macros.h:679:10: fatal error: 'cmath' file not found
+  679 | #include &lt;cmath&gt;
+      |          ^~~~~~~
+1 error generated.
+make: *** [foo.o] Error 1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Start sampling</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
+Chain 1: 
+Chain 1: Gradient evaluation took 2e-05 seconds
+Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.2 seconds.
+Chain 1: Adjust your expectations accordingly!
+Chain 1: 
+Chain 1: 
+Chain 1: Iteration:   1 / 1000 [  0%]  (Warmup)
+Chain 1: Iteration: 100 / 1000 [ 10%]  (Warmup)
+Chain 1: Iteration: 200 / 1000 [ 20%]  (Warmup)
+Chain 1: Iteration: 300 / 1000 [ 30%]  (Warmup)
+Chain 1: Iteration: 400 / 1000 [ 40%]  (Warmup)
+Chain 1: Iteration: 500 / 1000 [ 50%]  (Warmup)
+Chain 1: Iteration: 501 / 1000 [ 50%]  (Sampling)
+Chain 1: Iteration: 600 / 1000 [ 60%]  (Sampling)
+Chain 1: Iteration: 700 / 1000 [ 70%]  (Sampling)
+Chain 1: Iteration: 800 / 1000 [ 80%]  (Sampling)
+Chain 1: Iteration: 900 / 1000 [ 90%]  (Sampling)
+Chain 1: Iteration: 1000 / 1000 [100%]  (Sampling)
+Chain 1: 
+Chain 1:  Elapsed Time: 0.006 seconds (Warm-up)
+Chain 1:                0.005 seconds (Sampling)
+Chain 1:                0.011 seconds (Total)
+Chain 1: 
+
+SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).
+Chain 2: 
+Chain 2: Gradient evaluation took 1e-06 seconds
+Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.01 seconds.
+Chain 2: Adjust your expectations accordingly!
+Chain 2: 
+Chain 2: 
+Chain 2: Iteration:   1 / 1000 [  0%]  (Warmup)
+Chain 2: Iteration: 100 / 1000 [ 10%]  (Warmup)
+Chain 2: Iteration: 200 / 1000 [ 20%]  (Warmup)
+Chain 2: Iteration: 300 / 1000 [ 30%]  (Warmup)
+Chain 2: Iteration: 400 / 1000 [ 40%]  (Warmup)
+Chain 2: Iteration: 500 / 1000 [ 50%]  (Warmup)
+Chain 2: Iteration: 501 / 1000 [ 50%]  (Sampling)
+Chain 2: Iteration: 600 / 1000 [ 60%]  (Sampling)
+Chain 2: Iteration: 700 / 1000 [ 70%]  (Sampling)
+Chain 2: Iteration: 800 / 1000 [ 80%]  (Sampling)
+Chain 2: Iteration: 900 / 1000 [ 90%]  (Sampling)
+Chain 2: Iteration: 1000 / 1000 [100%]  (Sampling)
+Chain 2: 
+Chain 2:  Elapsed Time: 0.006 seconds (Warm-up)
+Chain 2:                0.005 seconds (Sampling)
+Chain 2:                0.011 seconds (Total)
+Chain 2: 
+
+SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 3).
+Chain 3: 
+Chain 3: Gradient evaluation took 1e-06 seconds
+Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.01 seconds.
+Chain 3: Adjust your expectations accordingly!
+Chain 3: 
+Chain 3: 
+Chain 3: Iteration:   1 / 1000 [  0%]  (Warmup)
+Chain 3: Iteration: 100 / 1000 [ 10%]  (Warmup)
+Chain 3: Iteration: 200 / 1000 [ 20%]  (Warmup)
+Chain 3: Iteration: 300 / 1000 [ 30%]  (Warmup)
+Chain 3: Iteration: 400 / 1000 [ 40%]  (Warmup)
+Chain 3: Iteration: 500 / 1000 [ 50%]  (Warmup)
+Chain 3: Iteration: 501 / 1000 [ 50%]  (Sampling)
+Chain 3: Iteration: 600 / 1000 [ 60%]  (Sampling)
+Chain 3: Iteration: 700 / 1000 [ 70%]  (Sampling)
+Chain 3: Iteration: 800 / 1000 [ 80%]  (Sampling)
+Chain 3: Iteration: 900 / 1000 [ 90%]  (Sampling)
+Chain 3: Iteration: 1000 / 1000 [100%]  (Sampling)
+Chain 3: 
+Chain 3:  Elapsed Time: 0.006 seconds (Warm-up)
+Chain 3:                0.006 seconds (Sampling)
+Chain 3:                0.012 seconds (Total)
+Chain 3: 
+
+SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 4).
+Chain 4: 
+Chain 4: Gradient evaluation took 1e-06 seconds
+Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.01 seconds.
+Chain 4: Adjust your expectations accordingly!
+Chain 4: 
+Chain 4: 
+Chain 4: Iteration:   1 / 1000 [  0%]  (Warmup)
+Chain 4: Iteration: 100 / 1000 [ 10%]  (Warmup)
+Chain 4: Iteration: 200 / 1000 [ 20%]  (Warmup)
+Chain 4: Iteration: 300 / 1000 [ 30%]  (Warmup)
+Chain 4: Iteration: 400 / 1000 [ 40%]  (Warmup)
+Chain 4: Iteration: 500 / 1000 [ 50%]  (Warmup)
+Chain 4: Iteration: 501 / 1000 [ 50%]  (Sampling)
+Chain 4: Iteration: 600 / 1000 [ 60%]  (Sampling)
+Chain 4: Iteration: 700 / 1000 [ 70%]  (Sampling)
+Chain 4: Iteration: 800 / 1000 [ 80%]  (Sampling)
+Chain 4: Iteration: 900 / 1000 [ 90%]  (Sampling)
+Chain 4: Iteration: 1000 / 1000 [100%]  (Sampling)
+Chain 4: 
+Chain 4:  Elapsed Time: 0.006 seconds (Warm-up)
+Chain 4:                0.005 seconds (Sampling)
+Chain 4:                0.011 seconds (Total)
+Chain 4: </code></pre>
 </div>
 </div>
-<p>But, as we seem to like to do, let’s try to take the hard way to getting those answers. Let’s use the method of maximum likelihood to find the mean and standard deviation. First have a look at the shape of the distribution of the data:</p>
+<p>Now we’re going to visually compare the posterior to prior for each fitted model object. We saw last lab how to visualize the posterior. We also saw how to visualize a random sample from the prior, but this time let’s visualize the actual probability density function.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(clim, <span class="fu">aes</span>(evapotrans_annual_mm)) <span class="sc">+</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">4</span>, <span class="dv">4</span>)), <span class="fu">aes</span>(<span class="at">x =</span> x)) <span class="sc">+</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stat_function</span>(<span class="at">fun =</span> dnorm,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">args =</span> <span class="fu">list</span>(<span class="at">sd =</span> <span class="dv">1000</span>)) <span class="sc">+</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"x"</span>, <span class="at">y =</span> <span class="st">"Density"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="bayes-ppc-samp_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>To compare posterior and prior, plot the posterior first (after having extracted it with <code>as_draws_df</code>, i.e., don’t use <code>mcmc_hist</code>). Then you can add the prior with <code>stat_function</code>. Adjust the x-axis limits so that we see more of the number line.</p>
+<p>Make a plot comparing prior to posterior for the <code>b_x</code> term of the model fit on the full data and the <code>b_x</code> term of the model fit on the smaller data set.</p>
+<p>Comparing those two plots, what do you notice? Which one shows a bigger difference between the prior and posterior?</p>
+</section>
+<section id="posterior-predictive-checks" class="level2" data-number="34.3">
+<h2 data-number="34.3" class="anchored" data-anchor-id="posterior-predictive-checks"><span class="header-section-number">34.3</span> Posterior predictive checks</h2>
+<p>Like with any model inference approach, we should check if our model is actually doing a good job predicting the data. In the frequentist framework we can use likelihood ratio test and AIC, among other methods, for this task. In the Bayesian framework we can use posterior predictive checks.</p>
+<p>The idea behind posterior predictive checks is to sample parameter values from the posterior, simulate response data (the <span class="math inline">\(y\)</span>) from the model with those parameter values, then compare the simulated data to the real data. Like with MCMC diagnostics, there are a number of helpful visual checks. Let’s see those in action.</p>
+<p>First we use <code>posterior_predict</code> to generate data simulated from the model</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># `ndraws` is an option argument, defaults to all</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co"># posterior samples if we don't specify</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>mod_ppc <span class="ot">&lt;-</span> <span class="fu">posterior_predict</span>(mod, <span class="at">ndraws =</span> <span class="dv">200</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The output of <code>posterior_predict</code> is a matrix, each row is one simulation of the response variable.</p>
+<p>Now we can visually compare the real data to the simulated data using functions from <em>bayesplot</em>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ppc_dens_overlay</span>(dat<span class="sc">$</span>y, mod_ppc)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="bayes-ppc-samp_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This plot shows the real data as the thick line and the 200 simulated data sets as lighter and thinner lines. What is your interpretation? Does the model (represented by simulated data) closely match the real data?</p>
+<p>It can also be helpful to compare summary statistics of the real and simulated data like the mean and variance. For that task we use <code>ppc_stat</code>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ppc_stat</span>(dat<span class="sc">$</span>y, mod_ppc, <span class="at">stat =</span> <span class="st">"mean"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Note: in most cases the default test statistic 'mean' is too weak to detect anything of interest.</code></pre>
+</div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value `binwidth`.</code></pre>
 </div>
 <div class="cell-output-display">
-<div id="fig-ET-hist" class="quarto-float quarto-figure quarto-figure-center anchored" width="384">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-ET-hist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="norm-lab_files/figure-html/fig-ET-hist-1.png" id="fig-ET-hist" class="img-fluid figure-img" width="384">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-ET-hist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;12.1
-</figcaption>
+<div>
+<figure class="figure">
+<p><img src="bayes-ppc-samp_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>Looks a lot like a bell-shaped curve—like a normal distribution. Thinking about annual ET, this makes sense too: day to day there are a lot of little processes that add up to produce ET, and on top of that <em>annual</em> ET literally adds up the ET of each day. So the Central Limit Theorem likely applies, and we shouldn’t be too surprised to find that annual ET looks to follow a normal distribution.</p>
-</section>
-<section id="the-log-likelihood-function-for-a-normal-distribution" class="level2" data-number="12.2">
-<h2 data-number="12.2" class="anchored" data-anchor-id="the-log-likelihood-function-for-a-normal-distribution"><span class="header-section-number">12.2</span> The log likelihood function for a normal distribution</h2>
-<p>As discussed in the introductory likelihood <a href="./likelihood-lec.html">lecture notes</a> the log likelihood function for data that come from a continuous probability distribution uses the same approach of summing log “probabilities” but now we are actually summing log probability <strong><em>densities</em></strong></p>
-<p><span class="math display">\[
-\log\mathscr{L}(\text{parameters, data}) = \sum\log PDF(\text{data} \mid \text{parameters})
-\]</span></p>
-<p>So our log likelihood function for the annual ET data will involve summing up the output of <code>dnorm(..., log = TRUE)</code>. One aspect that will be new and different from the log likelihood function based in the <a href="./binom-lab.html">binomial distribution lab</a> is that we need to estimate <em>two</em> parameters for the normal distribution: mean <span class="math inline">\(\hat{\mu}\)</span> and standard deviation <span class="math inline">\(\hat{\sigma}\)</span>.</p>
-<p><em>You can delete this list once complete, or perhaps make some bullets into subheaders, up to you!</em></p>
-<p>Your tasks are to</p>
-<ul>
-<li>write an R function to calculate the log likelihood function, it should be able to take arguments for the mean and sd (remember, these parameters need to be passed as together in a single vector) and the data</li>
-<li>visualize the log likelihood <em>surface</em> (see below, this will require some new skills)</li>
-<li>use <code>optim</code> to find the maximum likelihood estimates for <span class="math inline">\(\hat{\mu}\)</span> and <span class="math inline">\(\hat{\sigma}\)</span></li>
-<li>compare the estimates <span class="math inline">\(\hat{\mu}\)</span> and <span class="math inline">\(\hat{\sigma}\)</span> to the values we calculated with <code>mean</code> and <code>sd</code></li>
-</ul>
-</section>
-<section id="visualizing-a-surface" class="level2" data-number="12.3">
-<h2 data-number="12.3" class="anchored" data-anchor-id="visualizing-a-surface"><span class="header-section-number">12.3</span> Visualizing a surface</h2>
-<p>Part of our task is to visualize a surface. There are multiple ways to do that, but we use <code>geom_tile</code>. Check out how that works</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># make some simple data</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>surf <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>), </span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">y =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>), </span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">z =</span> <span class="fu">c</span>(<span class="dv">8</span>, <span class="dv">2</span>, <span class="dv">6</span>, <span class="dv">1</span>))</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co"># visualize the `z` axis as a third dimension coded by color</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(surf, <span class="fu">aes</span>(x, y, <span class="at">fill =</span> z)) <span class="sc">+</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_tile</span>() <span class="sc">+</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_viridis_c</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div id="fig-geom_tile-demo" class="quarto-float quarto-figure quarto-figure-center anchored" width="672">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-geom_tile-demo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="norm-lab_files/figure-html/fig-geom_tile-demo-1.png" id="fig-geom_tile-demo" class="img-fluid figure-img" width="672">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-geom_tile-demo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;12.2
-</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p>Look at the data underlying that graph</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>surf</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>  x y z
-1 1 1 8
-2 2 1 2
-3 1 2 6
-4 2 2 1</code></pre>
-</div>
-</div>
-<p>The <code>x</code> and <code>y</code> columns lay out a grid while the <code>z</code> column provides the “heights” of the surface at each one of those gridpoints. The <code>geom_tile</code> geom just fills the space with squares colored according to the values of <code>z</code>.</p>
-<p>You can use this for your visualization!</p>
-<p>But you will not want to make the xy grid by hand. To make a grid over a range of parameter (<span class="math inline">\(\mu\)</span> and <span class="math inline">\(\sigma\)</span> values) use the <code>expand.grid</code> function, for example</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>params <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">mu =</span> <span class="fu">seq</span>(<span class="dv">650</span>, <span class="dv">850</span>, <span class="at">length.out =</span> <span class="dv">20</span>), </span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">sig =</span> <span class="fu">seq</span>(<span class="dv">100</span>, <span class="dv">200</span>, <span class="at">length.out =</span> <span class="dv">20</span>))</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(params)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>        mu sig
-1 650.0000 100
-2 660.5263 100
-3 671.0526 100
-4 681.5789 100
-5 692.1053 100
-6 702.6316 100</code></pre>
-</div>
-</div>
-<p>Now we have a grid of values in the neighborhood of the results we got from <code>mean(clim$evapotrans_annual_mm)</code> and <code>sd(clim$evapotrans_annual_mm)</code>. In each column of the output of <code>expand.grid</code> there will be 20 unique values because in our call to <code>seq</code> we specified <code>length.out = 20</code>. You could make that larger or smaller—larger if you feel like you don’t have enough tiles for a pretty figure, smaller if (hypothetically) its too big of a computational task for your computer. Our task in this lab is nothing to worry about computationally.</p>
-<p>The next thing you need to figure out is how to apply your likelihood function to each parameter combination in each of the rows of <code>params</code>. Unfortunately you cannot just plug the columns into your log likelihood function. The reason is that you are (hopefully) passing the entire column of ET data into <code>dnorm</code> somewhere in your function. If you also pass in column vectors for the <code>mean</code> and <code>sd</code> arguments of <code>dnorm</code> it will get confused about what you’re asking for.</p>
-<p>That means we need to plug in the values for <code>mean</code> and <code>sd</code> one combination at a time. The way to do that based on what we’ve learned so far is a for loop! If you are curious about other ways you’ll want to dig deep into functions like <code>lapply</code> and <code>vapply</code> from base R or <code>rowwise</code> for a <em>dplyr</em>-flavored approach.</p>
-<p>To the for loop! Here is how it will work:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># this is a pretend version of a likelihood function</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>your_lik_fun <span class="ot">&lt;-</span> <span class="cf">function</span>(pars, data) {</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    pars[<span class="dv">1</span>] <span class="sc">+</span> pars[<span class="dv">2</span>] <span class="sc">+</span> <span class="fu">sum</span>(data)</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>} </span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co"># pretend data</span></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>your_data <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="co"># make an empty vector that will hold the log likelihood values</span></span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>ll_norm <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="fu">nrow</span>(params)) </span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(params)) {</span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    pars_i <span class="ot">&lt;-</span> <span class="fu">c</span>(params<span class="sc">$</span>mu[i], params<span class="sc">$</span>sig[i])</span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>    ll_norm[i] <span class="ot">&lt;-</span> <span class="fu">your_lik_fun</span>(pars_i, your_data)</span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a><span class="co"># combine params and ll_norm for plotting</span></span>
-<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>parms_ll <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(params, <span class="at">loglik =</span> ll_norm)</span>
-<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(parms_ll)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>        mu sig   loglik
-1 650.0000 100 760.0000
-2 660.5263 100 770.5263
-3 671.0526 100 781.0526
-4 681.5789 100 791.5789
-5 692.1053 100 802.1053
-6 702.6316 100 812.6316</code></pre>
-</div>
-</div>
-<p>This same approach will work for calculating the real log likelihood surface.</p>
-</section>
-<section id="references" class="level2" data-number="12.4">
-<h2 data-number="12.4" class="anchored" data-anchor-id="references"><span class="header-section-number">12.4</span> References</h2>
+<p>What is your interpretation? Are the means of the simulated data in agreement with the observed mean of the real data?</p>
+<p>For Poisson models it is generally a good idea to do posterior predictive checks on both the mean and variance because Poisson assumes these two metrics are equal, and we know ecological data can often violate that assumption. Use <code>ppc_stat</code> to compare real and simulated data in terms of variance (<code>var</code> is the summary statistic function you need). Interpret the results: is Poisson an adequate choice for our model and data?</p>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
-<div id="ref-brauman2012" class="csl-entry" role="listitem">
-Brauman KA, Freyberg DL, Daily GC. 2012. Potential evapotranspiration from forest and pasture in the tropics: A case study in kona, hawai ‘i. Journal of Hydrology <strong>440</strong>:52–61. Elsevier.
-</div>
-<div id="ref-fisher2011" class="csl-entry" role="listitem">
-Fisher JB, Whittaker RJ, Malhi Y. 2011. ET come home: Potential evapotranspiration in geographical ecology. Global Ecology and Biogeography <strong>20</strong>:1–18. Wiley Online Library.
-</div>
-<div id="ref-idol2007" class="csl-entry" role="listitem">
-Idol T, Baker PJ, Meason D. 2007. Indicators of forest ecosystem productivity and nutrient status across precipitation and temperature gradients in hawaii. Journal of Tropical Ecology <strong>23</strong>:693–704. Cambridge University Press.
-</div>
-</div>
 </section>
 
 </main> <!-- /main -->
@@ -1093,14 +1268,11 @@ Idol T, Baker PJ, Meason D. 2007. Indicators of forest ecosystem productivity an
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./binom-lab.html" class="pagination-link" aria-label="Estimating probability of occurrence">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Estimating probability of occurrence</span></span>
+      <a href="./bayes-basics-lab.html" class="pagination-link" aria-label="Basics of Bayesian inference">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Basics of Bayesian inference</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./lin-mod.html" class="pagination-link" aria-label="Linear models">
-        <span class="nav-page-text">Linear models</span> <i class="bi bi-arrow-right-short"></i>
-      </a>
   </div>
 </nav>
 </div> <!-- /content -->
