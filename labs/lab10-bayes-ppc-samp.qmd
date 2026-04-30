@@ -1,0 +1,143 @@
+---
+title: "Sample size considerations and posterior predictive checks"
+format:
+    pdf:
+        include-in-header:
+            text: |
+                \usepackage{newunicodechar}
+                \newunicodechar{ʻ}{`}
+author:
+    - your name here
+---
+
+```{r}
+#| label: setup
+
+# load all necessary packages
+library(ggplot2)
+library(dplyr)
+library(brms)
+library(bayesplot)
+```
+
+
+## Simulating a familiar model...with different sample sizes
+
+We'll continue with our Poisson GLM, but we're going to mix things up by also introducing differences in sample size. Here again is the code from last lab
+
+```{r}
+# set seed so we all have the same data
+set.seed(123)
+
+# random numeric data for explanatory variable
+x <- runif(400, 0, 1)
+
+# log(m) is the link function so mu = exp(...)
+mu <- exp(-1 + 4 * x)
+
+# draw random Poisson data based on mu responding to x
+y <- rpois(length(x), mu)
+
+# combine in one data object
+dat <- data.frame(x, y)
+```
+
+Now let's also create a subsample of those data with only 40 samples. Turns out *dplyr* has a convenient funciton to do this `slice_sample`
+
+
+```{r}
+
+# again set a seed so everyone works with the same data
+set.seed(1)
+
+dat_small <- slice_sample(dat, prop = 0.1)
+
+```
+
+
+
+## Evaluating the effect of sample size on Bayesian inference
+
+Now with two data sets of very different size, but coming from the same process, we can evaluate the effect of sample size on Bayesian inference. Let's fit the same model to each data set.
+
+```{r}
+# just like in the previous lab, making sure we
+# have sufficient warmup
+
+mod <- brm(y ~ x, 
+           data = dat, 
+           family = poisson(), 
+           prior = c(prior(normal(0, 1000), class = Intercept),
+                     prior(normal(0, 1000), class = b)), 
+           iter = 1000, 
+           warmup = 500)
+
+# only difference is using smaller sample size data set
+mod_small <- brm(y ~ x, 
+                 data = dat_small, 
+                 family = poisson(), 
+                 prior = c(prior(normal(0, 1000), class = Intercept),
+                           prior(normal(0, 1000), class = b)), 
+                 iter = 1000, 
+                 warmup = 500)
+
+```
+
+Now we're going to visually compare the posterior to prior for each fitted model object. We saw last lab how to visualize the posterior. We also saw how to visualize a random sample from the prior, but this time let's visualize the actual probability density function.
+
+
+```{r}
+ggplot(data.frame(x = c(-4, 4)), aes(x = x)) +
+    stat_function(fun = dnorm,
+                  args = list(sd = 1000)) +
+    labs(x = "x", y = "Density")
+
+```
+
+To compare posterior and prior, plot the posterior first (after having extracted it with `as_draws_df`, i.e., don't use `mcmc_hist`). Then you can add the prior with `stat_function`. Adjust the x-axis limits so that we see more of the number line.
+
+Make a plot comparing prior to posterior for the `b_x` term of the model fit on the full data and the `b_x` term of the model fit on the smaller data set.
+
+Comparing those two plots, what do you notice? Which one shows a bigger difference between the prior and posterior?
+
+## Posterior predictive checks
+
+Like with any model inference approach, we should check if our model is actually doing a good job predicting the data. In the frequentist framework we can use likelihood ratio test and AIC, among other methods,  for this task. In the Bayesian framework we can use posterior predictive checks.
+
+The idea behind posterior predictive checks is to sample parameter values from the posterior, simulate response data (the $y$) from the model with those parameter values, then compare the simulated data to the real data. Like with MCMC diagnostics, there are a number of helpful visual checks. Let's see those in action.
+
+First we use `posterior_predict` to generate data simulated from the model
+
+```{r}
+
+# `ndraws` is an option argument, defaults to all
+# posterior samples if we don't specify
+
+mod_ppc <- posterior_predict(mod, ndraws = 200)
+
+
+```
+
+The output of `posterior_predict` is a matrix, each row is one simulation of the response variable.
+
+Now we can visually compare the real data to the simulated data using functions from *bayesplot*.
+
+```{r}
+ppc_dens_overlay(dat$y, mod_ppc)
+
+```
+
+This plot shows the real data as the thick line and the 200 simulated data sets as lighter and thinner lines. What is your interpretation? Does the model (represented by simulated data) closely match the real data?
+
+It can also be helpful to compare summary statistics of the real and simulated data like the mean and variance. For that task we use `ppc_stat`.
+
+
+```{r}
+ppc_stat(dat$y, mod_ppc, stat = "mean")
+
+```
+
+What is your interpretation? Are the means of the simulated data in agreement with the observed mean of the real data?
+
+For Poisson models it is generally a good idea to do posterior predictive checks on both the mean and variance because Poisson assumes these two metrics are equal, and we know ecological data can often violate that assumption. Use `ppc_stat` to compare real and simulated data in terms of variance (`var` is the summary statistic function you need). Interpret the results: is Poisson an adequate choice for our model and data?
+
