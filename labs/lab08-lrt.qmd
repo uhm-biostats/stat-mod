@@ -266,6 +266,6 @@ Now see how many times we reject the null
 sum(pvals <= 0.05) / length(pvals)
 
 # or equivalently
-mean(pvals)
+mean(pvals <= 0.05)
 
 ```
