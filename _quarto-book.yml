@@ -54,6 +54,7 @@ book:
             - bayes-intro.qmd
             - bayes-basics-lab.qmd
             - bayes-ppc-samp.qmd
+            - bayes-sad.qmd
 
 
 bibliography: stat-mod.bib
