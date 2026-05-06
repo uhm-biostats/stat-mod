@@ -154,12 +154,12 @@ As a fixed effects Poisson model for species $i$ at site $j$ that looks like
 
 $$
 \begin{aligned}
-\log(\lambda_{ij}) &= b_0 + b_1 \text{NDVI}_j + b_2 \text{hii}_j + b_3 I_{\text{native, } i} + b_4 I_{\text{native, } i} \text{NDVI}_j \\
+\log(\lambda_{ij}) &= b_0 + b_1 \text{NDVI}_j + b_2 \text{hii}_j + b_3 I_{\text{native, } i} + b_4 I_{\text{native, } i} \text{hii}_j \\
 y_{ij} &\sim \text{Pois}(\lambda_{ij})
 \end{aligned}
 $$
 
-$I_{\text{native, } i}$ is an indicator function that equals 1 if species $i$ is native, and equals 0 otherwise. In this way $b_3 I_{\text{native, } i}$ represents the additional effect of being native relative to $b_0$ which is the effect of being non-native (recorded as "alien" in the *OpenNahele* data). Similarly, $b_4 I_{\text{native, } i} \text{NDVI}_j$ is the additional slope term added for species that are native.
+$I_{\text{native, } i}$ is an indicator function that equals 1 if species $i$ is native, and equals 0 otherwise. In this way $b_3 I_{\text{native, } i}$ represents the additional effect of being native relative to $b_0$ which is the effect of being non-native (recorded as "alien" in the *OpenNahele* data). Similarly, $b_4 I_{\text{native, } i} \text{hii}_j$ is the additional slope term added for species that are native.
 
 But we also know our model needs random effects for species and sites. We add those via random terms $b_{\text{sp} ~i}$ and $b_{\text{site} ~j}$. So the full model is
 
@@ -167,7 +167,7 @@ $$
 \begin{aligned}
 b_{\text{sp} ~i} &\sim \mathscr{N}(0, ~\sigma_\text{sp}) \\
 b_{\text{site} ~j} &\sim \mathscr{N}(0, ~\sigma_\text{site}) \\
-\log(\lambda_{ij}) &= b_0 + b_1 \text{NDVI}_j + b_2 \text{hii}_j + b_3 I_{\text{native, } i} + b_4 I_{\text{native, } i} \text{NDVI}_j + b_{\text{sp} ~i} + b_{\text{site} ~j} \\
+\log(\lambda_{ij}) &= b_0 + b_1 \text{NDVI}_j + b_2 \text{hii}_j + b_3 I_{\text{native, } i} + b_4 I_{\text{native, } i} \text{hii}_j + b_{\text{sp} ~i} + b_{\text{site} ~j} \\
 y_{ij} &\sim \text{Pois}(\lambda_{ij})
 \end{aligned}
 $$
@@ -252,7 +252,7 @@ Because of the random effects, there are many *MANY* columns, one for each fixed
 - $b_1 \text{NDVI}_j$
 - $b_2 \text{hii}_j$
 - $b_3 I_{\text{native, } i}$
-- $b_4 I_{\text{native, } i} \text{NDVI}_j$
+- $b_4 I_{\text{native, } i} \text{hii}_j$
 
 These 5 fixed effects should be the first 5 columns of `post_samps`. Let's confirm 
 
