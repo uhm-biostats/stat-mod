@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>35&nbsp; Species abundance: a surprisingly complex model – Intro to Statistical Modeling</title>
+<title>35&nbsp; Bayesian inference for complex models – Intro to Statistical Modeling</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,41 +20,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
@@ -65,6 +30,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
+<link href="./bayes-sad-lab.html" rel="next">
 <link href="./bayes-ppc-samp.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -77,7 +43,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-27c261d06b905028a18691de25d09dde.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/quarto-contrib/downloadthis-1.9.1/downloadthis.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -106,35 +71,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -148,7 +84,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./brief-bayes.html">A biref introduction to Bayesian Statistics</a></li><li class="breadcrumb-item"><a href="./bayes-sad.html"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Species abundance: a surprisingly complex model</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./brief-bayes.html">A biref introduction to Bayesian Statistics</a></li><li class="breadcrumb-item"><a href="./bayes-sad.html"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Bayesian inference for complex models</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -452,7 +388,13 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./bayes-sad.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Species abundance: a surprisingly complex model</span></span></a>
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Bayesian inference for complex models</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./bayes-sad-lab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Species abundance: a surprisingly complex model</span></span></a>
   </div>
 </li>
       </ul>
@@ -467,20 +409,16 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#a-look-at-the-poisson-log-normal" id="toc-a-look-at-the-poisson-log-normal" class="nav-link active" data-scroll-target="#a-look-at-the-poisson-log-normal"><span class="header-section-number">35.1</span> A look at the Poisson log normal</a></li>
-  <li><a href="#prepping-the-data" id="toc-prepping-the-data" class="nav-link" data-scroll-target="#prepping-the-data"><span class="header-section-number">35.2</span> Prepping the data</a></li>
-  <li><a href="#modeling-a-hypothesis" id="toc-modeling-a-hypothesis" class="nav-link" data-scroll-target="#modeling-a-hypothesis"><span class="header-section-number">35.3</span> Modeling a hypothesis</a></li>
-  <li><a href="#diagnosing-convergence-and-model-fit" id="toc-diagnosing-convergence-and-model-fit" class="nav-link" data-scroll-target="#diagnosing-convergence-and-model-fit"><span class="header-section-number">35.4</span> Diagnosing convergence and model fit</a></li>
-  <li><a href="#interpreting-the-model-in-the-context-of-our-hypotheses" id="toc-interpreting-the-model-in-the-context-of-our-hypotheses" class="nav-link" data-scroll-target="#interpreting-the-model-in-the-context-of-our-hypotheses"><span class="header-section-number">35.5</span> Interpreting the model in the context of our hypotheses</a></li>
+  <li><a href="#sec-slides" id="toc-sec-slides" class="nav-link active" data-scroll-target="#sec-slides"><span class="header-section-number">35.1</span> Slides</a></li>
   </ul>
 <div class="quarto-code-links"><h2>Code Links</h2><ul><li><a href="https://github.com/uhm-biostats/stat-mod/blob/main/bayes-sad.qmd"><i class="bi bi-github"></i>View source</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./brief-bayes.html">A biref introduction to Bayesian Statistics</a></li><li class="breadcrumb-item"><a href="./bayes-sad.html"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Species abundance: a surprisingly complex model</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./brief-bayes.html">A biref introduction to Bayesian Statistics</a></li><li class="breadcrumb-item"><a href="./bayes-sad.html"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Bayesian inference for complex models</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Species abundance: a surprisingly complex model</span></h1>
+<h1 class="title"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Bayesian inference for complex models</span></h1>
 </div>
 
 
@@ -497,245 +435,9 @@ window.Quarto = {
 </header>
 
 
-<p>This lab will guide you through building a Poisson log normal model of species abundance using Bayesian methods. You can download the template <code>.qmd</code> file for this lab here:</p>
-<p><a href="#dnldts35155" onclick="fetch('data:text/plain;base64,LS0tCnRpdGxlOiAiU3BlY2llcyBhYnVuZGFuY2U6IGEgc3VwcmlzaW5nIGNvbXBsZXggbW9kZWwiCmZvcm1hdDoKICAgIHBkZjoKICAgICAgICBpbmNsdWRlLWluLWhlYWRlcjoKICAgICAgICAgICAgdGV4dDogfAogICAgICAgICAgICAgICAgXHVzZXBhY2thZ2V7bmV3dW5pY29kZWNoYXJ9CiAgICAgICAgICAgICAgICBcbmV3dW5pY29kZWNoYXJ7yrt9e2B9CmF1dGhvcjoKICAgIC0geW91ciBuYW1lIGhlcmUKLS0tCgpgYGB7cn0KI3wgbGFiZWw6IHNldHVwCgojIGxvYWQgYWxsIG5lY2Vzc2FyeSBwYWNrYWdlcwpsaWJyYXJ5KGdncGxvdDIpCmxpYnJhcnkoZHBseXIpCmxpYnJhcnkoYnJtcykKbGlicmFyeShiYXllc3Bsb3QpCmBgYAoKCiMjIEEgbG9vayBhdCB0aGUgUG9pc3NvbiBsb2cgbm9ybWFsCgpUaGUgUG9pc3NvbiBsb2cgbm9ybWFsIGlzIGEgd2VsbCBlc3RhYmxpc2hlZCBtb2RlbCBvZiB0aGUgc3BlY2llcyBhYnVuZGFuY2UgZGlzdHJpYnV0aW9uIChTQUQpLiBXZSB3aWxsIHVzZSBpdCBhcyB0aGUgY29yZSBvZiBvdXIgbW9kZWwgcmVsYXRpbmcgc3BlY2llcyBhYnVuZGFuY2VzIHRvIGZpeGVkIGFuZCByYW5kb20gZWZmZWN0cy4gRmlyc3QgbGV0J3MgZ2FpbiBzb21lIGludHVpdGlvbiBhYm91dCBpdC4gCgpUaGUgUG9pc3NvbiBsb2cgbm9ybWFsIHNheXMgdGhhdCwgZm9yIGFueSBnaXZlbiBzcGVjaWVzLCBpdHMgKm1lYW4gYWJ1bmRhbmNlKiAkXGxhbWJkYV9pJCB3aWxsIGZvbGxvdyBhIGxvZyBub3JtYWwgZGlzdHJpYnV0aW9uCgokJApcbGFtYmRhX2kgXHNpbSBcbG9nXG1hdGhzY3J7Tn0oXG11LCB+XHNpZ21hX1x0ZXh0e3NwfSkKJCQKCkVxdWl2YWxlbnRseSB3ZSBjb3VsZCBzYXkgdGhlICpsb2cgb2YgbWVhbiBhYnVuZGFuY2UqIHdpbGwgZm9sbG93IGEgbm9ybWFsIGRpc3RyaWJ1dGlvbgoKJCQKXGxvZyhcbGFtYmRhX2kpIFxzaW0gXG1hdGhzY3J7Tn0oXG11LCB+XHNpZ21hX1x0ZXh0e3NwfSkKJCQKCldpdGggdGhhdCBtZWFuIGFidW5kYW5jZSwgd2UgdGhlbiBzYXkgdGhlIGFjdHVhbCBhYnVuZGFuY2UgJHlfaSQsIHRoZSBudW1iZXIgd2UgY29sbGVjdCBpbiB0aGUgZmllbGQsIGZvbGxvd3MgYSBQb2lzc29uIGRpc3RyaWJ1dGlvbiB3aXRoIG1lYW4gJFxsYW1iZGFfaSQKCiQkCnlfaSBcc2ltIFx0ZXh0e1BvaXN9KFxsYW1iZGFfaSkKJCQKCkxldCdzIHNpbXVsYXRlIGFuZCB2aXN1YWxpemUgYSBmZXcgUG9pc3NvbiBsb2cgbm9ybWFsIFNBRHMKCmBgYHtyfQojfCBsYWJlbDogZmlnLXNhZAoKbGFtYmRhIDwtIHJub3JtKDUwMCwgMSwgMikgfD4gZXhwKCkKeSA8LSBycG9pcyhsZW5ndGgobGFtYmRhKSwgbGFtYmRhKQoKIyBjb21iaW5lIGFsbCBpbmZvIGludG8gYSBkYXRhLmZyYW1lIGZvciBwbG90dGluZyAKcG9pc19sbm9ybV9zYWQgPC0gZGF0YS5mcmFtZShtZWFuID0gMSwgc2QgPSAyLCBhYnVuZCA9IHkpCgpnZ3Bsb3QocG9pc19sbm9ybV9zYWQsIGFlcyhhYnVuZCkpICsKICAgIGdlb21faGlzdG9ncmFtKCkgCgpgYGAKClRyeSAzIG1vcmUgZGlmZmVyZW50IHBhcmFtZXRlciBjb21iaW5hdGlvbnMgd2l0aCBuZXcgdmFsdWVzIGZvciAkXG11JCBhbmQgJFxzaWdtYV9cdGV4dHtzcH0kLiBJZiB5b3UgYWRkIHRoZW0gdG8gYHBvaXNfbG5vcm1fc2FkYCB5b3UgY2FuIGZhY2V0IGJ5IHBhcmFtZXRlciB2YWx1ZSBmb3IgYSBuaWNlIGZpbmFsIHZpc3VhbGl6YXRpb24gb2YgYWxsIDQgcGFyYW1ldGVyaXphdGlvbnMKCgojIyBQcmVwcGluZyB0aGUgZGF0YQoKRmlyc3QgcmVhZC1pbiBhbmQgam9pbiBhbGwgZGF0YQoKYGBge3J9CiN8IGxhYmVsOiBkYXRhLXByZXAKCnRyZWUgPC0gcmVhZC5jc3YoImh0dHBzOi8vcmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbS91aG0tYmlvc3RhdHMvc3RhdC1tb2QvcmVmcy9oZWFkcy9tYWluL2RhdGEvT3Blbk5haGVsZV9UcmVlX0RhdGEuY3N2IikKY2xpbSA8LSByZWFkLmNzdigiaHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL3VobS1iaW9zdGF0cy9zdGF0LW1vZC9yZWZzL2hlYWRzL21haW4vZGF0YS9wbG90X2NsaW1hdGUuY3N2IikKZ2VvX2hpaSA8LSByZWFkLmNzdigiaHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL3VobS1iaW9zdGF0cy9zdGF0LW1vZC9yZWZzL2hlYWRzL21haW4vZGF0YS9oaWlfZ2VvLmNzdiIpCgphbGxfZGF0IDwtIGxlZnRfam9pbih0cmVlLCBjbGltLCBieSA9ICJQbG90SUQiKSB8PgogICAgbGVmdF9qb2luKGRwbHlyOjpzZWxlY3QoZ2VvX2hpaSwgIShsb246bGF0KSksIGJ5ID0gIlBsb3RJRCIpCmBgYAoKTmV4dCB3ZSBuZWVkIHRvIHVzZSBhIHNwbGl0LWFwcGx5LWNvbWJpbmUgYXBwcm9hY2ggdG8gc3VtbWFyaXplIHNwZWNpZXMgYWJ1bmRhbmNlIGZvciBlYWNoIHNpdGUuICBXZSBoYXZlIHRvIGRvIHRoaXMgd2l0aCBtb3JlIGF0dGVudGlvbiB0byBkZXRhaWwgdGhhbiBub3JtYWwgYmVjYXVzZSB3ZSBuZWVkIHRvIGNvcnJlY3RseSByZWNvcmQgMCBhYnVuZGFuY2UgZm9yIHNwZWNpZXMgYWJzZW50IGZyb20gYSBzaXRlLiBOb3RpY2UgZnJvbSB0aGUgU0FEIHNpbXVsYXRpb25zIHdlIGp1c3QgZGlkIHRoYXQgMCBhYnVuZGFuY2UgaXMgcG9zc2libGUsIGFuZCBldmVuIGhpZ2hseSBwcm9iYWJsZSwgZm9yIGNlcnRhaW4gcGFyYW1ldGVyaXphdGlvbnMgb2YgdGhlIFNBRC4gUmFyZSBzcGVjaWVzIGFyZSBnZW5lcmFsbHkgdmVyeSBmcmVxdWVudCwgYW5kIHRoaXMgaXMgYW5vdGhlciB0aGluZyB3ZSdsbCBuZWVkIHRvIGJlIGNhdXRpb3VzIGFib3V0LiBUb28gbWFueSBleHRyZW1lbHkgcmFyZSBzcGVjaWVzIHdpbGwgYmUgdmVyeSBkaWZmaWN1bHQgZm9yIG91ciBCYXllc2lhbiBtb2RlbCB0byBkZWFsIHdpdGguIFRoaW5rIG9mIGl0IHRoaXMgd2F5OiBpZiBhIHNwZWNpZXMgb25seSBzaG93cyB1cCBhdCBvbmUgb3IgdHdvIHNpdGVzIG9yIGEgaGFuZGZ1bCBvZiBzaXRlcywgd2hhdCBpbmZlcmVuY2UgY2FuIHdlIGRyYXcgYWJvdXQgdGhhdCBzcGVjaWVzPyBOb25lIHJlYWxseS4gCgpXaXRoIGFsbCB0aGF0IGluIG1pbmQsIGxldCdzIGNyZWF0ZSBvdXIgc3BlY2llcyBhYnVuZGFuY2UgZGF0YQoKYGBge3J9CiN8IGxhYmVsOiBzYWQtZGF0YQoKIyB0aGlzIGRhdGEgb2JqZWN0IGp1c3QgaG9sZHMgdGhlIG5hbWVzIG9mIGFsbCBzcGVjaWVzIGZvdW5kCiMgYXQgMTAgb3IgbW9yZSBzaXRlcy4gV2Ugd2lsbCB1c2UgaXQgdG8gZmlsdGVyIG91dCBzcGVjaWVzCiMgdGhhdCBhcmUgdG9vIHJhcmUgdG8gYm90aGVyIG1vZGVsaW5nCmNvcmVfc2FkIDwtIGdyb3VwX2J5KGFsbF9kYXQsIFNjaWVudGlmaWNfbmFtZSkgfD4gCiAgICBzdW1tYXJpemUoZnJlcSA9IG5fZGlzdGluY3QoUGxvdElEKSkgfD4gCiAgICB1bmdyb3VwKCkgfD4gCiAgICBmaWx0ZXIoZnJlcSA+PSAxMCkKCgojIG5vdyB3ZSBjYW4gY3JlYXRlIHRoZSBkYXRhIGZvciBtb2RlbGluZwpkYXRfc2FkIDwtIGFsbF9kYXQgfD4gCiAgICAjIGJ5IGZpcnN0IGZpbHRlcmluZyB0byBvbmx5IHNwcCBmb3VuZCBhdCA+PSAxMCBzaXRlcwogICAgZmlsdGVyKFNjaWVudGlmaWNfbmFtZSAlaW4lIGNvcmVfc2FkJFNjaWVudGlmaWNfbmFtZSkgfD4gCiAgICAKICAgICMgdGhlbiBtYWtlIHNwIG5hbWUgYSBmYWN0b3Igc28gd2UgY2FuIHVzZSBgLmRyb3AgPSBGQUxTRWAKICAgIG11dGF0ZShTY2llbnRpZmljX25hbWUgPSBhcy5mYWN0b3IoU2NpZW50aWZpY19uYW1lKSkgfD4gCiAgICAKICAgICMgYC5kcm9wID0gRkFMU0VgIG1lYW5zIGRvbid0IGlnbm9yZSBjb21iaW5hdGlvbnMgb2YKICAgICMgYFBsb3RJRGAgYW5kIGBTY2llbnRpZmljX25hbWVgIHRoYXQgYXJlIGVtcHR5IChpLmUuIDAgYWJ1bmRhbmNlKQogICAgZ3JvdXBfYnkoUGxvdElELCBTY2llbnRpZmljX25hbWUsIC5kcm9wID0gRkFMU0UpIHw+CiAgICBzdW1tYXJpemUoYWJ1bmQgPSBuKCkpIHw+CiAgICB1bmdyb3VwKCkgfD4gCiAgICAKICAgICMgbm93IGpvaW4gYWJ1bmRhbmNlIGRhdGEgYmFjayB0byBwbG90LWxldmVsIGRhdGEKICAgIGxlZnRfam9pbihzZWxlY3QoYWxsX2RhdCwgUGxvdElELCBuZHZpX2FubnVhbCwgaGlpKSB8PiAKICAgICAgICAgICAgICAgICAgdW5pcXVlKCkpIHw+IAogICAgCiAgICAjIG5leHQgam9pbiB0byBzcGVjaWVzLWxldmVsIGRhdGEKICAgIGxlZnRfam9pbihzZWxlY3QoYWxsX2RhdCwgU2NpZW50aWZpY19uYW1lLCBOYXRpdmVfU3RhdHVzKSB8PiAKICAgICAgICAgICAgICAgICAgdW5pcXVlKCkpIHw+IAogICAgCiAgICAjIHJlbW92ZSBOQXMgZnJvbSBleHBsYW5hdG9yeSB2YXJpYWJsZXMKICAgIGZpbHRlcighaXMubmEobmR2aV9hbm51YWwpICYgCiAgICAgICAgICAgICAgICFpcy5uYShoaWkpICYgCiAgICAgICAgICAgICAgICFpcy5uYShOYXRpdmVfU3RhdHVzKSkgfD4gCiAgICAKICAgICMgZmluYWxseSwgc2NhbGUgZXhwbGFuYXRvcnkgdmFyaWFibGVzCiAgICBtdXRhdGUoaGlpID0gc2NhbGUoaGlpKVssIDFdLCAKICAgICAgICAgICBuZHZpX2FubnVhbCA9IHNjYWxlKG5kdmlfYW5udWFsKVssIDFdKQoKYGBgCgoKVGhhdCBsYXN0IHN0ZXAgb2Ygc2NhbGluZyBleHBsYW5hdG9yeSB2YXJpYWJsZXMgY2FuIGhlbHAgd2l0aCBNQ01DIGNvbnZlcmdlbmNlLiBXaGF0IHNjYWxpbmcgZG9lcyBpcyBtYWtlcyBlYWNoIHZhcmlhYmxlIGhhdmUgYSBtZWFuIG9mIDAgYW5kIGEgc3RhbmRhcmQgZGV2aWF0aW9uIG9mIDEKCmBgYHtyfQptZWFuKGRhdF9zYWQkbmR2aV9hbm51YWwpCnNkKGRhdF9zYWQkbmR2aV9hbm51YWwpCm1lYW4oZGF0X3NhZCRoaWkpCnNkKGRhdF9zYWQkaGlpKQpgYGAKClB1dHRpbmcgdGhlc2UgdmFyaWFibGVzIG9uIHRoZSBzYW1lICpzY2FsZSogbWVhbnMgdGhhdCB0aGUgTUNNQyBjYW4gbW92ZSBhcm91bmQgYSBwYXJhbWV0ZXIgc3BhY2Ugd2hlcmUgMSB1bml0IGluIHRoZSBgaGlpYCBkaXJlY3Rpb24gaXMgcm91Z2hseSBlcXVpdmVsYW50IHRvIDEgdW5pdCBpbiB0aGUgYG5kdmlfYW5udWFsYCBkaXJlY3Rpb24uCgojIyBNb2RlbGluZyBhIGh5cG90aGVzaXMKCldpdGggdGhlIGRhdGEgbm93IGluIGhhbmQsIHdoYXQgd291bGQgd2UgbGlrZSB0byBhc2sgKGFuZCBoeXBvdGhlc2l6ZSkgYWJvdXQgc3BlY2llcyBhYnVuZGFuY2U/IExldCdzIGFzayB3aGV0aGVyIGFidW5kYW5jZSBpcyByZWxhdGVkIHRvIHByaW1hcnkgcHJvZHVjdGl2aXR5IGFzIG1lYXN1cmVkIGJ5IE5EVkkgYW5kIHdoZXRoZXIgaHVtYW4gaW1wYWN0IGludGVyYWN0cyB3aXRoIG5hdGl2ZSBzdGF0dXMgdG8gZGV0ZXJtaW5lIGEgc3BlY2llcycgYWJ1bmRhbmNlLgoKT3VyIGh5cG90aGVzaXMgbWlnaHQgYmUgdGhhdCAKCi0gTkRWSSBpbmNyZWFzZXMgYWJ1bmRhbmNlCi0gaHVtYW4gaW1wYWN0IGRlY3JlYXNlcyBhYnVuZGFuY2UKLSBiZWluZyBhIG5hdGl2ZSBzcGVjaWVzIGhhcyBubyBlZmZlY3QKLSBidXQgdGhlcmUgaXMgYSBuZWdhdGl2ZSBpbnRlcmFjdGlvbiBvZiBuYXRpdmUgc3RhdHVzIGFuZCBodW1hbiBpbXBhY3QgKG5hdGl2ZSB0YXhhIGFyZSBkZWNyZWFzZSBpbiBhYnVuZGFuY2Ugd2l0aCBodW1hbiBpbXBhY3QpCgoKQXMgYSBmaXhlZCBlZmZlY3RzIFBvaXNzb24gbW9kZWwgZm9yIHNwZWNpZXMgJGkkIGF0IHNpdGUgJGokIHRoYXQgbG9va3MgbGlrZQoKJCQKXGJlZ2lue2FsaWduZWR9Clxsb2coXGxhbWJkYV97aWp9KSAmPSBiXzAgKyBiXzEgXHRleHR7TkRWSX1faiArIGJfMiBcdGV4dHtoaWl9X2ogKyBiXzMgSV97XHRleHR7bmF0aXZlLCB9IGl9ICsgYl80IElfe1x0ZXh0e25hdGl2ZSwgfSBpfSBcdGV4dHtORFZJfV9qIFxcCnlfe2lqfSAmXHNpbSBcdGV4dHtQb2lzfShcbGFtYmRhX3tpan0pClxlbmR7YWxpZ25lZH0KJCQKCiRJX3tcdGV4dHtuYXRpdmUsIH0gaX0kIGlzIGFuIGluZGljYXRvciBmdW5jdGlvbiB0aGF0IGVxdWFscyAxIGlmIHNwZWNpZXMgJGkkIGlzIG5hdGl2ZSwgYW5kIGVxdWFscyAwIG90aGVyd2lzZS4gSW4gdGhpcyB3YXkgJGJfMyBJX3tcdGV4dHtuYXRpdmUsIH0gaX0kIHJlcHJlc2VudHMgdGhlIGFkZGl0aW9uYWwgZWZmZWN0IG9mIGJlaW5nIG5hdGl2ZSByZWxhdGl2ZSB0byAkYl8wJCB3aGljaCBpcyB0aGUgZWZmZWN0IG9mIGJlaW5nIG5vbi1uYXRpdmUgKHJlY29yZGVkIGFzICJhbGllbiIgaW4gdGhlICpPcGVuTmFoZWxlKiBkYXRhKS4gU2ltaWxhcmx5LCAkYl80IElfe1x0ZXh0e25hdGl2ZSwgfSBpfSBcdGV4dHtORFZJfV9qJCBpcyB0aGUgYWRkaXRpb25hbCBzbG9wZSB0ZXJtIGFkZGVkIGZvciBzcGVjaWVzIHRoYXQgYXJlIG5hdGl2ZS4KCkJ1dCB3ZSBhbHNvIGtub3cgb3VyIG1vZGVsIG5lZWRzIHJhbmRvbSBlZmZlY3RzIGZvciBzcGVjaWVzIGFuZCBzaXRlcy4gV2UgYWRkIHRob3NlIHZpYSByYW5kb20gdGVybXMgJGJfe1x0ZXh0e3NwfSB+aX0kIGFuZCAkYl97XHRleHR7c2l0ZX0gfmp9JC4gU28gdGhlIGZ1bGwgbW9kZWwgaXMKCiQkClxiZWdpbnthbGlnbmVkfQpiX3tcdGV4dHtzcH0gfml9ICZcc2ltIFxtYXRoc2Nye059KDAsIH5cc2lnbWFfXHRleHR7c3B9KSBcXApiX3tcdGV4dHtzaXRlfSB+an0gJlxzaW0gXG1hdGhzY3J7Tn0oMCwgflxzaWdtYV9cdGV4dHtzaXRlfSkgXFwKXGxvZyhcbGFtYmRhX3tpan0pICY9IGJfMCArIGJfMSBcdGV4dHtORFZJfV9qICsgYl8yIFx0ZXh0e2hpaX1faiArIGJfMyBJX3tcdGV4dHtuYXRpdmUsIH0gaX0gKyBiXzQgSV97XHRleHR7bmF0aXZlLCB9IGl9IFx0ZXh0e05EVkl9X2ogKyBiX3tcdGV4dHtzcH0gfml9ICsgYl97XHRleHR7c2l0ZX0gfmp9IFxcCnlfe2lqfSAmXHNpbSBcdGV4dHtQb2lzfShcbGFtYmRhX3tpan0pClxlbmR7YWxpZ25lZH0KJCQKClRoZSByYW5kb20gZWZmZWN0cyBtZWFuIHRoYXQgJFxsb2coXGxhbWJkYV97aWp9KSQgaXMgbm9ybWFsbHkgZGlzdHJpYnV0ZWQsIG9yIGVxdWl2YWxlbnRseSB0aGF0ICRcbGFtYmRhX3tpan0kIGlzICpsb2cgbm9ybWFsbHkgZGlzdHJpYnV0ZWQqLiBUaHVzIHdlIGFycml2ZSBhdCB0aGUgUG9pc3NvbiBsb2cgbm9ybWFsLgoKVGhlICpicm1zKiBjb2RlIGZvciB0aGlzIG1vZGVsIGxvb2tzIGxpa2UgdGhpczoKCmBgYHtyfQojfCBsYWJlbDogZml0LWJybQojfCBldmFsOiBmYWxzZQoKIyBub3RlOiBkbyBub3QgcnVuIHRoaXMgY29kZSwgbGVhdmUgdGhlIGNodW5rIG9wdGlvbiBzZXQgdG8gYGZhbHNlYAojIHRoZSBtY21jIGZvciB0aGlzIG1vZGVsIHRha2VzIGEgKmxvb29vbm5ubmcqIHRpbWUKIyBpbnN0ZWFkLCB3ZSdsbCByZWFkLWluIGEgc2F2ZWQsIHByZXZpb3VzbHkgcnVuIG1vZGVsIAoKbW9kX2FidW5kX2hpaV9uZHZpIDwtIGJybShhYnVuZCB+IG5kdmlfYW5udWFsICsgaGlpICogTmF0aXZlX1N0YXR1cyArIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAoMSB8IFBsb3RJRCkgKwogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAoMSB8IFNjaWVudGlmaWNfbmFtZSksIAogICAgICAgICAgICAgICAgICAgICAgICAgIGRhdGEgPSBkYXRfc2FkLAogICAgICAgICAgICAgICAgICAgICAgICAgIGZhbWlseSA9IHBvaXNzb24oKSwKICAgICAgICAgICAgICAgICAgICAgICAgICBwcmlvciA9IGMoCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHByaW9yKG5vcm1hbCgwLCA1KSwgY2xhc3MgPSBJbnRlcmNlcHQpLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwcmlvcihub3JtYWwoMCwgMSksIGNsYXNzID0gYiksCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHByaW9yKGV4cG9uZW50aWFsKDEpLCBjbGFzcyA9IHNkKQogICAgICAgICAgICAgICAgICAgICAgICAgICksCiAgICAgICAgICAgICAgICAgICAgICAgICAgY2hhaW5zID0gNCwKICAgICAgICAgICAgICAgICAgICAgICAgICBjb3JlcyA9IDQsCiAgICAgICAgICAgICAgICAgICAgICAgICAgc2VlZCA9IDEyMywgCiAgICAgICAgICAgICAgICAgICAgICAgICAgaXRlciA9IDUwMDAsIAogICAgICAgICAgICAgICAgICAgICAgICAgIHdhcm11cCA9IDIwMDAsIAogICAgICAgICAgICAgICAgICAgICAgICAgIGNvbnRyb2wgPSBsaXN0KG1heF90cmVlZGVwdGggPSAxNSkpCgpgYGAKCkEgZmV3IHRoaW5ncyB0byBub3RlIGFib3V0IHRoaXMgY29kZToKCi0gdGhlIHByaW9ycyBtaWdodCBzZWVtIGEgbGl0dGxlIHRvbyBpbmZvcm1hdGl2ZSBhdCBmaXJzdCwgYnV0IHJlY2FsbCB0aGF0IHRoZSBwYXJhbWV0ZXIgdmFsdWVzIHdlIGRyYXcgZnJvbSB0aGUgcHJpb3JzIGFyZSBvbiBhIGxvZyBzY2FsZSwgc28gYHNkID0gNWAgb24gYSBsb2cgc2NhbGUgaXMgcmVhbGx5IGBzZCA9IChleHAoNSkgLSAxKSAqIGV4cCg1KWAuIFRoZSBwcmlvciBmb3Igc2xvcGVzIG1pZ2h0IGFsc28gc2VlbSB0b28gbmFycm93LCBidXQgd2Ugc2NhbGVkIG91ciBleHBsYW5hdG9yeSB2YXJpYWJsZXMgdG8gcmFuZ2UgZnJvbSByb3VnaGx5IC0zIHRvIDMuIFRoZXJlZm9yZSB0aGUgc2xvcGVzIHdpbGwgbmV2ZXIgYmUgbGFyZ2UKLSB3ZSBuZWVkIGEgbG90IG9mIGl0ZXJhdGlvbnMgYW5kIGEgbG9uZyB3YXJtdXAgZm9yIHRoaXMgY29tcGxleCBtb2RlbAotIHdlIGFsc28gbmVlZCB0byBhbGxvdyBmb3IgYSBsYXJnZXIgYG1heF90cmVlZGVwdGhgLiBUaGUgYG1heF90cmVlZGVwdGhgIGFyZ3VtZW50IGRldGVybWluZXMgaG93IGxvbmcgd2UgbGV0IHRoZSBjb21wdXRlciB0cnkgc2ltdWxhdGluZyB0aGUgYmFsbCByb2xsaW5nIGFyb3VuZCB0aGUgYmFzaW4gb2YgdGhlIHBvc3RlcmlvcgoKTm93IHJhdGhlciB0aGFuIHJ1bm5pbmcgdGhhdCBtb2RlbCwgd2Ugd2lsbCBpbnN0ZWFkIGxvYWQgYSBzYXZlZCB2ZXJzaW9uIG9mIGEgcHJldmlvdXMgcnVuCgoKYGBge3J9CiN8IGxhYmVsOiBsb2FkLW1vZAojfCBjYWNoZTogdHJ1ZQoKbG9hZCh1cmwoImh0dHBzOi8vZ2l0aHViLmNvbS91aG0tYmlvc3RhdHMvc3RhdC1tb2QvcmF3L3JlZnMvaGVhZHMvbWFpbi9tb2QuUkRhdGEiKSkKCmBgYAoKTm8gZGl2ZXJnZW5jZXMgb2NjdXJyZWQgZHVyaW5nIHRoZSBNQ01DLiAKCgojIyBEaWFnbm9zaW5nIGNvbnZlcmdlbmNlIGFuZCBtb2RlbCBmaXQKCk5vdyB3ZSBjYW4gZXZhbHVhdGUgdGhpcyBtb2RlbC4gUmVmZXIgYmFjayB0byBsZWN0dXJlcyBhbmQgcHJldmlvdXMgbGFicyB0byB3b3JrIHRocm91Z2ggdGhlIGZvbGxvd2luZzoKCi0gdXNlIGBzdW1tYXJ5KG1vZF9hYnVuZF9oaWlfbmR2aSlgIHRvIGdldCBhIHNlbnNlIG9mIGhvdyB0aGUgTUNNQyB3b3JrZWQgdmlhIHRoZSBSaGF0IGFuZCBFU1Mgc3RhdGlzdGljcwotIGxvb2sgYXQgdGhlIHRyYWNlIHBsb3QgZm9yIHRoZSBwYXJhbWV0ZXIgd2l0aCB0aGUgaGlnaGVzdCBFU1MgYW5kIGZvciBhbnkgcGFyYW1ldGVycyB0aGF0IGhhdmUgYSBzdXNwaWNpb3VzbHkgbG93IEVTUyAocmVjYWxsOiBwb3N0IHdhcm11cCB3ZSBoYXZlIDMwMDAgTUNNQyBzYW1wbGVzKS4gSW4gdGhlIHRyYWNlIHBsb3RzLCBkbyB5b3Ugc2VlIGFueSByZWFzb24gZm9yIGNvbmNlcm4/IFlvdSB3aWxsIG5lZWQgdG8gc3BlY2lmeSB3aGljaCBwYXJhbWV0ZXJzIHlvdSB3YW50IHRvIG1ha2UgYSB0cmFjZSBwbG90IGZvciBieSBzZXR0aW5nIHRoZSBhcmd1bWVudCBgcGFyc2AgZXF1YWwgdG8gdGhlIG5hbWVzIG9mIHlvdXIgcGFyYW1ldGVycyBvZiBpbnRlcmVzdC4gUmVjYWxsIHRoYXQgYGJybWAgbmFtZXMgcGFyYW1ldGVycyB3aXRoIGEgYCJiXyJgIHByZWZpeC4gU28gaWYgeW91IHdhbnRlZCB0byBsb29rIGF0IHRoZSBpbnRlcmNlcHQgYW5kIGludGVyYWN0aW9uIHRlcm1zIHlvdSB3b3VsZCBzZXQgYHBhcnMgPSBjKCJiX0ludGVyY2VwdCIsICJiX2hpaTpOYXRpdmVfU3RhdHVzbmF0aXZlIilgCi0gbG9vayBhdCB0aGUgYXV0b2NvcnJlbGF0aW9uIHBsb3RzICh3aXRoIGBtY21jX2FjZmAgZnJvbSAqYmF5ZXNwbG90KikgZm9yIHRob3NlIHNhbWUgcGFyYW1ldGVycywgd2hhdCBpbnNpZ2h0cyBkbyB0aGVzZSBwbG90cyBnaXZlIHlvdT8KLSBkbyBhIHBvc3RlcmlvciBwcmVkaWN0aXZlIGNoZWNrIG9uIHRoZSBtZWFuIGFuZCB2YXJpYW5jZS4gRG8geW91IHNlZSBhbnkgY2F1c2UgZm9yIGNvbmNlcm4/CgoKIyMgSW50ZXJwcmV0aW5nIHRoZSBtb2RlbCBpbiB0aGUgY29udGV4dCBvZiBvdXIgaHlwb3RoZXNlcwoKRXZlbiBpZiB0aGVyZSB3ZXJlIHBlcmhhcHMgc29tZSBkaWFnbm9zdGljcyB0aGF0IGdhdmUgdXMgcmVhc29uIHRvIGJlIGNhdXRpb3VzIHdpdGggdGhpcyBtb2RlbCwgbGV0J3Mgc3RpbGwgd29yayBvbiBpbnRlcnByZXRpbmcgdGhlIHBhcmFtZXRlciB2YWx1ZXMgYXMgYW4gZXhlcmNpc2UgaW4gdW5kZXJzdGFuZGluZyBtb2RlbHMuIExvb2sgYmFjayB0byBvdXIgaHlwb3RoZXNlcywgd2VyZSB0aGV5IHN1cHBvcnRlZCBieSB0aGlzIG1vZGVsPwoKWW91IGNhbiBxdWlja2x5IGFzc2VzcyB0aGlzIGJ5IHVzaW5nIGBzdW1tYXJ5YCB0byBsb29rIGF0IDk1JSBjcmVkaWJsZSBpbnRlcnZhbHMuIEJ1dCBpdCBpcyBhbHNvIG5pY2UgdG8gdmlzdWFsaXplIHRoZSBoaXN0b2dyYW1zIG9mIHBvc3RlcmlvcnMuCgpUbyBsb29rIGF0IHRoZSBoaXN0b2dyYW1zIHlvdSB3aWxsIG5lZWQgdG8gcHVsbCBwb3N0ZXJpb3Igc2FtcGxlcwoKYGBge3J9CnBvc3Rfc2FtcHMgPC0gYXNfZHJhd3NfZGYobW9kX2FidW5kX2hpaV9uZHZpKQoKYGBgCgpCZWNhdXNlIG9mIHRoZSByYW5kb20gZWZmZWN0cywgdGhlcmUgYXJlIG1hbnkgKk1BTlkqIGNvbHVtbnMsIG9uZSBmb3IgZWFjaCBmaXhlZCBlZmZlY3QsIGJ1dCBhbHNvIG9uZSBmb3IgZWFjaCBzcGVjaWVzIGFuZCBzaXRlISBMb29raW5nIGJhY2sgYXQgdGhlIGVxdWF0aW9ucyBmb3Igb3VyIG1vZGVsIHdlIGNhbiBjb3VudCA1IGZpeGVkIGVmZmVjdHM6CgotICRiXzAkCi0gJGJfMSBcdGV4dHtORFZJfV9qJAotICRiXzIgXHRleHR7aGlpfV9qJAotICRiXzMgSV97XHRleHR7bmF0aXZlLCB9IGl9JAotICRiXzQgSV97XHRleHR7bmF0aXZlLCB9IGl9IFx0ZXh0e05EVkl9X2okCgpUaGVzZSA1IGZpeGVkIGVmZmVjdHMgc2hvdWxkIGJlIHRoZSBmaXJzdCA1IGNvbHVtbnMgb2YgYHBvc3Rfc2FtcHNgLiBMZXQncyBjb25maXJtIAoKCmBgYHtyfQpuYW1lcyhwb3N0X3NhbXBzKVsxOjVdCgpgYGAKCk5vdyBtYWtlIG9uZSBmaWd1cmUgd2hlcmUgdGhlIDUgcG9zdGVyaW9yIGhpc3RvZ3JhbXMgYXJlIHN0YWNrZWQgb24gdG9wIG9mIGVhY2ggb3RoZXIuIFlvdSBjYW4gdXNlIGBwbG90X2dyaWRgIGZyb20gdGhlICpjb3dwbG90KiBwYWNrYWdlLCBvciB5b3UgY2FuIHRpZHkgdGhlIGZpcnN0IDUgY29sdW1ucyBvZiBgcG9zdF9zYW1wc2AgdXNpbmcgYHBpdm90X2xvbmdlcmAgZnJvbSB0aGUgKnRpZHlyKiBwYWNrYWdlLgoKCkZpbmFsbHksIHdoYXQgZG8geW91IGNvbmNsdWRlPyBXZXJlIG91ciBoeXBvdGhlc2VzIHN1cHBvcnRlZCBieSB0aGUgZml0dGVkIG1vZGVsPwoK').then(res => res.blob()).then(blob => {
-      const downloadURL = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      document.body.appendChild(a);
-      a.href = downloadURL;
-      a.download = 'lab10-bayes-sad.qmd'; a.click();
-      window.URL.revokeObjectURL(downloadURL);
-      document.body.removeChild(a);
-        });"><button class="btn btn-default downloadthis  " id="dnldts35155"><i class="bi bi-download"></i> Download lab template </button></a></p>
-<p>The template will prompt you to work through the following sections.</p>
-<section id="a-look-at-the-poisson-log-normal" class="level2" data-number="35.1">
-<h2 data-number="35.1" class="anchored" data-anchor-id="a-look-at-the-poisson-log-normal"><span class="header-section-number">35.1</span> A look at the Poisson log normal</h2>
-<p>The Poisson log normal is a well established model of the species abundance distribution (SAD). We will use it as the core of our model relating species abundances to fixed and random effects. First let’s gain some intuition about it.</p>
-<p>The Poisson log normal says that, for any given species, its <em>mean abundance</em> <span class="math inline">\(\lambda_i\)</span> will follow a log normal distribution</p>
-<p><span class="math display">\[
-\lambda_i \sim \log\mathscr{N}(\mu, ~\sigma_\text{sp})
-\]</span></p>
-<p>Equivalently we could say the <em>log of mean abundance</em> will follow a normal distribution</p>
-<p><span class="math display">\[
-\log(\lambda_i) \sim \mathscr{N}(\mu, ~\sigma_\text{sp})
-\]</span></p>
-<p>With that mean abundance, we then say the actual abundance <span class="math inline">\(y_i\)</span>, the number we collect in the field, follows a Poisson distribution with mean <span class="math inline">\(\lambda_i\)</span></p>
-<p><span class="math display">\[
-y_i \sim \text{Pois}(\lambda_i)
-\]</span></p>
-<p>Let’s simulate and visualize a few Poisson log normal SADs</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">500</span>, <span class="dv">1</span>, <span class="dv">2</span>) <span class="sc">|&gt;</span> <span class="fu">exp</span>()</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">rpois</span>(<span class="fu">length</span>(lambda), lambda)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># combine all info into a data.frame for plotting </span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>pois_lnorm_sad <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">mean =</span> <span class="dv">1</span>, <span class="at">sd =</span> <span class="dv">2</span>, <span class="at">abund =</span> y)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(pois_lnorm_sad, <span class="fu">aes</span>(abund)) <span class="sc">+</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>() </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>`stat_bin()` using `bins = 30`. Pick better value `binwidth`.</code></pre>
-</div>
-<div class="cell-output-display">
-<div id="fig-sad" class="quarto-float quarto-figure quarto-figure-center anchored" width="672">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-sad-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="bayes-sad_files/figure-html/fig-sad-1.png" id="fig-sad" class="img-fluid figure-img" width="672">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-sad-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;35.1
-</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p>Try 3 more different parameter combinations with new values for <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\sigma_\text{sp}\)</span>. If you add them to <code>pois_lnorm_sad</code> you can facet by parameter value for a nice final visualization of all 4 parameterizations</p>
-</section>
-<section id="prepping-the-data" class="level2" data-number="35.2">
-<h2 data-number="35.2" class="anchored" data-anchor-id="prepping-the-data"><span class="header-section-number">35.2</span> Prepping the data</h2>
-<p>First read-in and join all data</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>tree <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"https://raw.githubusercontent.com/uhm-biostats/stat-mod/refs/heads/main/data/OpenNahele_Tree_Data.csv"</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>clim <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"https://raw.githubusercontent.com/uhm-biostats/stat-mod/refs/heads/main/data/plot_climate.csv"</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>geo_hii <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"https://raw.githubusercontent.com/uhm-biostats/stat-mod/refs/heads/main/data/hii_geo.csv"</span>)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>all_dat <span class="ot">&lt;-</span> <span class="fu">left_join</span>(tree, clim, <span class="at">by =</span> <span class="st">"PlotID"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">left_join</span>(dplyr<span class="sc">::</span><span class="fu">select</span>(geo_hii, <span class="sc">!</span>(lon<span class="sc">:</span>lat)), <span class="at">by =</span> <span class="st">"PlotID"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Next we need to use a split-apply-combine approach to summarize species abundance for each site. We have to do this with more attention to detail than normal because we need to correctly record 0 abundance for species absent from a site. Notice from the SAD simulations we just did that 0 abundance is possible, and even highly probable, for certain parameterizations of the SAD. Rare species are generally very frequent, and this is another thing we’ll need to be cautious about. Too many extremely rare species will be very difficult for our Bayesian model to deal with. Think of it this way: if a species only shows up at one or two sites or a handful of sites, what inference can we draw about that species? None really.</p>
-<p>With all that in mind, let’s create our species abundance data</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># this data object just holds the names of all species found</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># at 10 or more sites. We will use it to filter out species</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># that are too rare to bother modeling</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>core_sad <span class="ot">&lt;-</span> <span class="fu">group_by</span>(all_dat, Scientific_name) <span class="sc">|&gt;</span> </span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="at">freq =</span> <span class="fu">n_distinct</span>(PlotID)) <span class="sc">|&gt;</span> </span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ungroup</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(freq <span class="sc">&gt;=</span> <span class="dv">10</span>)</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co"># now we can create the data for modeling</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>dat_sad <span class="ot">&lt;-</span> all_dat <span class="sc">|&gt;</span> </span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># by first filtering to only spp found at &gt;= 10 sites</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(Scientific_name <span class="sc">%in%</span> core_sad<span class="sc">$</span>Scientific_name) <span class="sc">|&gt;</span> </span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># then make sp name a factor so we can use `.drop = FALSE`</span></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Scientific_name =</span> <span class="fu">as.factor</span>(Scientific_name)) <span class="sc">|&gt;</span> </span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># `.drop = FALSE` means don't ignore combinations of</span></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># `PlotID` and `Scientific_name` that are empty (i.e. 0 abundance)</span></span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(PlotID, Scientific_name, <span class="at">.drop =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="at">abund =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ungroup</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># now join abundance data back to plot-level data</span></span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">left_join</span>(<span class="fu">select</span>(all_dat, PlotID, ndvi_annual, hii) <span class="sc">|&gt;</span> </span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">unique</span>()) <span class="sc">|&gt;</span> </span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    <span class="co"># next join to species-level data</span></span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">left_join</span>(<span class="fu">select</span>(all_dat, Scientific_name, Native_Status) <span class="sc">|&gt;</span> </span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">unique</span>()) <span class="sc">|&gt;</span> </span>
-<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>    <span class="co"># remove NAs from explanatory variables</span></span>
-<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(ndvi_annual) <span class="sc">&amp;</span> </span>
-<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>               <span class="sc">!</span><span class="fu">is.na</span>(hii) <span class="sc">&amp;</span> </span>
-<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>               <span class="sc">!</span><span class="fu">is.na</span>(Native_Status)) <span class="sc">|&gt;</span> </span>
-<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>    <span class="co"># finally, scale explanatory variables</span></span>
-<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">hii =</span> <span class="fu">scale</span>(hii)[, <span class="dv">1</span>], </span>
-<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>           <span class="at">ndvi_annual =</span> <span class="fu">scale</span>(ndvi_annual)[, <span class="dv">1</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>`summarise()` has regrouped the output.
-Joining with `by = join_by(PlotID)`
-Joining with `by = join_by(Scientific_name)`
-ℹ Summaries were computed grouped by PlotID and Scientific_name.
-ℹ Output is grouped by PlotID.
-ℹ Use `summarise(.groups = "drop_last")` to silence this message.
-ℹ Use `summarise(.by = c(PlotID, Scientific_name))` for per-operation grouping
-  (`?dplyr::dplyr_by`) instead.</code></pre>
-</div>
-</div>
-<p>That last step of scaling explanatory variables can help with MCMC convergence. What scaling does is makes each variable have a mean of 0 and a standard deviation of 1</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(dat_sad<span class="sc">$</span>ndvi_annual)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] -3.859722e-15</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(dat_sad<span class="sc">$</span>ndvi_annual)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 1</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(dat_sad<span class="sc">$</span>hii)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 3.906694e-16</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(dat_sad<span class="sc">$</span>hii)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 1</code></pre>
-</div>
-</div>
-<p>Putting these variables on the same <em>scale</em> means that the MCMC can move around a parameter space where 1 unit in the <code>hii</code> direction is roughly equivelant to 1 unit in the <code>ndvi_annual</code> direction.</p>
-</section>
-<section id="modeling-a-hypothesis" class="level2" data-number="35.3">
-<h2 data-number="35.3" class="anchored" data-anchor-id="modeling-a-hypothesis"><span class="header-section-number">35.3</span> Modeling a hypothesis</h2>
-<p>With the data now in hand, what would we like to ask (and hypothesize) about species abundance? Let’s ask whether abundance is related to primary productivity as measured by NDVI and whether human impact interacts with native status to determine a species’ abundance.</p>
-<p>Our hypothesis might be that</p>
-<ul>
-<li>NDVI increases abundance</li>
-<li>human impact decreases abundance</li>
-<li>being a native species has no effect</li>
-<li>but there is a negative interaction of native status and human impact (native taxa are decrease in abundance with human impact)</li>
-</ul>
-<p>As a fixed effects Poisson model for species <span class="math inline">\(i\)</span> at site <span class="math inline">\(j\)</span> that looks like</p>
-<p><span class="math display">\[
-\begin{aligned}
-\log(\lambda_{ij}) &amp;= b_0 + b_1 \text{NDVI}_j + b_2 \text{hii}_j + b_3 I_{\text{native, } i} + b_4 I_{\text{native, } i} \text{NDVI}_j \\
-y_{ij} &amp;\sim \text{Pois}(\lambda_{ij})
-\end{aligned}
-\]</span></p>
-<p><span class="math inline">\(I_{\text{native, } i}\)</span> is an indicator function that equals 1 if species <span class="math inline">\(i\)</span> is native, and equals 0 otherwise. In this way <span class="math inline">\(b_3 I_{\text{native, } i}\)</span> represents the additional effect of being native relative to <span class="math inline">\(b_0\)</span> which is the effect of being non-native (recorded as “alien” in the <em>OpenNahele</em> data). Similarly, <span class="math inline">\(b_4 I_{\text{native, } i} \text{NDVI}_j\)</span> is the additional slope term added for species that are native.</p>
-<p>But we also know our model needs random effects for species and sites. We add those via random terms <span class="math inline">\(b_{\text{sp} ~i}\)</span> and <span class="math inline">\(b_{\text{site} ~j}\)</span>. So the full model is</p>
-<p><span class="math display">\[
-\begin{aligned}
-b_{\text{sp} ~i} &amp;\sim \mathscr{N}(0, ~\sigma_\text{sp}) \\
-b_{\text{site} ~j} &amp;\sim \mathscr{N}(0, ~\sigma_\text{site}) \\
-\log(\lambda_{ij}) &amp;= b_0 + b_1 \text{NDVI}_j + b_2 \text{hii}_j + b_3 I_{\text{native, } i} + b_4 I_{\text{native, } i} \text{NDVI}_j + b_{\text{sp} ~i} + b_{\text{site} ~j} \\
-y_{ij} &amp;\sim \text{Pois}(\lambda_{ij})
-\end{aligned}
-\]</span></p>
-<p>The random effects mean that <span class="math inline">\(\log(\lambda_{ij})\)</span> is normally distributed, or equivalently that <span class="math inline">\(\lambda_{ij}\)</span> is <em>log normally distributed</em>. Thus we arrive at the Poisson log normal.</p>
-<p>The <em>brms</em> code for this model looks like this:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># note: do not run this code, leave the chunk option set to `false`</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># the mcmc for this model takes a *loooonnnng* time</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co"># instead, we'll read-in a saved, previously run model </span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>mod_abund_hii_ndvi <span class="ot">&lt;-</span> <span class="fu">brm</span>(abund <span class="sc">~</span> ndvi_annual <span class="sc">+</span> hii <span class="sc">*</span> Native_Status <span class="sc">+</span> </span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>                              (<span class="dv">1</span> <span class="sc">|</span> PlotID) <span class="sc">+</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>                              (<span class="dv">1</span> <span class="sc">|</span> Scientific_name), </span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>                          <span class="at">data =</span> dat_sad,</span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>                          <span class="at">family =</span> <span class="fu">poisson</span>(),</span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>                          <span class="at">prior =</span> <span class="fu">c</span>(</span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>                              <span class="fu">prior</span>(<span class="fu">normal</span>(<span class="dv">0</span>, <span class="dv">5</span>), <span class="at">class =</span> Intercept),</span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>                              <span class="fu">prior</span>(<span class="fu">normal</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">class =</span> b),</span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>                              <span class="fu">prior</span>(<span class="fu">exponential</span>(<span class="dv">1</span>), <span class="at">class =</span> sd)</span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>                          ),</span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>                          <span class="at">chains =</span> <span class="dv">4</span>,</span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>                          <span class="at">cores =</span> <span class="dv">4</span>,</span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>                          <span class="at">seed =</span> <span class="dv">123</span>, </span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>                          <span class="at">iter =</span> <span class="dv">5000</span>, </span>
-<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>                          <span class="at">warmup =</span> <span class="dv">2000</span>, </span>
-<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>                          <span class="at">control =</span> <span class="fu">list</span>(<span class="at">max_treedepth =</span> <span class="dv">15</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>A few things to note about this code:</p>
-<ul>
-<li>the priors might seem a little too informative at first, but recall that the parameter values we draw from the priors are on a log scale, so <code>sd = 5</code> on a log scale is really <code>sd = (exp(5) - 1) * exp(5)</code>. The prior for slopes might also seem too narrow, but we scaled our explanatory variables to range from roughly -3 to 3. Therefore the slopes will never be large</li>
-<li>we need a lot of iterations and a long warmup for this complex model</li>
-<li>we also need to allow for a larger <code>max_treedepth</code>. The <code>max_treedepth</code> argument determines how long we let the computer try simulating the ball rolling around the basin of the posterior</li>
-</ul>
-<p>Now rather than running that model, we will instead load a saved version of a previous run</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="fu">url</span>(<span class="st">"https://github.com/uhm-biostats/stat-mod/raw/refs/heads/main/mod.RData"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>No divergences occurred during the MCMC.</p>
-</section>
-<section id="diagnosing-convergence-and-model-fit" class="level2" data-number="35.4">
-<h2 data-number="35.4" class="anchored" data-anchor-id="diagnosing-convergence-and-model-fit"><span class="header-section-number">35.4</span> Diagnosing convergence and model fit</h2>
-<p>Now we can evaluate this model. Refer back to lectures and previous labs to work through the following:</p>
-<ul>
-<li>use <code>summary(mod_abund_hii_ndvi)</code> to get a sense of how the MCMC worked via the Rhat and ESS statistics</li>
-<li>look at the trace plot for the parameter with the highest ESS and for any parameters that have a suspiciously low ESS (recall: post warmup we have 3000 MCMC samples). In the trace plots, do you see any reason for concern? You will need to specify which parameters you want to make a trace plot for by setting the argument <code>pars</code> equal to the names of your parameters of interest. Recall that <code>brm</code> names parameters with a <code>"b_"</code> prefix. So if you wanted to look at the intercept and interaction terms you would set <code>pars = c("b_Intercept", "b_hii:Native_Statusnative")</code></li>
-<li>look at the autocorrelation plots (with <code>mcmc_acf</code> from <em>bayesplot</em>) for those same parameters, what insights do these plots give you?</li>
-<li>do a posterior predictive check on the mean and variance. Do you see any cause for concern?</li>
-</ul>
-</section>
-<section id="interpreting-the-model-in-the-context-of-our-hypotheses" class="level2" data-number="35.5">
-<h2 data-number="35.5" class="anchored" data-anchor-id="interpreting-the-model-in-the-context-of-our-hypotheses"><span class="header-section-number">35.5</span> Interpreting the model in the context of our hypotheses</h2>
-<p>Even if there were perhaps some diagnostics that gave us reason to be cautious with this model, let’s still work on interpreting the parameter values as an exercise in understanding models. Look back to our hypotheses, were they supported by this model?</p>
-<p>You can quickly assess this by using <code>summary</code> to look at 95% credible intervals. But it is also nice to visualize the histograms of posteriors.</p>
-<p>To look at the histograms you will need to pull posterior samples</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>post_samps <span class="ot">&lt;-</span> <span class="fu">as_draws_df</span>(mod_abund_hii_ndvi)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Because of the random effects, there are many <em>MANY</em> columns, one for each fixed effect, but also one for each species and site! Looking back at the equations for our model we can count 5 fixed effects:</p>
-<ul>
-<li><span class="math inline">\(b_0\)</span></li>
-<li><span class="math inline">\(b_1 \text{NDVI}_j\)</span></li>
-<li><span class="math inline">\(b_2 \text{hii}_j\)</span></li>
-<li><span class="math inline">\(b_3 I_{\text{native, } i}\)</span></li>
-<li><span class="math inline">\(b_4 I_{\text{native, } i} \text{NDVI}_j\)</span></li>
-</ul>
-<p>These 5 fixed effects should be the first 5 columns of <code>post_samps</code>. Let’s confirm</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(post_samps)[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "b_Intercept"               "b_ndvi_annual"            
-[3] "b_hii"                     "b_Native_Statusnative"    
-[5] "b_hii:Native_Statusnative"</code></pre>
-</div>
-</div>
-<p>Now make one figure where the 5 posterior histograms are stacked on top of each other. You can use <code>plot_grid</code> from the <em>cowplot</em> package, or you can tidy the first 5 columns of <code>post_samps</code> using <code>pivot_longer</code> from the <em>tidyr</em> package.</p>
-<p>Finally, what do you conclude? Were our hypotheses supported by the fitted model?</p>
+<section id="sec-slides" class="level2" data-number="35.1">
+<h2 data-number="35.1" class="anchored" data-anchor-id="sec-slides"><span class="header-section-number">35.1</span> Slides</h2>
+<iframe class="slide-deck" src="bayes-sad-slides.html"></iframe>
 
 
 </section>
@@ -1148,6 +850,9 @@ y_{ij} &amp;\sim \text{Pois}(\lambda_{ij})
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="./bayes-sad-lab.html" class="pagination-link" aria-label="Species abundance: a surprisingly complex model">
+        <span class="nav-page-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Species abundance: a surprisingly complex model</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav>
 </div> <!-- /content -->
