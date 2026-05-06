@@ -1,0 +1,39 @@
+---
+format:
+  html:
+    code-links:
+      - text: View source
+        icon: github
+        href: https://github.com/uhm-biostats/stat-mod/blob/main/bayes-sad-lab.qmd
+---
+
+
+# Species abundance: a surprisingly complex model
+
+This lab will guide you through building a Poisson log normal model of species abundance using Bayesian methods. You can download the template `.qmd` file for this lab here:
+
+{{< downloadthis labs/lab10-bayes-sad.qmd dname=lab10-bayes-sad label="Download lab template">}}
+
+The template will prompt you to work through the following sections.
+
+
+
+```{r}
+#| include: false
+
+library(ggplot2)
+library(dplyr)
+library(brms)
+library(bayesplot)
+
+
+source("R/utils.R")
+out <- render_lab("labs/lab10-bayes-sad.qmd")
+```
+
+```{r}
+#| echo: false
+#| results: asis
+
+cat(out$m, sep = "\n")
+```
