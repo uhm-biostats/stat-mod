@@ -1,0 +1,498 @@
+---
+title: "Bayesian inference for complex models"
+
+format:
+  revealjs:
+    slide-number: true
+    preview-links: auto
+    auto-stretch: false
+    embed-resources: false
+    controls: true
+    html-math-method:
+      method: mathjax
+      url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+
+bibliography: stat-mod.bib
+csl: conservation-biology.csl
+
+---
+
+```{r}
+#| label: setup
+#| echo: false
+#| message: false
+#| warning: false
+
+library(knitr)
+library(ggplot2)
+library(cowplot)
+library(dplyr)
+library(brms)
+library(poilog)
+
+opts_chunk$set(echo = FALSE)
+
+# shared data setup used throughout
+clim <- read.csv("data/plot_climate.csv")
+geo_hii <- read.csv("data/hii_geo.csv")
+tree <- read.csv("data/OpenNahele_Tree_Data.csv")
+
+all_dat <- left_join(tree, clim, by = "PlotID") |>
+    left_join(dplyr::select(geo_hii, !(lon:lat)), by = "PlotID") |> 
+    mutate(Scientific_name = as.factor(Scientific_name))
+```
+
+```{r}
+#| label: sad-make
+#| cache: true
+#| include: false
+
+dat_sad <- group_by(all_dat, PlotID, Scientific_name, .drop = FALSE) |>
+    summarize(across(c(Island, Plot_Area, lon:elev_m), first),
+              abund = n()) |>
+    ungroup() |>
+    filter(Plot_Area < 10000)
+```
+
+## The species abundnace distribution
+
+Ecology has spent a long time thinking about the probability distribution of abundances
+
+The shape of the SAD 
+
+::: {incremental}
+
+- figured in early and influential debates about ecological processes [@fisher1943; @preston1962]
+- is the focus of the unified neutral theory of biodiversity [@hubbell2011]
+- is still central to models of biodiversity, though we now know other biodiversity dimensions are important [@overcast2021]
+
+:::
+
+## The species abundnace distribution
+
+Ecology has spent a long time thinking about the probability distribution of abundances
+
+::: {.columns}
+
+:::: {.column}
+
+::: {.fragment}
+
+Most species are rare
+
+<br>
+
+```{r}
+#| fig-width: 5
+#| fig-height: 4
+
+x <- seq(log(1), log(1000), length.out = 30) |> 
+    exp() |> 
+    round()
+dat_sing <- data.frame(x, px = dpoilog(x, 10, 4))
+
+ggplot(dat_sing, aes(x, px)) +
+    geom_point(size = 2) +
+    scale_x_log10() +
+    xlab("Abundance (note log scale)") +
+    ylab("Probability") +
+    theme(axis.text = element_text(size = 18), 
+          axis.title = element_text(size = 22))
+```
+
+:::
+
+::::
+
+:::: {.column}
+
+::: {.fragment}
+
+But perhaps singletons are not the most frequent
+
+```{r}
+#| fig-width: 5
+#| fig-height: 4
+
+dat_hump <- data.frame(x, px = dpoilog(x, 3, 1.2))
+
+ggplot(dat_hump, aes(x, px)) +
+    geom_point(size = 2) +
+    scale_x_log10() +
+    xlab("Abundance (note log scale)") +
+    ylab("Probability") +
+    theme(axis.text = element_text(size = 18), 
+          axis.title = element_text(size = 22))
+```
+
+:::
+
+::::
+
+:::
+
+
+## The species abundnace distribution
+
+Ecology has spent a long time thinking about the probability distribution of abundances
+
+::: {.columns}
+
+:::: {.column}
+
+
+Log series distribution
+
+<br>
+
+```{r}
+#| fig-width: 5
+#| fig-height: 4
+
+x <- seq(log(1), log(1000), length.out = 30) |> 
+    exp() |> 
+    round()
+dat_sing <- data.frame(x, px = dpoilog(x, 10, 4))
+
+ggplot(dat_sing, aes(x, px)) +
+    geom_point(size = 2) +
+    scale_x_log10() +
+    xlab("Abundance (note log scale)") +
+    ylab("Probability") +
+    theme(axis.text = element_text(size = 18), 
+          axis.title = element_text(size = 22))
+```
+
+
+::::
+
+:::: {.column}
+
+Log normal distribution
+
+<br>
+
+```{r}
+#| fig-width: 5
+#| fig-height: 4
+
+dat_hump <- data.frame(x, px = dpoilog(x, 3, 1.2))
+
+ggplot(dat_hump, aes(x, px)) +
+    geom_point(size = 2) +
+    scale_x_log10() +
+    xlab("Abundance (note log scale)") +
+    ylab("Probability") +
+    theme(axis.text = element_text(size = 18), 
+          axis.title = element_text(size = 22))
+```
+
+
+::::
+
+:::
+
+
+## The species abundnace distribution
+
+Ecology has spent a long time thinking about the probability distribution of abundances
+
+Turns out the ***Poisson log normal*** can accamodate both shapes and a gradient in between
+
+::: {.columns}
+
+:::: {.column}
+
+
+
+```{r}
+#| fig-width: 5
+#| fig-height: 4
+
+x <- seq(log(1), log(1000), length.out = 30) |> 
+    exp() |> 
+    round()
+dat_sing <- data.frame(x, px = dpoilog(x, 10, 4))
+
+ggplot(dat_sing, aes(x, px)) +
+    geom_point(size = 2) +
+    scale_x_log10() +
+    xlab("Abundance (note log scale)") +
+    ylab("Probability") +
+    theme(axis.text = element_text(size = 18), 
+          axis.title = element_text(size = 22))
+```
+
+
+::::
+
+:::: {.column}
+
+
+```{r}
+#| fig-width: 5
+#| fig-height: 4
+
+dat_hump <- data.frame(x, px = dpoilog(x, 3, 1.2))
+
+ggplot(dat_hump, aes(x, px)) +
+    geom_point(size = 2) +
+    scale_x_log10() +
+    xlab("Abundance (note log scale)") +
+    ylab("Probability") +
+    theme(axis.text = element_text(size = 18), 
+          axis.title = element_text(size = 22))
+```
+
+
+::::
+
+:::
+
+
+## The species abundnace distribution
+
+The ***Poisson log normal*** 
+
+$$
+\begin{aligned}
+\log(\lambda_i) &\sim \mathscr{N}(\mu, ~\sigma) \\
+y_i &= \text{Pois}(\lambda_i)
+\end{aligned}
+$$
+
+::: {.fragment}
+
+Some familiar looking things
+
+:::: {.incremental}
+
+- log link function for mean of Poisson 
+- but the mean comes from a distribution like a random effect
+- adding some explanatory variables will reveal the random effect structure
+
+::::
+
+
+:::
+
+## The species abundnace distribution
+
+The ***Poisson log normal*** as a random effects model
+
+$$
+\begin{aligned}
+\mu_i &= b_0 + b_1 x_{1i} \\
+\log(\lambda_i) &\sim \mathscr{N}(\mu_i, ~\sigma) \\
+y_i &= \text{Pois}(\lambda_i)
+\end{aligned}
+$$
+
+::: {.fragment}
+
+Due to additive property of normal we can rearrange
+
+$$
+\begin{aligned}
+b_{\text{sp} ~i} &\sim \mathscr{N}(0, ~\sigma_\text{sp}) \\
+\log(\lambda_i) &= b_0 + b_1 x_1 + b_{\text{sp} ~i} \\
+y_i &= \text{Pois}(\lambda_i)
+\end{aligned}
+$$
+
+:::
+
+
+
+
+## The species abundnace distribution
+
+The ***Poisson log normal*** as a random effects model
+
+
+
+$$
+\begin{aligned}
+b_{\text{sp} ~i} &\sim \mathscr{N}(0, ~\sigma_\text{sp}) \\
+\log(\lambda_i) &= b_0 + b_1 x_1 + b_{\text{sp} ~i} \\
+y_i &= \text{Pois}(\lambda_i)
+\end{aligned}
+$$
+
+
+
+This is a ***random intercepts*** model, each species gets a random intercept
+
+
+## The species abundnace distribution
+
+The ***Poisson log normal*** as a random effects model
+
+::: {.columns}
+
+:::: {.column}
+
+At one sampling location, distribution of abundances will be distributed Poisson log normal
+
+::: {.r-stack}
+
+::: {.fragment .fade-in-then-out}
+
+You might be thinking about overdispersion, *Poisson log normal* is already "overdispersed" and, in fact, quite similar to negative binomial
+
+:::
+
+::: {.fragment}
+
+But what about SAD at another sampling location??
+
+:::
+
+
+
+:::
+
+::::
+
+:::: {.column}
+
+```{r}
+#| fig-width: 5
+#| fig-height: 3
+
+ggplot(dat_hump, aes(x, px)) +
+    geom_point(size = 2) +
+    scale_x_log10() +
+    xlab("Abundance (note log scale)") +
+    ylab("Probability") +
+    theme(axis.text = element_text(size = 18), 
+          axis.title = element_text(size = 22))
+
+```
+
+::: {.fragment style="margin-top: -2em;"}
+
+```{r}
+#| fig-width: 5
+#| fig-height: 3
+
+ggplot(data.frame(x, px = dpoilog(x, 1, 3)), aes(x, px)) +
+    geom_point(size = 2) +
+    scale_x_log10() +
+    xlab("Abundance (note log scale)") +
+    ylab("Probability") +
+    theme(axis.text = element_text(size = 18), 
+          axis.title = element_text(size = 22))
+
+```
+
+:::
+
+::::
+
+:::
+
+## The species abundnace distribution
+
+The ***Poisson log normal*** as a random effects model
+
+
+
+$$
+\begin{aligned}
+b_{\text{sp} ~i} &\sim \mathscr{N}(0, ~\sigma_\text{sp}) \\
+b_{\text{site} ~j} &\sim \mathscr{N}(0, ~\sigma_\text{site}) \\
+\log(\lambda_{ij}) &= b_0 + b_1 x_1 + b_{\text{sp} ~i} + b_{\text{site} ~j} \\
+y_{ij} &= \text{Pois}(\lambda_{ij})
+\end{aligned}
+$$
+
+
+
+We need ***random intercepts*** for species and site
+
+
+::: {.fragment}
+
+This model means that a common species will tend to be common everywhere (and a rare species rare everywhere), but there is random variation site-to-site due to demographic noise
+
+:::
+
+
+## The species abundnace distribution
+
+The ***Poisson log normal*** as a random effects model
+
+::: {.fragment}
+
+Why this is a challenging model
+
+::: {.incremental}
+
+- Random effects models are already a challenge
+    - There are `r n_distinct(dat_sad$PlotID)` plots
+    - There are `r n_distinct(dat_sad$Scientific_name)` species
+    - Estimating (via likelihood or posterior) $\sigma_\text{sp}$ and $\sigma_\text{site}$ requires integrating over all those entities
+- Mixing Poisson and (log) normal makes the necessary integrals all the more challenging
+- Using MCMC means we do not need to do these integrals
+
+:::
+
+:::
+
+
+
+## Fitting the SAD with `brm`
+
+Here is the code for ***just the random effects***
+
+```{r}
+#| label: fit-brms
+#| cache: true
+#| echo: true
+
+
+sad_mod <- brm(
+    abund ~ (1 | Scientific_name) +
+        (1 | PlotID), 
+    data = dat_sad,
+    family = poisson(),
+    prior = c(
+        prior(normal(0, 100), class = Intercept),
+        prior(exponential(0.01), class = sd)
+    ),
+    chains = 4,
+    cores = 4,
+    seed = 123, 
+    iter = 4000, 
+    warmup = 1000
+)
+```
+
+## Fitting the SAD with `brm`
+
+How does it look?
+
+```{r}
+summary(sad_mod)
+
+
+```
+
+
+## Modeling species abundances
+
+With this approach we can now ask more interesting questions
+
+::: {.incremental}
+
+- are native or non-native taxa more abundant?
+- what variables determine the balance of native and non-native taxa?
+
+
+:::
+
+## References
+
+
+
